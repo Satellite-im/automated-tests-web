@@ -1,0 +1,12 @@
+{
+  "name": "automated-tests-web",
+  "version": "1.0.0",
+  "description": "Automation Testing Framework For Uplink Web",
+  "main": "index.js",
+  "repository": "https://github.com/Satellite-im/automated-tests-web.git",
+  "author": "Luis Cardeña <35935591+luisecm@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "cypress": "^13.9.0"
+  }
+}
