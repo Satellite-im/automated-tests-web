@@ -7,6 +7,7 @@
   "author": "Luis Cardeña <35935591+luisecm@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
-    "cypress": "^13.9.0"
+    "cypress": "^13.9.0",
+    "typescript": "^5.4.5"
   }
 }
