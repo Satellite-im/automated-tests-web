@@ -24,6 +24,15 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
-Cypress.Commands.add("dataCy", (value) => {
-  return cy.get(`[data-cy=${value}]`);
+declare namespace Cypress {
+  interface Chainable<Subject> {
+    getByTestAttr(
+      selector: string,
+      ...options: any
+    ): Chainable<JQuery<HTMLElement>>;
+  }
+}
+
+Cypress.Commands.add("getByTestAttr", (value: string, ...options: any) => {
+  return cy.get(`[data-cy=${value}]`, ...options);
 });
