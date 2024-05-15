@@ -1,0 +1,4 @@
+# Ignore artifacts:
+cypress/downloads
+cypress/fixtures
+node_modules
