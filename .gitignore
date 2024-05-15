@@ -75,3 +75,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+# Reports
+allure-results/

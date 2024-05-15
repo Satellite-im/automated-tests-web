@@ -7,7 +7,10 @@
   "author": "Luis Cardeña <35935591+luisecm@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
+    "allure-commandline": "^2.29.0",
+    "allure-cypress": "^2.15.1",
     "cypress": "^13.9.0",
+    "prettier": "3.2.5",
     "typescript": "^5.4.5"
   }
 }
