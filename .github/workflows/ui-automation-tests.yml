@@ -1,0 +1,42 @@
+name: Cypress Tests
+
+on: push
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout App Repo
+        uses: actions/checkout@v4
+        with:
+          repository: Satellite-im/UplinkWeb
+
+      - name: Checkout Testing Repo
+        uses: actions/checkout@v4
+        with:
+          repository: Satellite-im/UplinkWebTests
+          path: "./automated-tests"
+
+      - name: Setup Node.js 🔨
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+
+      - name: Cache NPM dependencies 🔨
+        uses: actions/cache@v4
+        id: cache-cypress
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install NPM dependencies 📦
+        if: steps.cache-cypress.outputs.cache-hit != 'true'
+        run: yarn ci
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm run dev
+          working-directory: "./automated-tests"
