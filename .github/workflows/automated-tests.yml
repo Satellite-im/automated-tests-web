@@ -24,6 +24,9 @@ jobs:
         with:
           repository: Satellite-im/UplinkWeb
 
+      - name: Init submodules
+        run: git submodule update --init --recursive --remote
+
       - name: Checkout Automated Tests directory 🔖
         uses: actions/checkout@v4
         with:
