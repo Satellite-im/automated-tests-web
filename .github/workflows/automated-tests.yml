@@ -54,4 +54,3 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           start: npm run dev
-          working-directory: automated-tests
