@@ -48,7 +48,9 @@ jobs:
         uses: actions/cache@v4
         id: cache-cypress
         with:
-          path: automated-tests/node_modules
+          path: |
+            automated-tests/node_modules
+            /Users/runner/Library/Caches/Cypress
           key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
 
       - name: Cache NPM dependencies 🔨
