@@ -17,7 +17,7 @@ on:
 
 jobs:
   cypress-run:
-    runs-on: ubuntu-22.04
+    runs-on: macos-latest
     steps:
       - name: Checkout Uplink Web directory 🔖
         uses: actions/checkout@v4
@@ -44,19 +44,19 @@ jobs:
           cache: "npm"
           cache-dependency-path: package-lock.json
 
-      - name: Cache NPM dependencies 🔨
-        uses: actions/cache@v4
-        id: cache-uplink
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-
       - name: Cache Yarn dependencies 🔨
         uses: actions/cache@v4
         id: cache-cypress
         with:
           path: automated-tests/node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+
+      - name: Cache NPM dependencies 🔨
+        uses: actions/cache@v4
+        id: cache-uplink
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
 
       - name: Install Yarn dependencies for Cypress Tests 📦
         if: steps.cache-cypress.outputs.cache-hit != 'true'
