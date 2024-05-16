@@ -30,43 +30,24 @@ jobs:
         with:
           path: automated-tests
 
-      - name: Setup Node.js for Automated Tests 🔨
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: "yarn"
-          cache-dependency-path: automated-tests/yarn.lock
-
       - name: Setup Node.js for Uplink Web 🔨
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: "npm"
-          cache-dependency-path: package-lock.json
-
-      - name: Cache Yarn dependencies 🔨
-        uses: actions/cache@v4
-        id: cache-cypress
-        with:
-          path: |
-            automated-tests/node_modules
-            /Users/runner/Library/Caches/Cypress
-          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+          cache-dependency-path: |
+            package-lock.json
+            automated-tests/package-lock.json
 
       - name: Cache NPM dependencies 🔨
         uses: actions/cache@v4
-        id: cache-uplink
+        id: cache-test
         with:
           path: node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
-
-      - name: Install Yarn dependencies for Cypress Tests 📦
-        if: steps.cache-cypress.outputs.cache-hit != 'true'
-        working-directory: automated-tests
-        run: yarn install --frozen-lockfile
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
       - name: Install NPM dependencies for Uplink Web 📦
-        if: steps.cache-uplink.outputs.cache-hit != 'true'
+        if: steps.cache-test.outputs.cache-hit != 'true'
         run: npm ci
 
       - name: Cypress run
