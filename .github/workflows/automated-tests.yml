@@ -1,0 +1,73 @@
+name: Cypress Tests
+
+on:
+  schedule:
+    - cron: "0 0/6 * * 1-5"
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+    paths-ignore:
+      - ".github/workflows/**"
+      - "!.github/workflows/automated-tests.yml"
+      - ".gitignore"
+      - ".prettierignore"
+      - ".prettierrc.json"
+      - "PULL_REQUEST_TEMPLATE.md"
+      - "README.md"
+  workflow_dispatch:
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Uplink Web directory 🔖
+        uses: actions/checkout@v4
+        with:
+          repository: Satellite-im/UplinkWeb
+
+      - name: Checkout Automated Tests directory 🔖
+        uses: actions/checkout@v4
+        with:
+          path: automated-tests
+
+      - name: Setup Node.js for Automated Tests 🔨
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "yarn"
+          cache-dependency-path: automated-tests/yarn.lock
+
+      - name: Setup Node.js for Uplink Web 🔨
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+          cache-dependency-path: package-lock.json
+
+      - name: Cache NPM dependencies 🔨
+        uses: actions/cache@v4
+        id: cache-uplink
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Cache Yarn dependencies 🔨
+        uses: actions/cache@v4
+        id: cache-cypress
+        with:
+          path: automated-tests/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('yarn.lock') }}
+
+      - name: Install Yarn dependencies for Cypress Tests 📦
+        if: steps.cache-cypress.outputs.cache-hit != 'true'
+        working-directory: automated-tests
+        run: yarn install --frozen-lockfile
+
+      - name: Install NPM dependencies for Uplink Web 📦
+        if: steps.cache-uplink.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          working-directory: automated-tests
