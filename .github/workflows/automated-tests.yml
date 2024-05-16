@@ -50,7 +50,11 @@ jobs:
         if: steps.cache-test.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Run server
+        run: npm run dev &
+
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          start: npm run dev
+          wait-on: "http://localhost:5173"
+          working-directory: automated-tests
