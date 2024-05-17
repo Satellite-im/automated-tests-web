@@ -1,11 +1,13 @@
 describe("Pin Screen", () => {
   it("Enter Pin Screen - Enter valid PIN", () => {
     cy.visit("/");
+    cy.url().should("include", "/auth/unlock");
     cy.getByTestAttr("button-pin-1").should("exist").click();
     cy.getByTestAttr("button-pin-2").should("exist").click();
     cy.getByTestAttr("button-pin-3").should("exist").click();
     cy.getByTestAttr("button-pin-4").should("exist").click();
     cy.getByTestAttr("button-confirm-pin").should("exist").click();
+    cy.getByTestAttr("button-confirm-pin").should("not.exist");
     cy.url().should("include", "/pre");
     cy.url().should("include", "/chat");
   });
