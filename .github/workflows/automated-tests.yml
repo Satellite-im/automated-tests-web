@@ -58,3 +58,12 @@ jobs:
         with:
           wait-on: "http://localhost:5173"
           working-directory: automated-tests
+
+      - name: Upload screenshots and videos from failed tests 📷
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: cypress-artifacts
+          path: |
+            automated-tests/cypress/screenshots
+            automated-tests/cypress/videos

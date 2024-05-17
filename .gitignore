@@ -76,5 +76,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Reports
-allure-results/
+# Cypress Assets
+cypress/screenshots/
+cypress/videos/
