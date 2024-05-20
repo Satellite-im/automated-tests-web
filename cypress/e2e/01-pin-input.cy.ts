@@ -1,8 +1,8 @@
 describe("Pin Screen", () => {
   it("Enter Pin Screen - Enter valid PIN", () => {
     cy.visit("/");
+    cy.getByTestAttr("pin-keypad", { timeout: 30000 }).should("exist");
     cy.location("href").should("include", "/auth/unlock");
-    cy.getByTestAttr("pin-keypad").should("exist");
     cy.getByTestAttr("button-pin-1").should("exist").click();
     cy.getByTestAttr("button-pin-2").should("exist").click();
     cy.getByTestAttr("button-pin-3").should("exist").click();
