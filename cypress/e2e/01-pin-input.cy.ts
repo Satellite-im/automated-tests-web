@@ -11,7 +11,10 @@ describe("Pin Screen", () => {
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("1234");
     loginPinPage.clickConfirm();
+    preLoadingPage.validateLoadingHeader();
+    preLoadingPage.validateLoadingMessage();
     preLoadingPage.validateURL();
+    chatsMainPage.validateAddSomeoneIsShown();
     chatsMainPage.validateURL();
   });
 
