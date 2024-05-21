@@ -43,14 +43,50 @@ class LoginPinPage {
     return cy.getByTestAttr("button-confirm-pin");
   }
 
+  get pinKeypad() {
+    return cy.getByTestAttr("pin-keypad", { timeout: 30000 });
+  }
+
+  get scrambleKeypadLabel() {
+    return cy.getByTestAttr("label-scramble-keypad");
+  }
+
+  get scrambleKeypadSwitch() {
+    return cy.getByTestAttr("switch-scramble-keypad");
+  }
+
+  get stayUnlockedLabel() {
+    return cy.getByTestAttr("label-stay-unlocked");
+  }
+
+  get stayUnlockedSwitch() {
+    return cy.getByTestAttr("switch-stay-unlocked");
+  }
+
+  get settingsButton() {
+    return cy.getByTestAttr("button-settings");
+  }
+
   public clickConfirm() {
-    this.pinButtonConfirm.should("exist").click();
+    this.pinButtonConfirm.click();
+  }
+
+  public clickScrambleKeypadSwitch() {
+    this.scrambleKeypadSwitch.siblings(".slider").click();
+  }
+
+  public clickStayUnlockedSwitch() {
+    this.stayUnlockedSwitch.siblings(".slider").click();
   }
 
   public enterPin(pin: string) {
     pin.split("").forEach((digit) => {
-      cy.getByTestAttr(`button-pin-${digit}`).should("exist").click();
+      cy.getByTestAttr(`button-pin-${digit}`).click();
     });
+  }
+
+  public goToSettings() {
+    this.settingsButton.click();
   }
 
   public launchApplication() {
@@ -58,11 +94,11 @@ class LoginPinPage {
   }
 
   public validateConfirmButtonIsDisabled() {
-    this.pinButtonConfirm.should("exist").and("be.disabled");
+    this.pinButtonConfirm.should("be.disabled");
   }
 
   public waitUntilPageIsLoaded() {
-    cy.getByTestAttr("pin-keypad", { timeout: 30000 }).should("exist");
+    this.pinKeypad.should("exist");
     cy.location("href").should("include", "/auth/unlock");
   }
 }

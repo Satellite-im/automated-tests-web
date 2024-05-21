@@ -8,6 +8,7 @@ describe("Pin Screen", () => {
   });
 
   it("Enter Pin Screen - Enter valid PIN", () => {
+    loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("1234");
     loginPinPage.clickConfirm();
@@ -19,8 +20,26 @@ describe("Pin Screen", () => {
   });
 
   it("Enter Pin Screen - Enter PIN with 3 digits", () => {
+    loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("123");
     loginPinPage.validateConfirmButtonIsDisabled();
+  });
+
+  it("Enter Pin Screen - Scramble Keypad", () => {
+    loginPinPage.launchApplication();
+    loginPinPage.waitUntilPageIsLoaded();
+    loginPinPage.goToSettings();
+    loginPinPage.clickScrambleKeypadSwitch();
+    loginPinPage.pinKeypad.should(
+      "have.attr",
+      "data-keyorder",
+      "1,2,3,4,5,6,7,8,9,0",
+    );
+
+    loginPinPage.clickScrambleKeypadSwitch();
+    loginPinPage.pinKeypad
+      .its("data-keyorder")
+      .should("not.eq", "1,2,3,4,5,6,7,8,9,0");
   });
 });
