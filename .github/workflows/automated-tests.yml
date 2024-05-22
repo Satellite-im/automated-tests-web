@@ -33,20 +33,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "npm"
-          cache-dependency-path: |
-            package-lock.json
-            automated-tests/package-lock.json
-
-      - name: Cache NPM dependencies 🔨
-        uses: actions/cache@v4
-        id: cache-test
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
 
       - name: Install NPM dependencies for Uplink Web 📦
-        if: steps.cache-test.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Install NPM dependencies for Testing Repo 📦
+        working-directory: automated-tests
         run: npm install
 
       - name: Run server
