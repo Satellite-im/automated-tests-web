@@ -79,3 +79,7 @@ $RECYCLE.BIN/
 # Cypress Assets
 cypress/screenshots/
 cypress/videos/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
