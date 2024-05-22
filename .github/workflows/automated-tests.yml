@@ -24,6 +24,12 @@ jobs:
         with:
           repository: Satellite-im/UplinkWeb
 
+      - name: Checkout Warp Wasm package
+        uses: actions/checkout@v4
+        with:
+          repository: Satellite-im/warp-wasm
+          path: warp-wasm
+
       - name: Checkout Automated Tests directory 🔖
         uses: actions/checkout@v4
         with:
@@ -48,6 +54,10 @@ jobs:
       - name: Install NPM dependencies for Uplink Web 📦
         if: steps.cache-test.outputs.cache-hit != 'true'
         run: npm ci
+
+      - name: Install Warp Wasm Package
+        working-directory: warp-wasm
+        run: sh generate_wasm_pkg.sh
 
       - name: Run server
         run: npm run dev &
