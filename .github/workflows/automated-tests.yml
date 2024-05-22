@@ -52,7 +52,8 @@ jobs:
 
       - name: Generate Wasm Package
         working-directory: warp-wasm
-        run: sh generate_wasm_pkg.sh
+        run: |
+          ls -la
 
       - name: Run server
         run: npm run dev &
