@@ -50,6 +50,10 @@ jobs:
         if: steps.cache-test.outputs.cache-hit != 'true'
         run: npm ci
 
+      - name: Generate Wasm Package
+        working-directory: warp-wasm
+        run: sh generate_wasm_pkg.sh
+
       - name: Run server
         run: npm run dev &
 
