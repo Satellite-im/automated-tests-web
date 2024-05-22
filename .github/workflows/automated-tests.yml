@@ -53,7 +53,8 @@ jobs:
         run: git submodule update --init --recursive --remote
 
       - name: Generate Warp Wasm Package
-        run: sh ./warp-wasm/generate_wasm_pkg.sh
+        working-directory: warp-wasm
+        run: sh generate_wasm_pkg.sh
 
       - name: Run server
         run: npm run dev &
