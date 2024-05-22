@@ -58,6 +58,9 @@ jobs:
       - name: Install Warp Wasm Package
         working-directory: warp-wasm
         run: sh generate_wasm_pkg.sh
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
 
       - name: Run server
         run: npm run dev &
