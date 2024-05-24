@@ -1,4 +1,12 @@
 class LoginPinPage {
+  get clearInputButton() {
+    return cy.getByTestAttr("button-clear-input");
+  }
+
+  get labelChooseEnterPin() {
+    return cy.getByTestAttr("label-choose-enter-pin");
+  }
+
   get pinButton0() {
     return cy.getByTestAttr("button-pin-0");
   }
@@ -43,6 +51,18 @@ class LoginPinPage {
     return cy.getByTestAttr("button-confirm-pin");
   }
 
+  get pinDisplay() {
+    return cy.getByTestAttr("pin-display");
+  }
+
+  get pinDot() {
+    return cy.getByTestAttr("pin-dot-filled");
+  }
+
+  get pinDotFilled() {
+    return cy.getByTestAttr("pin-dot-filled");
+  }
+
   get pinKeypad() {
     return cy.getByTestAttr("pin-keypad", { timeout: 30000 });
   }
@@ -65,6 +85,10 @@ class LoginPinPage {
 
   get settingsButton() {
     return cy.getByTestAttr("button-settings");
+  }
+
+  public clickClearPin() {
+    this.clearInputButton.click();
   }
 
   public clickConfirm() {

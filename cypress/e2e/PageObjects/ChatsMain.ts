@@ -1,6 +1,6 @@
 class ChatsMainPage {
   get addSomeone() {
-    return cy.get(".add-someone");
+    return cy.get(".add-someone", { timeout: 30000 });
   }
 
   public validateAddSomeoneIsShown() {

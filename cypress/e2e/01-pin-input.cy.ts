@@ -2,12 +2,12 @@ import { chatsMainPage } from "./PageObjects/ChatsMain";
 import { loginPinPage } from "./PageObjects/LoginPin";
 import { preLoadingPage } from "./PageObjects/PreLoading";
 
-describe("Pin Screen", () => {
+describe("Create Account and Login", () => {
   beforeEach(() => {
     loginPinPage.launchApplication();
   });
 
-  it("Enter Pin Screen - Enter valid PIN", () => {
+  it("Create Account and Login - Enter valid PIN redirects to Main Page", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("1234");
@@ -19,11 +19,26 @@ describe("Pin Screen", () => {
     chatsMainPage.validateURL();
   });
 
-  it("Enter Pin Screen - Enter PIN with 3 digits", () => {
+  it("Create Account and Login - Pin should have at least 4 digits", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("123");
     loginPinPage.validateConfirmButtonIsDisabled();
+  });
+
+  it("Create Account and Login - Pin cannot have more than 8 digits", () => {
+    loginPinPage.launchApplication();
+    loginPinPage.waitUntilPageIsLoaded();
+    loginPinPage.enterPin("12345678901234");
+    loginPinPage.pinDotFilled.should("have.length", 8);
+  });
+
+  it("Create Account and Login - Clicking red reset button should erase any inputs made", () => {
+    loginPinPage.launchApplication();
+    loginPinPage.waitUntilPageIsLoaded();
+    loginPinPage.enterPin("12345678");
+    loginPinPage.clickClearPin();
+    loginPinPage.pinDotFilled.should("have.length", 0);
   });
 
   it("Enter Pin Screen - Scramble Keypad", () => {
