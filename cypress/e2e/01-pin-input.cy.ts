@@ -2,12 +2,12 @@ import { chatsMainPage } from "./PageObjects/ChatsMain";
 import { loginPinPage } from "./PageObjects/LoginPin";
 import { preLoadingPage } from "./PageObjects/PreLoading";
 
-describe("Create Account and Login", () => {
+describe("Create Account and Login Tests", () => {
   beforeEach(() => {
     loginPinPage.launchApplication();
   });
 
-  it("Create Account and Login - Enter valid PIN redirects to Main Page", () => {
+  it("Enter valid PIN redirects to Main Page", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("1234");
@@ -19,21 +19,21 @@ describe("Create Account and Login", () => {
     chatsMainPage.validateURL();
   });
 
-  it("Create Account and Login - Pin should have at least 4 digits", () => {
+  it("Pin should have at least 4 digits", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("123");
     loginPinPage.validateConfirmButtonIsDisabled();
   });
 
-  it("Create Account and Login - Pin cannot have more than 8 digits", () => {
+  it("Pin cannot have more than 8 digits", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("12345678901234");
     loginPinPage.pinDotFilled.should("have.length", 8);
   });
 
-  it("Create Account and Login - Clicking red reset button should erase any inputs made", () => {
+  it("Clicking red reset button should erase any inputs made", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("12345678");
@@ -41,7 +41,19 @@ describe("Create Account and Login", () => {
     loginPinPage.pinDotFilled.should("have.length", 0);
   });
 
-  it("Enter Pin Screen - Scramble Keypad", () => {
+  it("Settings dropdown should show option to Scramble numberpad and option to stay unlocked", () => {
+    loginPinPage.launchApplication();
+    loginPinPage.waitUntilPageIsLoaded();
+    loginPinPage.goToSettings();
+    loginPinPage.scrambleKeypadLabel
+      .should("exist")
+      .and("contain", "Scramble keypad?");
+    loginPinPage.stayUnlockedLabel
+      .should("exist")
+      .and("contain", "Stay unlocked?");
+  });
+
+  it("Scramble Keypad will change the order of pin input buttons", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.goToSettings();
