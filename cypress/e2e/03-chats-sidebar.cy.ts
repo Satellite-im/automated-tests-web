@@ -76,7 +76,7 @@ describe("Chats Sidebar Tests", () => {
   xit("Context menu should display: Favorite, Hide, Mark as read", () => {});
 
   // Cannot be automated at this moment
-  xit("Timestamp of most recent message sent or recieved in chat should be displayed in the sidebar", () => {});
+  xit("Timestamp of most recent message sent or received in chat should be displayed in the sidebar", () => {});
 
   // Cannot be automated at this moment
   xit("Typing indicator should be displayed around users profile picture when they are typing (this applys to favorites as well)", () => {});
