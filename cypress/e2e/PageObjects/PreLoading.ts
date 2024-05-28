@@ -10,7 +10,7 @@ class PreLoadingPage {
   public validatePreLoadingPage() {
     this.validateLoadingHeader();
     this.validateLoadingMessage();
-    this.validateURL();
+    cy.location("href").should("include", "/pre");
   }
 
   public validateLoadingHeader() {
@@ -21,10 +21,6 @@ class PreLoadingPage {
     this.loadingMessage
       .should("exist")
       .and("have.text", "Fetching your friends from space.");
-  }
-
-  public validateURL() {
-    cy.location("href").should("include", "/pre");
   }
 }
 

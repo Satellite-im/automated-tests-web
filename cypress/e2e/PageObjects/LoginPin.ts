@@ -115,18 +115,6 @@ class LoginPinPage {
     return cy.getByTestAttr("button-settings");
   }
 
-  public clickChangeUser() {
-    this.changeUserButton.click();
-  }
-
-  public clickClearPin() {
-    this.clearInputButton.click();
-  }
-
-  public clickConfirm() {
-    this.pinButtonConfirm.click();
-  }
-
   public clickScrambleKeypadSwitch() {
     this.scrambleKeypadSwitch.siblings(".slider").click();
   }
@@ -153,7 +141,7 @@ class LoginPinPage {
     this.launchApplication();
     this.waitUntilPageIsLoaded();
     this.enterPin(pin);
-    this.clickConfirm();
+    this.pinButtonConfirm.click();
   }
 
   public validateConfirmButtonIsDisabled() {

@@ -7,41 +7,41 @@ describe("Create Account and Login Tests", () => {
     loginPinPage.launchApplication();
   });
 
-  it("Enter valid PIN redirects to Main Page", () => {
+  it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("1234");
-    loginPinPage.clickConfirm();
+    loginPinPage.pinButtonConfirm.click();
     preLoadingPage.validateLoadingHeader();
     preLoadingPage.validateLoadingMessage();
-    preLoadingPage.validateURL();
-    chatsMainPage.validateAddSomeoneIsShown();
-    chatsMainPage.validateURL();
+    cy.location("href").should("include", "/pre");
+    chatsMainPage.addSomeone.should("exist");
+    cy.location("href").should("include", "/chat");
   });
 
-  it("Pin should have at least 4 digits", () => {
+  it("A2 - Pin should have at least 4 digits", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("123");
     loginPinPage.validateConfirmButtonIsDisabled();
   });
 
-  it("Pin cannot have more than 8 digits", () => {
+  it("A3 - Pin cannot have more than 8 digits", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("12345678901234");
     loginPinPage.pinDotFilled.should("have.length", 8);
   });
 
-  it("Clicking red reset button should erase any inputs made", () => {
+  it("A4 - Clicking red reset button should erase any inputs made", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("12345678");
-    loginPinPage.clickClearPin();
+    loginPinPage.clearInputButton.click();
     loginPinPage.pinDotFilled.should("have.length", 0);
   });
 
-  it("Settings dropdown should show option to Scramble numberpad and option to stay unlocked", () => {
+  it("A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.goToSettings();
@@ -53,7 +53,7 @@ describe("Create Account and Login Tests", () => {
       .and("contain", "Stay unlocked?");
   });
 
-  it("Scramble Keypad will change the order of pin input buttons", () => {
+  it("A6, A7 - Scramble Keypad will change the order of pin input buttons", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.goToSettings();
@@ -70,10 +70,13 @@ describe("Create Account and Login Tests", () => {
       .should("not.eq", "1,2,3,4,5,6,7,8,9,0");
   });
 
-  it("User can see menu to switch to a different profile", () => {
+  // Cannot be automated at this moment
+  xit("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {});
+
+  it("A10 - User can see menu to switch to a different profile", () => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
-    loginPinPage.clickChangeUser();
+    loginPinPage.changeUserButton.click();
     loginPinPage.selectProfileModal.should("be.visible");
     loginPinPage.selectProfileLabel.should("have.text", "Profiles");
     loginPinPage.selectProfileUserName.eq(0).should("have.text", "Space Kev");
@@ -81,5 +84,5 @@ describe("Create Account and Login Tests", () => {
   });
 
   // Cannot be automated at this moment
-  xit("If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {});
+  xit("A12 - If incorrect pin is entered, error message should be displayed", () => {});
 });
