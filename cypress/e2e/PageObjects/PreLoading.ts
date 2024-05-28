@@ -7,6 +7,12 @@ class PreLoadingPage {
     return cy.get(".text.medium");
   }
 
+  public validatePreLoadingPage() {
+    this.validateLoadingHeader();
+    this.validateLoadingMessage();
+    this.validateURL();
+  }
+
   public validateLoadingHeader() {
     this.loadingHeader.should("exist").and("have.text", "Initializing...");
   }

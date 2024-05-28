@@ -69,4 +69,17 @@ describe("Create Account and Login Tests", () => {
       .its("data-keyorder")
       .should("not.eq", "1,2,3,4,5,6,7,8,9,0");
   });
+
+  it("User can see menu to switch to a different profile", () => {
+    loginPinPage.launchApplication();
+    loginPinPage.waitUntilPageIsLoaded();
+    loginPinPage.clickChangeUser();
+    loginPinPage.selectProfileModal.should("be.visible");
+    loginPinPage.selectProfileLabel.should("have.text", "Profiles");
+    loginPinPage.selectProfileUserName.eq(0).should("have.text", "Space Kev");
+    loginPinPage.selectProfileUserName.eq(1).should("have.text", "Sara Saturn");
+  });
+
+  // Cannot be automated at this moment
+  xit("If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {});
 });
