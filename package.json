@@ -7,6 +7,7 @@
   "author": "Luis Cardeña <35935591+luisecm@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
+    "@faker-js/faker": "^8.4.1",
     "cypress": "^13.9.0",
     "cypress-real-events": "^1.12.0",
     "prettier": "3.2.5",
