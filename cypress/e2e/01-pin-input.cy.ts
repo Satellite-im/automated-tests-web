@@ -1,6 +1,7 @@
+import { authNewAccount } from "./PageObjects/AuthNewAccount";
 import { chatsMainPage } from "./PageObjects/ChatsMain";
 import { loginPinPage } from "./PageObjects/LoginPin";
-import { preLoadingPage } from "./PageObjects/PreLoading";
+import { faker } from "@faker-js/faker";
 
 describe("Create Account and Login Tests", () => {
   beforeEach(() => {
@@ -8,13 +9,27 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
+    const username = faker.internet.userName();
+    const status = faker.lorem.sentence(3);
+
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("1234");
     loginPinPage.pinButtonConfirm.click();
-    preLoadingPage.validateLoadingHeader();
-    preLoadingPage.validateLoadingMessage();
-    cy.location("href").should("include", "/pre");
+    authNewAccount.validateLoadingHeader();
+    cy.location("href").should("include", "/auth/new_account");
+    authNewAccount.textNewAccountSecondary.should(
+      "have.text",
+      "Let's setup your new account. Please choose a username below.",
+    );
+    authNewAccount.labelNewAccountUsername.should("have.text", "Username");
+    authNewAccount.labelNewAccountStatus.should("have.text", "Status Message");
+    authNewAccount.profilePictureNewAccount.should("be.visible");
+    authNewAccount.buttonNewAccountGoBack.should("be.visible");
+    authNewAccount.buttonNewAccountCreate.should("be.visible");
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
   });
