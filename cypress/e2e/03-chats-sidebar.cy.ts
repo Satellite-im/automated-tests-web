@@ -54,7 +54,7 @@ describe("Chats Sidebar Tests", () => {
   it("C4 - Clicking hamburger button should collapse sidebar", () => {
     chatsMainPage.ensureSidebarIsDisplayed();
     chatsMainPage.buttonHideSidebar.click();
-    chatsMainPage.sidebar.should("not.be.visible");
+    chatsMainPage.sidebar.should("not.exist");
     chatsMainPage.buttonShowSidebar.click();
     chatsMainPage.sidebar.should("be.visible");
   });
