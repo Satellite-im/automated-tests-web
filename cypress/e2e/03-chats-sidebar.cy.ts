@@ -9,11 +9,24 @@ describe("Chats Sidebar Tests", () => {
     chatsMainPage.validateChatsMainPageIsShown();
   });
 
-  // To be automated
-  xit("Clicking Create Chat should open modal with option for Group Name and Group Members", () => {});
+  it("C1 - Clicking Create Chat should open modal with option for Group Name and Group Members", () => {
+    chatsMainPage.buttonCreateGroupChat.click();
+    chatsMainPage.createGroupModal.should("be.visible");
+    chatsMainPage.createGroupLabelGroupName.should("have.text", "Group Name:");
+    chatsMainPage.createGroupInputGroupName.should("be.visible");
+    chatsMainPage.createGroupLabelGroupMembers.should(
+      "have.text",
+      "Group Members:",
+    );
+    chatsMainPage.createGroupLabelSelectMembers.should(
+      "have.text",
+      "Select member(s)",
+    );
+    chatsMainPage.createGroupButton.should("be.visible");
+  });
 
-  it("Hovering over Create Chat should show tooltips", () => {
-    chatsMainPage.hoverCreateGroupChatButton();
+  it("C2 - Hovering over Create Chat should show tooltips", () => {
+    chatsMainPage.buttonCreateGroupChat.realHover();
     chatsMainPage.buttonCreateGroupChat.should(
       "have.attr",
       "data-tooltip",
@@ -21,16 +34,16 @@ describe("Chats Sidebar Tests", () => {
     );
   });
 
-  it("Hovering over Nav buttons should show tooltips", () => {
-    chatsMainPage.hoverWalletButton();
+  it("C3 - Hovering over Nav buttons should show tooltips", () => {
+    chatsMainPage.buttonWallet.realHover();
     chatsMainPage.buttonWallet.should("have.attr", "data-tooltip", "Wallet");
-    chatsMainPage.hoverFilesButton();
+    chatsMainPage.buttonFiles.realHover();
     chatsMainPage.buttonFiles.should("have.attr", "data-tooltip", "Files");
-    chatsMainPage.hoverChatsButton();
+    chatsMainPage.buttonChat.realHover();
     chatsMainPage.buttonChat.should("have.attr", "data-tooltip", "Chat");
-    chatsMainPage.hoverFriendsButton();
+    chatsMainPage.buttonFriends.realHover();
     chatsMainPage.buttonFriends.should("have.attr", "data-tooltip", "Friends");
-    chatsMainPage.hoverSettingsButton();
+    chatsMainPage.buttonSettings.realHover();
     chatsMainPage.buttonSettings.should(
       "have.attr",
       "data-tooltip",
@@ -38,49 +51,30 @@ describe("Chats Sidebar Tests", () => {
     );
   });
 
-  // To be automated
-  xit("Clicking hamburger button should collapse sidebar", () => {});
+  it("C4 - Clicking hamburger button should collapse sidebar", () => {
+    chatsMainPage.buttonHideSidebar.click();
+    chatsMainPage.sidebar.should("not.be.visible");
+    chatsMainPage.buttonShowSidebar.click();
+    chatsMainPage.sidebar.should("be.visible");
+  });
 
-  it("Nav bar buttons should redirect to correct page", () => {
-    chatsMainPage.clickWallet();
+  it("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", () => {
+    chatsMainPage.buttonWallet.click();
     cy.url().should("include", "/wallet");
-    chatsMainPage.clickFiles();
+    chatsMainPage.buttonFiles.click();
     cy.url().should("include", "/files");
-    chatsMainPage.clickChat();
+    chatsMainPage.buttonChat.click();
     cy.url().should("include", "/chat");
-    chatsMainPage.clickFriends();
+    chatsMainPage.buttonFriends.click();
     cy.url().should("include", "/friends");
-    chatsMainPage.clickSettings();
+    chatsMainPage.buttonSettings.click();
     cy.url().should("include", "/settings/profile");
   });
 
-  // To be automated
-  xit("Textbox should have highlighted border when clicking into Chat Search", () => {});
-
-  // Cannot be automated at this moment
-  xit("ProfilePicFrame should display for any friends that have one", () => {});
-
-  // Cannot be automated at this moment
-  xit("Favorites should appear on left side of Sidebar", () => {});
-
-  // Cannot be automated at this moment
-  xit("Number of members in group should appear on that chat in both Sidebar and Favorites", () => {});
-
-  // Cannot be automated at this moment
-  xit("Clicking a favorite should take you to that chat ", () => {});
-
-  // Cannot be automated at this moment
-  xit("Right clicking a chat in sidebar should open context menu", () => {});
-
-  // Cannot be automated at this moment
-  xit("Context menu should display: Favorite, Hide, Mark as read", () => {});
-
-  // Cannot be automated at this moment
-  xit("Timestamp of most recent message sent or received in chat should be displayed in the sidebar", () => {});
-
-  // Cannot be automated at this moment
-  xit("Typing indicator should be displayed around users profile picture when they are typing (this applys to favorites as well)", () => {});
-
-  // Cannot be automated at this moment
-  xit("After selecting Hide chat chat should no longer be displayed in sidebar", () => {});
+  it("C10 - Textbox should have highlighted border when clicking into Chat Search", () => {
+    chatsMainPage.inputSidebarSearch.click().type("test");
+    chatsMainPage.inputSidebarSearch
+      .parents(".input-group")
+      .should("have.css", "border-color", "rgb(215, 226, 255)");
+  });
 });

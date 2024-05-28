@@ -23,6 +23,14 @@ class ChatsMainPage {
     return cy.getByTestAttr("button-Friends");
   }
 
+  get buttonHideSidebar() {
+    return cy.getByTestAttr("button-hide-sidebar");
+  }
+
+  get buttonMarketplace() {
+    return cy.getByTestAttr("button-marketplace");
+  }
+
   get buttonSettings() {
     return cy.getByTestAttr("button-Settings");
   }
@@ -35,8 +43,40 @@ class ChatsMainPage {
     return cy.getByTestAttr("button-Wallet");
   }
 
+  get createGroupButton() {
+    return cy.getByTestAttr("button-create-group");
+  }
+
+  get createGroupModal() {
+    return cy.getByTestAttr("modal-create-group-chat");
+  }
+
+  get createGroupInputGroupName() {
+    return cy.getByTestAttr("input-create-group-name");
+  }
+
+  get createGroupLabelGroupMembers() {
+    return cy.getByTestAttr("label-create-group-members");
+  }
+
+  get createGroupLabelGroupName() {
+    return cy.getByTestAttr("label-create-group-name");
+  }
+
+  get createGroupLabelSelectMembers() {
+    return cy.getByTestAttr("label-create-group-select-members");
+  }
+
+  get inputSidebarSearch() {
+    return cy.getByTestAttr("input-sidebar-search");
+  }
+
   get sectionAddSomeone() {
     return cy.getByTestAttr("section-add-someone");
+  }
+
+  get sidebar() {
+    return cy.getByTestAttr("sidebar");
   }
 
   get slimbar() {
@@ -47,72 +87,12 @@ class ChatsMainPage {
     return cy.getByTestAttr("topbar");
   }
 
-  public clickAddFriends() {
-    this.buttonAddFriends.click();
-  }
-
-  public clickChat() {
-    this.buttonChat.click();
-  }
-
-  public clickCreateGroupChat() {
-    this.buttonCreateGroupChat.click();
-  }
-
-  public clickFiles() {
-    this.buttonFiles.click();
-  }
-
-  public clickFriends() {
-    this.buttonFriends.click();
-  }
-
-  public clickSettings() {
-    this.buttonSettings.click();
-  }
-
-  public clickShowSidebar() {
-    this.buttonShowSidebar.click();
-  }
-
-  public clickWallet() {
-    this.buttonWallet.click();
-  }
-
-  public hoverChatsButton() {
-    this.buttonChat.realHover();
-  }
-
-  public hoverCreateGroupChatButton() {
-    this.buttonCreateGroupChat.realHover();
-  }
-
-  public hoverFilesButton() {
-    this.buttonFiles.realHover();
-  }
-
-  public hoverFriendsButton() {
-    this.buttonFriends.realHover();
-  }
-
-  public hoverSettingsButton() {
-    this.buttonSettings.realHover();
-  }
-
-  public hoverWalletButton() {
-    this.buttonWallet.realHover();
-  }
-
-  public validateAddSomeoneIsShown() {
-    this.addSomeone.should("exist");
+  public exitCreateGroup() {
+    this.topbar.click();
   }
 
   public validateChatsMainPageIsShown() {
-    this.validateAddSomeoneIsShown();
-    this.validateURL();
-  }
-
-  public validateURL() {
+    this.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
   }
 }

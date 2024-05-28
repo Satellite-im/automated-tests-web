@@ -2,15 +2,15 @@ import { chatsMainPage } from "./PageObjects/ChatsMain";
 import { loginPinPage } from "./PageObjects/LoginPin";
 import { preLoadingPage } from "./PageObjects/PreLoading";
 
-describe("Chat Page Tests", () => {
+describe("Marketplace Tests", () => {
   beforeEach(() => {
     loginPinPage.loginWithPin("1234");
     preLoadingPage.validatePreLoadingPage();
     chatsMainPage.validateChatsMainPageIsShown();
   });
 
-  it("B1, B2 - Add Friends should navigate to Friends Page", () => {
-    chatsMainPage.buttonAddFriends.click();
-    cy.location("href").should("include", "/friends");
+  it("D1 - Marketplace modal should appear when user clicks Marketplace", () => {
+    chatsMainPage.buttonMarketplace.click();
+    cy.contains("Uplink Marketplace").should("exist");
   });
 });
