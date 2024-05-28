@@ -91,6 +91,15 @@ class ChatsMainPage {
     this.topbar.click();
   }
 
+  public ensureSidebarIsDisplayed() {
+    if (!this.sidebar) {
+      this.buttonShowSidebar.click();
+      this.sidebar.should("be.visible");
+    } else {
+      this.sidebar.should("be.visible");
+    }
+  }
+
   public validateChatsMainPageIsShown() {
     this.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");

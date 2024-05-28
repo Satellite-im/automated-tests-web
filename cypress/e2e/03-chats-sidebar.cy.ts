@@ -52,6 +52,7 @@ describe("Chats Sidebar Tests", () => {
   });
 
   it("C4 - Clicking hamburger button should collapse sidebar", () => {
+    chatsMainPage.ensureSidebarIsDisplayed();
     chatsMainPage.buttonHideSidebar.click();
     chatsMainPage.sidebar.should("not.be.visible");
     chatsMainPage.buttonShowSidebar.click();
@@ -72,6 +73,7 @@ describe("Chats Sidebar Tests", () => {
   });
 
   it("C10 - Textbox should have highlighted border when clicking into Chat Search", () => {
+    chatsMainPage.ensureSidebarIsDisplayed();
     chatsMainPage.inputSidebarSearch.click().type("test");
     chatsMainPage.inputSidebarSearch
       .parents(".input-group")
