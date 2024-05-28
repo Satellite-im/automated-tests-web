@@ -1,11 +1,11 @@
+import { authNewAccount } from "./PageObjects/AuthNewAccount";
 import { chatsMainPage } from "./PageObjects/ChatsMain";
 import { loginPinPage } from "./PageObjects/LoginPin";
-import { preLoadingPage } from "./PageObjects/PreLoading";
 
 describe("Chat Page Tests", () => {
   beforeEach(() => {
     loginPinPage.loginWithPin("1234");
-    preLoadingPage.validatePreLoadingPage();
+    authNewAccount.createRandomUser();
     chatsMainPage.validateChatsMainPageIsShown();
   });
 
