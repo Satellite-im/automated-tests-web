@@ -71,6 +71,10 @@ class ChatsMainPage {
     return cy.getByTestAttr("input-sidebar-search");
   }
 
+  get navigationBar() {
+    return cy.get(".navigation");
+  }
+
   get sectionAddSomeone() {
     return cy.getByTestAttr("section-add-someone");
   }
@@ -92,12 +96,14 @@ class ChatsMainPage {
   }
 
   public ensureSidebarIsDisplayed() {
-    if (!this.sidebar) {
-      this.buttonShowSidebar.click();
-      this.sidebar.should("be.visible");
-    } else {
-      this.sidebar.should("be.visible");
-    }
+    this.navigationBar.then(($navBar) => {
+      if ($navBar.hasClass("vertical")) {
+        this.buttonShowSidebar.click();
+        this.sidebar.should("be.visible");
+      } else {
+        this.sidebar.should("be.visible");
+      }
+    });
   }
 
   public validateChatsMainPageIsShown() {
