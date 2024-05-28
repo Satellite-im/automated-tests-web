@@ -1,6 +1,14 @@
 class LoginPinPage {
+  get changeUserButton() {
+    return cy.getByTestAttr("button-change-user");
+  }
+
   get clearInputButton() {
     return cy.getByTestAttr("button-clear-input");
+  }
+
+  get createNewProfileButton() {
+    return cy.getByTestAttr("button-create-new-profile");
   }
 
   get labelChooseEnterPin() {
@@ -75,6 +83,26 @@ class LoginPinPage {
     return cy.getByTestAttr("switch-scramble-keypad");
   }
 
+  get selectProfileLabel() {
+    return cy.getByTestAttr("label-select-profile");
+  }
+
+  get selectProfileUser() {
+    return cy.getByTestAttr("select-profile-user");
+  }
+
+  get selectProfileUserImage() {
+    return cy.getByTestAttr("select-profile-user-image");
+  }
+
+  get selectProfileUserName() {
+    return cy.getByTestAttr("select-profile-user-name");
+  }
+
+  get selectProfileModal() {
+    return cy.getByTestAttr("modal-select-profile");
+  }
+
   get stayUnlockedLabel() {
     return cy.getByTestAttr("label-stay-unlocked");
   }
@@ -85,14 +113,6 @@ class LoginPinPage {
 
   get settingsButton() {
     return cy.getByTestAttr("button-settings");
-  }
-
-  public clickClearPin() {
-    this.clearInputButton.click();
-  }
-
-  public clickConfirm() {
-    this.pinButtonConfirm.click();
   }
 
   public clickScrambleKeypadSwitch() {
@@ -115,6 +135,13 @@ class LoginPinPage {
 
   public launchApplication() {
     cy.visit("/");
+  }
+
+  public loginWithPin(pin: string) {
+    this.launchApplication();
+    this.waitUntilPageIsLoaded();
+    this.enterPin(pin);
+    this.pinButtonConfirm.click();
   }
 
   public validateConfirmButtonIsDisabled() {

@@ -7,6 +7,12 @@ class PreLoadingPage {
     return cy.get(".text.medium");
   }
 
+  public validatePreLoadingPage() {
+    this.validateLoadingHeader();
+    this.validateLoadingMessage();
+    cy.location("href").should("include", "/pre");
+  }
+
   public validateLoadingHeader() {
     this.loadingHeader.should("exist").and("have.text", "Initializing...");
   }
@@ -15,10 +21,6 @@ class PreLoadingPage {
     this.loadingMessage
       .should("exist")
       .and("have.text", "Fetching your friends from space.");
-  }
-
-  public validateURL() {
-    cy.location("href").should("include", "/pre");
   }
 }
 
