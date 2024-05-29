@@ -1,6 +1,6 @@
 class PreLoadingPage {
   get loadingHeader() {
-    return cy.get(".small", { timeout: 30000 });
+    return cy.get(".small");
   }
 
   get loadingMessage() {
