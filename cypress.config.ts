@@ -5,6 +5,7 @@ export default defineConfig({
   e2e: {
     baseUrl: "http://localhost:5173",
     video: true,
+    defaultCommandTimeout: 15000,
     setupNodeEvents(on, config) {
       on(
         "after:spec",

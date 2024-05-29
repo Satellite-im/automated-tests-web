@@ -1,11 +1,11 @@
 import { chatsMainPage } from "./PageObjects/ChatsMain";
 import { loginPinPage } from "./PageObjects/LoginPin";
-import { preLoadingPage } from "./PageObjects/PreLoading";
+import { authNewAccount } from "./PageObjects/AuthNewAccount";
 
 describe("Chats Sidebar Tests", () => {
   beforeEach(() => {
     loginPinPage.loginWithPin("1234");
-    preLoadingPage.validatePreLoadingPage();
+    authNewAccount.createRandomUser();
     chatsMainPage.validateChatsMainPageIsShown();
   });
 
@@ -54,7 +54,7 @@ describe("Chats Sidebar Tests", () => {
   it("C4 - Clicking hamburger button should collapse sidebar", () => {
     chatsMainPage.ensureSidebarIsDisplayed();
     chatsMainPage.buttonHideSidebar.click();
-    chatsMainPage.sidebar.should("not.be.visible");
+    chatsMainPage.sidebar.should("not.exist");
     chatsMainPage.buttonShowSidebar.click();
     chatsMainPage.sidebar.should("be.visible");
   });
