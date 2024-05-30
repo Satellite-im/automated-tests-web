@@ -38,12 +38,13 @@ class AuthNewAccount {
   }
 
   async createRandomUser() {
-    const username = faker.internet.userName();
+    const username: string = faker.internet.userName();
     const status = faker.lorem.sentence(3);
     this.validateLoadingHeader();
     this.typeOnUsername(username);
     this.typeOnStatus(status);
     this.buttonNewAccountCreate.click();
+    return username;
   }
 
   async typeOnStatus(status: string) {

@@ -106,6 +106,10 @@ class ChatsMainPage {
     });
   }
 
+  public goToSettings() {
+    this.buttonSettings.click();
+  }
+
   public validateChatsMainPageIsShown() {
     this.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
