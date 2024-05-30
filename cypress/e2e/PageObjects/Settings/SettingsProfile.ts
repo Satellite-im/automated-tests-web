@@ -49,6 +49,10 @@ class SettingsProfile {
     return cy.getByTestAttr("input-settings-profile-short-id");
   }
 
+  get inputSettingsProfileShortIDGroup() {
+    return this.inputSettingsProfileShortID.parents(".input-group");
+  }
+
   get inputSettingsProfileStatus() {
     return cy.getByTestAttr("input-settings-profile-status-message");
   }
@@ -86,7 +90,7 @@ class SettingsProfile {
   }
 
   get profileBannerInput() {
-    return this.profilePicture
+    return this.profilePictureUploadButton
       .parents(".profile-picture-container")
       .siblings("input");
   }
@@ -96,7 +100,7 @@ class SettingsProfile {
   }
 
   get profilePictureInput() {
-    return this.profilePicture.siblings("input");
+    return this.profilePictureUploadButton.siblings("input");
   }
 
   get profilePictureUploadButton() {
@@ -179,16 +183,44 @@ class SettingsProfile {
     return cy.getByTestAttr("section-store-recovery-seed");
   }
 
-  storeRecoverySeedCheckbox() {
+  get storeRecoverySeedCheckbox() {
     return this.storeRecoverySeedSection.find(
       '[data-cy="checkbox-store-recovery-seed"]',
     );
   }
 
-  storeRecoverySeedText() {
+  get storeRecoverySeedText() {
     return this.storeRecoverySeedSection.find(
       '[data-cy="text-store-recovery-seed"]',
     );
+  }
+
+  public uploadProfileBanner(file: string) {
+    this.profileBannerInput.selectFile(file, {
+      force: true,
+    });
+  }
+
+  public uploadProfilePicture(file: string) {
+    cy.get('input[type="file"]').eq(0).selectFile(file, {
+      force: true,
+    });
+  }
+
+  public validateProfileBannerURLIsValid() {
+    this.profileBanner.should(($el) => {
+      const style = $el.attr("style");
+      return expect(
+        style.startsWith('background-image: url("data:image/jpeg;base64'),
+      ).to.be.true;
+    });
+  }
+
+  public validateProfilePictureURLIsValid() {
+    this.profilePictureImage.should(($el) => {
+      const style = $el.attr("src");
+      return expect(style.startsWith("data:image/jpeg;base64")).to.be.true;
+    });
   }
 }
 
