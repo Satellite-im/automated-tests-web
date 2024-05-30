@@ -50,7 +50,7 @@ class SettingsProfile {
   }
 
   get inputSettingsProfileStatus() {
-    return cy.getByTestAttr("input-settings-profile-status");
+    return cy.getByTestAttr("input-settings-profile-status-message");
   }
 
   get inputSettingsProfileUsername() {
@@ -111,7 +111,11 @@ class SettingsProfile {
     return cy.getByTestAttr("section-reveal-phrase");
   }
 
-  get revealPhraseSectionButton() {
+  get revealPhraseSectionHideButton() {
+    return this.revealPhraseSection.find('[data-cy="button-hide-phrase"]');
+  }
+
+  get revealPhraseSectionRevealButton() {
     return this.revealPhraseSection.find('[data-cy="button-reveal-phrase"]');
   }
 
@@ -147,28 +151,28 @@ class SettingsProfile {
     return cy.getByTestAttr("button-save");
   }
 
-  get statusSection() {
-    return cy.getByTestAttr("section-status");
+  get onlineStatusSection() {
+    return cy.getByTestAttr("section-online-status");
   }
 
-  get statusSectionLabel() {
-    return this.statusSection.find('[data-cy="setting-section-label"]');
+  get onlineStatusSectionLabel() {
+    return this.onlineStatusSection.find('[data-cy="setting-section-label"]');
   }
 
-  get statusSectionSelect() {
-    return this.statusSection.find(
+  get onlineStatusSectionSelect() {
+    return this.onlineStatusSection.find(
       '[data-cy="settings-profile-status-select"]',
     );
   }
 
-  get statusSectionSelectOptions() {
-    return this.statusSectionSelect
+  get onlineStatusSectionSelectOptions() {
+    return this.onlineStatusSection
       .find("[name='generic-select']")
-      .find("option");
+      .find('[data-cy="select-option"]');
   }
 
-  get statusSectionText() {
-    return this.statusSection.find('[data-cy="setting-section-text"]');
+  get onlineStatusSectionText() {
+    return this.onlineStatusSection.find('[data-cy="setting-section-text"]');
   }
 
   get storeRecoverySeedSection() {
