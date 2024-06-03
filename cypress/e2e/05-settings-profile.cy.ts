@@ -2,6 +2,7 @@ import { chatsMainPage } from "./PageObjects/ChatsMain";
 import { loginPinPage } from "./PageObjects/LoginPin";
 import { authNewAccount } from "./PageObjects/AuthNewAccount";
 import { settingsProfile } from "./PageObjects/Settings/SettingsProfile";
+import { friendsPage } from "./PageObjects/Friends";
 
 describe("Settings Profile Tests", () => {
   beforeEach(() => {
@@ -59,6 +60,13 @@ describe("Settings Profile Tests", () => {
   });
 
   it("I7 - UsernameID should be displayed next to username", () => {
+    // Go to friends and copy short ID
+    chatsMainPage.buttonFriends.click();
+    cy.location("href").should("include", "/friends");
+    friendsPage.buttonCopyID.rightclick();
+    friendsPage.contextOptionCopyID.click();
+    chatsMainPage.goToSettings();
+
     // Short ID button tooltip shows "Copy"
     settingsProfile.inputSettingsProfileShortIDGroup.realHover();
     settingsProfile.inputSettingsProfileShortIDGroup.should(
@@ -67,8 +75,21 @@ describe("Settings Profile Tests", () => {
       "Copy",
     );
 
-    // Value displayed on Short ID is hardcoded
-    settingsProfile.inputSettingsProfileShortID.should("have.value", "xxxxxx");
+    cy.window().then(async (win) => {
+      const text = await win.navigator.clipboard.readText();
+      const statusText = String(text);
+      // Extract the last 8 characters
+      const last8Chars = statusText.slice(-8);
+      // Store the last 8 characters in a Cypress alias
+      cy.wrap(last8Chars).as("last8Chars");
+    });
+
+    cy.get("@last8Chars").then((last8Chars) => {
+      settingsProfile.inputSettingsProfileShortID.should(
+        "have.value",
+        last8Chars,
+      );
+    });
   });
 
   xit("I9 - User should be able to click into username textbox and change username", () => {});
