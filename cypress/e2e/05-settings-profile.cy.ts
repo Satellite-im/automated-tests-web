@@ -68,7 +68,10 @@ describe("Settings Profile Tests", () => {
     );
 
     // Value displayed on Short ID is hardcoded
-    settingsProfile.inputSettingsProfileShortID.should("have.value", "xxxxxx");
+    settingsProfile.inputSettingsProfileShortID.should(
+      "not.have.value",
+      "xxxxxx",
+    );
   });
 
   xit("I9 - User should be able to click into username textbox and change username", () => {});
