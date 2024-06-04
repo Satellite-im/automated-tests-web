@@ -44,7 +44,7 @@ class AuthNewAccount {
     this.typeOnUsername(username);
     this.typeOnStatus(status);
     this.buttonNewAccountCreate.click();
-    return username;
+    return { username, status };
   }
 
   async typeOnStatus(status: string) {

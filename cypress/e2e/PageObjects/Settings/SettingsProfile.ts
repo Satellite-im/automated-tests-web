@@ -163,9 +163,27 @@ class SettingsProfile {
     return this.onlineStatusSection.find('[data-cy="setting-section-label"]');
   }
 
-  get onlineStatusSectionSelect() {
+  get onlineStatusSectionSelectorCurrentlyDoNotDisturb() {
     return this.onlineStatusSection.find(
-      '[data-cy="settings-profile-status-select"]',
+      '[data-cy="selector-current-status-do-not-disturb"]',
+    );
+  }
+
+  get onlineStatusSectionSelectorCurrentlyIdle() {
+    return this.onlineStatusSection.find(
+      '[data-cy="selector-current-status-idle"]',
+    );
+  }
+
+  get onlineStatusSectionSelectorCurrentlyOffline() {
+    return this.onlineStatusSection.find(
+      '[data-cy="selector-current-status-offline"]',
+    );
+  }
+
+  get onlineStatusSectionSelectorCurrentlyOnline() {
+    return this.onlineStatusSection.find(
+      '[data-cy="selector-current-status-online"]',
     );
   }
 
@@ -193,6 +211,52 @@ class SettingsProfile {
     return this.storeRecoverySeedSection.find(
       '[data-cy="text-store-recovery-seed"]',
     );
+  }
+
+  public copyShortID() {
+    this.inputSettingsProfileShortIDGroup.parents(".short-id").click();
+  }
+
+  public getSelectorOptions(locator: string) {
+    let options = [];
+    cy.get(locator)
+      .find("[data-cy='select-option']")
+      .each(($option) => {
+        cy.log("Option: ", $option);
+        cy.log("Option Val: ", $option.val());
+        options.push($option.val());
+      });
+    return options;
+  }
+
+  public getRecoveryPhrase() {
+    this.revealPhraseSectionRevealButton.click();
+    let phrase = [];
+    for (let i = 1; i <= 12; i++) {
+      cy.getByTestAttr(`ordered-phrase-number-${i}`).should("exist");
+      cy.getByTestAttr(`ordered-phrase-word-${i}`).should("exist");
+      cy.getByTestAttr(`ordered-phrase-word-${i}`)
+        .find("p")
+        .invoke("text")
+        .then((text) => {
+          phrase.push(text);
+        });
+    }
+    return phrase;
+  }
+
+  public validateRecoveryPhraseIsHidden() {
+    for (let i = 1; i <= 12; i++) {
+      cy.getByTestAttr(`ordered-phrase-number-${i}`).should("not.exist");
+      cy.getByTestAttr(`ordered-phrase-word-${i}`).should("not.exist");
+    }
+  }
+
+  public validateRecoveryPhraseIsShown() {
+    for (let i = 1; i <= 12; i++) {
+      cy.getByTestAttr(`ordered-phrase-number-${i}`).should("exist");
+      cy.getByTestAttr(`ordered-phrase-word-${i}`).should("exist");
+    }
   }
 
   public uploadProfileBanner(file: string) {

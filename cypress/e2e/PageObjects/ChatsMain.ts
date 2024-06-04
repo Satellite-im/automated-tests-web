@@ -87,6 +87,18 @@ class ChatsMainPage {
     return cy.getByTestAttr("slimbar");
   }
 
+  get toastNotification() {
+    return cy.getByTestAttr("toast-notification");
+  }
+
+  get toastNotificationButton() {
+    return cy.getByTestAttr("toast-notification-button");
+  }
+
+  get toastNotificationText() {
+    return cy.getByTestAttr("toast-notification-text");
+  }
+
   get topbar() {
     return cy.getByTestAttr("topbar");
   }

@@ -86,7 +86,7 @@ describe("Create Account and Login Tests", () => {
   });
 
   // Cannot be automated at this moment
-  xit("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {});
+  it.skip("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {});
 
   it("A10 - User can see menu to switch to a different profile", () => {
     loginPinPage.launchApplication();
@@ -99,5 +99,5 @@ describe("Create Account and Login Tests", () => {
   });
 
   // Cannot be automated at this moment
-  xit("A12 - If incorrect pin is entered, error message should be displayed", () => {});
+  it.skip("A12 - If incorrect pin is entered, error message should be displayed", () => {});
 });
