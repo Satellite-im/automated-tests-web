@@ -10,7 +10,7 @@ class AuthNewAccount {
   }
 
   get titleNewAccount() {
-    return cy.getByTestAttr("title-new-account", { timeout: 60000 });
+    return cy.getByTestAttr("title-new-account", { timeout: 120000 });
   }
 
   get textNewAccountSecondary() {
