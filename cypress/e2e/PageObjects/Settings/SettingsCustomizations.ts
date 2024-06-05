@@ -96,7 +96,7 @@ class SettingsCustomizations {
   }
 
   get primaryColorSectionPopUpButton() {
-    return cy.getByTestAttr("primary-colour-popup-button");
+    return cy.getByTestAttr("primary-color-popup-button");
   }
 
   get primaryColorSectionText() {
