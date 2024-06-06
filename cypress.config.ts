@@ -6,6 +6,7 @@ export default defineConfig({
     baseUrl: "http://localhost:5173",
     video: true,
     defaultCommandTimeout: 30000,
+    retries: { runMode: 0, openMode: 0 },
     setupNodeEvents(on, config) {
       on(
         "after:spec",
