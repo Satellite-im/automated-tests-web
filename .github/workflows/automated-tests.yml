@@ -49,6 +49,7 @@ jobs:
         with:
           wait-on: "http://localhost:5173/"
           working-directory: automated-tests
+          browser: chrome
 
       - name: Upload screenshots and videos from failed tests 📷
         uses: actions/upload-artifact@v3
