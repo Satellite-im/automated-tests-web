@@ -68,7 +68,8 @@ describe("Settings Profile Tests", () => {
     });
   });
 
-  it("I7 - UsernameID should be displayed next to username", () => {
+  // Needs investigation on how to implement clipboard retrieve correctly in cypress
+  it.skip("I7 - UsernameID should be displayed next to username", () => {
     // Go to friends and copy short ID
     chatsMainPage.buttonFriends.click();
     cy.location("href").should("include", "/friends");
@@ -103,7 +104,8 @@ describe("Settings Profile Tests", () => {
     });
   });
 
-  it("I8 - Clicking usernameID should copy it to clipboard", () => {
+  // Needs investigation on how to implement clipboard retrieve correctly in cypress
+  it.skip("I8 - Clicking usernameID should copy it to clipboard", () => {
     // Go to friends and copy short ID
     chatsMainPage.buttonFriends.click();
     cy.location("href").should("include", "/friends");
