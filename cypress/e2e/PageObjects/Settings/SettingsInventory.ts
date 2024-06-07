@@ -44,11 +44,17 @@ class SettingsInventory {
   }
 
   get profilePictureFrameName() {
-    return this.profilePictureFrame.find("inventory-item-name");
+    return this.profilePictureFrame.find("[data-cy='inventory-item-name']");
   }
 
   get profilePictureFrameType() {
-    return this.profilePictureFrame.find("inventory-item-type");
+    return this.profilePictureFrame.find("[data-cy='inventory-item-type']");
+  }
+
+  get profilePictureFrameUnequipButton() {
+    return this.profilePictureFrame.find(
+      "[data-cy='button-unequip-inventory']",
+    );
   }
 
   get inventoryItemName() {
@@ -61,6 +67,22 @@ class SettingsInventory {
 
   public getFrameByName(name: string) {
     return cy.getByTestAttr("inventory-item-name").contains(name).parent();
+  }
+
+  public validateInventoryFrames(
+    expectedFrames: { name: string; type: string }[],
+  ) {
+    let frames: { name: string; type: string }[] = [];
+    this.inventoryFrameName
+      .each(($item, index, $list) => {
+        frames.push({
+          name: $item.text(),
+          type: $item.siblings("[data-cy='inventory-item-type']").text(),
+        });
+      })
+      .then(() => {
+        expect(frames).to.deep.equal(expectedFrames);
+      });
   }
 }
 
