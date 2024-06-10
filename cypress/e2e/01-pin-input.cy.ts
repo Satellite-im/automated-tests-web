@@ -1,6 +1,6 @@
-import { authNewAccount } from "./PageObjects/AuthNewAccount";
-import { chatsMainPage } from "./PageObjects/ChatsMain";
-import { loginPinPage } from "./PageObjects/LoginPin";
+import authNewAccount from "./PageObjects/AuthNewAccount";
+import chatsMainPage from "./PageObjects/ChatsMain";
+import loginPinPage from "./PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
 
 describe("Create Account and Login Tests", () => {

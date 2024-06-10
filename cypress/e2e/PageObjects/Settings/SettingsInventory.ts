@@ -1,4 +1,10 @@
-class SettingsInventory {
+import SettingsBase from "./SettingsBase";
+
+class SettingsInventory extends SettingsBase {
+  constructor() {
+    super();
+  }
+
   get buttonUnequipInventory() {
     return cy.getByTestAttr("button-unequip-inventory");
   }
@@ -13,6 +19,12 @@ class SettingsInventory {
 
   get inventoryFrameButton() {
     return this.inventoryFrame.find("[data-cy='inventory-item-button']");
+  }
+
+  get inventoryFrameEquippedButton() {
+    return cy
+      .get('[data-cy="inventory-frame"].equipped')
+      .find("[data-cy='inventory-item-button']");
   }
 
   get inventoryFrameName() {
@@ -65,8 +77,28 @@ class SettingsInventory {
     return cy.getByTestAttr("inventory-item-type");
   }
 
-  public getFrameByName(name: string) {
+  public clickOnFrameButton(name: string) {
+    return this.getFrame(name)
+      .find("[data-cy='inventory-item-button']")
+      .click();
+  }
+
+  public getFrame(name: string) {
     return cy.getByTestAttr("inventory-item-name").contains(name).parent();
+  }
+
+  public getFrameButtonText(name: string) {
+    return this.getFrame(name)
+      .find("[data-cy='inventory-item-button']")
+      .find("p");
+  }
+
+  public getFrameContainer(name: string) {
+    return cy
+      .getByTestAttr("inventory-item-name")
+      .contains(name)
+      .last()
+      .parent();
   }
 
   public validateInventoryFrames(
@@ -86,4 +118,4 @@ class SettingsInventory {
   }
 }
 
-export const settingsInventory: SettingsInventory = new SettingsInventory();
+export default new SettingsInventory();

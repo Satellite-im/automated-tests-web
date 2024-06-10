@@ -1,4 +1,6 @@
-class LoginPinPage {
+import MainPage from "./MainPage";
+
+class LoginPinPage extends MainPage {
   get changeUserButton() {
     return cy.getByTestAttr("button-change-user");
   }
@@ -166,4 +168,4 @@ class LoginPinPage {
   }
 }
 
-export const loginPinPage: LoginPinPage = new LoginPinPage();
+export default new LoginPinPage();

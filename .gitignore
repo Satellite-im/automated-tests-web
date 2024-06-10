@@ -77,5 +77,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # Cypress Assets
+cypress/downloads/
 cypress/screenshots/
 cypress/videos/

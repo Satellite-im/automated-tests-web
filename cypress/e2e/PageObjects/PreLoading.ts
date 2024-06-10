@@ -1,4 +1,10 @@
-class PreLoadingPage {
+import MainPage from "./MainPage";
+
+class PreLoadingPage extends MainPage {
+  constructor() {
+    super();
+  }
+
   get loadingHeader() {
     return cy.get(".small");
   }
@@ -24,4 +30,4 @@ class PreLoadingPage {
   }
 }
 
-export const preLoadingPage: PreLoadingPage = new PreLoadingPage();
+export default new PreLoadingPage();

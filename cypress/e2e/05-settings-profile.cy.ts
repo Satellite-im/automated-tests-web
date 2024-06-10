@@ -1,8 +1,8 @@
-import { chatsMainPage } from "./PageObjects/ChatsMain";
-import { loginPinPage } from "./PageObjects/LoginPin";
-import { authNewAccount } from "./PageObjects/AuthNewAccount";
-import { settingsProfile } from "./PageObjects/Settings/SettingsProfile";
-import { friendsPage } from "./PageObjects/Friends";
+import chatsMainPage from "./PageObjects/ChatsMain";
+import loginPinPage from "./PageObjects/LoginPin";
+import authNewAccount from "./PageObjects/AuthNewAccount";
+import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+import friendsPage from "./PageObjects/Friends";
 
 describe("Settings Profile Tests", () => {
   beforeEach(() => {
