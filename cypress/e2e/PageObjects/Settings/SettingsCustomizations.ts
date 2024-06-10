@@ -1,4 +1,10 @@
-class SettingsCustomizations {
+import SettingsBase from "./SettingsBase";
+
+class SettingsCustomizations extends SettingsBase {
+  constructor() {
+    super();
+  }
+
   get appLanguageSection() {
     return cy.getByTestAttr("section-app-language");
   }
@@ -132,5 +138,4 @@ class SettingsCustomizations {
   }
 }
 
-export const settingsCustomizations: SettingsCustomizations =
-  new SettingsCustomizations();
+export default new SettingsCustomizations();

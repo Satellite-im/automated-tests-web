@@ -1,6 +1,11 @@
 import { faker } from "@faker-js/faker";
+import MainPage from "./MainPage";
 
-class AuthNewAccount {
+class AuthNewAccount extends MainPage {
+  constructor() {
+    super();
+  }
+
   get buttonNewAccountGoBack() {
     return cy.getByTestAttr("button-new-account-go-back");
   }
@@ -60,4 +65,4 @@ class AuthNewAccount {
   }
 }
 
-export const authNewAccount: AuthNewAccount = new AuthNewAccount();
+export default new AuthNewAccount();
