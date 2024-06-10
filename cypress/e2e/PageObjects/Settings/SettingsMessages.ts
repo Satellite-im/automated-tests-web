@@ -1,4 +1,10 @@
-class SettingsMessages {
+import SettingsBase from "./SettingsBase";
+
+class SettingsMessages extends SettingsBase {
+  constructor() {
+    super();
+  }
+
   get convertToEmojiSection() {
     return cy.getByTestAttr("section-convert-to-emoji");
   }
@@ -54,4 +60,4 @@ class SettingsMessages {
   }
 }
 
-export const settingsMessages: SettingsMessages = new SettingsMessages();
+export default new SettingsMessages();

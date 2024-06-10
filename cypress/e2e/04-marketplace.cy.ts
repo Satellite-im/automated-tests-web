@@ -1,6 +1,6 @@
-import { chatsMainPage } from "./PageObjects/ChatsMain";
-import { loginPinPage } from "./PageObjects/LoginPin";
-import { authNewAccount } from "./PageObjects/AuthNewAccount";
+import chatsMainPage from "./PageObjects/ChatsMain";
+import loginPinPage from "./PageObjects/LoginPin";
+import authNewAccount from "./PageObjects/AuthNewAccount";
 
 describe("Marketplace Tests", () => {
   beforeEach(() => {

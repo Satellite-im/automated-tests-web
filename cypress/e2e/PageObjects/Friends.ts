@@ -1,4 +1,10 @@
-class FriendsPage {
+import MainPage from "./MainPage";
+
+class FriendsPage extends MainPage {
+  constructor() {
+    super();
+  }
+
   get buttonAddFriend() {
     return cy.getByTestAttr("button-add-friend");
   }
@@ -20,4 +26,4 @@ class FriendsPage {
   }
 }
 
-export const friendsPage: FriendsPage = new FriendsPage();
+export default new FriendsPage();
