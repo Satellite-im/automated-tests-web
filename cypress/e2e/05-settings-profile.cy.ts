@@ -357,7 +357,7 @@ describe("Settings Profile Tests", () => {
   it.skip("I22 - Clicking copy should copy the Recovery Phrase to the users clipboard", () => {});
 
   // Cannot be automated for now since checkbox checked or not checked works on the same way for now
-  it.skip("I23 - User should be able to click checkbox to determine wether they want to store Recovery Phrase on account", () => {});
+  it.skip("I23 - User should be able to click checkbox to determine whether they want to store Recovery Phrase on account", () => {});
 
   it("I24 - Clicking LogOut should log user out of the account", () => {
     // Validate Settings Section contents

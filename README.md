@@ -12,7 +12,7 @@ Tests running using GitHub Actions:
 
 This automation framework is currently based on the following:
 
-- **Cypress:** `13.9.0`
+- **Cypress:** `13.11.0`
 
 ## Setting up to run on the local machine
 
@@ -37,7 +37,7 @@ npm run dev
 4. Clone this testing repository:
 
 ```sh
-git clone https://github.com/Satellite-im/automated-tests-web.git
+git clone git@github.com:Satellite-im/automated-tests-web.git
 ```
 
 5. Install testing repository dependencies
@@ -46,13 +46,13 @@ git clone https://github.com/Satellite-im/automated-tests-web.git
 npm install
 ```
 
-6. If you want to run the cypress tests in command line, open a CLI, go to the testing repository directory and run:
+6. If you want to run the Cypress tests in command line, open a CLI, go to the testing repository directory and run:
 
 ```sh
 npx cypress run
 ```
 
-7. Now, if you want to open the cypress runner and see the tests in action, open a CLI, go to the testing repository directory and run:
+7. Now, if you want to open the Cypress runner and see the tests in action, open a CLI, go to the testing repository directory and run:
 
 ```sh
 npx cypress open
