@@ -39,20 +39,18 @@ describe("Chats Sidebar Tests", () => {
   });
 
   it("C3 - Hovering over Nav buttons should show tooltips", () => {
-    chatsMainPage.buttonWallet.realHover();
-    chatsMainPage.buttonWallet.should("have.attr", "data-tooltip", "Wallet");
-    chatsMainPage.buttonFiles.realHover();
-    chatsMainPage.buttonFiles.should("have.attr", "data-tooltip", "Files");
-    chatsMainPage.buttonChat.realHover();
-    chatsMainPage.buttonChat.should("have.attr", "data-tooltip", "Chat");
-    chatsMainPage.buttonFriends.realHover();
-    chatsMainPage.buttonFriends.should("have.attr", "data-tooltip", "Friends");
-    chatsMainPage.buttonSettings.realHover();
-    chatsMainPage.buttonSettings.should(
-      "have.attr",
-      "data-tooltip",
-      "Settings",
-    );
+    const buttonsWithTooltips = [
+      { button: chatsMainPage.buttonWallet, tooltip: "Wallet" },
+      { button: chatsMainPage.buttonFiles, tooltip: "Files" },
+      { button: chatsMainPage.buttonChat, tooltip: "Chat" },
+      { button: chatsMainPage.buttonFriends, tooltip: "Friends" },
+      { button: chatsMainPage.buttonSettings, tooltip: "Settings" },
+    ]
+
+    buttonsWithTooltips.forEach(({ button, tooltip }) => {
+      button.realHover();
+      button.should("have.attr", "data-tooltip", tooltip);
+    });
   });
 
   it("C4 - Clicking hamburger button should collapse sidebar", () => {
@@ -64,16 +62,18 @@ describe("Chats Sidebar Tests", () => {
   });
 
   it("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", () => {
-    chatsMainPage.buttonWallet.click();
-    cy.url().should("include", "/wallet");
-    chatsMainPage.buttonFiles.click();
-    cy.url().should("include", "/files");
-    chatsMainPage.buttonChat.click();
-    cy.url().should("include", "/chat");
-    chatsMainPage.buttonFriends.click();
-    cy.url().should("include", "/friends");
-    chatsMainPage.buttonSettings.click();
-    cy.url().should("include", "/settings/profile");
+    const navButtons = [
+      { button: chatsMainPage.buttonWallet, url: "/wallet" },
+      { button: chatsMainPage.buttonFiles, url: "/files" },
+      { button: chatsMainPage.buttonChat, url: "/chat" },
+      { button: chatsMainPage.buttonFriends, url: "/friends" },
+      { button: chatsMainPage.buttonSettings, url: "/settings/profile" },
+    ]
+
+    navButtons.forEach(({ button, url }) => {
+      button.click();
+      cy.url().should("include", url);
+    });
   });
 
   it("C10 - Textbox should have highlighted border when clicking into Chat Search", () => {
