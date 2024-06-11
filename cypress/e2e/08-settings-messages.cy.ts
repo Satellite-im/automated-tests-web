@@ -18,7 +18,7 @@ describe("Settings - Messages", () => {
   });
 
   it("L1 - User should be able to toggle on and off emoji conversion", () => {
-    // Label and texts for settigns section are correct
+    // Label and texts for settings section are correct
     settingsMessages.convertToEmojiSectionLabel.should(
       "have.text",
       "Convert to Emoji",
@@ -41,7 +41,7 @@ describe("Settings - Messages", () => {
   });
 
   it("L2 - User should be able to toggle on and off Markdown support", () => {
-    // Label and texts for settigns section are correct
+    // Label and texts for settings section are correct
     settingsMessages.markdownSupportSectionLabel.should(
       "have.text",
       "Markdown Support",
@@ -64,7 +64,7 @@ describe("Settings - Messages", () => {
   });
 
   it("L3 - User should be able to toggle on and off emoji Spam/Bot detection & rejection", () => {
-    // Label and texts for settigns section are correct
+    // Label and texts for settings section are correct
     settingsMessages.spamBotDetectionSectionLabel.should(
       "have.text",
       "Spam/Bot Detection & Rejection",
