@@ -21,6 +21,12 @@ class SettingsMessages extends SettingsBase {
     return this.convertToEmojiSection.find("[data-cy='setting-section-text']");
   }
 
+  get convertToEmojiSectionSlider() {
+    return cy.get(
+      '[data-cy="section-convert-to-emoji"] > .body > .content > .switch > .slider',
+    );
+  }
+
   get markdownSupportSection() {
     return cy.getByTestAttr("section-markdown-support");
   }
@@ -37,6 +43,12 @@ class SettingsMessages extends SettingsBase {
 
   get markdownSupportSectionText() {
     return this.markdownSupportSection.find("[data-cy='setting-section-text']");
+  }
+
+  get markdownSupportSectionSlider() {
+    return cy.get(
+      '[data-cy="section-markdown-support"] > .body > .content > .switch > .slider',
+    );
   }
 
   get spamBotDetectionSection() {
@@ -56,6 +68,12 @@ class SettingsMessages extends SettingsBase {
   get spamBotDetectionSectionText() {
     return this.spamBotDetectionSection.find(
       "[data-cy='setting-section-text']",
+    );
+  }
+
+  get spamBotDetectionSectionSlider() {
+    return cy.get(
+      '[data-cy="section-spam-bot-detection"] > .body > .content > .switch > .slider',
     );
   }
 }
