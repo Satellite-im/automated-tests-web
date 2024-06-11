@@ -1,19 +1,87 @@
+import { faker } from "@faker-js/faker";
+import authNewAccount from "./PageObjects/AuthNewAccount";
+import chatsMainPage from "./PageObjects/ChatsMain";
+import loginPinPage from "./PageObjects/LoginPin";
+import settingsCustomizations from "./PageObjects/Settings/SettingsCustomizations";
+import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+
 describe("Settings - Customization", () => {
-  it.skip("K1 - Language dropdown should display English", () => {
-    // Test code for K1
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+
+  beforeEach(() => {
+    loginPinPage.loginWithPin("1234");
+    authNewAccount.createRandomUser(username, status);
+    chatsMainPage.validateChatsMainPageIsShown();
+    chatsMainPage.goToSettings();
+    settingsProfile.buttonCustomization.click();
   });
 
-  it.skip("K2 - Font dropdown should show: Poppins, SpaceMono, ChakraPetch, Confortaa, Dosis, IBMPlexMono, IndieFlower, JosefinSans, Noto, SourceCodePro, SpaceGrotesk, MajorMono, MerriWeather, PoiretOne, OpenDyslexic", () => {
-    // Test code for K2
+  it("K1 - Language dropdown should display English", () => {
+    settingsCustomizations.appLanguageSectionLabel.should(
+      "have.text",
+      "App Language",
+    );
+    settingsCustomizations.appLanguageSectionText.should(
+      "have.text",
+      "Change language.",
+    );
+    settingsCustomizations.appLanguageSectionSelectorOption.should(
+      "have.length",
+      1,
+    );
+    settingsCustomizations.appLanguageSectionSelectorOption
+      .should("have.value", "english")
+      .and("have.text", "English (USA)");
   });
 
-  it.skip("K3 - Selected Fonts should be applied everywhere throughout the app", () => {
-    // Test code for K3
+  it("K2 - Font dropdown should show expected font names", () => {
+    const expectedFonts: string[] = [
+      "Poppins",
+      "SpaceMono",
+      "ChakraPetch",
+      "Comfortaa",
+      "Dosis",
+      "IBMPlexMono",
+      "PixelifySans",
+      "IndieFlower",
+      "JosefinSans",
+      "Noto",
+      "SourceCodePro",
+      "SpaceGrotesk",
+      "MajorMono",
+      "Merriweather",
+      "PoiretOne",
+      "OpenDyslexic",
+    ];
+    settingsCustomizations.fontSectionLabel.should("have.text", "Font");
+    settingsCustomizations.fontSectionText.should(
+      "have.text",
+      "Change the font used in the app.",
+    );
+    settingsCustomizations.fontSectionSelectorOption.should("have.length", 16);
+    settingsCustomizations.validateFontNames(expectedFonts);
   });
 
-  it.skip("K4 - Clicking OpenFolder should open the Fonts folder", () => {
-    // Test code for K4
+  it("K3 - Selected Fonts should be applied everywhere throughout the app", () => {
+    cy.get('[data-cy="selector-current-font-poppins"]')
+      .find("select")
+      .select("JosefinSans");
+    settingsCustomizations.fontSectionText.should(
+      "have.css",
+      "font-family",
+      "JosefinSans",
+    );
+    settingsCustomizations.goToChat();
+    cy.contains("Let's get something started!").should(
+      "have.css",
+      "font-family",
+      "JosefinSans",
+    );
   });
+
+  // Cannot be tested for now since its not working on Uplink Web
+  it.skip("K4 - Clicking OpenFolder should open the Fonts folder", () => {});
 
   it.skip("K5 - Font size should have a minimum of .82", () => {
     // Test code for K5
@@ -31,6 +99,7 @@ describe("Settings - Customization", () => {
     // Test code for K8
   });
 
+  // Cannot be tested for now since its not working on Uplink Web
   it.skip("K9 - Themes dropdown should display Default", () => {
     // Test code for K9
   });

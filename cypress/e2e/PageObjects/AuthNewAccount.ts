@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import MainPage from "./MainPage";
 
 class AuthNewAccount extends MainPage {
@@ -42,14 +41,11 @@ class AuthNewAccount extends MainPage {
     return cy.getByTestAttr("input-new-account-status");
   }
 
-  async createRandomUser() {
-    const username: string = faker.internet.userName();
-    const status = faker.lorem.sentence(3);
+  async createRandomUser(username: string, status: string) {
     this.validateLoadingHeader();
     this.typeOnUsername(username);
     this.typeOnStatus(status);
     this.buttonNewAccountCreate.click();
-    return { username, status };
   }
 
   async typeOnStatus(status: string) {

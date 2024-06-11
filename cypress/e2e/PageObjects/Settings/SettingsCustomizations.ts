@@ -136,6 +136,17 @@ class SettingsCustomizations extends SettingsBase {
   get themeSectionText() {
     return this.themeSection.find("[data-cy='setting-section-text']");
   }
+
+  public validateFontNames(expectedFonts: string[]) {
+    let displayedFonts: string[] = [];
+    this.fontSectionSelectorOption
+      .each(($option) => {
+        displayedFonts.push($option.text());
+      })
+      .then(() => {
+        expect(displayedFonts).to.deep.equal(expectedFonts);
+      });
+  }
 }
 
 export default new SettingsCustomizations();

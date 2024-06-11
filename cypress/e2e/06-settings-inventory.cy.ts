@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
@@ -5,9 +6,12 @@ import settingsInventory from "./PageObjects/Settings/SettingsInventory";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 
 describe("Settings - Inventory", () => {
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+
   beforeEach(() => {
     loginPinPage.loginWithPin("1234");
-    authNewAccount.createRandomUser();
+    authNewAccount.createRandomUser(username, status);
     chatsMainPage.validateChatsMainPageIsShown();
     chatsMainPage.goToSettings();
     settingsProfile.buttonInventory.click();

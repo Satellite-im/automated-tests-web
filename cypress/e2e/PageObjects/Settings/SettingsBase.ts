@@ -1,5 +1,9 @@
-export default class SettingsBase {
-  constructor() {}
+import MainPage from "../MainPage";
+
+export default class SettingsBase extends MainPage {
+  constructor() {
+    super();
+  }
 
   get buttonAbout() {
     return cy.getByTestAttr("button-About");

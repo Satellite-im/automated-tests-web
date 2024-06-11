@@ -106,7 +106,7 @@ class SettingsInventory extends SettingsBase {
   ) {
     let frames: { name: string; type: string }[] = [];
     this.inventoryFrameName
-      .each(($item, index, $list) => {
+      .each(($item) => {
         frames.push({
           name: $item.text(),
           type: $item.siblings("[data-cy='inventory-item-type']").text(),

@@ -68,7 +68,23 @@ export default class MainPage {
     });
   }
 
+  public goToChat() {
+    this.buttonChat.click();
+  }
+
+  public goToFiles() {
+    this.buttonFiles.click();
+  }
+
+  public goToFriends() {
+    this.buttonFriends.click();
+  }
+
   public goToSettings() {
     this.buttonSettings.click();
+  }
+
+  public goToWallet() {
+    this.buttonWallet.click();
   }
 }
