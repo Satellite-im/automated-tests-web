@@ -6,14 +6,13 @@ import { faker } from "@faker-js/faker";
 describe("Create Account and Login Tests", () => {
   beforeEach(() => {
     loginPinPage.launchApplication();
+    loginPinPage.waitUntilPageIsLoaded();
   });
 
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
     const username = faker.internet.userName();
     const status = faker.lorem.sentence(3);
 
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("1234");
     loginPinPage.pinButtonConfirm.click();
     authNewAccount.validateLoadingHeader();
@@ -35,30 +34,22 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A2 - Pin should have at least 4 digits", () => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("123");
     loginPinPage.validateConfirmButtonIsDisabled();
   });
 
   it("A3 - Pin cannot have more than 8 digits", () => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("12345678901234");
     loginPinPage.pinDotFilled.should("have.length", 8);
   });
 
   it("A4 - Clicking red reset button should erase any inputs made", () => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.enterPin("12345678");
     loginPinPage.clearInputButton.click();
     loginPinPage.pinDotFilled.should("have.length", 0);
   });
 
   it("A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked", () => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.goToSettings();
     loginPinPage.scrambleKeypadLabel
       .should("exist")
@@ -69,8 +60,6 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A6, A7 - Scramble Keypad will change the order of pin input buttons", () => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.goToSettings();
     loginPinPage.clickScrambleKeypadSwitch();
     loginPinPage.pinKeypad.should(
@@ -89,8 +78,6 @@ describe("Create Account and Login Tests", () => {
   it.skip("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {});
 
   it("A10 - User can see menu to switch to a different profile", () => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
     loginPinPage.changeUserButton.click();
     loginPinPage.selectProfileModal.should("be.visible");
     loginPinPage.selectProfileLabel.should("have.text", "Profiles");
