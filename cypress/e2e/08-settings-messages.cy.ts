@@ -71,7 +71,7 @@ describe("Settings - Messages", () => {
     );
     settingsMessages.spamBotDetectionSectionText.should(
       "have.text",
-      "Enabled the automatic rejection of messages from known spam bots or scammers. This uses a public ledger that we reserve privately for 30 days to prevent bots detecting they have been blocked too quickly.",
+      "Enabled the automatic rejection of messages from known spam bots or scammers. This uses a public ledger that we reserve privately for 30 days to prevent bots from detecting they have been blocked too quickly.",
     );
 
     // Checkbox should be enabled by default
