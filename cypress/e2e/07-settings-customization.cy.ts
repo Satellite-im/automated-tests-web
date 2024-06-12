@@ -17,15 +17,9 @@ describe("Settings - Customization", () => {
     settingsProfile.buttonCustomization.click();
   });
 
-  const assertText = (element, text, message) => {
-    element.should("have.text", text, { log: false }).then(($el) => {
-      expect($el.text()).to.eq(text, message);
-    });
-  };
-
   it("K1 - Language dropdown should display English", () => {
-    assertText(settingsCustomizations.appLanguageSectionLabel, "App Language", "App Language label should be present");
-    assertText(settingsCustomizations.appLanguageSectionText, "Change language.", "App Language text should be present");
+    cy.assertText(settingsCustomizations.appLanguageSectionLabel, "App Language", "App Language label should be present");
+    cy.assertText(settingsCustomizations.appLanguageSectionText, "Change language.", "App Language text should be present");
     settingsCustomizations.appLanguageSectionSelectorOption.should("have.length", 1);
     settingsCustomizations.appLanguageSectionSelectorOption
       .should("have.value", "english")
@@ -51,8 +45,8 @@ describe("Settings - Customization", () => {
       "PoiretOne",
       "OpenDyslexic"
     ];
-    assertText(settingsCustomizations.fontSectionLabel, "Font", "Font label should be present");
-    assertText(settingsCustomizations.fontSectionText, "Change the font used in the app.", "Font text should be present");
+    cy.assertText(settingsCustomizations.fontSectionLabel, "Font", "Font label should be present");
+    cy.assertText(settingsCustomizations.fontSectionText, "Change the font used in the app.", "Font text should be present");
     settingsCustomizations.fontSectionSelectorOption.should("have.length", expectedFonts.length);
     settingsCustomizations.validateFontNames(expectedFonts);
   });
@@ -67,8 +61,8 @@ describe("Settings - Customization", () => {
   it.skip("K4 - Clicking OpenFolder should open the Fonts folder", () => {});
 
   it("K5 - Font size should have a minimum of .82", () => {
-    assertText(settingsCustomizations.fontScalingSectionLabel, "Font Scaling", "Font Scaling label should be present");
-    assertText(settingsCustomizations.fontScalingSectionText, "Scale the font size up or down to your liking.", "Font Scaling text should be present");
+    cy.assertText(settingsCustomizations.fontScalingSectionLabel, "Font Scaling", "Font Scaling label should be present");
+    cy.assertText(settingsCustomizations.fontScalingSectionText, "Scale the font size up or down to your liking.", "Font Scaling text should be present");
     settingsCustomizations.fontScalingSectionInput.should("have.value", "1.00");
 
     for (let i = 0; i < 10; i++) {
@@ -98,8 +92,8 @@ describe("Settings - Customization", () => {
     const expectedThemes = [
       "Default"
     ];
-    assertText(settingsCustomizations.themeSectionLabel, "Theme", "Theme label should be present");
-    assertText(settingsCustomizations.themeSectionText, "Change the theme of the app.", "Theme text should be present");
+    cy.assertText(settingsCustomizations.themeSectionLabel, "Theme", "Theme label should be present");
+    cy.assertText(settingsCustomizations.themeSectionText, "Change the theme of the app.", "Theme text should be present");
     settingsCustomizations.themeSectionSelectorOption.should("have.length", 1);
     settingsCustomizations.validateThemes(expectedThemes);
   });
@@ -120,8 +114,8 @@ describe("Settings - Customization", () => {
       "Apple Valley",
       "Pencil Lead"
     ];
-    assertText(settingsCustomizations.primaryColorSectionLabel, "Primary Color", "Primary Color label should be present");
-    assertText(settingsCustomizations.primaryColorSectionText, "Change the primary color of the app.", "Primary Color text should be present");
+    cy.assertText(settingsCustomizations.primaryColorSectionLabel, "Primary Color", "Primary Color label should be present");
+    cy.assertText(settingsCustomizations.primaryColorSectionText, "Change the primary color of the app.", "Primary Color text should be present");
     settingsCustomizations.primaryColorSectionColorSwatchButton.should("have.length", expectedPrimaryColors.length);
     settingsCustomizations.validatePrimaryColors(expectedPrimaryColors);
   });
@@ -146,8 +140,8 @@ describe("Settings - Customization", () => {
 
   it("K14 - User should be able to add additional custom CSS to the application", () => {
     settingsCustomizations.sidebar.should("have.css", "background-color", "rgba(0, 0, 0, 0)");
-    assertText(settingsCustomizations.customCSSSectionLabel, "Custom CSS", "Custom CSS label should be present");
-    assertText(settingsCustomizations.customCSSSectionText, "Add additional custom CSS to the application.", "Custom CSS text should be present");
+    cy.assertText(settingsCustomizations.customCSSSectionLabel, "Custom CSS", "Custom CSS label should be present");
+    cy.assertText(settingsCustomizations.customCSSSectionText, "Add additional custom CSS to the application.", "Custom CSS text should be present");
     settingsCustomizations.customCSSSectionTextArea.type(".sidebar {background-color: rgb(255, 0, 141)}", { parseSpecialCharSequences: false });
     settingsCustomizations.buttonCustomization.click();
     settingsCustomizations.sidebar.should("have.css", "background-color", "rgb(255, 0, 141)");
