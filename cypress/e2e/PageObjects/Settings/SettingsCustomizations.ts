@@ -25,6 +25,14 @@ class SettingsCustomizations extends SettingsBase {
     return this.appLanguageSection.find("[data-cy='setting-section-text']");
   }
 
+  get customColorInput() {
+    return this.customColorPicker.find(".text-input");
+  }
+
+  get customColorPicker() {
+    return cy.get(".color-picker");
+  }
+
   get customCSSSection() {
     return cy.getByTestAttr("section-custom-css");
   }
@@ -135,6 +143,49 @@ class SettingsCustomizations extends SettingsBase {
 
   get themeSectionText() {
     return this.themeSection.find("[data-cy='setting-section-text']");
+  }
+
+  public selectColorSwatch(color: string) {
+    return cy.get(`[data-cy="color-swatch"][data-tooltip="${color}"]`).click();
+  }
+
+  public selectFont(font: string) {
+    cy.get('[data-cy="selector-current-font-poppins"]')
+      .find("select")
+      .select(font);
+  }
+
+  public validateFontNames(expectedFonts: string[]) {
+    let displayedFonts: string[] = [];
+    this.fontSectionSelectorOption
+      .each(($option) => {
+        displayedFonts.push($option.text());
+      })
+      .then(() => {
+        expect(displayedFonts).to.deep.equal(expectedFonts);
+      });
+  }
+
+  public validatePrimaryColors(expectedPrimaryColors: string[]) {
+    let displayedPrimaryColors: string[] = [];
+    this.primaryColorSectionColorSwatchButton
+      .each(($option) => {
+        displayedPrimaryColors.push($option.attr("data-tooltip"));
+      })
+      .then(() => {
+        expect(displayedPrimaryColors).to.deep.equal(expectedPrimaryColors);
+      });
+  }
+
+  public validateThemes(expectedThemes: string[]) {
+    let displayedThemes: string[] = [];
+    this.themeSectionSelectorOption
+      .each(($option) => {
+        displayedThemes.push($option.text());
+      })
+      .then(() => {
+        expect(displayedThemes).to.deep.equal(expectedThemes);
+      });
   }
 }
 
