@@ -56,3 +56,10 @@ Cypress.Commands.add('getClipboardTextAndTriggerCopy', () => {
     });
   });
 });
+
+// Command to assert text
+Cypress.Commands.add('assertText', (element, text, message) => {
+  element.should("have.text", text, { log: false }).then(($el) => {
+    expect($el.text()).to.eq(text, message);
+  });
+});

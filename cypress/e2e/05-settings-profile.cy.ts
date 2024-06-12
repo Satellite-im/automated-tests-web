@@ -338,7 +338,7 @@ describe("Settings Profile Tests", () => {
     );
     settingsProfile.storeRecoverySeedText.should(
       "have.text",
-      "Store recovery seed on account (disable for increased security, irriversable)",
+      "Store recovery seed on account (disable for increased security, irreversible)",
     );
 
     // Show Recovery Phrase and ensure is displayed now
