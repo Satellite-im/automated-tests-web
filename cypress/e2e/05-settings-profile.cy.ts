@@ -1,4 +1,5 @@
 import 'cypress-clipboard';
+import { faker } from "@faker-js/faker";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import authNewAccount from "./PageObjects/AuthNewAccount";
@@ -6,14 +7,13 @@ import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 import friendsPage from "./PageObjects/Friends";
 
 describe("Settings Profile Tests", () => {
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+
   beforeEach(() => {
     // Login with pin and wrap data from creating a new account
     loginPinPage.loginWithPin("1234");
-    cy.wrap(null)
-      .then(() => {
-        return authNewAccount.createRandomUser();
-      })
-      .as("newUser");
+    authNewAccount.createRandomUser(username, status);
 
     // Go to settings profile
     chatsMainPage.validateChatsMainPageIsShown();
@@ -60,13 +60,7 @@ describe("Settings Profile Tests", () => {
 
   it("I6 - Username should be displayed in the Username textbox", () => {
     // Username displayed will be equal to the username assigned randomly when creating account
-    cy.get("@newUser").then((newUser) => {
-      const { username }: any = newUser;
-      settingsProfile.inputSettingsProfileUsername.should(
-        "have.value",
-        username,
-      );
-    });
+    settingsProfile.inputSettingsProfileUsername.should("have.value", username);
   });
 
   it("I7 - UsernameID that is copied should be displayed on the page", () => {
@@ -173,13 +167,7 @@ describe("Settings Profile Tests", () => {
     settingsProfile.saveControlsButtonCancel.click();
 
     // Username displayed will be equal to the username assigned randomly when creating account
-    cy.get("@newUser").then((newUser) => {
-      const { username }: any = newUser;
-      settingsProfile.inputSettingsProfileUsername.should(
-        "have.value",
-        username,
-      );
-    });
+    settingsProfile.inputSettingsProfileUsername.should("have.value", username);
 
     // User types into username and change value
     settingsProfile.inputSettingsProfileUsername
@@ -239,10 +227,7 @@ describe("Settings Profile Tests", () => {
     settingsProfile.saveControls.should("exist");
     settingsProfile.saveControlsButtonCancel.click();
     // Username displayed will be equal to the username assigned randomly when creating account
-    cy.get("@newUser").then((newUser) => {
-      const { status }: any = newUser;
-      settingsProfile.inputSettingsProfileStatus.should("have.value", status);
-    });
+    settingsProfile.inputSettingsProfileStatus.should("have.value", status);
 
     // User types into status and change value
     settingsProfile.inputSettingsProfileStatus

@@ -1,57 +1,242 @@
+import { faker } from "@faker-js/faker";
+import authNewAccount from "./PageObjects/AuthNewAccount";
+import chatsMain from "./PageObjects/ChatsMain";
+import loginPinPage from "./PageObjects/LoginPin";
+import settingsCustomizations from "./PageObjects/Settings/SettingsCustomizations";
+import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+
 describe("Settings - Customization", () => {
-  it.skip("K1 - Language dropdown should display English", () => {
-    // Test code for K1
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+
+  beforeEach(() => {
+    loginPinPage.loginWithPin("1234");
+    authNewAccount.createRandomUser(username, status);
+    chatsMain.validateChatsMainPageIsShown();
+    chatsMain.goToSettings();
+    settingsProfile.buttonCustomization.click();
   });
 
-  it.skip("K2 - Font dropdown should show: Poppins, SpaceMono, ChakraPetch, Confortaa, Dosis, IBMPlexMono, IndieFlower, JosefinSans, Noto, SourceCodePro, SpaceGrotesk, MajorMono, MerriWeather, PoiretOne, OpenDyslexic", () => {
-    // Test code for K2
+  it("K1 - Language dropdown should display English", () => {
+    settingsCustomizations.appLanguageSectionLabel.should(
+      "have.text",
+      "App Language",
+    );
+    settingsCustomizations.appLanguageSectionText.should(
+      "have.text",
+      "Change language.",
+    );
+    settingsCustomizations.appLanguageSectionSelectorOption.should(
+      "have.length",
+      1,
+    );
+    settingsCustomizations.appLanguageSectionSelectorOption
+      .should("have.value", "english")
+      .and("have.text", "English (USA)");
   });
 
-  it.skip("K3 - Selected Fonts should be applied everywhere throughout the app", () => {
-    // Test code for K3
+  it("K2 - Font dropdown should show expected font names", () => {
+    const expectedFonts: string[] = [
+      "Poppins",
+      "SpaceMono",
+      "ChakraPetch",
+      "Comfortaa",
+      "Dosis",
+      "IBMPlexMono",
+      "PixelifySans",
+      "IndieFlower",
+      "JosefinSans",
+      "Noto",
+      "SourceCodePro",
+      "SpaceGrotesk",
+      "MajorMono",
+      "Merriweather",
+      "PoiretOne",
+      "OpenDyslexic",
+    ];
+    settingsCustomizations.fontSectionLabel.should("have.text", "Font");
+    settingsCustomizations.fontSectionText.should(
+      "have.text",
+      "Change the font used in the app.",
+    );
+    settingsCustomizations.fontSectionSelectorOption.should("have.length", 16);
+    settingsCustomizations.validateFontNames(expectedFonts);
   });
 
-  it.skip("K4 - Clicking OpenFolder should open the Fonts folder", () => {
-    // Test code for K4
+  it("K3 - Selected Fonts should be applied everywhere throughout the app", () => {
+    settingsCustomizations.selectFont("JosefinSans");
+    settingsCustomizations.fontSectionText.should(
+      "have.css",
+      "font-family",
+      "JosefinSans",
+    );
+    settingsCustomizations.goToChat();
+    cy.contains("Let's get something started!").should(
+      "have.css",
+      "font-family",
+      "JosefinSans",
+    );
   });
 
-  it.skip("K5 - Font size should have a minimum of .82", () => {
-    // Test code for K5
+  // Cannot be tested for now since its not working on Uplink Web
+  it.skip("K4 - Clicking OpenFolder should open the Fonts folder", () => {});
+
+  it("K5 - Font size should have a minimum of .82", () => {
+    settingsCustomizations.fontScalingSectionLabel.should(
+      "have.text",
+      "Font Scaling",
+    );
+    settingsCustomizations.fontScalingSectionText.should(
+      "have.text",
+      "Scale the font size up or down to your liking.",
+    );
+    settingsCustomizations.fontScalingSectionInput.should("have.value", "1.00");
+
+    for (let i = 0; i < 10; i++) {
+      settingsCustomizations.fontScalingSectionDecreaseButton.click();
+    }
+
+    settingsCustomizations.fontScalingSectionInput.should("have.value", "0.82");
+    settingsCustomizations.fontScalingSectionText.should(
+      "have.css",
+      "font-size",
+      "13.12px",
+    );
   });
 
-  it.skip("K6 - Font size should have a maximum of 1.50", () => {
-    // Test code for K6
+  it("K6, K7 - Font size should have a maximum of 1.50 and can be applied correctly everywhere through the app", () => {
+    settingsCustomizations.fontScalingSectionInput.should("have.value", "1.00");
+
+    for (let i = 0; i < 20; i++) {
+      settingsCustomizations.fontScalingSectionIncreaseButton.click();
+    }
+
+    settingsCustomizations.fontScalingSectionInput.should("have.value", "1.50");
+    settingsCustomizations.fontScalingSectionText.should(
+      "have.css",
+      "font-size",
+      "24px",
+    );
+    settingsCustomizations.goToChat();
+    cy.contains("Let's get something started!").should(
+      "have.css",
+      "font-size",
+      "24px",
+    );
   });
 
-  it.skip("K7 - Font size should be applied correctly everywhere through the app", () => {
-    // Test code for K7
+  // Cannot be tested for now since its not working on Uplink Web
+  it.skip("K8 - Clicking the moon button should change theme of the app from Dark to Light", () => {});
+
+  it("K9 - Themes dropdown should display Default", () => {
+    const expectedThemes: string[] = ["Default"];
+    settingsCustomizations.themeSectionLabel.should("have.text", "Theme");
+    settingsCustomizations.themeSectionText.should(
+      "have.text",
+      "Change the theme of the app.",
+    );
+    settingsCustomizations.themeSectionSelectorOption.should("have.length", 1);
+    settingsCustomizations.validateThemes(expectedThemes);
   });
 
-  it.skip("K8 - Clicking the moon button should change theme of the app from Dark to Light", () => {
-    // Test code for K8
+  // Cannot be tested for now since its not working on Uplink Web
+  it.skip("K10 - Themes folder button should open the themes folder", () => {});
+
+  it("K11 - Primary Colors should display expected values", () => {
+    const expectedPrimaryColors: string[] = [
+      "Neo Orbit",
+      "Creamy Peach",
+      "Neon Sunflower",
+      "TV Character Purple",
+      "Traffic Cone",
+      "Firehouse",
+      "Purple Mountain Majesty",
+      "Rogue Pink",
+      "Squeaky",
+      "Apple Valley",
+      "Pencil Lead",
+    ];
+    settingsCustomizations.primaryColorSectionLabel.should(
+      "have.text",
+      "Primary Color",
+    );
+    settingsCustomizations.primaryColorSectionText.should(
+      "have.text",
+      "Change the primary color of the app.",
+    );
+    settingsCustomizations.primaryColorSectionColorSwatchButton.should(
+      "have.length",
+      11,
+    );
+    settingsCustomizations.validatePrimaryColors(expectedPrimaryColors);
   });
 
-  it.skip("K9 - Themes dropdown should display Default", () => {
-    // Test code for K9
+  it("K12 - Clicking Pick should open up the finetune color selector", () => {
+    settingsCustomizations.primaryColorSectionPopUpButton.click();
+    settingsCustomizations.customColorPicker.should("be.visible");
+    settingsCustomizations.customColorInput.clear().type("#ff8fb8");
+    settingsCustomizations.buttonCustomization.click({ force: true });
+    settingsCustomizations.buttonCustomization.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 143, 184)",
+    );
   });
 
-  it.skip("K10 - Themes folder button should open the themes folder", () => {
-    // Test code for K10
+  it("K13 - Selected primary color should be applied throughout the entire app", () => {
+    // Button selected has initially default color
+    settingsCustomizations.buttonCustomization.should(
+      "have.css",
+      "background-color",
+      "rgb(77, 77, 255)",
+    );
+
+    // Select Traffic Cone as primary color and validate that button selected has new background color
+    settingsCustomizations.selectColorSwatch("Traffic Cone");
+    settingsCustomizations.buttonCustomization.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 60, 0)",
+    );
+
+    settingsCustomizations.goToChat();
+    chatsMain.buttonAddFriends.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 60, 0)",
+    );
   });
 
-  it.skip("K11 - Primary Colors should display: Neo Orbit, Creamy Peach, Neon Sunflower, TV Character Purple, Traffic cone, Fire House, Purple Mountain Majesty, Rogue Pink, Squeaky, Apple Valley, Pencil Lead", () => {
-    // Test code for K11
-  });
+  it("K14 - User should be able to add additional custom CSS to the application", () => {
+    settingsCustomizations.sidebar.should(
+      "have.css",
+      "background-color",
+      "rgba(0, 0, 0, 0)",
+    );
+    settingsCustomizations.customCSSSectionLabel.should(
+      "have.text",
+      "Custom CSS",
+    );
+    settingsCustomizations.customCSSSectionText.should(
+      "have.text",
+      "Add additional custom CSS to the application.",
+    );
+    settingsCustomizations.customCSSSectionTextArea.type(
+      ".sidebar {background-color: rgb(255, 0, 141)}",
+      { parseSpecialCharSequences: false },
+    );
+    settingsCustomizations.buttonCustomization.click();
+    settingsCustomizations.sidebar.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 0, 141)",
+    );
 
-  it.skip("K12 - Clicking Pick should open up the finetune color selector", () => {
-    // Test code for K12
-  });
-
-  it.skip("K13 - Selected primary color should be applied throughout the entire app", () => {
-    // Test code for K13
-  });
-
-  it.skip("K14 - User should be able to add additional custom CSS to the application", () => {
-    // Test code for K14
+    settingsCustomizations.goToChat();
+    chatsMain.sidebar.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 0, 141)",
+    );
   });
 });

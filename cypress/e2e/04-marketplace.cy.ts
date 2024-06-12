@@ -1,11 +1,15 @@
+import { faker } from "@faker-js/faker";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 
 describe("Marketplace Tests", () => {
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+
   beforeEach(() => {
     loginPinPage.loginWithPin("1234");
-    authNewAccount.createRandomUser();
+    authNewAccount.createRandomUser(username, status);
     chatsMainPage.validateChatsMainPageIsShown();
   });
 
