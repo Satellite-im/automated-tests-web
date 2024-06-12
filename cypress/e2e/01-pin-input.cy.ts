@@ -19,7 +19,7 @@ describe("Create Account and Login Tests", () => {
     cy.location("href").should("include", "/auth/new_account");
     authNewAccount.textNewAccountSecondary.should(
       "have.text",
-      "Let's setup your new account. Please choose a username below.",
+      "Let's set up your new account. Please choose a username below.",
     );
     authNewAccount.labelNewAccountUsername.should("have.text", "Username");
     authNewAccount.labelNewAccountStatus.should("have.text", "Status Message");
