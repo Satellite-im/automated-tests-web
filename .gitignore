@@ -80,3 +80,13 @@ $RECYCLE.BIN/
 cypress/downloads/
 cypress/screenshots/
 cypress/videos/
+/test-results/
+
+# Playwright Assets
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
