@@ -13,7 +13,8 @@ describe("Marketplace Tests", () => {
     chatsMainPage.validateChatsMainPageIsShown();
   });
 
-  it("D1 - Marketplace modal should appear when user clicks Marketplace", () => {
+  // Marketplace section is gone from the app
+  it.skip("D1 - Marketplace modal should appear when user clicks Marketplace", () => {
     chatsMainPage.buttonMarketplace.click();
     cy.contains("Uplink Marketplace").should("exist");
   });

@@ -65,24 +65,27 @@ describe("Settings - Messages", () => {
 
   it("L3 - User should be able to toggle on and off emoji Spam/Bot detection & rejection", () => {
     // Label and texts for settings section are correct
-    settingsMessages.spamBotDetectionSectionLabel.should(
-      "have.text",
-      "Spam/Bot Detection & Rejection",
-    );
-    settingsMessages.spamBotDetectionSectionText.should(
-      "have.text",
-      "Enabled the automatic rejection of messages from known spam bots or scammers. This uses a public ledger that we reserve privately for 30 days to prevent bots from detecting they have been blocked too quickly.",
-    );
+    settingsMessages.spamBotDetectionSectionLabel
+      .eq(0)
+      .should("have.text", "Spam/Bot Detection & Rejection");
+    settingsMessages.spamBotDetectionSectionText
+      .eq(0)
+      .should(
+        "have.text",
+        "Enabled the automatic rejection of messages from known spam bots or scammers. This uses a public ledger that we reserve privately for 30 days to prevent bots from detecting they have been blocked too quickly.",
+      );
 
     // Checkbox should be enabled by default
-    settingsMessages.spamBotDetectionSectionCheckbox.should("be.checked");
+    settingsMessages.spamBotDetectionSectionCheckbox.eq(0).should("be.checked");
 
     // User can toggle checkbox to off
-    settingsMessages.spamBotDetectionSectionSlider.click();
-    settingsMessages.spamBotDetectionSectionCheckbox.should("not.be.checked");
+    settingsMessages.spamBotDetectionSectionSlider.eq(0).click();
+    settingsMessages.spamBotDetectionSectionCheckbox
+      .eq(0)
+      .should("not.be.checked");
 
     // User can toggle again checkbox to on
-    settingsMessages.spamBotDetectionSectionSlider.click();
-    settingsMessages.spamBotDetectionSectionCheckbox.should("be.checked");
+    settingsMessages.spamBotDetectionSectionSlider.eq(0).click();
+    settingsMessages.spamBotDetectionSectionCheckbox.eq(0).should("be.checked");
   });
 });
