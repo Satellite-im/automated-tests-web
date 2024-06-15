@@ -21,6 +21,10 @@ export default class SettingsBase extends MainPage {
     return cy.getByTestAttr("button-Customization");
   }
 
+  get buttonDeveloper() {
+    return cy.getByTestAttr("button-Developer");
+  }
+
   get buttonExtensions() {
     return cy.getByTestAttr("button-Extensions");
   }
