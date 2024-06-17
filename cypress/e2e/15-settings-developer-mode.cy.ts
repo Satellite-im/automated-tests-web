@@ -1,4 +1,21 @@
+import { faker } from "@faker-js/faker";
+import authNewAccount from "./PageObjects/AuthNewAccount";
+import chatsMain from "./PageObjects/ChatsMain";
+import loginPinPage from "./PageObjects/LoginPin";
+import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+
 describe("Settings - Developer Mode", () => {
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+
+  beforeEach(() => {
+    loginPinPage.loginWithPin("1234");
+    authNewAccount.createRandomUser(username, status);
+    chatsMain.validateChatsMainPageIsShown();
+    chatsMain.goToSettings();
+    settingsProfile.buttonAudioAndVideo.click();
+  });
+
   it.skip("T1 - Clicking the DevMode button 10x should enable it", () => {
     // Test code for T1
   });

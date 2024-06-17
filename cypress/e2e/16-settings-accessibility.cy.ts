@@ -3,7 +3,6 @@ import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMain from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
-import settingsNotifications from "./PageObjects/Settings/SettingsNotifications";
 
 describe("Settings - Accessibility", () => {
   const username = faker.internet.userName();
@@ -14,14 +13,10 @@ describe("Settings - Accessibility", () => {
     authNewAccount.createRandomUser(username, status);
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
-    settingsProfile.buttonNotifications.click();
+    settingsProfile.buttonAudioAndVideo.click();
   });
 
-  it.skip("P1 - User should be able to toggle on/off Dyslexic mode", () => {
-    cy.url().should("include", "/settings/notifications");
-  });
-
-  it.skip("P2 - If Dyslexic mode is toggled on, font should be applied everywhere throughout the app", () => {
-    // Test code for P2
+  it.skip("", () => {
+    // Test code for R1
   });
 });
