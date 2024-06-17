@@ -60,18 +60,28 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A6, A7 - Scramble Keypad will change the order of pin input buttons", () => {
-    loginPinPage.goToSettings();
-    loginPinPage.clickScrambleKeypadSwitch();
+    // Scramble keypad is disabled by default
     loginPinPage.pinKeypad.should(
       "have.attr",
       "data-keyorder",
       "1,2,3,4,5,6,7,8,9,0",
     );
 
+    loginPinPage.goToSettings();
     loginPinPage.clickScrambleKeypadSwitch();
+
+    // Validate that the order of the buttons has changed
     loginPinPage.pinKeypad
       .its("data-keyorder")
       .should("not.eq", "1,2,3,4,5,6,7,8,9,0");
+
+    loginPinPage.clickScrambleKeypadSwitch();
+    // Scramble keypad is disabled again by the user
+    loginPinPage.pinKeypad.should(
+      "have.attr",
+      "data-keyorder",
+      "1,2,3,4,5,6,7,8,9,0",
+    );
   });
 
   // Cannot be automated at this moment
