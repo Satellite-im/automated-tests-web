@@ -1,3 +1,4 @@
+import { Browser } from "@playwright/test";
 import { defineConfig } from "cypress";
 const fs = require("fs");
 
@@ -21,7 +22,12 @@ export default defineConfig({
             }
           }
         },
-      );
+      ),
+        on("before:browser:launch", (browser: any, launchOptions) => {
+          if (browser.family === "chromium" && browser.name !== "electron") {
+            //launchOptions.args.push("--use-fake-device-for-media-stream");
+          }
+        });
     },
   },
 });

@@ -200,6 +200,39 @@ class SettingsAudio extends SettingsBase {
   get videoDeviceSectionText() {
     return this.videoDeviceSection.find("[data-cy='setting-section-text']");
   }
+
+  public validateInputDevices(expectedInputDevices: string[]) {
+    let displayedInputDevices: string[] = [];
+    this.inputDeviceSectionSelectorOption
+      .each(($option) => {
+        displayedInputDevices.push($option.text());
+      })
+      .then(() => {
+        expect(displayedInputDevices).to.deep.equal(expectedInputDevices);
+      });
+  }
+
+  public validateOutputDevices(expectedOutputDevices: string[]) {
+    let displayedOutputDevices: string[] = [];
+    this.outputDeviceSectionSelectorOption
+      .each(($option) => {
+        displayedOutputDevices.push($option.text());
+      })
+      .then(() => {
+        expect(displayedOutputDevices).to.deep.equal(expectedOutputDevices);
+      });
+  }
+
+  public validateVideoDevices(expectedVideoDevices: string[]) {
+    let displayedVideoDevices: string[] = [];
+    this.videoDeviceSectionSelectorOption
+      .each(($option) => {
+        displayedVideoDevices.push($option.text());
+      })
+      .then(() => {
+        expect(displayedVideoDevices).to.deep.equal(expectedVideoDevices);
+      });
+  }
 }
 
 export default new SettingsAudio();

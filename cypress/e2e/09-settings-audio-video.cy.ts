@@ -24,6 +24,10 @@ describe("Settings - Audio & Video", () => {
       "have.text",
       "Select your input device, this is usually your microphone.",
     );
+
+    const expectedInputDevices = ["Default"];
+
+    settingsAudio.validateInputDevices(expectedInputDevices);
   });
 
   it("M2 - Volume indicator should display volume level of microphone input when sound is detected", () => {
@@ -38,6 +42,10 @@ describe("Settings - Audio & Video", () => {
       "have.text",
       "Select your output device, this is usually your headphones or speakers.",
     );
+
+    const expectedOutputDevices = ["Default"];
+
+    settingsAudio.validateOutputDevices(expectedOutputDevices);
   });
 
   it("M4 - Volume indicator should display volume level of speaker output when sound is played", () => {
@@ -172,6 +180,10 @@ describe("Settings - Audio & Video", () => {
       "have.text",
       "Select your video device, this is usually your webcam.",
     );
+
+    const expectedVideoDevices = ["Default"];
+
+    settingsAudio.validateVideoDevices(expectedVideoDevices);
 
     settingsAudio.testVideoButton.click();
     settingsAudio.testVideoPreview.should("be.visible");
