@@ -26,6 +26,8 @@ export default defineConfig({
         launchOptions.args.push(
           "--use-file-for-fake-video-capture=cypress/fixtures/akiyo_qcif.y4m",
         );
+        launchOptions.args.push("--use-fake-ui-for-media-stream");
+        launchOptions.args.push("--use-fake-device-for-media-stream");
 
         return launchOptions;
       });
