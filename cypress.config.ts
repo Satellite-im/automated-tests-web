@@ -1,4 +1,3 @@
-import { Browser } from "@playwright/test";
 import { defineConfig } from "cypress";
 const fs = require("fs");
 
@@ -22,12 +21,14 @@ export default defineConfig({
             }
           }
         },
-      ),
-        on("before:browser:launch", (browser: any, launchOptions) => {
-          if (browser.family === "chromium" && browser.name !== "electron") {
-            //launchOptions.args.push("--use-fake-device-for-media-stream");
-          }
-        });
+      );
+      on("before:browser:launch", (_browser, launchOptions) => {
+        launchOptions.args.push(
+          "--use-file-for-fake-video-capture=cypress/fixtures/akiyo_qcif.y4m",
+        );
+
+        return launchOptions;
+      });
     },
   },
 });

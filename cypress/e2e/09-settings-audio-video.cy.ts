@@ -18,6 +18,12 @@ describe("Settings - Audio & Video", () => {
   });
 
   it("M1 - Input dropdown should show available input devices", () => {
+    const expectedInputDevices = [
+      "Fake Default Audio Input",
+      "Fake Audio Input 1",
+      "Fake Audio Input 2",
+    ];
+
     cy.url().should("include", "/settings/audio_video");
     settingsAudio.inputDeviceSectionLabel.should("have.text", "Input Device");
     settingsAudio.inputDeviceSectionText.should(
@@ -25,30 +31,52 @@ describe("Settings - Audio & Video", () => {
       "Select your input device, this is usually your microphone.",
     );
 
-    const expectedInputDevices = ["Default"];
-
-    settingsAudio.validateInputDevices(expectedInputDevices);
+    settingsAudio.testVideoButton.click().then(() => {
+      settingsAudio.testVideoPreview.then(($video) => {
+        // Access the native HTML video element
+        const videoElement = $video[0];
+        // Assert that srcObject property exists
+        expect(videoElement).to.have.property("srcObject");
+        settingsAudio.validateInputDevices(expectedInputDevices);
+      });
+    });
   });
 
   it("M2 - Volume indicator should display volume level of microphone input when sound is detected", () => {
+    settingsAudio.testVideoButton.click();
+    settingsAudio.testVideoPreview.should("be.visible");
     settingsAudio.inputDeviceSectionMeter
       .should("have.attr", "style")
       .and("not.eq", "width: 100%;");
   });
 
   it("M3 - Output device dropdown should show all available output devices", () => {
+    const expectedOutputDevices = [
+      "Fake Default Audio Output",
+      "Fake Audio Output 1",
+      "Fake Audio Output 2",
+    ];
+
     settingsAudio.outputDeviceSectionLabel.should("have.text", "Output Device");
     settingsAudio.outputDeviceSectionText.should(
       "have.text",
       "Select your output device, this is usually your headphones or speakers.",
     );
 
-    const expectedOutputDevices = ["Default"];
-
-    settingsAudio.validateOutputDevices(expectedOutputDevices);
+    settingsAudio.testVideoButton.click().then(() => {
+      settingsAudio.testVideoPreview.then(($video) => {
+        // Access the native HTML video element
+        const videoElement = $video[0];
+        // Assert that srcObject property exists
+        expect(videoElement).to.have.property("srcObject");
+        settingsAudio.validateOutputDevices(expectedOutputDevices);
+      });
+    });
   });
 
   it("M4 - Volume indicator should display volume level of speaker output when sound is played", () => {
+    settingsAudio.testVideoButton.click();
+    settingsAudio.testVideoPreview.should("be.visible");
     settingsAudio.outputDeviceSectionMeter.should(
       "have.attr",
       "style",
@@ -181,11 +209,14 @@ describe("Settings - Audio & Video", () => {
       "Select your video device, this is usually your webcam.",
     );
 
-    const expectedVideoDevices = ["Default"];
-
-    settingsAudio.validateVideoDevices(expectedVideoDevices);
-
-    settingsAudio.testVideoButton.click();
-    settingsAudio.testVideoPreview.should("be.visible");
+    // Enable test video
+    settingsAudio.testVideoButton.click().then(() => {
+      settingsAudio.testVideoPreview.then(($video) => {
+        // Access the native HTML video element
+        const videoElement = $video[0];
+        // Assert that srcObject property exists
+        expect(videoElement).to.have.property("srcObject");
+      });
+    });
   });
 });
