@@ -24,7 +24,7 @@ export default defineConfig({
       );
       on("before:browser:launch", (_browser, launchOptions) => {
         launchOptions.args.push(
-          "--use-file-for-fake-video-capture=cypress/fixtures/akiyo_qcif.y4m",
+          "--use-file-for-fake-video-capture=automated-tests/cypress/fixtures/akiyo_qcif.y4m",
         );
 
         return launchOptions;

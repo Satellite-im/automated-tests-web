@@ -50,7 +50,7 @@ jobs:
           wait-on: "http://localhost:5173/"
           working-directory: automated-tests
           browser: chrome
-          headed: true
+          config-file: cypress.CI.config.ts
 
       - name: Upload screenshots and videos from failed tests 📷
         uses: actions/upload-artifact@v3
