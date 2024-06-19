@@ -23,7 +23,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Satellite-im/UplinkWeb
-          ref: use-multipass-to-generate-tesseract
 
       - name: Checkout Automated Tests directory 🔖
         uses: actions/checkout@v4
