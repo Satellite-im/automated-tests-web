@@ -76,7 +76,7 @@ class SettingsAudio extends SettingsBase {
   }
 
   get inputDeviceSection() {
-    return cy.getByTestAttr("section-input-version");
+    return cy.getByTestAttr("section-input-device");
   }
 
   get inputDeviceSectionLabel() {
@@ -84,7 +84,7 @@ class SettingsAudio extends SettingsBase {
   }
 
   get inputDeviceSectionMeter() {
-    return cy.getByTestAttr("meter").eq(0);
+    return cy.get(".meter-mask").eq(0);
   }
 
   get inputDeviceSectionSelector() {
@@ -146,7 +146,7 @@ class SettingsAudio extends SettingsBase {
   }
 
   get outputDeviceSection() {
-    return cy.getByTestAttr("section-output-version");
+    return cy.getByTestAttr("section-output-device");
   }
 
   get outputDeviceSectionTestButton() {
@@ -158,7 +158,7 @@ class SettingsAudio extends SettingsBase {
   }
 
   get outputDeviceSectionMeter() {
-    return cy.getByTestAttr("meter").eq(1);
+    return cy.get(".meter-mask").eq(1);
   }
 
   get outputDeviceSectionSelector() {
@@ -182,7 +182,7 @@ class SettingsAudio extends SettingsBase {
   }
 
   get videoDeviceSection() {
-    return cy.getByTestAttr("section-video-version");
+    return cy.getByTestAttr("section-video-device");
   }
 
   get videoDeviceSectionLabel() {
@@ -199,6 +199,39 @@ class SettingsAudio extends SettingsBase {
 
   get videoDeviceSectionText() {
     return this.videoDeviceSection.find("[data-cy='setting-section-text']");
+  }
+
+  public validateInputDevices(expectedInputDevices: string[]) {
+    let displayedInputDevices: string[] = [];
+    this.inputDeviceSectionSelectorOption
+      .each(($option) => {
+        displayedInputDevices.push($option.text());
+      })
+      .then(() => {
+        expect(displayedInputDevices).to.deep.equal(expectedInputDevices);
+      });
+  }
+
+  public validateOutputDevices(expectedOutputDevices: string[]) {
+    let displayedOutputDevices: string[] = [];
+    this.outputDeviceSectionSelectorOption
+      .each(($option) => {
+        displayedOutputDevices.push($option.text());
+      })
+      .then(() => {
+        expect(displayedOutputDevices).to.deep.equal(expectedOutputDevices);
+      });
+  }
+
+  public validateVideoDevices(expectedVideoDevices: string[]) {
+    let displayedVideoDevices: string[] = [];
+    this.videoDeviceSectionSelectorOption
+      .each(($option) => {
+        displayedVideoDevices.push($option.text());
+      })
+      .then(() => {
+        expect(displayedVideoDevices).to.deep.equal(expectedVideoDevices);
+      });
   }
 }
 

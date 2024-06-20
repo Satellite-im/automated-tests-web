@@ -14,7 +14,7 @@ export default class SettingsBase extends MainPage {
   }
 
   get buttonAudioAndVideo() {
-    return cy.getByTestAttr("button-Audio & Video");
+    return cy.get('[data-cy="button-Audio & Video"]');
   }
 
   get buttonCustomization() {
