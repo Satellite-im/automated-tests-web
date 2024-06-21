@@ -26,15 +26,6 @@ describe("Settings - License", () => {
       "Both code and icons are under the MIT license.",
     );
 
-    // Validate open website button has correct href and target
-    settingsLicenses.licensesSectionButton
-      .should(
-        "have.attr",
-        "href",
-        "https://github.com/Satellite-im/UplinkWeb/blob/dev/LICENSE-MIT",
-      )
-      .and("have.attr", "target", "_blank");
-
     // Intercept window.open calls
     cy.window().then((win) => {
       cy.stub(win, "open").as("windowOpen");

@@ -90,11 +90,11 @@ class SettingsAbout extends SettingsBase {
   }
 
   get websiteSectionLabel() {
-    return this.versionSection.find("[data-cy='setting-section-label']");
+    return this.websiteSection.find("[data-cy='setting-section-label']");
   }
 
   get websiteSectionText() {
-    return this.versionSection.find("[data-cy='setting-section-text']");
+    return this.websiteSection.find("[data-cy='setting-section-text']");
   }
 
   public openDevMode() {

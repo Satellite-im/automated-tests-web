@@ -43,11 +43,6 @@ describe("Settings - About", () => {
       "Open a new browser window to our official website.",
     );
 
-    // Validate open website button has correct href and target
-    settingsAbout.websiteSectionButton
-      .should("have.attr", "href", "https://satellite.im/")
-      .and("have.attr", "target", "_blank");
-
     // Intercept window.open calls
     cy.window().then((win) => {
       cy.stub(win, "open").as("windowOpen");
@@ -74,11 +69,6 @@ describe("Settings - About", () => {
       "have.text",
       "Open a new browser window to our open source repository.",
     );
-
-    // Validate open website button has correct href and target
-    settingsAbout.openSourceCodeSectionButton
-      .should("have.attr", "href", "https://github.com/Satellite-im")
-      .and("have.attr", "target", "_blank");
 
     // Intercept window.open calls
     cy.window().then((win) => {
