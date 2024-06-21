@@ -26,11 +26,11 @@ class SettingsAbout extends SettingsBase {
   }
 
   get devModeSectionLabel() {
-    return this.openSourceCodeSection.find("[data-cy='setting-section-label']");
+    return this.devModeSection.find("[data-cy='setting-section-label']");
   }
 
   get devModeSectionText() {
-    return this.openSourceCodeSection.find("[data-cy='setting-section-text']");
+    return this.devModeSection.find("[data-cy='setting-section-text']");
   }
 
   get madeInSection() {
@@ -90,15 +90,15 @@ class SettingsAbout extends SettingsBase {
   }
 
   get websiteSectionLabel() {
-    return this.versionSection.find("[data-cy='setting-section-label']");
+    return this.websiteSection.find("[data-cy='setting-section-label']");
   }
 
   get websiteSectionText() {
-    return this.versionSection.find("[data-cy='setting-section-text']");
+    return this.websiteSection.find("[data-cy='setting-section-text']");
   }
 
   public openDevMode() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 11; i++) {
       this.devModeSectionButton.click();
     }
   }
