@@ -35,8 +35,7 @@ describe("Settings - About", () => {
     settingsAbout.versionSectionButton.click();
   });
 
-  // Skipped since button is not performing any action now
-  it.skip("R4 - Clicking Open Website should take you to the Uplink website", () => {
+  it("R4 - Clicking Open Website should take you to the Uplink website", () => {
     // Label and texts for settings section are correct
     settingsAbout.websiteSectionLabel.should("have.text", "Website");
     settingsAbout.websiteSectionText.should(
@@ -44,12 +43,28 @@ describe("Settings - About", () => {
       "Open a new browser window to our official website.",
     );
 
-    // Click on website button to open Uplink website
+    // Validate open website button has correct href and target
+    settingsAbout.websiteSectionButton
+      .should("have.attr", "href", "https://satellite.im/")
+      .and("have.attr", "target", "_blank");
+
+    // Intercept window.open calls
+    cy.window().then((win) => {
+      cy.stub(win, "open").as("windowOpen");
+    });
+
+    // Click the button
     settingsAbout.websiteSectionButton.click();
+
+    // Assert that window.open was called with the correct URL and target
+    cy.get("@windowOpen").should(
+      "be.calledWith",
+      "https://satellite.im/",
+      "_blank",
+    );
   });
 
-  // Skipped since button is not performing any action now
-  it.skip("R5 - Clicking Open Source Code should take you to the source code", () => {
+  it("R5 - Clicking Open Source Code should take you to the source code", () => {
     // Label and texts for settings section are correct
     settingsAbout.openSourceCodeSectionLabel.should(
       "have.text",
@@ -60,8 +75,25 @@ describe("Settings - About", () => {
       "Open a new browser window to our open source repository.",
     );
 
-    // Click on open source code button to open source code website
+    // Validate open website button has correct href and target
+    settingsAbout.openSourceCodeSectionButton
+      .should("have.attr", "href", "https://github.com/Satellite-im")
+      .and("have.attr", "target", "_blank");
+
+    // Intercept window.open calls
+    cy.window().then((win) => {
+      cy.stub(win, "open").as("windowOpen");
+    });
+
+    // Click the button
     settingsAbout.openSourceCodeSectionButton.click();
+
+    // Assert that window.open was called with the correct URL and target
+    cy.get("@windowOpen").should(
+      "be.calledWith",
+      "https://github.com/Satellite-im",
+      "_blank",
+    );
   });
 
   it("R6 and R7 - Made In header text, description and flags displayed", () => {
@@ -75,11 +107,11 @@ describe("Settings - About", () => {
     // Validate flags displayed are correct in made in section
     settingsAbout.madeInSectionFlags.should(
       "have.text",
-      "🇺🇸 🇮🇹 🇩🇪 🇵🇹 🇧🇷 🇺🇦 🇧🇾 🇯🇵 🇦🇺 🇮🇩",
+      "🇺🇸 🇮🇹 🇩🇪 🇵🇹 🇧🇷 🇺🇦 🇧🇾 🇯🇵 🇦🇺 🇮🇩 🇲🇽 🇨🇦",
     );
   });
 
-  it.skip("R8 - Clicking DevMode button 10 times should enable DevMode", () => {
+  it("R8 - Clicking DevMode button 10 times should enable DevMode", () => {
     // Label and texts for settings section are correct
     settingsAbout.devModeSectionLabel.should("have.text", "DevMode");
     settingsAbout.devModeSectionText.should(

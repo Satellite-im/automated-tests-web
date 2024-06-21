@@ -17,8 +17,7 @@ describe("Settings - License", () => {
     settingsProfile.buttonLicenses.click();
   });
 
-  // Skipped since the licenses button does not perform any action
-  it.skip("S1 - Clicking View License should take user to our licenses page", () => {
+  it("S1 - Clicking View License should take user to our licenses page", () => {
     cy.url().should("include", "/settings/licenses");
     // Label and texts for settings section are correct
     settingsLicenses.licensesSectionLabel.should("have.text", "Uplink");
@@ -27,7 +26,28 @@ describe("Settings - License", () => {
       "Both code and icons are under the MIT license.",
     );
 
-    // Click on licenses button to show Uplink license
+    // Validate open website button has correct href and target
+    settingsLicenses.licensesSectionButton
+      .should(
+        "have.attr",
+        "href",
+        "https://github.com/Satellite-im/UplinkWeb/blob/dev/LICENSE-MIT",
+      )
+      .and("have.attr", "target", "_blank");
+
+    // Intercept window.open calls
+    cy.window().then((win) => {
+      cy.stub(win, "open").as("windowOpen");
+    });
+
+    // Click the button
     settingsLicenses.licensesSectionButton.click();
+
+    // Assert that window.open was called with the correct URL and target
+    cy.get("@windowOpen").should(
+      "be.calledWith",
+      "https://github.com/Satellite-im/UplinkWeb/blob/dev/LICENSE-MIT",
+      "_blank",
+    );
   });
 });
