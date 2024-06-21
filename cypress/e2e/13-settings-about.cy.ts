@@ -110,9 +110,7 @@ describe("Settings - About", () => {
     );
 
     // Open DevMode
-    for (let i = 0; i < 10; i++) {
-      settingsAbout.devModeSectionButton.click();
-    }
+    settingsAbout.openDevMode();
 
     cy.url().should("include", "/settings/developer");
   });

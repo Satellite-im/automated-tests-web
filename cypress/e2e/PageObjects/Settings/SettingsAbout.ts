@@ -98,7 +98,7 @@ class SettingsAbout extends SettingsBase {
   }
 
   public openDevMode() {
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 11; i++) {
       this.devModeSectionButton.click();
     }
   }
