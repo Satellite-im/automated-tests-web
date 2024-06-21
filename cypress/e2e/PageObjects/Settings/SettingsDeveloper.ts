@@ -22,11 +22,11 @@ class SettingsDeveloper extends SettingsBase {
   }
 
   get devModeSection() {
-    return cy.getByTestAttr("section-dev-mode");
+    return cy.getByTestAttr("section-devmode");
   }
 
   get devModeSectionButton() {
-    return cy.getByTestAttr("button-dev-mode");
+    return cy.getByTestAttr("button-exit-devmode");
   }
 
   get devModeSectionLabel() {
