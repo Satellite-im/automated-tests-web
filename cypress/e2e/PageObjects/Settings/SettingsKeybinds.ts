@@ -1,3 +1,4 @@
+import _ = require("cypress/types/lodash");
 import SettingsBase from "./SettingsBase";
 
 class SettingsKeybinds extends SettingsBase {
@@ -34,15 +35,15 @@ class SettingsKeybinds extends SettingsBase {
   }
 
   get newKeybindActionLabel() {
-    return this.newKeybindSection.find("[data-cy='label-keybind-action");
+    return this.newKeybindSection.find("[data-cy='label-keybind-action']");
   }
 
   get newKeybindActionSelector() {
-    return this.newKeybindSection.find("[data-cy='selector-keybind-action");
+    return this.newKeybindSection.find("[data-cy='selector-keybind-action']");
   }
 
   get newKeybindActionSelectorOption() {
-    return this.newKeybindActionSelector.find("[data-cy='select-option");
+    return this.newKeybindActionSelector.find("[data-cy='select-option']");
   }
 
   get newKeybindRecordedKeysLabel() {
@@ -89,6 +90,43 @@ class SettingsKeybinds extends SettingsBase {
 
   get revertKeybindSectionAllButton() {
     return cy.getByTestAttr("button-keybind-revert-all");
+  }
+
+  public clickOnRevertSingleKeybind(action: string) {
+    cy.get("[data-cy='text-keybind-action']")
+      .contains(action)
+      .parent()
+      .find("[data-cy='button-keybind-revert-single']")
+      .click();
+  }
+
+  public validateKeybindButtonKeys(action: string, expectedKeys: string[]) {
+    let keysArray: string[] = [];
+    cy.get("[data-cy='text-keybind-action']")
+      .contains(action)
+      .parent()
+      .find("[data-cy='key-button-text']")
+      .each(($el) => {
+        keysArray.push($el.text());
+      })
+      .then(() => {
+        expect(keysArray).to.have.deep.members(expectedKeys);
+      });
+  }
+
+  public selectKeybind(name: string) {
+    cy.get('[data-cy="selector-keybind-action"]').find("select").select(name);
+  }
+
+  public validateKeybindActions(expectedKeybinds: string[]) {
+    let displayedKeybinds: string[] = [];
+    this.newKeybindActionSelectorOption
+      .each(($option) => {
+        displayedKeybinds.push($option.text());
+      })
+      .then(() => {
+        expect(displayedKeybinds).to.deep.equal(expectedKeybinds);
+      });
   }
 }
 
