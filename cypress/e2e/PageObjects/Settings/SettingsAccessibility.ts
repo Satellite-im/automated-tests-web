@@ -22,9 +22,7 @@ class SettingsAccessibility extends SettingsBase {
   }
 
   get openDyslexicSectionSlider() {
-    return cy.get(
-      '[data-cy="section-accessibility"] > .body > .content > .switch > .slider',
-    );
+    return this.openDyslexicSection.find(".slider");
   }
 }
 
