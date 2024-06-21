@@ -26,11 +26,11 @@ class SettingsAbout extends SettingsBase {
   }
 
   get devModeSectionLabel() {
-    return this.openSourceCodeSection.find("[data-cy='setting-section-label']");
+    return this.devModeSection.find("[data-cy='setting-section-label']");
   }
 
   get devModeSectionText() {
-    return this.openSourceCodeSection.find("[data-cy='setting-section-text']");
+    return this.devModeSection.find("[data-cy='setting-section-text']");
   }
 
   get madeInSection() {
