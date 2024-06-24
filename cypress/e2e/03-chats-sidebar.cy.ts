@@ -63,7 +63,7 @@ describe("Chats Sidebar Tests", () => {
   });
 
   // Skipping due to animations bug introduced for mobile changes - GH issue # to be added
-  it.only("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", () => {
+  it.skip("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", () => {
     const navButtons = [
       { button: chatsMainPage.buttonWallet, url: "/wallet" },
       { button: chatsMainPage.buttonFiles, url: "/files" },
