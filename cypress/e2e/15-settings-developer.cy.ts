@@ -114,7 +114,7 @@ describe("Settings - Developer Mode", () => {
     cy.url().should("include", "/settings/developer");
 
     // Click on Clear State button
-    settingsDeveloper.clearStateSectionButton.click();
+    settingsDeveloper.clearStateSectionButton.focus();
 
     // Validate that the border color changes to blue
     settingsDeveloper.clearStateSectionButton.should(
