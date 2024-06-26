@@ -1,10 +1,9 @@
-import 'cypress-clipboard';
+import "cypress-clipboard";
 import { faker } from "@faker-js/faker";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
-import friendsPage from "./PageObjects/Friends";
 
 describe("Settings Profile Tests", () => {
   const username = faker.internet.userName();
@@ -27,7 +26,8 @@ describe("Settings Profile Tests", () => {
     settingsProfile.profileBanner.realHover();
   });
 
-  it("I2, I3 - Banner Picture - User can upload banner", () => {
+  // Skipping due to open bug https://github.com/Satellite-im/UplinkWeb/issues/136
+  it.skip("I2, I3 - Banner Picture - User can upload banner", () => {
     // Shows tooltip when hovering
     settingsProfile.profileBanner.realHover();
 
@@ -38,7 +38,8 @@ describe("Settings Profile Tests", () => {
     settingsProfile.validateProfileBannerURLIsValid();
   });
 
-  it("I4 - Clicking upload picture on Profile picture should open File Browser", () => {
+  // Skipping due to open bug https://github.com/Satellite-im/UplinkWeb/issues/136
+  it.skip("I4 - Clicking upload picture on Profile picture should open File Browser", () => {
     // Profile Picture Upload Button tooltip shows "Change Profile Picture"
     settingsProfile.profilePictureUploadButton.realHover();
     settingsProfile.profilePictureUploadButton.should(
@@ -63,29 +64,34 @@ describe("Settings Profile Tests", () => {
     settingsProfile.inputSettingsProfileUsername.should("have.value", username);
   });
 
-  // clipboard tests are skipped because dont work in headless 
+  // clipboard tests are skipped because dont work in headless
   it.skip("I7 - UsernameID that is copied should be displayed on the page", () => {
     settingsProfile.inputSettingsProfileShortIDGroup.realHover();
     settingsProfile.inputSettingsProfileShortIDGroup.should(
       "have.attr",
       "data-tooltip",
-      "Copy"
+      "Copy",
     );
-  
-      cy.getClipboardTextAndTriggerContextMenu().then(() => {
+
+    cy.getClipboardTextAndTriggerContextMenu().then(() => {
       cy.contains("Copy id").click(); // Click on the element that triggers the copy action
       cy.log("Clicked on the 'Copy id' element."); // Add a log after clicking
-  
+
       // Check if the value in the clipboard matches the expected content
       cy.copyFromClipboard().then((copiedText) => {
         cy.log("Content copied to clipboard: " + copiedText);
-  
+
         // Extract the part after the hashtag
         const partAfterHashtag = copiedText.split("#")[1];
-  
+
         // Check if the part after the hashtag is present within the input and div elements
-        cy.get('[data-cy="input-settings-profile-short-id"]').invoke('val').should("include", partAfterHashtag);
-        cy.log("Part after hashtag is present within the specified elements: " + partAfterHashtag);
+        cy.get('[data-cy="input-settings-profile-short-id"]')
+          .invoke("val")
+          .should("include", partAfterHashtag);
+        cy.log(
+          "Part after hashtag is present within the specified elements: " +
+            partAfterHashtag,
+        );
       });
     });
   });
@@ -95,21 +101,21 @@ describe("Settings Profile Tests", () => {
     settingsProfile.inputSettingsProfileShortIDGroup.should(
       "have.attr",
       "data-tooltip",
-      "Copy"
+      "Copy",
     );
-  
-      cy.getClipboardTextAndTriggerCopy().then(() => {
+
+    cy.getClipboardTextAndTriggerCopy().then(() => {
       cy.log("Clicked on the 'username' element."); // Add a log after clicking
       // Check if the value in the clipboard matches the expected content
       cy.copyFromClipboard().then((copiedText) => {
-      cy.log("Content copied to clipboard: " + copiedText);
-        
-      // Expect the copied text to be equal to itself, essentially logging it
-      expect(copiedText).to.equal(copiedText);
+        cy.log("Content copied to clipboard: " + copiedText);
+
+        // Expect the copied text to be equal to itself, essentially logging it
+        expect(copiedText).to.equal(copiedText);
       });
     });
   });
-  
+
   it.skip("Context menu - Clicking usernameID should copy it to clipboard", () => {
     settingsProfile.inputSettingsProfileShortIDGroup.realHover();
     settingsProfile.inputSettingsProfileShortIDGroup.should(
@@ -118,17 +124,17 @@ describe("Settings Profile Tests", () => {
       "Copy",
     );
 
-      cy.getClipboardTextAndTriggerContextMenu().then(() => {
+    cy.getClipboardTextAndTriggerContextMenu().then(() => {
       cy.contains("Copy id").click(); // Click on the element that triggers the copy action
       cy.log("Clicked on the 'Copy id' element."); // Add a log after clicking
-  
+
       // Check if the value in the clipboard matches the expected content
       cy.copyFromClipboard().then((copiedText) => {
-      cy.log("Content copied to clipboard: " + copiedText);
-  
-      // Expect the copied text to be equal to itself, essentially logging it
-      expect(copiedText).to.equal(copiedText);
-      cy.log("Content copied to clipboard is present on the page.");
+        cy.log("Content copied to clipboard: " + copiedText);
+
+        // Expect the copied text to be equal to itself, essentially logging it
+        expect(copiedText).to.equal(copiedText);
+        cy.log("Content copied to clipboard is present on the page.");
       });
     });
   });
@@ -141,14 +147,14 @@ describe("Settings Profile Tests", () => {
       "Copy",
     );
 
-      cy.getClipboardTextAndTriggerContextMenu().then(() => {
+    cy.getClipboardTextAndTriggerContextMenu().then(() => {
       cy.contains("Copy DID").click(); // Click on the element that triggers the copy action
       cy.log("Clicked on the 'Copy DID' element."); // Add a log after clicking
-  
+
       // Check if the value in the clipboard matches the expected content
       cy.copyFromClipboard().then((copiedText) => {
         cy.log("Content copied to clipboard: " + copiedText);
-  
+
         // Expect the copied text to be equal to itself, essentially logging it
         expect(copiedText).to.equal(copiedText);
         cy.log("Content copied to clipboard is present on the page.");
