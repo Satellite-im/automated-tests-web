@@ -25,6 +25,14 @@ export default class MainPage {
     return cy.getByTestAttr("button-show-sidebar");
   }
 
+  get buttonSidebarChats() {
+    return cy.getByTestAttr("button-sidebar-chats");
+  }
+
+  get buttonSidebarFiles() {
+    return cy.getByTestAttr("button-sidebar-files");
+  }
+
   get buttonWallet() {
     return cy.getByTestAttr("button-Wallet");
   }

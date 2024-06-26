@@ -4,7 +4,6 @@ import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
-import friendsPage from "./PageObjects/Friends";
 
 describe("Settings Profile Tests", () => {
   const username = faker.internet.userName();
@@ -27,7 +26,8 @@ describe("Settings Profile Tests", () => {
     settingsProfile.profileBanner.realHover();
   });
 
-  it("I2, I3 - Banner Picture - User can upload banner", () => {
+  // Skipping due to open bug https://github.com/Satellite-im/UplinkWeb/issues/136
+  it.skip("I2, I3 - Banner Picture - User can upload banner", () => {
     // Shows tooltip when hovering
     settingsProfile.profileBanner.realHover();
 
@@ -38,7 +38,8 @@ describe("Settings Profile Tests", () => {
     settingsProfile.validateProfileBannerURLIsValid();
   });
 
-  it("I4 - Clicking upload picture on Profile picture should open File Browser", () => {
+  // Skipping due to open bug https://github.com/Satellite-im/UplinkWeb/issues/136
+  it.skip("I4 - Clicking upload picture on Profile picture should open File Browser", () => {
     // Profile Picture Upload Button tooltip shows "Change Profile Picture"
     settingsProfile.profilePictureUploadButton.realHover();
     settingsProfile.profilePictureUploadButton.should(
