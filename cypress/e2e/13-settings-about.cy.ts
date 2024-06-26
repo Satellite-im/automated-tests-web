@@ -68,7 +68,7 @@ describe("Settings - About", () => {
     // Label and texts for settings section are correct
     settingsAbout.openSourceCodeSectionLabel.should(
       "have.text",
-      "Open Source Code"
+      "Open Source Code",
     );
     settingsAbout.openSourceCodeSectionText.should(
       "have.text",
