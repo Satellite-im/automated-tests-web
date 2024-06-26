@@ -5,16 +5,25 @@ import loginPinPage from "./PageObjects/LoginPin";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 import settingsAbout from "./PageObjects/Settings/SettingsAbout";
 
-describe("Settings - About", () => {
-  const username = faker.internet.userName();
-  const status = faker.lorem.sentence(3);
+const USERNAME = faker.internet.userName();
+const STATUS = faker.lorem.sentence(3);
+const PIN = "1234";
+const BASE_URL = "https://satellite.im/";
+const VERSION = "0.2.5";
+const GITHUB_URL = "https://github.com/Satellite-im";
 
-  beforeEach(() => {
-    loginPinPage.loginWithPin("1234");
-    authNewAccount.createRandomUser(username, status);
+describe("Settings - About", () => {
+  // Reusable function for logging in and navigating to the About section
+  const loginAndNavigateToAbout = () => {
+    loginPinPage.loginWithPin(PIN);
+    authNewAccount.createRandomUser(USERNAME, STATUS);
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
     settingsProfile.buttonAbout.click();
+  };
+
+  beforeEach(() => {
+    loginAndNavigateToAbout();
   });
 
   it('R1 - "About Uplink" should appear at top of page', () => {
@@ -27,7 +36,7 @@ describe("Settings - About", () => {
   it("R2 - Current version of Uplink should be displayed", () => {
     // Label and texts for settings section are correct
     settingsAbout.versionSectionLabel.should("have.text", "Version");
-    settingsAbout.versionSectionText.should("have.text", "0.2.5");
+    settingsAbout.versionSectionText.should("have.text", VERSION);
   });
 
   // Skipped since button is not performing any action now
@@ -52,22 +61,18 @@ describe("Settings - About", () => {
     settingsAbout.websiteSectionButton.click();
 
     // Assert that window.open was called with the correct URL and target
-    cy.get("@windowOpen").should(
-      "be.calledWith",
-      "https://satellite.im/",
-      "_blank",
-    );
+    cy.get("@windowOpen").should("be.calledWith", BASE_URL, "_blank");
   });
 
   it("R5 - Clicking Open Source Code should take you to the source code", () => {
     // Label and texts for settings section are correct
     settingsAbout.openSourceCodeSectionLabel.should(
       "have.text",
-      "Open Source Code",
+      "Open Source Code"
     );
     settingsAbout.openSourceCodeSectionText.should(
       "have.text",
-      "Open a new browser window to our open source repository.",
+      "Open a new browser window to our open source repository."
     );
 
     // Intercept window.open calls
@@ -79,11 +84,7 @@ describe("Settings - About", () => {
     settingsAbout.openSourceCodeSectionButton.click();
 
     // Assert that window.open was called with the correct URL and target
-    cy.get("@windowOpen").should(
-      "be.calledWith",
-      "https://github.com/Satellite-im",
-      "_blank",
-    );
+    cy.get("@windowOpen").should("be.calledWith", GITHUB_URL, "_blank");
   });
 
   it("R6 and R7 - Made In header text, description and flags displayed", () => {
