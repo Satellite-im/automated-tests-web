@@ -72,7 +72,7 @@ describe("Settings - About", () => {
     );
     settingsAbout.openSourceCodeSectionText.should(
       "have.text",
-      "Open a new browser window to our open source repository."
+      "Open a new browser window to our open source repository.",
     );
 
     // Intercept window.open calls
