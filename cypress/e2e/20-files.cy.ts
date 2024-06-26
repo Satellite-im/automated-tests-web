@@ -1,6 +1,36 @@
+import { faker } from "@faker-js/faker";
+import authNewAccount from "./PageObjects/AuthNewAccount";
+import chatsMainPage from "./PageObjects/ChatsMain";
+import loginPinPage from "./PageObjects/LoginPin";
+import filesScreen from "./PageObjects/Files";
+
 describe("Files", () => {
-  it.skip("F1 - Highlighted border should appear when user clicks Sync", () => {
-    // Test code for F1
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+  const pin = "1234";
+
+  beforeEach(() => {
+    // Login and set up user before each test
+    loginPinPage.loginWithPin(pin);
+    authNewAccount.createRandomUser(username, status);
+    chatsMainPage.validateChatsMainPageIsShown();
+    chatsMainPage.goToFiles();
+  });
+
+  it("F1 - Highlighted border should appear when user clicks Sync", () => {
+    cy.url().should("include", "/files");
+
+    filesScreen.syncButton.should(
+      "have.css",
+      "border-bottom-color",
+      "rgb(28, 29, 43)",
+    );
+    filesScreen.syncButton.click();
+    filesScreen.syncButton.should(
+      "have.css",
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
   });
 
   it.skip("F2 - Highlighted border should appear when user clicks Gift Space", () => {
