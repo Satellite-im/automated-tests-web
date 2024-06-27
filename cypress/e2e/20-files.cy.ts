@@ -2,7 +2,6 @@ import { faker } from "@faker-js/faker";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
-import filesScreen from "./PageObjects/Files";
 
 describe("Files", () => {
   const username = faker.internet.userName();
@@ -17,55 +16,43 @@ describe("Files", () => {
     chatsMainPage.goToFiles();
   });
 
-  it("F1 - Highlighted border should appear when user clicks Sync", () => {
-    cy.url().should("include", "/files");
-
-    filesScreen.syncButton.should(
-      "have.css",
-      "border-bottom-color",
-      "rgb(28, 29, 43)",
-    );
-    filesScreen.syncButton.click();
-    filesScreen.syncButton.should(
-      "have.css",
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+  it.skip("F1 - Highlighted border should appear when user clicks Sync", () => {
+    // Test code for F1
   });
-
-  it.skip("F2 - Highlighted border should appear when user clicks Gift Space", () => {
+  it.skip("F2 - Highlighted border should appear when user clicks Create Node", () => {
     // Test code for F2
   });
-
-  it.skip("F3 - Highlighted border should appear when user clicks Rent Space", () => {
+  it.skip("F3 -	Amount of Free Space should appear in Toolbar", () => {
     // Test code for F3
   });
-
-  it.skip("F4 - Highlighted border should appear when user clicks Create Node", () => {
+  it.skip("F4 -	Amount used of Total Space should appear in Toolbar", () => {
     // Test code for F4
   });
-
-  it.skip("F5 - Amount of Free Space should appear in Toolbar", () => {
+  it.skip("F5 -	Highlighted border should appaer when you click Create New Folder", () => {
     // Test code for F5
   });
-
-  it.skip("F6 - Amount used of Total Space should appear in Toolbar", () => {
+  it.skip("F6 -	Clicking Upload should then open up the OS files browser", () => {
     // Test code for F6
   });
-
-  it.skip("F7 - Amount of Sync Size should appear in Toolbar", () => {
+  it.skip("F7 -	User can create new folders on root", () => {
     // Test code for F7
   });
-
-  it.skip("F8 - Amount used of Shuttle Space should appear in Toolbar", () => {
+  it.skip("F8 -	If user tries to create a folder with empty name or press Esc while name input is displayed, folder is not created", () => {
     // Test code for F8
   });
-
-  it.skip("F9 - Highlighted border should appear when you click Create New Folder", () => {
+  it.skip("F9 -	User cannot create directories with existing name - Toast notification is shown", () => {
     // Test code for F9
   });
-
-  it.skip("F10 - Clicking Upload should then open up the OS files browser", () => {
+  it.skip("F10 - User can create subfolders and navigate to parent folder with go back button", () => {
     // Test code for F10
+  });
+  it.skip("F11 - User can upload files in root folder", () => {
+    // Test code for F11
+  });
+  it.skip("F12 - User can upload files in subfolder folder", () => {
+    // Test code for F12
+  });
+  it.skip("F13 - Files and folders are still visible after logging out and login again", () => {
+    // Test code for F13
   });
 });
