@@ -2,18 +2,20 @@ import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
+import SettingsProfile from "./PageObjects/Settings/SettingsProfile";
 
 describe("Create Account and Login Tests", () => {
+  const username = faker.internet.userName();
+  const status = faker.lorem.sentence(3);
+  const pinNumber = "1234";
+
   beforeEach(() => {
     loginPinPage.launchApplication();
     loginPinPage.waitUntilPageIsLoaded();
   });
 
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
-    const username = faker.internet.userName();
-    const status = faker.lorem.sentence(3);
-
-    loginPinPage.enterPin("1234");
+    loginPinPage.enterPin(pinNumber);
     loginPinPage.pinButtonConfirm.click();
     authNewAccount.validateLoadingHeader();
     cy.location("href").should("include", "/auth/new_account");
@@ -60,24 +62,48 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A6, A7 - Scramble Keypad will change the order of pin input buttons", () => {
-    loginPinPage.goToSettings();
-    loginPinPage.clickScrambleKeypadSwitch();
+    // Scramble keypad is disabled by default
     loginPinPage.pinKeypad.should(
       "have.attr",
       "data-keyorder",
       "1,2,3,4,5,6,7,8,9,0",
     );
 
+    loginPinPage.goToSettings();
     loginPinPage.clickScrambleKeypadSwitch();
+
+    // Validate that the order of the buttons has changed
     loginPinPage.pinKeypad
       .its("data-keyorder")
       .should("not.eq", "1,2,3,4,5,6,7,8,9,0");
+
+    loginPinPage.clickScrambleKeypadSwitch();
+    // Scramble keypad is disabled again by the user
+    loginPinPage.pinKeypad.should(
+      "have.attr",
+      "data-keyorder",
+      "1,2,3,4,5,6,7,8,9,0",
+    );
   });
 
-  // Cannot be automated at this moment
-  it.skip("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {});
+  it("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {
+    loginPinPage.goToSettings();
+    loginPinPage.clickStayUnlockedSwitch();
+    loginPinPage.stayUnlockedCheckbox.should("be.checked");
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
+    chatsMainPage.addSomeone.should("exist");
+    cy.location("href").should("include", "/chat");
+    cy.reload();
+    cy.location("href").should("include", "/chat");
+  });
 
-  it("A10 - User can see menu to switch to a different profile", () => {
+  // Needs investigation to unskip
+  it.skip("A10 - User can see menu to switch to a different profile", () => {
     loginPinPage.changeUserButton.click();
     loginPinPage.selectProfileModal.should("be.visible");
     loginPinPage.selectProfileLabel.should("have.text", "Profiles");
@@ -85,6 +111,53 @@ describe("Create Account and Login Tests", () => {
     loginPinPage.selectProfileUserName.eq(1).should("have.text", "Sara Saturn");
   });
 
-  // Cannot be automated at this moment
-  it.skip("A12 - If incorrect pin is entered, error message should be displayed", () => {});
+  it.skip("A12 - If incorrect pin is entered, error message should be displayed", () => {
+    loginPinPage.goToSettings();
+    loginPinPage.clickStayUnlockedSwitch();
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
+    cy.url().should("contain", "/chat");
+    chatsMainPage.addSomeone.should("exist");
+    cy.reload();
+    cy.url().should("contain", "/auth/unlock");
+    loginPinPage.pinKeypad.should("exist");
+    loginPinPage.enterPin("9876");
+    loginPinPage.pinButtonConfirm.click();
+    loginPinPage.toastNotification.should("exist");
+    loginPinPage.toastNotificationText.should("have.text", "Pin is wrong!");
+  });
+
+  it.skip("A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page", () => {
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
+    chatsMainPage.addSomeone.should("exist");
+    cy.location("href").should("include", "/chat");
+    cy.reload();
+    loginPinPage.pinKeypad.should("exist");
+  });
+
+  it.skip("A14 - If Stay Unlocked is toggled on, user should be redirected to enter PIN after logging off", () => {
+    loginPinPage.goToSettings();
+    loginPinPage.clickStayUnlockedSwitch();
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
+    chatsMainPage.addSomeone.should("exist");
+    cy.location("href").should("include", "/chat");
+    chatsMainPage.buttonSettings.click();
+    cy.location("href").should("include", "/settings/profile");
+    SettingsProfile.logOutSectionButton.click();
+    loginPinPage.pinKeypad.should("exist");
+  });
 });
