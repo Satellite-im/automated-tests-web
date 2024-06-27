@@ -32,6 +32,10 @@ class FilesPage extends MainPage {
     return this.statsButton.eq(0).find("p");
   }
 
+  get inputFileFolderName() {
+    return cy.getByTestAttr("input-file-folder-name");
+  }
+
   get goBackButton() {
     return cy.getByTestAttr("button-folder-back");
   }
@@ -45,14 +49,14 @@ class FilesPage extends MainPage {
   }
 
   get statsButton() {
-    return cy.get("button .stat");
+    return cy.get(".stat");
   }
 
   get totalSpaceLabel() {
-    return this.statsButton.eq(0).find("label");
+    return this.statsButton.eq(1).find("label");
   }
   get totalSpaceValue() {
-    return this.statsButton.eq(0).find("p");
+    return this.statsButton.eq(1).find("p");
   }
 
   get uploadFileButton() {
@@ -60,15 +64,21 @@ class FilesPage extends MainPage {
   }
 
   get uploadFileInput() {
-    return cy.getByTestAttr("input=upload-files");
+    return cy.get('[data-cy="input=upload-files"]');
   }
 
   public getFileByName(name: string) {
-    return cy.getByTestAttr(`file-${name}`);
+    return cy.get(`[data-cy='file-${name}']`);
   }
 
   public getFolderByName(name: string) {
-    return cy.getByTestAttr(`folder-${name}`);
+    return cy.get(`[data-cy='folder-${name}']`);
+  }
+
+  public uploadFile(file: string) {
+    this.uploadFileInput.selectFile(file, {
+      force: true,
+    });
   }
 }
 
