@@ -93,4 +93,9 @@ export default class MainPage {
   public goToWallet() {
     this.buttonWallet.click();
   }
+
+  public validateToastNotification(toastText: string) {
+    this.toastNotification.should("be.visible");
+    this.toastNotificationText.should("have.text", toastText);
+  }
 }
