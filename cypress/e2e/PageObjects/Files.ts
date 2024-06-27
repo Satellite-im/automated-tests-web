@@ -25,12 +25,11 @@ class FilesPage extends MainPage {
     return cy.getByTestAttr("context-menu-option-Rename");
   }
 
-  get createNodeButton() {
-    return cy.getByTestAttr("button-create-node");
+  get freeSpaceLabel() {
+    return this.statsButton.eq(0).find("label");
   }
-
-  get giftSpaceButton() {
-    return cy.getByTestAttr("button-gift-space");
+  get freeSpaceValue() {
+    return this.statsButton.eq(0).find("p");
   }
 
   get goBackButton() {
@@ -45,20 +44,15 @@ class FilesPage extends MainPage {
     return cy.getByTestAttr("progress-button");
   }
 
-  get quickActionsLabel() {
-    return cy.getByTestAttr("label-quick-actions");
-  }
-
-  get rentSpaceButton() {
-    return cy.getByTestAttr("button-rent-space");
-  }
-
   get statsButton() {
     return cy.get("button .stat");
   }
 
-  get syncButton() {
-    return cy.getByTestAttr("button-sync");
+  get totalSpaceLabel() {
+    return this.statsButton.eq(0).find("label");
+  }
+  get totalSpaceValue() {
+    return this.statsButton.eq(0).find("p");
   }
 
   get uploadFileButton() {

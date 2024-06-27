@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
+import filesScreen from "./PageObjects/Files";
 
 describe("Files", () => {
   const username = faker.internet.userName();
@@ -22,15 +23,22 @@ describe("Files", () => {
   it.skip("F2 - Highlighted border should appear when user clicks Create Node", () => {
     // Test code for F2
   });
-  it.skip("F3 -	Amount of Free Space should appear in Toolbar", () => {
-    // Test code for F3
+  it.skip("F3, F4 -	Amount of Free and Total should appear in Toolbar", () => {
+    cy.url().should("include", "/files");
+    filesScreen.freeSpaceLabel.should("have.text", "Free Space");
+    filesScreen.freeSpaceValue.should("have.text", "885 TB");
+    filesScreen.totalSpaceLabel.should("have.text", "Total Space");
+    filesScreen.totalSpaceValue.should("have.text", "13.2 EB");
   });
-  it.skip("F4 -	Amount used of Total Space should appear in Toolbar", () => {
-    // Test code for F4
-  });
+
   it.skip("F5 -	Highlighted border should appaer when you click Create New Folder", () => {
-    // Test code for F5
+    cy.url().should("include", "/files");
+    filesScreen.newFolderButton
+      .should("have.css", "border-color", "rgb(28, 29, 43)")
+      .focus()
+      .should("have.css", "border-color", "rgb(77, 77, 255)");
   });
+
   it.skip("F6 -	Clicking Upload should then open up the OS files browser", () => {
     // Test code for F6
   });

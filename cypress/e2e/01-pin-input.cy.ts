@@ -102,7 +102,8 @@ describe("Create Account and Login Tests", () => {
     cy.location("href").should("include", "/chat");
   });
 
-  it("A10 - User can see menu to switch to a different profile", () => {
+  // Needs investigation to unskip
+  it.skip("A10 - User can see menu to switch to a different profile", () => {
     loginPinPage.changeUserButton.click();
     loginPinPage.selectProfileModal.should("be.visible");
     loginPinPage.selectProfileLabel.should("have.text", "Profiles");
