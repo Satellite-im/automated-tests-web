@@ -22,7 +22,7 @@ export default class MainPage {
   }
 
   get buttonShowSidebar() {
-    return cy.getByTestAttr("button-show-sidebar");
+    return this.slimbar.find("[data-cy='button-show-sidebar']");
   }
 
   get buttonSidebarChats() {
@@ -66,13 +66,11 @@ export default class MainPage {
   }
 
   public ensureSidebarIsDisplayed() {
-    this.navigationBar.then(($navBar) => {
-      if ($navBar.hasClass("vertical")) {
+    this.sidebar.then(($sidebar) => {
+      if ($sidebar.hasClass("closed")) {
         this.buttonShowSidebar.click();
-        this.sidebar.should("be.visible");
-      } else {
-        this.sidebar.should("be.visible");
       }
+      this.sidebar.should("have.class", "open");
     });
   }
 

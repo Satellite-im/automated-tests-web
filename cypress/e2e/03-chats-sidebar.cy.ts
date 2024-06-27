@@ -53,17 +53,17 @@ describe("Chats Sidebar Tests", () => {
     });
   });
 
-  // Skipping due to animations bug introduced for mobile changes - GH issue # to be added
-  it.skip("C4 - Clicking hamburger button should collapse sidebar", () => {
-    chatsMainPage.ensureSidebarIsDisplayed();
-    chatsMainPage.buttonHideSidebar.click();
-    chatsMainPage.sidebar.should("not.exist");
-    chatsMainPage.buttonShowSidebar.click();
-    chatsMainPage.sidebar.should("be.visible");
+  it("C4 - Clicking hamburger button should collapse sidebar", () => {
+    chatsMainPage.buttonHideSidebar.click().should("not.exist");
+    chatsMainPage.sidebar.should("have.class", "closed");
+    chatsMainPage.buttonShowSidebar
+      .should("have.length", 1)
+      .click()
+      .should("not.exist");
+    chatsMainPage.sidebar.should("have.class", "open");
   });
 
-  // Skipping due to animations bug introduced for mobile changes - GH issue # to be added
-  it.skip("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", () => {
+  it("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", () => {
     const navButtons = [
       { button: chatsMainPage.buttonWallet, url: "/wallet" },
       { button: chatsMainPage.buttonFiles, url: "/files" },

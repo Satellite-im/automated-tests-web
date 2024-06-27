@@ -221,9 +221,8 @@ describe("Settings - Customization", () => {
     );
   });
 
-  // Skipping due to animations bug introduced for mobile changes - GH issue # to be added
-  it.skip("K14 - User should be able to add additional custom CSS to the application", () => {
-    settingsCustomizations.sidebar.should(
+  it("K14 - User should be able to add additional custom CSS to the application", () => {
+    settingsCustomizations.slimbar.should(
       "have.css",
       "background-color",
       "rgba(0, 0, 0, 0)",
@@ -239,18 +238,18 @@ describe("Settings - Customization", () => {
       "Custom CSS text should be present",
     );
     settingsCustomizations.customCSSSectionTextArea.type(
-      ".sidebar {background-color: rgb(255, 0, 141)}",
+      ".slimbar {background-color: rgb(255, 0, 141)}",
       { parseSpecialCharSequences: false },
     );
     settingsCustomizations.buttonCustomization.click();
-    settingsCustomizations.sidebar.should(
+    settingsCustomizations.slimbar.should(
       "have.css",
       "background-color",
       "rgb(255, 0, 141)",
     );
 
     settingsCustomizations.goToChat();
-    chatsMain.sidebar.should(
+    chatsMain.slimbar.should(
       "have.css",
       "background-color",
       "rgb(255, 0, 141)",

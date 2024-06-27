@@ -81,8 +81,12 @@ class LoginPinPage extends MainPage {
     return cy.getByTestAttr("label-scramble-keypad");
   }
 
-  get scrambleKeypadSwitch() {
+  get scrambleKeypadCheckbox() {
     return cy.getByTestAttr("switch-scramble-keypad");
+  }
+
+  get scrambleKeypadSlider() {
+    return cy.get(".pin-settings > .setting").eq(0).find(".slider");
   }
 
   get selectProfileLabel() {
@@ -109,8 +113,12 @@ class LoginPinPage extends MainPage {
     return cy.getByTestAttr("label-stay-unlocked");
   }
 
-  get stayUnlockedSwitch() {
+  get stayUnlockedCheckbox() {
     return cy.getByTestAttr("switch-stay-unlocked");
+  }
+
+  get stayUnlockedSlider() {
+    return cy.get(".pin-settings > .setting").eq(1).find(".slider");
   }
 
   get settingsButton() {
@@ -118,16 +126,17 @@ class LoginPinPage extends MainPage {
   }
 
   public clickScrambleKeypadSwitch() {
-    this.scrambleKeypadSwitch.siblings(".slider").click();
+    this.scrambleKeypadSlider.click();
   }
 
   public clickStayUnlockedSwitch() {
-    this.stayUnlockedSwitch.siblings(".slider").click();
+    this.stayUnlockedSlider.click();
   }
 
   public enterPin(pin: string) {
+    this.pinKeypad.should("exist");
     pin.split("").forEach((digit) => {
-      cy.getByTestAttr(`button-pin-${digit}`).click();
+      cy.getByTestAttr(`button-pin-${digit}`).should("be.be.visible").click();
     });
   }
 

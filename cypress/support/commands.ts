@@ -12,6 +12,10 @@ declare namespace Cypress {
       text: string,
       message: string,
     ): Chainable<JQuery<HTMLElement>>;
+    validateBorderColor(
+      element: Chainable<JQuery<HTMLElement>>,
+      color: string,
+    ): void;
   }
 }
 
@@ -73,5 +77,12 @@ Cypress.Commands.add(
     element.should("have.text", text, { log: false }).then(($el) => {
       expect($el.text()).to.eq(text, message);
     });
+  },
+);
+
+Cypress.Commands.add(
+  "validateBorderColor",
+  (element: Chainable<JQuery<HTMLElement>>, color: string) => {
+    element.should("have.css", "border-bottom-color", color);
   },
 );
