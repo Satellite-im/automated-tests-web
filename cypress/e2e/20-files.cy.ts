@@ -108,7 +108,7 @@ describe("Files", () => {
     filesScreen.toastNotification.should("be.visible");
     filesScreen.toastNotificationText.should(
       "have.text",
-      "Directory already exist",
+      "Directory already exists",
     );
   });
 
@@ -195,6 +195,6 @@ describe("Files", () => {
 
     // Toast notification should be displayed
     filesScreen.toastNotification.should("be.visible");
-    filesScreen.toastNotificationText.should("have.text", "File already exist");
+    filesScreen.toastNotificationText.should("have.text", "File already exists");
   });
 });
