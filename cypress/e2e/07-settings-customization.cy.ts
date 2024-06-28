@@ -8,25 +8,41 @@ import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 describe("Settings - Customization", () => {
   const username = faker.internet.userName();
   const status = faker.lorem.sentence(3);
+  const pin = "1234";
 
   beforeEach(() => {
-    loginPinPage.loginWithPin("1234");
+    // Login and setup user before each test
+    loginPinPage.loginWithPin(pin);
     authNewAccount.createRandomUser(username, status);
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
     settingsProfile.buttonCustomization.click();
   });
 
-  it("K1 - Language dropdown should display English", () => {
+  const assertLabelAndText = (
+    label: any,
+    text: any,
+    labelDescription: string,
+    textDescription: string,
+  ) => {
     cy.assertText(
-      settingsCustomizations.appLanguageSectionLabel,
-      "App Language",
-      "App Language label should be present",
+      label,
+      labelDescription,
+      `${labelDescription} label should be present`,
     );
     cy.assertText(
+      text,
+      textDescription,
+      `${textDescription} text should be present`,
+    );
+  };
+
+  it("K1 - Language dropdown should display English", () => {
+    assertLabelAndText(
+      settingsCustomizations.appLanguageSectionLabel,
       settingsCustomizations.appLanguageSectionText,
+      "App Language",
       "Change language.",
-      "App Language text should be present",
     );
     settingsCustomizations.appLanguageSectionSelectorOption.should(
       "have.length",
@@ -56,15 +72,11 @@ describe("Settings - Customization", () => {
       "PoiretOne",
       "OpenDyslexic",
     ];
-    cy.assertText(
+    assertLabelAndText(
       settingsCustomizations.fontSectionLabel,
-      "Font",
-      "Font label should be present",
-    );
-    cy.assertText(
       settingsCustomizations.fontSectionText,
+      "Font",
       "Change the font used in the app.",
-      "Font text should be present",
     );
     settingsCustomizations.fontSectionSelectorOption.should(
       "have.length",
@@ -74,17 +86,18 @@ describe("Settings - Customization", () => {
   });
 
   it("K3 - Selected Fonts should be applied everywhere throughout the app", () => {
-    settingsCustomizations.selectFont("JosefinSans");
+    const selectedFont = "JosefinSans";
+    settingsCustomizations.selectFont(selectedFont);
     settingsCustomizations.fontSectionText.should(
       "have.css",
       "font-family",
-      "JosefinSans",
+      selectedFont,
     );
     settingsCustomizations.goToChat();
     cy.contains("Let's get something started!").should(
       "have.css",
       "font-family",
-      "JosefinSans",
+      selectedFont,
     );
   });
 
@@ -92,22 +105,16 @@ describe("Settings - Customization", () => {
 
   // Skipped since a new bug was introduced for this test and font size is not refreshing after changing the font
   it.skip("K5 - Font size should have a minimum of .82", () => {
-    cy.assertText(
+    assertLabelAndText(
       settingsCustomizations.fontScalingSectionLabel,
-      "Font Scaling",
-      "Font Scaling label should be present",
-    );
-    cy.assertText(
       settingsCustomizations.fontScalingSectionText,
+      "Font Scaling",
       "Scale the font size up or down to your liking.",
-      "Font Scaling text should be present",
     );
     settingsCustomizations.fontScalingSectionInput.should("have.value", "1.00");
-
     for (let i = 0; i < 10; i++) {
       settingsCustomizations.fontScalingSectionDecreaseButton.click();
     }
-
     settingsCustomizations.fontScalingSectionInput.should("have.value", "0.82");
     settingsCustomizations.fontScalingSectionText.should(
       "have.css",
@@ -119,11 +126,9 @@ describe("Settings - Customization", () => {
   // Skipped since a new bug was introduced for this test and font size is not refreshing after changing the font
   it.skip("K6, K7 - Font size should have a maximum of 1.50 and can be applied correctly everywhere through the app", () => {
     settingsCustomizations.fontScalingSectionInput.should("have.value", "1.00");
-
     for (let i = 0; i < 20; i++) {
       settingsCustomizations.fontScalingSectionIncreaseButton.click();
     }
-
     settingsCustomizations.fontScalingSectionInput.should("have.value", "1.50");
     settingsCustomizations.fontScalingSectionText.should(
       "have.css",
@@ -142,15 +147,11 @@ describe("Settings - Customization", () => {
 
   it("K9 - Themes dropdown should display Default", () => {
     const expectedThemes = ["Default"];
-    cy.assertText(
+    assertLabelAndText(
       settingsCustomizations.themeSectionLabel,
-      "Theme",
-      "Theme label should be present",
-    );
-    cy.assertText(
       settingsCustomizations.themeSectionText,
+      "Theme",
       "Change the theme of the app.",
-      "Theme text should be present",
     );
     settingsCustomizations.themeSectionSelectorOption.should("have.length", 1);
     settingsCustomizations.validateThemes(expectedThemes);
@@ -172,15 +173,11 @@ describe("Settings - Customization", () => {
       "Apple Valley",
       "Pencil Lead",
     ];
-    cy.assertText(
+    assertLabelAndText(
       settingsCustomizations.primaryColorSectionLabel,
-      "Primary Color",
-      "Primary Color label should be present",
-    );
-    cy.assertText(
       settingsCustomizations.primaryColorSectionText,
+      "Primary Color",
       "Change the primary color of the app.",
-      "Primary Color text should be present",
     );
     settingsCustomizations.primaryColorSectionColorSwatchButton.should(
       "have.length",
@@ -207,14 +204,12 @@ describe("Settings - Customization", () => {
       "background-color",
       "rgb(77, 77, 255)",
     );
-
     settingsCustomizations.selectColorSwatch("Traffic Cone");
     settingsCustomizations.buttonCustomization.should(
       "have.css",
       "background-color",
       "rgb(255, 60, 0)",
     );
-
     settingsCustomizations.goToChat();
     chatsMain.buttonAddFriends.should(
       "have.css",
@@ -229,15 +224,11 @@ describe("Settings - Customization", () => {
       "background-color",
       "rgba(0, 0, 0, 0)",
     );
-    cy.assertText(
+    assertLabelAndText(
       settingsCustomizations.customCSSSectionLabel,
-      "Custom CSS",
-      "Custom CSS label should be present",
-    );
-    cy.assertText(
       settingsCustomizations.customCSSSectionText,
+      "Custom CSS",
       "Add additional custom CSS to the application.",
-      "Custom CSS text should be present",
     );
     settingsCustomizations.customCSSSectionTextArea.type(
       ".slimbar {background-color: rgb(255, 0, 141)}",
@@ -249,7 +240,6 @@ describe("Settings - Customization", () => {
       "background-color",
       "rgb(255, 0, 141)",
     );
-
     settingsCustomizations.goToChat();
     chatsMain.slimbar.should(
       "have.css",
