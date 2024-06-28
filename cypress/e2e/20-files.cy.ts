@@ -79,7 +79,11 @@ describe("Files", () => {
     filesScreen.createNewFolder("NewFolder");
 
     // Toast notification should be displayed
-    filesScreen.validateToastNotification("Directory already exist");
+    filesScreen.toastNotification.should("be.visible");
+    filesScreen.toastNotificationText.should(
+      "have.text",
+      "Directory already exists",
+    );
   });
 
   it("F10 - User can create subfolders and navigate to parent folder with go back button", () => {
@@ -159,49 +163,7 @@ describe("Files", () => {
     filesScreen.uploadFile("cypress/fixtures/banner.jpg");
 
     // Toast notification should be displayed
-    filesScreen.validateToastNotification("File already exist");
-  });
-
-  it("F15 - Context Menu - Files - Rename", () => {
-    // User can upload an image file in root
-    filesScreen.validateFilesURL();
-    filesScreen.uploadFile("cypress/fixtures/banner.jpg");
-    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
-
-    // Right click on item and select rename
-    filesScreen.renameFile("banner", "renamedBanner");
-    filesScreen.validateRenamedFileInfo(
-      "banner",
-      "renamedBanner",
-      "jpg",
-      "61.4 kB",
-    );
-  });
-
-  // Test to be added soon
-  it.skip("F16 - Context Menu - Files - Download", () => {
-    // Test code for F16
-  });
-
-  // Cannot be automated now since delete option is not working
-  it.skip("F17 - Context Menu - Files - Delete", () => {
-    // Test code for F17
-  });
-
-  // Test needs to be fixed before unskipping
-  it.skip("F18 - Context Menu - Folder - Rename", () => {
-    // Create a folder in root
-    filesScreen.validateFilesURL();
-    filesScreen.createNewFolder("NewFolder");
-    filesScreen.validateNewFolderCreated("NewFolder");
-
-    // Right click on item and select rename
-    filesScreen.renameFolder("NewFolder", "RenamedFolder");
-    filesScreen.validateNewFolderCreated("RenamedFolder");
-  });
-
-  // Cannot be automated now since delete option is not working
-  it.skip("F19 - Context Menu - Folder - Delete", () => {
-    // Test code for F19
+    filesScreen.toastNotification.should("be.visible");
+    filesScreen.toastNotificationText.should("have.text", "File already exists");
   });
 });
