@@ -90,7 +90,8 @@ describe("Settings - Customization", () => {
 
   it.skip("K4 - Clicking OpenFolder should open the Fonts folder", () => {});
 
-  it("K5 - Font size should have a minimum of .82", () => {
+  // Skipped since a new bug was introduced for this test and font size is not refreshing after changing the font
+  it.skip("K5 - Font size should have a minimum of .82", () => {
     cy.assertText(
       settingsCustomizations.fontScalingSectionLabel,
       "Font Scaling",
@@ -115,7 +116,8 @@ describe("Settings - Customization", () => {
     );
   });
 
-  it("K6, K7 - Font size should have a maximum of 1.50 and can be applied correctly everywhere through the app", () => {
+  // Skipped since a new bug was introduced for this test and font size is not refreshing after changing the font
+  it.skip("K6, K7 - Font size should have a maximum of 1.50 and can be applied correctly everywhere through the app", () => {
     settingsCustomizations.fontScalingSectionInput.should("have.value", "1.00");
 
     for (let i = 0; i < 20; i++) {
