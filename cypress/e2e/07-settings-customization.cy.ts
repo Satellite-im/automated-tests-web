@@ -29,7 +29,7 @@ describe("Settings - Customization", () => {
       settingsCustomizations.appLanguageSectionLabel,
       settingsCustomizations.appLanguageSectionText,
       "App Language",
-      "Change language."
+      "Change language.",
     );
     settingsCustomizations.appLanguageSectionSelectorOption.should("have.length", 1);
     settingsCustomizations.appLanguageSectionSelectorOption
@@ -54,13 +54,13 @@ describe("Settings - Customization", () => {
       "MajorMono",
       "Merriweather",
       "PoiretOne",
-      "OpenDyslexic"
+      "OpenDyslexic",
     ];
     assertLabelAndText(
       settingsCustomizations.fontSectionLabel,
       settingsCustomizations.fontSectionText,
       "Font",
-      "Change the font used in the app."
+      "Change the font used in the app.",
     );
     settingsCustomizations.fontSectionSelectorOption.should("have.length", expectedFonts.length);
     settingsCustomizations.validateFontNames(expectedFonts);
@@ -110,7 +110,7 @@ describe("Settings - Customization", () => {
       settingsCustomizations.themeSectionLabel,
       settingsCustomizations.themeSectionText,
       "Theme",
-      "Change the theme of the app."
+      "Change the theme of the app.",
     );
     settingsCustomizations.themeSectionSelectorOption.should("have.length", 1);
     settingsCustomizations.validateThemes(expectedThemes);
@@ -130,13 +130,13 @@ describe("Settings - Customization", () => {
       "Rogue Pink",
       "Squeaky",
       "Apple Valley",
-      "Pencil Lead"
+      "Pencil Lead",
     ];
     assertLabelAndText(
       settingsCustomizations.primaryColorSectionLabel,
       settingsCustomizations.primaryColorSectionText,
       "Primary Color",
-      "Change the primary color of the app."
+      "Change the primary color of the app.",
     );
     settingsCustomizations.primaryColorSectionColorSwatchButton.should("have.length", expectedPrimaryColors.length);
     settingsCustomizations.validatePrimaryColors(expectedPrimaryColors);
@@ -164,7 +164,7 @@ describe("Settings - Customization", () => {
       settingsCustomizations.customCSSSectionLabel,
       settingsCustomizations.customCSSSectionText,
       "Custom CSS",
-      "Add additional custom CSS to the application."
+      "Add additional custom CSS to the application.",
     );
     settingsCustomizations.customCSSSectionTextArea.type(
       ".slimbar {background-color: rgb(255, 0, 141)}",
