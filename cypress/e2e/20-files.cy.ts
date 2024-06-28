@@ -3,6 +3,7 @@ import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import filesScreen from "./PageObjects/Files";
+import SettingsProfile from "./PageObjects/Settings/SettingsProfile";
 
 describe("Files", () => {
   const username = faker.internet.userName();
@@ -20,181 +21,187 @@ describe("Files", () => {
   it.skip("F1 - Highlighted border should appear when user clicks Sync", () => {
     // Test code for F1
   });
+
   it.skip("F2 - Highlighted border should appear when user clicks Create Node", () => {
     // Test code for F2
   });
-  it("F3, F4 -	Amount of Free and Total should appear in Toolbar", () => {
-    cy.url().should("include", "/files");
-    filesScreen.freeSpaceLabel.should("have.text", "Free Space");
-    filesScreen.freeSpaceValue.should("have.text", "885 TB");
-    filesScreen.totalSpaceLabel.should("have.text", "Total Space");
-    filesScreen.totalSpaceValue.should("have.text", "13.2 EB");
+
+  it("F3, F4 - Amount of Free and Total should appear in Toolbar", () => {
+    // Validate Free and Total space data
+    filesScreen.validateFilesURL();
+    filesScreen.validateFreeSpaceInfo("885 TB");
+    filesScreen.validateTotalSpaceInfo("13.2 EB");
   });
 
-  it("F5 -	Highlighted border should appaer when you click Create New Folder", () => {
-    cy.url().should("include", "/files");
+  it("F5 - Highlighted border should appaer when you click Create New Folder", () => {
+    // Validate border color when user clicks on New Folder button
+    filesScreen.validateFilesURL();
     filesScreen.newFolderButton
       .should("have.css", "border-color", "rgb(28, 29, 43)")
-      .focus()
-      .wait(1000)
-      .should("have.css", "border-color", "rgb(77, 77, 255)");
-  });
-
-  it("F6, F11 -Clicking Upload should then open up the OS files browser and user can upload files in root folder", () => {
-    cy.url().should("include", "/files");
-    filesScreen.uploadFileButton.click();
-
-    // User can upload an image file
-    filesScreen.uploadFile("cypress/fixtures/banner.jpg");
-
-    // File uploaded should be displayed
-    filesScreen.getFileByName("banner").then(($file) => {
-      cy.wrap($file)
-        .should("exist")
-        .find("[data-cy='file-folder-name']")
-        .should("have.text", "banner.jpg");
-      cy.wrap($file)
-        .find("[data-cy='file-folder-size']")
-        .should("have.text", "61.4 kB");
-      cy.wrap($file).find(".svg-icon").should("be.visible");
-    });
-  });
-
-  it("F7 -	User can create new folders on root", () => {
-    cy.url().should("include", "/files");
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("New Folder{Enter}");
-    filesScreen.getFolderByName("New Folder").then(($folder) => {
-      cy.wrap($folder)
-        .should("exist")
-        .find("[data-cy='file-folder-name']")
-        .should("have.text", "New Folder");
-      cy.wrap($folder)
-        .find("[data-cy='file-folder-size']")
-        .should("have.text", "0 B");
-      cy.wrap($folder).find(".svg-icon").should("be.visible");
-    });
-  });
-
-  it("F8 -	If user tries to create a folder with empty name or press Esc while name input is displayed, folder is not created", () => {
-    cy.url().should("include", "/files");
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("{Enter}");
-    filesScreen.getFolderByName("").then(($folder) => {
-      cy.wrap($folder)
-        .should("exist")
-        .find("[data-cy='file-folder-name']")
-        .should("have.text", "undefined");
-      cy.wrap($folder)
-        .find("[data-cy='file-folder-size']")
-        .should("have.text", "0 B");
-      cy.wrap($folder).find(".svg-icon").should("be.visible");
-    });
-  });
-
-  it("F9 -	User cannot create directories with existing name - Toast notification is shown", () => {
-    cy.url().should("include", "/files");
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("New Folder{Enter}");
-    filesScreen.getFolderByName("New Folder").then(($folder) => {
-      cy.wrap($folder).should("exist");
-    });
-
-    // Create again the same folder
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("New Folder{Enter}");
-
-    // Toast notification should be displayed
-    filesScreen.toastNotification.should("be.visible");
-    filesScreen.toastNotificationText.should(
-      "have.text",
-      "Directory already exist",
+      .focus();
+    filesScreen.newFolderButton.should(
+      "have.css",
+      "border-color",
+      "rgb(77, 77, 255)",
     );
   });
 
+  it("F6, F11 -Clicking Upload should then open up the OS files browser and user can upload files in root folder", () => {
+    // User can upload an image file
+    filesScreen.validateFilesURL();
+    filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+
+    // File uploaded should be displayed
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+  });
+
+  it("F7 - User can create new folders on root", () => {
+    // User can create folders on root
+    filesScreen.validateFilesURL();
+    filesScreen.createNewFolder("NewFolder");
+    filesScreen.validateNewFolderCreated("NewFolder");
+  });
+
+  it("F8 - If user tries to create a folder with empty name or press Esc while name input is displayed, folder is not created", () => {
+    // Empty folders are named as undefined
+    filesScreen.validateFilesURL();
+    filesScreen.createNewFolder("");
+    filesScreen.validateNewFolderCreated("", true);
+  });
+
+  it("F9 - User cannot create directories with existing name - Toast notification is shown", () => {
+    // Create a folder
+    filesScreen.validateFilesURL();
+    filesScreen.createNewFolder("NewFolder");
+    filesScreen.validateNewFolderCreated("NewFolder");
+
+    // Create again the same folder
+    filesScreen.createNewFolder("NewFolder");
+
+    // Toast notification should be displayed
+    filesScreen.validateToastNotification("Directory already exist");
+  });
+
   it("F10 - User can create subfolders and navigate to parent folder with go back button", () => {
-    cy.url().should("include", "/files");
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("New Folder{Enter}");
-    filesScreen.getFolderByName("New Folder").then(($folder) => {
-      cy.wrap($folder).should("exist").dblclick();
-    });
+    // Create a folder
+    filesScreen.validateFilesURL();
+    filesScreen.createNewFolder("NewFolder");
+    filesScreen.navigateToFolder("NewFolder");
 
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("New Subfolder{Enter}");
-    filesScreen.getFolderByName("New Subfolder").then(($folder) => {
-      cy.wrap($folder)
-        .should("exist")
-        .click()
-        .find("[data-cy='file-folder-name']")
-        .should("have.text", "New Subfolder");
-      cy.wrap($folder)
-        .find("[data-cy='file-folder-size']")
-        .should("have.text", "0 B");
-      cy.wrap($folder).find(".svg-icon").should("be.visible");
-    });
+    // Create a subfolder
+    filesScreen.createNewFolder("Subfolder");
+    filesScreen.validateNewFolderCreated("Subfolder");
 
+    // User can navigate to parent folder
     filesScreen.goBackButton.click();
-    filesScreen.getFolderByName("New Folder").then(($folder) => {
-      cy.wrap($folder).should("exist");
-    });
+    filesScreen.validateNewFolderCreated("NewFolder");
   });
 
   it("F12 - User can upload files in subfolder folder", () => {
-    cy.url().should("include", "/files");
-
     // Create a folder in root and enter on it
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("New Folder{Enter}");
-    filesScreen.getFolderByName("New Folder").then(($folder) => {
-      cy.wrap($folder).should("exist").dblclick();
-    });
+    filesScreen.validateFilesURL();
+    filesScreen.createNewFolder("NewFolder");
+    filesScreen.navigateToFolder("NewFolder");
 
     // Create a subfolder
-    filesScreen.newFolderButton.click();
-    filesScreen.inputFileFolderName.type("New Subfolder{Enter}");
-    filesScreen.getFolderByName("New Subfolder").then(($folder) => {
-      cy.wrap($folder).should("exist");
-    });
+    filesScreen.createNewFolder("Subfolder");
+    filesScreen.validateNewFolderCreated("Subfolder");
 
     // User can upload an image file in subfolder
-    filesScreen.uploadFileButton.click();
     filesScreen.uploadFile("cypress/fixtures/banner.jpg");
-
-    // File uploaded should be displayed
-    filesScreen.getFileByName("banner").then(($file) => {
-      cy.wrap($file)
-        .should("exist")
-        .find("[data-cy='file-folder-name']")
-        .should("have.text", "banner.jpg");
-      cy.wrap($file)
-        .find("[data-cy='file-folder-size']")
-        .should("have.text", "61.4 kB");
-      cy.wrap($file).find(".svg-icon").should("be.visible");
-    });
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
   });
 
-  it.skip("F13 - Files and folders are still visible after logging out and login again", () => {
-    // Test code for F13
+  it("F13 - Files and folders are still visible after logging out and login again", () => {
+    // User can upload an image file in root
+    filesScreen.validateFilesURL();
+    filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+
+    // Create a folder in root and enter on it
+    filesScreen.createNewFolder("NewFolder");
+    filesScreen.navigateToFolder("NewFolder");
+
+    // User can upload an image file in folder
+    filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+
+    // Go back to root
+    filesScreen.goBackButton.click();
+
+    // Logout from application
+    filesScreen.goToSettings();
+    cy.location("href").should("include", "/settings/profile");
+    SettingsProfile.logOutSectionButton.click();
+    cy.url().should("include", "/auth/unlock");
+
+    // Log in again entering the same pin
+    loginPinPage.waitUntilPageIsLoaded();
+    loginPinPage.enterPin(pin);
+    loginPinPage.pinButtonConfirm.click();
+    chatsMainPage.validateChatsMainPageIsShown();
+    chatsMainPage.goToFiles();
+
+    // Validate files are still visible
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    filesScreen.validateNewFolderCreated("NewFolder", false, "61.4 kB");
+    filesScreen.navigateToFolder("NewFolder");
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
   });
 
   it("F14 - User cannot upload the same file again", () => {
-    cy.url().should("include", "/files");
-    filesScreen.uploadFileButton.click();
-
-    // User can upload an image file
+    // Upload a file
+    filesScreen.validateFilesURL();
     filesScreen.uploadFile("cypress/fixtures/banner.jpg");
-
-    // File uploaded should be displayed
-    filesScreen.getFileByName("banner").then(($file) => {
-      cy.wrap($file).should("exist");
-    });
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
 
     // Attempt to upload the same file again
     filesScreen.uploadFile("cypress/fixtures/banner.jpg");
 
     // Toast notification should be displayed
-    filesScreen.toastNotification.should("be.visible");
-    filesScreen.toastNotificationText.should("have.text", "File already exist");
+    filesScreen.validateToastNotification("File already exist");
+  });
+
+  it("F15 - Context Menu - Files - Rename", () => {
+    // User can upload an image file in root
+    filesScreen.validateFilesURL();
+    filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+
+    // Right click on item and select rename
+    filesScreen.renameFile("banner", "renamedBanner");
+    filesScreen.validateRenamedFileInfo(
+      "banner",
+      "renamedBanner",
+      "jpg",
+      "61.4 kB",
+    );
+  });
+
+  // Test to be added soon
+  it.skip("F16 - Context Menu - Files - Download", () => {
+    // Test code for F16
+  });
+
+  // Cannot be automated now since delete option is not working
+  it.skip("F17 - Context Menu - Files - Delete", () => {
+    // Test code for F17
+  });
+
+  // Test needs to be fixed before unskipping
+  it.skip("F18 - Context Menu - Folder - Rename", () => {
+    // Create a folder in root
+    filesScreen.validateFilesURL();
+    filesScreen.createNewFolder("NewFolder");
+    filesScreen.validateNewFolderCreated("NewFolder");
+
+    // Right click on item and select rename
+    filesScreen.renameFolder("NewFolder", "RenamedFolder");
+    filesScreen.validateNewFolderCreated("RenamedFolder");
+  });
+
+  // Cannot be automated now since delete option is not working
+  it.skip("F19 - Context Menu - Folder - Delete", () => {
+    // Test code for F19
   });
 });
