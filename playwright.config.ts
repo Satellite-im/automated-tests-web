@@ -31,6 +31,7 @@ export default defineConfig({
     trace: "on-first-retry",
     testIdAttribute: "data-cy",
     actionTimeout: 20000,
+    video: "retain-on-failure",
   },
 
   /* Configure projects for major browsers */

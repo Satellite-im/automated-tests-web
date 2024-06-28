@@ -70,13 +70,11 @@ export default class MainPage {
     await this.buttonWallet.click();
   }
 
-  async findSiblingWithClass(
-    page: Page,
-    selector: string,
-    siblingClass: string,
-  ) {
-    // Use the + combinator to find the next sibling with the specified class
-    const siblingLocator = page.getByTestId(`${selector} + ${siblingClass}`);
-    return siblingLocator;
+  async visitOtherSite(url: string) {
+    await this.page.goto(url);
+  }
+
+  async reloadPage() {
+    await this.page.goto("");
   }
 }
