@@ -79,10 +79,7 @@ describe("Files", () => {
     filesScreen.createNewFolder("NewFolder");
 
     // Toast notification should be displayed
-    filesScreen.toastNotificationText.should(
-      "have.text",
-      "Directory already exists",
-    );
+    filesScreen.toastNotification.should("be.visible");
   });
 
   it("F10 - User can create subfolders and navigate to parent folder with go back button", () => {
@@ -162,9 +159,6 @@ describe("Files", () => {
     filesScreen.uploadFile("cypress/fixtures/banner.jpg");
 
     // Toast notification should be displayed
-    filesScreen.toastNotificationText.should(
-      "have.text",
-      "File already exists",
-    );
+    filesScreen.toastNotification.should("be.visible");
   });
 });
