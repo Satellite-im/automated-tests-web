@@ -44,6 +44,7 @@ jobs:
         run: npm install
 
       - name: Install Playwright Browsers
+        working-directory: automated-tests
         run: npx playwright install --with-deps
 
       - name: Run server for Uplink Web
