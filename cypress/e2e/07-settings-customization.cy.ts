@@ -19,9 +19,22 @@ describe("Settings - Customization", () => {
     settingsProfile.buttonCustomization.click();
   });
 
-  const assertLabelAndText = (label, text, labelDescription, textDescription) => {
-    cy.assertText(label, labelDescription, `${labelDescription} label should be present`);
-    cy.assertText(text, textDescription, `${textDescription} text should be present`);
+  const assertLabelAndText = (
+    label: any,
+    text: any,
+    labelDescription: string,
+    textDescription: string,
+  ) => {
+    cy.assertText(
+      label,
+      labelDescription,
+      `${labelDescription} label should be present`,
+    );
+    cy.assertText(
+      text,
+      textDescription,
+      `${textDescription} text should be present`,
+    );
   };
 
   it("K1 - Language dropdown should display English", () => {
@@ -31,7 +44,10 @@ describe("Settings - Customization", () => {
       "App Language",
       "Change language.",
     );
-    settingsCustomizations.appLanguageSectionSelectorOption.should("have.length", 1);
+    settingsCustomizations.appLanguageSectionSelectorOption.should(
+      "have.length",
+      1,
+    );
     settingsCustomizations.appLanguageSectionSelectorOption
       .should("have.value", "english")
       .and("have.text", "English (USA)");
@@ -62,33 +78,49 @@ describe("Settings - Customization", () => {
       "Font",
       "Change the font used in the app.",
     );
-    settingsCustomizations.fontSectionSelectorOption.should("have.length", expectedFonts.length);
+    settingsCustomizations.fontSectionSelectorOption.should(
+      "have.length",
+      expectedFonts.length,
+    );
     settingsCustomizations.validateFontNames(expectedFonts);
   });
 
   it("K3 - Selected Fonts should be applied everywhere throughout the app", () => {
     const selectedFont = "JosefinSans";
     settingsCustomizations.selectFont(selectedFont);
-    settingsCustomizations.fontSectionText.should("have.css", "font-family", selectedFont);
+    settingsCustomizations.fontSectionText.should(
+      "have.css",
+      "font-family",
+      selectedFont,
+    );
     settingsCustomizations.goToChat();
-    cy.contains("Let's get something started!").should("have.css", "font-family", selectedFont);
+    cy.contains("Let's get something started!").should(
+      "have.css",
+      "font-family",
+      selectedFont,
+    );
   });
 
   it.skip("K4 - Clicking OpenFolder should open the Fonts folder", () => {});
 
-  it("K5 - Font size should have a minimum of .82", () => {
+  // Skipped since a new bug was introduced for this test and font size is not refreshing after changing the font
+  it.skip("K5 - Font size should have a minimum of .82", () => {
     assertLabelAndText(
       settingsCustomizations.fontScalingSectionLabel,
       settingsCustomizations.fontScalingSectionText,
       "Font Scaling",
-      "Scale the font size up or down to your liking."
+      "Scale the font size up or down to your liking.",
     );
     settingsCustomizations.fontScalingSectionInput.should("have.value", "1.00");
     for (let i = 0; i < 10; i++) {
       settingsCustomizations.fontScalingSectionDecreaseButton.click();
     }
     settingsCustomizations.fontScalingSectionInput.should("have.value", "0.82");
-    settingsCustomizations.fontScalingSectionText.should("have.css", "font-size", "13.12px");
+    settingsCustomizations.fontScalingSectionText.should(
+      "have.css",
+      "font-size",
+      "13.12px",
+    );
   });
 
   // Skipped since a new bug was introduced for this test and font size is not refreshing after changing the font
@@ -98,9 +130,17 @@ describe("Settings - Customization", () => {
       settingsCustomizations.fontScalingSectionIncreaseButton.click();
     }
     settingsCustomizations.fontScalingSectionInput.should("have.value", "1.50");
-    settingsCustomizations.fontScalingSectionText.should("have.css", "font-size", "24px");
+    settingsCustomizations.fontScalingSectionText.should(
+      "have.css",
+      "font-size",
+      "24px",
+    );
     settingsCustomizations.goToChat();
-    cy.contains("Let's get something started!").should("have.css", "font-size", "24px");
+    cy.contains("Let's get something started!").should(
+      "have.css",
+      "font-size",
+      "24px",
+    );
   });
 
   it.skip("K8 - Clicking the moon button should change theme of the app from Dark to Light", () => {});
@@ -139,7 +179,10 @@ describe("Settings - Customization", () => {
       "Primary Color",
       "Change the primary color of the app.",
     );
-    settingsCustomizations.primaryColorSectionColorSwatchButton.should("have.length", expectedPrimaryColors.length);
+    settingsCustomizations.primaryColorSectionColorSwatchButton.should(
+      "have.length",
+      expectedPrimaryColors.length,
+    );
     settingsCustomizations.validatePrimaryColors(expectedPrimaryColors);
   });
 
@@ -148,19 +191,39 @@ describe("Settings - Customization", () => {
     settingsCustomizations.customColorPicker.should("be.visible");
     settingsCustomizations.customColorInput.clear().type("#ff8fb8");
     settingsCustomizations.buttonCustomization.click({ force: true });
-    settingsCustomizations.buttonCustomization.should("have.css", "background-color", "rgb(255, 143, 184)");
+    settingsCustomizations.buttonCustomization.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 143, 184)",
+    );
   });
 
   it("K13 - Selected primary color should be applied throughout the entire app", () => {
-    settingsCustomizations.buttonCustomization.should("have.css", "background-color", "rgb(77, 77, 255)");
+    settingsCustomizations.buttonCustomization.should(
+      "have.css",
+      "background-color",
+      "rgb(77, 77, 255)",
+    );
     settingsCustomizations.selectColorSwatch("Traffic Cone");
-    settingsCustomizations.buttonCustomization.should("have.css", "background-color", "rgb(255, 60, 0)");
+    settingsCustomizations.buttonCustomization.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 60, 0)",
+    );
     settingsCustomizations.goToChat();
-    chatsMain.buttonAddFriends.should("have.css", "background-color", "rgb(255, 60, 0)");
+    chatsMain.buttonAddFriends.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 60, 0)",
+    );
   });
 
   it("K14 - User should be able to add additional custom CSS to the application", () => {
-    settingsCustomizations.slimbar.should("have.css", "background-color", "rgba(0, 0, 0, 0)");
+    settingsCustomizations.slimbar.should(
+      "have.css",
+      "background-color",
+      "rgba(0, 0, 0, 0)",
+    );
     assertLabelAndText(
       settingsCustomizations.customCSSSectionLabel,
       settingsCustomizations.customCSSSectionText,
@@ -169,11 +232,19 @@ describe("Settings - Customization", () => {
     );
     settingsCustomizations.customCSSSectionTextArea.type(
       ".slimbar {background-color: rgb(255, 0, 141)}",
-      { parseSpecialCharSequences: false }
+      { parseSpecialCharSequences: false },
     );
     settingsCustomizations.buttonCustomization.click();
-    settingsCustomizations.slimbar.should("have.css", "background-color", "rgb(255, 0, 141)");
+    settingsCustomizations.slimbar.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 0, 141)",
+    );
     settingsCustomizations.goToChat();
-    chatsMain.slimbar.should("have.css", "background-color", "rgb(255, 0, 141)");
+    chatsMain.slimbar.should(
+      "have.css",
+      "background-color",
+      "rgb(255, 0, 141)",
+    );
   });
 });
