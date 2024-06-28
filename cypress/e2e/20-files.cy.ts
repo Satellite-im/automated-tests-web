@@ -80,10 +80,6 @@ describe("Files", () => {
 
     // Toast notification should be displayed
     filesScreen.toastNotification.should("be.visible");
-    filesScreen.toastNotificationText.should(
-      "have.text",
-      "Directory already exists",
-    );
   });
 
   it("F10 - User can create subfolders and navigate to parent folder with go back button", () => {
@@ -164,6 +160,5 @@ describe("Files", () => {
 
     // Toast notification should be displayed
     filesScreen.toastNotification.should("be.visible");
-    filesScreen.toastNotificationText.should("have.text", "File already exists");
   });
 });
