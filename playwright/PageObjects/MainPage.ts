@@ -86,4 +86,10 @@ export default class MainPage {
     await expect(this.toastNotification).toBeVisible();
     await expect(this.toastNotificationText).toHaveText(toastText);
   }
+
+  async readClipboard() {
+    return await this.page.evaluate(async () => {
+      return await navigator.clipboard.readText();
+    });
+  }
 }

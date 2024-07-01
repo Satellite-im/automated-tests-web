@@ -30,6 +30,7 @@ test.describe("Friends tests", () => {
     // All with first user
     browser1 = await chromium.launch();
     context1 = await browser1.newContext();
+    await context1.grantPermissions(["clipboard-read"]);
     page1 = await context1.newPage();
 
     browser2 = await chromium.launch();
@@ -49,7 +50,7 @@ test.describe("Friends tests", () => {
   test("Create two accounts and add them as friends", async () => {
     authNewAccount = new AuthNewAccount(page1);
     chatsMainPage = new ChatsMainPage(page1);
-    friendPage = new FriendsScreen(page1);
+    friendsPage = new FriendsScreen(page1);
 
     authNewAccountSecond = new AuthNewAccount(page2);
     chatsMainPageSecond = new ChatsMainPage(page2);
@@ -74,6 +75,9 @@ test.describe("Friends tests", () => {
     await authNewAccount.buttonNewAccountCreate.click();
     await chatsMainPage.addSomeone.waitFor({ state: "visible" });
     await page1.waitForURL("/chat");
+    await chatsMainPage.goToFriends();
+    await page1.waitForURL("/friends");
+    const didKeyFirstUser = await friendsPage.copyDID();
 
     // All with second user
     await loginPinPageSecond.enterPin(pinNumber);
@@ -100,8 +104,7 @@ test.describe("Friends tests", () => {
 
     await chatsMainPageSecond.goToFriends();
     await friendPageSecond.validateURL();
-
-    await chatsMainPage.goToFriends();
-    await friendsPage.validateURL();
+    await friendPageSecond.addFriend(didKeyFirstUser);
+    await expect(friendPageSecond.modalRequestDispatched).toBeVisible();
   });
 });

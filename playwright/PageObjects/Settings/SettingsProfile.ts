@@ -1,91 +1,255 @@
 import MainPage from "../MainPage";
 import { type Locator, type Page } from "@playwright/test";
 
-export class SettingsAbout extends MainPage {
+export class SettingsProfile extends MainPage {
   readonly page: Page;
-  readonly aboutSection: Locator;
-  readonly aboutSectionLabel: Locator;
-  readonly aboutSectionText: Locator;
-  readonly devModeSection: Locator;
-  readonly devModeSectionButton: Locator;
-  readonly devModeSectionLabel: Locator;
-  readonly devModeSectionText: Locator;
-  readonly madeInSection: Locator;
-  readonly madeInSectionFlags: Locator;
-  readonly madeInSectionLabel: Locator;
-  readonly madeInSectionText: Locator;
-  readonly openSourceCodeSection: Locator;
-  readonly openSourceCodeSectionButton: Locator;
-  readonly openSourceCodeSectionLabel: Locator;
-  readonly openSourceCodeSectionText: Locator;
-  readonly versionSection: Locator;
-  readonly versionSectionButton: Locator;
-  readonly versionSectionLabel: Locator;
-  readonly versionSectionText: Locator;
-  readonly websiteSection: Locator;
-  readonly websiteSectionButton: Locator;
-  readonly websiteSectionLabel: Locator;
-  readonly websiteSectionText: Locator;
+  readonly inputSettingsProfileShortID: Locator;
+  readonly inputSettingsProfileShortIDGroup: Locator;
+  readonly inputSettingsProfileStatus: Locator;
+  readonly inputSettingsProfileUsername: Locator;
+  readonly labelSettingsProfileStatusMessage: Locator;
+  readonly labelSettingsProfileUsername: Locator;
+  readonly logOutSection: Locator;
+  readonly logOutSectionButton: Locator;
+  readonly logOutSectionLabel: Locator;
+  readonly logOutSectionText: Locator;
+  readonly profileBanner: Locator;
+  readonly profileBannerInput: Locator;
+  readonly profileImageFrame: Locator;
+  readonly profilePicture: Locator;
+  readonly profilePictureInput: Locator;
+  readonly profilePictureUploadButton: Locator;
+  readonly profilePictureImage: Locator;
+  readonly revealPhraseSection: Locator;
+  readonly revealPhraseSectionHideButton: Locator;
+  readonly revealPhraseSectionRevealButton: Locator;
+  readonly revealPhraseSectionButtonCopyPhrase: Locator;
+  readonly revealPhraseSectionLabel: Locator;
+  readonly revealPhraseSectionText: Locator;
+  readonly revealPhraseSectionWordNumber: Locator;
+  readonly revealPhraseSectionWordValue: Locator;
+  readonly saveControls: Locator;
+  readonly saveControlsButtonCancel: Locator;
+  readonly saveControlsButtonSave: Locator;
+  readonly onlineStatusSection: Locator;
+  readonly onlineStatusSectionLabel: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyDoNotDisturb: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyIdle: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyOffline: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyOnline: Locator;
+  readonly onlineStatusSectionSelectOptions: Locator;
+  readonly onlineStatusSectionText: Locator;
+  readonly startRecoverySeedSection: Locator;
+  readonly startRecoverySeedCheckbox: Locator;
+  readonly startRecoverySeedText: Locator;
 
   constructor(page: Page) {
     super(page);
     this.page = page;
-    this.aboutSection = page.getByTestId("section-about-header");
-    this.aboutSectionLabel = this.aboutSection.getByTestId(
-      "setting-section-label",
+    this.inputSettingsProfileShortID = page.getByTestId(
+      "input-settings-profile-short-id",
     );
-    this.aboutSectionText = this.aboutSection.getByTestId(
-      "setting-section-text",
+    this.inputSettingsProfileShortIDGroup = this.inputSettingsProfileShortID
+      .locator("..")
+      .locator(".input-group");
+    this.inputSettingsProfileStatus = page.getByTestId(
+      "input-settings-profile-status-message",
     );
-    this.devModeSection = page.getByTestId("section-about-dev-mode");
-    this.devModeSectionButton = page.getByTestId("button-about-dev-mode");
-    this.devModeSectionLabel = this.devModeSection.getByTestId(
-      "setting-section-label",
+    this.inputSettingsProfileUsername = page.getByTestId(
+      "input-settings-profile-username",
     );
-    this.devModeSectionText = this.devModeSection.getByTestId(
-      "setting-section-text",
+    this.labelSettingsProfileStatusMessage = page.getByTestId(
+      "label-settings-profile-status-message",
     );
-    this.madeInSection = page.getByTestId("section-about-made-in");
-    this.madeInSectionFlags = page.getByTestId("about-made-in-flags");
-    this.madeInSectionLabel = this.madeInSection.getByTestId(
-      "setting-section-label",
+    this.labelSettingsProfileUsername = page.getByTestId(
+      "label-settings-profile-username",
     );
-    this.madeInSectionText = this.madeInSection.getByTestId(
-      "setting-section-text",
+    this.logOutSection = page.getByTestId("section-log-out");
+    this.logOutSectionButton = this.logOutSection.locator(
+      '[data-cy="button-log-out"]',
     );
-    this.openSourceCodeSection = page.getByTestId(
-      "section-about-open-source-code",
+    this.logOutSectionLabel = this.logOutSection.locator(
+      '[data-cy="setting-section-label"]',
     );
-    this.openSourceCodeSectionButton = page.getByTestId(
-      "button-open-source-code",
+    this.logOutSectionText = this.logOutSection.locator(
+      '[data-cy="setting-section-text"]',
     );
-    this.openSourceCodeSectionLabel = this.openSourceCodeSection.getByTestId(
-      "setting-section-label",
+    this.profileBanner = page.getByTestId("profile-banner");
+    this.profileBannerInput = this.profilePictureUploadButton
+      .locator("..")
+      .locator("..")
+      .locator(".profile-picture-container")
+      .locator("input");
+    this.profileImageFrame = page.getByTestId("profile-image-frame");
+    this.profilePicture = page.getByTestId("profile-picture");
+    this.profilePictureInput = page
+      .getByTestId("profile-picture-input")
+      .locator("..")
+      .locator("input");
+    this.profilePictureUploadButton = page.getByTestId(
+      "profile-picture-upload",
     );
-    this.openSourceCodeSectionText = this.openSourceCodeSection.getByTestId(
-      "setting-section-text",
+    this.profilePictureImage = this.profilePicture.locator("img");
+    this.revealPhraseSection = page.getByTestId("section-reveal-phrase");
+    this.revealPhraseSectionHideButton = this.revealPhraseSection.locator(
+      '[data-cy="button-hide-phrase"]',
     );
-    this.versionSection = page.getByTestId("section-about-version");
-    this.versionSectionButton = page.getByTestId("button-about-version");
-    this.versionSectionLabel = this.versionSection.getByTestId(
-      "setting-section-label",
+    this.revealPhraseSectionRevealButton = this.revealPhraseSection.locator(
+      '[data-cy="button-reveal-phrase"]',
     );
-    this.versionSectionText = this.versionSection.getByTestId(
-      "setting-section-text",
+    this.revealPhraseSectionButtonCopyPhrase = this.revealPhraseSection.locator(
+      '[data-cy="button-copy-phrase"]',
     );
-    this.websiteSection = page.getByTestId("section-about-website");
-    this.websiteSectionButton = page.getByTestId("button-about-website");
-    this.websiteSectionLabel = this.websiteSection.getByTestId(
-      "setting-section-label",
+    this.revealPhraseSectionLabel = this.revealPhraseSection.locator(
+      '[data-cy="setting-section-label"]',
     );
-    this.websiteSectionText = this.websiteSection.getByTestId(
-      "setting-section-text",
+    this.revealPhraseSectionText = this.revealPhraseSection.locator(
+      '[data-cy="setting-section-text"]',
+    );
+    this.revealPhraseSectionWordNumber = this.revealPhraseSection.locator(
+      '[data-cy="word-number"]',
+    );
+    this.revealPhraseSectionWordValue = this.revealPhraseSection.locator(
+      '[data-cy="word-value"]',
+    );
+    this.saveControls = page.getByTestId("save-controls");
+    this.saveControlsButtonCancel = this.saveControls.locator(
+      '[data-cy="button-cancel"]',
+    );
+    this.saveControlsButtonSave = this.saveControls.locator(
+      '[data-cy="button-save"]',
+    );
+    this.onlineStatusSection = page.getByTestId("section-online-status");
+    this.onlineStatusSectionLabel = this.onlineStatusSection.locator(
+      '[data-cy="setting-section-label"]',
+    );
+    this.onlineStatusSectionSelectorCurrentlyDoNotDisturb =
+      this.onlineStatusSection.locator(
+        '[data-cy="selector-currently-do-not-disturb"]',
+      );
+    this.onlineStatusSectionSelectorCurrentlyIdle =
+      this.onlineStatusSection.locator('[data-cy="selector-currently-idle"]');
+    this.onlineStatusSectionSelectorCurrentlyOffline =
+      this.onlineStatusSection.locator(
+        '[data-cy="selector-currently-offline"]',
+      );
+    this.onlineStatusSectionSelectorCurrentlyOnline =
+      this.onlineStatusSection.locator('[data-cy="selector-currently-online"]');
+    this.onlineStatusSectionSelectOptions = this.onlineStatusSection.locator(
+      '[data-cy="select-options"]',
+    );
+    this.onlineStatusSectionText = this.onlineStatusSection.locator(
+      '[data-cy="setting-section-text"]',
+    );
+    this.startRecoverySeedSection = page.getByTestId(
+      "section-start-recovery-seed",
+    );
+    this.startRecoverySeedCheckbox = this.startRecoverySeedSection.locator(
+      '[data-cy="checkbox-start-recovery-seed"]',
+    );
+    this.startRecoverySeedText = this.startRecoverySeedSection.locator(
+      '[data-cy="setting-section-text"]',
     );
   }
 
-  async openDevModeSection() {
-    for (let i = 0; i < 11; i++) {
-      await this.devModeSectionButton.click();
+  // Rewrite everything here in playwright
+
+  async copyShortID() {
+    await this.inputSettingsProfileShortIDGroup.click();
+  }
+
+  async getSelectorOptions(locator: string) {
+    let options = [];
+    // Locate all elements with the data-cy attribute within the given locator
+    const elements = await this.page.locator(
+      `${locator} [data-cy='select-option']`,
+    );
+
+    // Get the count of matched elements
+    const count = await elements.count();
+
+    // Iterate through each element and extract the value
+    for (let i = 0; i < count; i++) {
+      const element = elements.nth(i);
+      const value = await element.getAttribute("value"); // Assuming the value you want is an attribute
+      console.log("Option: ", await element.innerText());
+      console.log("Option Val: ", value);
+      options.push(value);
     }
+
+    return options;
+  }
+
+  async getRecoveryPhrase() {
+    let phrase = [];
+
+    // Click the reveal button
+    await this.page.locator("your-reveal-button-locator").click(); // Replace with the actual locator for reveal button
+
+    // Loop through each of the 12 phrases
+    for (let i = 1; i <= 12; i++) {
+      // Ensure the phrase number element exists
+      await this.page
+        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .waitFor({ state: "visible" });
+
+      // Ensure the phrase word element exists
+      await this.page
+        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .waitFor({ state: "visible" });
+
+      // Get the text from the <p> tag inside the phrase word element
+      const text = await this.page
+        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator("p")
+        .innerText();
+      phrase.push(text);
+    }
+
+    return phrase;
+  }
+
+  async validateRecoveryPhraseIsHidden() {
+    // Ensure the phrase number and word elements do not exist
+    for (let i = 1; i <= 12; i++) {
+      await this.page
+        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .waitFor({ state: "hidden" });
+      await this.page
+        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .waitFor({ state: "hidden" });
+    }
+  }
+
+  async validateRecoveryPhraseIsShown() {
+    // Ensure the phrase number and word elements exist
+    for (let i = 1; i <= 12; i++) {
+      await this.page
+        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .waitFor({ state: "visible" });
+      await this.page
+        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .waitFor({ state: "visible" });
+    }
+  }
+
+  async uploadProfileBanner(file: string) {
+    await this.profileBannerInput.setInputFiles(file);
+  }
+
+  async uploadProfilePicture(file: string) {
+    await this.profilePictureInput.setInputFiles(file);
+  }
+
+  async validateProfileBannerURLIsValid() {
+    const style = await this.profileBanner.getAttribute("style");
+    expect(
+      style.startsWith('background-image: url("data:image/jpeg;base64'),
+    ).eq(true);
+  }
+
+  async validateProfilePictureURLIsValid() {
+    const style = await this.profilePictureImage.getAttribute("src");
+    expect(style.startsWith("data:image/jpeg;base64")).eq(true);
   }
 }

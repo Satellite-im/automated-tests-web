@@ -50,8 +50,12 @@ export class FriendsScreen extends MainPage {
     this.buttonFriendsAll = page.getByTestId("button-friends-all");
     this.buttonFriendsBlocked = page.getByTestId("button-friends-blocked");
     this.contextMenuCopyID = page.getByTestId("context-menu-copy-id");
-    this.contextOptionCopyDid = this.contextMenuCopyID.getByTestId("copy-did");
-    this.contextOptionCopyID = this.contextMenuCopyID.getByTestId("copy-id");
+    this.contextOptionCopyDid = this.contextMenuCopyID.getByTestId(
+      "context-menu-option-Copy DID",
+    );
+    this.contextOptionCopyID = this.contextMenuCopyID.getByTestId(
+      "context-menu-option-Copy id",
+    );
     this.friendName = page.getByTestId("friend-name");
     this.friendProfilePicture = page.getByTestId("friend-profile-picture");
     this.friendProfilePictureImage = page.getByTestId("profile-image");
@@ -106,6 +110,14 @@ export class FriendsScreen extends MainPage {
   async chatWithFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
     await friendUser.getByTestId("button-friend-chat").click();
+  }
+
+  async copyDID() {
+    await this.buttonCopyID.click({ button: "right" });
+    await this.contextMenuCopyID.waitFor({ state: "attached" });
+    await this.contextOptionCopyDid.click();
+    const didKey = await this.readClipboard();
+    return didKey;
   }
 
   async denyFriendRequest(didKey: string) {
