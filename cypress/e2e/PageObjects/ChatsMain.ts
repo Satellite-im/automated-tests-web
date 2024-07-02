@@ -6,7 +6,7 @@ class ChatsMainPage extends MainPage {
   }
 
   get addSomeone() {
-    return cy.get(".add-someone", { timeout: 30000 });
+    return cy.get(".add-someone");
   }
 
   get buttonAddFriends() {
