@@ -5,7 +5,8 @@ import loginPinPage from "./PageObjects/LoginPin";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 import settingsAbout from "./PageObjects/Settings/SettingsAbout";
 
-const USERNAME = faker.internet.userName();
+const username =
+  faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
 const STATUS = faker.lorem.sentence(3);
 const PIN = "1234";
 const BASE_URL = "https://satellite.im/";

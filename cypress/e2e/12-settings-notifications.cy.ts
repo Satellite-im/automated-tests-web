@@ -6,7 +6,8 @@ import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 import settingsNotifications from "./PageObjects/Settings/SettingsNotifications";
 
 describe("Settings - Accessibility", () => {
-  const username = faker.internet.userName();
+  const username =
+    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status = faker.lorem.sentence(3);
 
   beforeEach(() => {
@@ -30,7 +31,7 @@ describe("Settings - Accessibility", () => {
       });
     });
   }
-  
+
   it("Q1 - User should be able to toggle on/off Notifications", () => {
     // Label and texts for settings section are correct
     settingsNotifications.enabledSectionLabel.should("have.text", "Enabled");
@@ -39,7 +40,10 @@ describe("Settings - Accessibility", () => {
       "Enable notifications for incoming calls, messages, and more.",
     );
     settingsNotifications.enabledSectionCheckbox.should("be.checked");
-    verifyToggleFunctionality(settingsNotifications.enabledSectionSlider, settingsNotifications.enabledSectionCheckbox);
+    verifyToggleFunctionality(
+      settingsNotifications.enabledSectionSlider,
+      settingsNotifications.enabledSectionCheckbox,
+    );
   });
 
   it("Q2 - User should be able to toggle on/off Friend Request Notifications", () => {
@@ -50,7 +54,10 @@ describe("Settings - Accessibility", () => {
       "Enable notifications for friend requests.",
     );
     settingsNotifications.friendsSectionCheckbox.should("be.checked");
-    verifyToggleFunctionality(settingsNotifications.friendsSectionSlider, settingsNotifications.friendsSectionCheckbox);
+    verifyToggleFunctionality(
+      settingsNotifications.friendsSectionSlider,
+      settingsNotifications.friendsSectionCheckbox,
+    );
   });
 
   it("Q3 - User should be able to toggle on/off Message Notifications", () => {
@@ -61,7 +68,10 @@ describe("Settings - Accessibility", () => {
       "Enable notifications for incoming messages.",
     );
     settingsNotifications.messagesSectionCheckbox.should("be.checked");
-    verifyToggleFunctionality(settingsNotifications.messagesSectionSlider, settingsNotifications.messagesSectionCheckbox);
+    verifyToggleFunctionality(
+      settingsNotifications.messagesSectionSlider,
+      settingsNotifications.messagesSectionCheckbox,
+    );
   });
 
   it("Q4 - User should be able to toggle on/off Settings Notifications", () => {
@@ -72,6 +82,9 @@ describe("Settings - Accessibility", () => {
       "Enable notifications for updates and important alerts.",
     );
     settingsNotifications.settingsSectionCheckbox.should("be.checked");
-    verifyToggleFunctionality(settingsNotifications.settingsSectionSlider, settingsNotifications.settingsSectionCheckbox);
+    verifyToggleFunctionality(
+      settingsNotifications.settingsSectionSlider,
+      settingsNotifications.settingsSectionCheckbox,
+    );
   });
 });
