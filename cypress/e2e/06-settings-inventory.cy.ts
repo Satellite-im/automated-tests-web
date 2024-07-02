@@ -6,7 +6,8 @@ import settingsInventory from "./PageObjects/Settings/SettingsInventory";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 
 describe("Settings - Inventory", () => {
-  const username = faker.internet.userName();
+  const username =
+    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status = faker.lorem.sentence(3);
   const pin = "1234";
 
@@ -70,7 +71,10 @@ describe("Settings - Inventory", () => {
       .should("contain", "Equipped");
 
     settingsInventory.profilePictureFrameName.should("have.text", "Fire");
-    settingsInventory.profilePictureFrameType.should("have.text", "Profile Picture Frame");
+    settingsInventory.profilePictureFrameType.should(
+      "have.text",
+      "Profile Picture Frame",
+    );
 
     // Unequip the frame
     unequipFrame("Fire");
@@ -78,18 +82,29 @@ describe("Settings - Inventory", () => {
 
   // Helper functions
   const equipFrame = (frameName) => {
-    settingsInventory.getFrameButtonText(frameName).should("have.text", "Equip");
+    settingsInventory
+      .getFrameButtonText(frameName)
+      .should("have.text", "Equip");
     settingsInventory.clickOnFrameButton(frameName);
-    settingsInventory.getFrameContainer(frameName).should("have.class", "equipped");
+    settingsInventory
+      .getFrameContainer(frameName)
+      .should("have.class", "equipped");
   };
 
   const unequipFrame = (frameName) => {
-    settingsInventory.profilePictureFrameUnequipButton.should("contain", "Unequip").click();
-    settingsInventory.getFrameContainer(frameName).should("not.have.class", "equipped");
+    settingsInventory.profilePictureFrameUnequipButton
+      .should("contain", "Unequip")
+      .click();
+    settingsInventory
+      .getFrameContainer(frameName)
+      .should("not.have.class", "equipped");
   };
 
   const validateEquippedFrame = (frameName) => {
     settingsInventory.profilePictureFrameName.should("have.text", frameName);
-    settingsInventory.profilePictureFrameType.should("have.text", "Profile Picture Frame");
+    settingsInventory.profilePictureFrameType.should(
+      "have.text",
+      "Profile Picture Frame",
+    );
   };
 });

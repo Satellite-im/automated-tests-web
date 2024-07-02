@@ -6,7 +6,8 @@ import settingsCustomizations from "./PageObjects/Settings/SettingsCustomization
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 
 describe("Settings - Customization", () => {
-  const username = faker.internet.userName();
+  const username =
+    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status = faker.lorem.sentence(3);
   const pin = "1234";
 
