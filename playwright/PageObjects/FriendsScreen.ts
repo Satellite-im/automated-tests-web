@@ -95,6 +95,8 @@ export class FriendsScreen extends MainPage {
   async addFriend(didKey: string) {
     await this.inputAddFriend.fill(didKey);
     await this.buttonAddFriend.click();
+    await this.toastNotification.waitFor({ state: "attached" });
+    await this.toastNotification.waitFor({ state: "detached" });
   }
 
   async blockFriend(didKey: string) {
@@ -116,8 +118,11 @@ export class FriendsScreen extends MainPage {
     await this.buttonCopyID.click({ button: "right" });
     await this.contextMenuCopyID.waitFor({ state: "attached" });
     await this.contextOptionCopyDid.click();
-    const didKey = await this.readClipboard();
-    return didKey;
+  }
+
+  async pasteClipboardOnAddInput() {
+    await this.inputAddFriend.click();
+    await this.page.keyboard.press("Control+V");
   }
 
   async denyFriendRequest(didKey: string) {
@@ -149,6 +154,14 @@ export class FriendsScreen extends MainPage {
   async unblockFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
     await friendUser.getByTestId("button-friend-unblock").click();
+  }
+
+  async validateIncomingRequestExists() {
+    await this.textNoIncomingRequests.waitFor({ state: "detached" });
+  }
+
+  async validateOutgoingRequestExists() {
+    await this.textNoOutgoingRequests.waitFor({ state: "detached" });
   }
 
   async validateURL() {

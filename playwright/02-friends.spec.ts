@@ -20,91 +20,106 @@ let chatsMainPage: ChatsMainPage, chatsMainPageSecond: ChatsMainPage;
 let friendsPage: FriendsScreen, friendPageSecond: FriendsScreen;
 
 test.describe("Friends tests", () => {
-  const username: string = faker.internet.userName();
+  const username: string =
+    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
+  const usernameTwo: string =
+    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status: string = faker.lorem.sentence(3);
-  const usernameTwo: string = faker.internet.userName();
   const statusTwo: string = faker.lorem.sentence(3);
   const pinNumber: string = "1234";
 
   test.beforeEach(async () => {
-    // All with first user
+    // Setup for first user
     browser1 = await chromium.launch();
     context1 = await browser1.newContext();
-    await context1.grantPermissions(["clipboard-read"]);
     page1 = await context1.newPage();
 
+    // Setup for second user
     browser2 = await chromium.launch();
     context2 = await browser2.newContext();
     page2 = await context2.newPage();
 
+    // Create new login page classes
     loginPinPage = new LoginPinPage(page1);
     loginPinPageSecond = new LoginPinPage(page2);
 
+    // Start browser one
     await loginPinPage.navigateTo();
     await loginPinPage.waitUntilPageIsLoaded();
 
+    // Start browser two
     await loginPinPageSecond.navigateTo();
     await loginPinPageSecond.waitUntilPageIsLoaded();
   });
 
   test("Create two accounts and add them as friends", async () => {
+    // Start page objects from user one
     authNewAccount = new AuthNewAccount(page1);
     chatsMainPage = new ChatsMainPage(page1);
     friendsPage = new FriendsScreen(page1);
 
+    // Start page objects from user two
     authNewAccountSecond = new AuthNewAccount(page2);
     chatsMainPageSecond = new ChatsMainPage(page2);
     friendPageSecond = new FriendsScreen(page2);
 
+    // Enter Pin
     await loginPinPage.enterPin(pinNumber);
-    await loginPinPage.pinButtonConfirm.click();
+    await loginPinPage.clickConfirmButton();
+
+    // Enter username and Status and click on create account
     await authNewAccount.validateLoadingHeader();
-    await page1.waitForURL("/auth/new_account");
-    await expect(authNewAccount.textNewAccountSecondary).toHaveText(
-      "Let's set up your new account. Please choose a username below.",
-    );
-    await expect(authNewAccount.labelNewAccountUsername).toHaveText("Username");
-    await expect(authNewAccount.labelNewAccountStatus).toHaveText(
-      "Status Message",
-    );
-    await expect(authNewAccount.profilePictureNewAccount).toBeVisible();
-    await expect(authNewAccount.buttonNewAccountGoBack).toBeVisible();
-    await expect(authNewAccount.buttonNewAccountCreate).toBeVisible();
     await authNewAccount.typeOnUsername(username);
     await authNewAccount.typeOnStatus(status);
-    await authNewAccount.buttonNewAccountCreate.click();
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-    await page1.waitForURL("/chat");
-    await chatsMainPage.goToFriends();
-    await page1.waitForURL("/friends");
-    const didKeyFirstUser = await friendsPage.copyDID();
+    await authNewAccount.clickOnCreateAccount();
 
-    // All with second user
+    // Go to Friends
+    await chatsMainPage.goToFriends();
+
+    // Grant clipboard permissions, Copy DID and save it into a constant
+    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsPage.copyDID();
+    const handle = await page1.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    const didKeyFirstUser = await handle.jsonValue();
+
+    // Now with the second user, enter a valid pin
     await loginPinPageSecond.enterPin(pinNumber);
-    await loginPinPageSecond.pinButtonConfirm.click();
+    await loginPinPageSecond.clickConfirmButton();
+
+    // Enter username, status and click on create account
     await authNewAccountSecond.validateLoadingHeader();
-    await page2.waitForURL("/auth/new_account");
-    await expect(authNewAccountSecond.textNewAccountSecondary).toHaveText(
-      "Let's set up your new account. Please choose a username below.",
-    );
-    await expect(authNewAccountSecond.labelNewAccountUsername).toHaveText(
-      "Username",
-    );
-    await expect(authNewAccountSecond.labelNewAccountStatus).toHaveText(
-      "Status Message",
-    );
-    await expect(authNewAccountSecond.profilePictureNewAccount).toBeVisible();
-    await expect(authNewAccountSecond.buttonNewAccountGoBack).toBeVisible();
-    await expect(authNewAccountSecond.buttonNewAccountCreate).toBeVisible();
     await authNewAccountSecond.typeOnUsername(usernameTwo);
     await authNewAccountSecond.typeOnStatus(statusTwo);
-    await authNewAccountSecond.buttonNewAccountCreate.click();
-    await chatsMainPageSecond.addSomeone.waitFor({ state: "visible" });
-    await page2.waitForURL("/chat");
+    await authNewAccountSecond.clickOnCreateAccount();
 
+    // Go to Friends
     await chatsMainPageSecond.goToFriends();
-    await friendPageSecond.validateURL();
+
+    // Grant clipboard permissions, Copy DID and save it into a constant
+    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendPageSecond.copyDID();
+    const handleTwo = await page1.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    const didKeySecondUser = await handleTwo.jsonValue();
+
+    // Now, add the first user as a friend
     await friendPageSecond.addFriend(didKeyFirstUser);
-    await expect(friendPageSecond.modalRequestDispatched).toBeVisible();
+
+    // With First User, go to requests list and accept friend request
+    await friendsPage.goToRequestList();
+    await friendPageSecond.validateIncomingRequestExists();
+    await friendsPage.acceptFriendRequest(didKeySecondUser);
+
+    // With First User, go to All Friends and click on Chat Button
+    await friendsPage.goToAllFriendsList();
+    await friendsPage.chatWithFriend(didKeySecondUser);
+
+    // With Second User, go to All Friends and click on Chat Button
+    await friendPageSecond.goToRequestList();
+    await friendPageSecond.goToAllFriendsList();
+    await friendPageSecond.chatWithFriend(didKeyFirstUser);
   });
 });

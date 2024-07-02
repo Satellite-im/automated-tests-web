@@ -64,6 +64,7 @@ export default class MainPage {
 
   async goToFriends() {
     await this.buttonFriends.click();
+    await this.page.waitForURL("/friends");
   }
 
   async goToSettings() {

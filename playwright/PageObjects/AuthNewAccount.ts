@@ -37,6 +37,11 @@ export class AuthNewAccount extends MainPage {
     this.inputNewAccountStatus = page.getByTestId("input-new-account-status");
   }
 
+  async clickOnCreateAccount() {
+    await this.buttonNewAccountCreate.click();
+    await this.page.waitForURL("/chat");
+  }
+
   async createRandomUser(username: string, status: string) {
     this.validateLoadingHeader();
     this.typeOnUsername(username);
@@ -55,5 +60,6 @@ export class AuthNewAccount extends MainPage {
   async validateLoadingHeader() {
     await expect(this.titleNewAccount).toBeVisible();
     await expect(this.titleNewAccount).toHaveText("Make It Yours");
+    await this.page.waitForURL("/auth/new_account");
   }
 }
