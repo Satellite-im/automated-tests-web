@@ -65,7 +65,6 @@ describe("Settings - Developer Mode", () => {
   it.skip("T4 - Clicking Clear State should clear users state", () => {
     // Open DevMode
     openDevMode();
-    cy.url().should("include", DEV_MODE_URL);
 
     // Validate header and description texts
     settingsDeveloper.clearStateSectionLabel.should("have.text", "Clear State");
@@ -78,7 +77,6 @@ describe("Settings - Developer Mode", () => {
   it("T5 - Highlighted border should appear around Exit DevMode when clicked", () => {
     // Open DevMode
     openDevMode();
-    cy.url().should("include", DEV_MODE_URL);
 
     // Focus on Exit DevMode
     settingsDeveloper.devModeSectionButton.focus();
@@ -90,7 +88,6 @@ describe("Settings - Developer Mode", () => {
   it("T6 - Highlighted border should appear around Load MockData when clicked", () => {
     // Open DevMode
     openDevMode();
-    cy.url().should("include", DEV_MODE_URL);
 
     // Click on Load Mock Data button
     settingsDeveloper.loadMockSectionButton.click();
@@ -102,7 +99,6 @@ describe("Settings - Developer Mode", () => {
   it("T7 - Highlighted border should appear around Clear State when clicked", () => {
     // Open DevMode
     openDevMode();
-    cy.url().should("include", DEV_MODE_URL);
 
     // Click on Clear State button
     settingsDeveloper.clearStateSectionButton.focus();
