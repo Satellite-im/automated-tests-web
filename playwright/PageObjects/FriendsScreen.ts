@@ -89,6 +89,7 @@ export class FriendsScreen extends MainPage {
 
   async acceptFriendRequest(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
+    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-accept").click();
   }
 
@@ -101,16 +102,19 @@ export class FriendsScreen extends MainPage {
 
   async blockFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
+    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-block").click();
   }
 
   async cancelFriendRequest(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
+    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-cancel").click();
   }
 
   async chatWithFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
+    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-chat").click();
   }
 
@@ -127,6 +131,7 @@ export class FriendsScreen extends MainPage {
 
   async denyFriendRequest(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
+    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-deny").click();
   }
 
@@ -144,6 +149,7 @@ export class FriendsScreen extends MainPage {
 
   async removeFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
+    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-remove").click();
   }
 
@@ -153,6 +159,7 @@ export class FriendsScreen extends MainPage {
 
   async unblockFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
+    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-unblock").click();
   }
 

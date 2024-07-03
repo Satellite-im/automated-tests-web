@@ -1,6 +1,5 @@
 import {
   test,
-  expect,
   chromium,
   Browser,
   BrowserContext,
@@ -100,7 +99,7 @@ test.describe("Friends tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendPageSecond.copyDID();
-    const handleTwo = await page1.evaluateHandle(() =>
+    const handleTwo = await page2.evaluateHandle(() =>
       navigator.clipboard.readText(),
     );
     const didKeySecondUser = await handleTwo.jsonValue();
@@ -110,7 +109,7 @@ test.describe("Friends tests", () => {
 
     // With First User, go to requests list and accept friend request
     await friendsPage.goToRequestList();
-    await friendPageSecond.validateIncomingRequestExists();
+    await friendsPage.validateIncomingRequestExists();
     await friendsPage.acceptFriendRequest(didKeySecondUser);
 
     // With First User, go to All Friends and click on Chat Button
