@@ -8,6 +8,8 @@ export default class MainPage {
   readonly buttonHideSidebar: Locator;
   readonly buttonSettings: Locator;
   readonly buttonShowSidebar: Locator;
+  readonly buttonSidebarChats: Locator;
+  readonly buttonSidebarFiles: Locator;
   readonly buttonWallet: Locator;
   readonly inputSidebarSearch: Locator;
   readonly navigationBar: Locator;
@@ -25,6 +27,8 @@ export default class MainPage {
     this.buttonHideSidebar = page.getByTestId("button-hide-sidebar");
     this.buttonSettings = page.getByTestId("button-Settings");
     this.buttonShowSidebar = page.getByTestId("button-show-sidebar");
+    this.buttonSidebarChats = page.getByTestId("button-sidebar-chats");
+    this.buttonSidebarFiles = page.getByTestId("button-sidebar-files");
     this.buttonWallet = page.getByTestId("button-Wallet");
     this.inputSidebarSearch = page.getByTestId("input-sidebar-search");
     this.navigationBar = page.getByTestId(".navigation");
@@ -60,6 +64,7 @@ export default class MainPage {
 
   async goToFriends() {
     await this.buttonFriends.click();
+    await this.page.waitForURL("/friends");
   }
 
   async goToSettings() {
@@ -76,5 +81,16 @@ export default class MainPage {
 
   async reloadPage() {
     await this.page.goto("");
+  }
+
+  async validateToastNotification(toastText: string) {
+    await expect(this.toastNotification).toBeVisible();
+    await expect(this.toastNotificationText).toHaveText(toastText);
+  }
+
+  async readClipboard() {
+    return await this.page.evaluate(async () => {
+      return await navigator.clipboard.readText();
+    });
   }
 }
