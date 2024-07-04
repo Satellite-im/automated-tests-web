@@ -139,7 +139,7 @@ describe("Settings - Keybindings", () => {
       "rgb(28, 29, 43)",
     );
 
-    //Clicking on button
+    // Clicking on button
     settingsKeybinds.newKeybindCancelButton.click();
 
     // Color after clicking button
