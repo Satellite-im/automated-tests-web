@@ -6,16 +6,6 @@ import SettingsProfile from "./PageObjects/Settings/SettingsProfile";
 
 beforeEach(() => {
     cy.visit('/')
-  })
-
-describe("Create Account and Login Tests", () => {
-  const username =
-    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
-  const status = faker.lorem.sentence(3);
-  const pinNumber = "1234";
-
-  it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
-    cy.visit('/')
     cy.contains('Create New Account').click()
     authNewAccount.textNewAccountSecondary.should(
       "have.text",
@@ -29,6 +19,15 @@ describe("Create Account and Login Tests", () => {
     authNewAccount.typeOnUsername(username);
     authNewAccount.typeOnStatus(status);
     authNewAccount.buttonNewAccountCreate.click();
+  })
+
+describe("Create Account and Login Tests", () => {
+  const username =
+    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
+  const status = faker.lorem.sentence(3);
+  const pinNumber = "1234";
+
+  it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {    
     loginPinPage.enterPin(pinNumber);
     loginPinPage.pinButtonConfirm.click();
     cy.contains('Saved It, Next Step').click()
