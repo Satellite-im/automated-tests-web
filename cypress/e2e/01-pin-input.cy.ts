@@ -11,6 +11,7 @@ describe("Create Account and Login Tests", () => {
   const pinNumber = "1234";
 
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
+    cy.visit('/')
     cy.contains('Create New Account').click()
     authNewAccount.textNewAccountSecondary.should(
       "have.text",
