@@ -28,6 +28,7 @@ describe("Settings - Inventory", () => {
       { name: "Far Too Epic", type: "Profile Picture Frame" },
       { name: "Natural", type: "Profile Picture Frame" },
       { name: "Orbiting Moon", type: "Profile Picture Frame" },
+      { name: "Skull Party", type: "Profile Picture Frame" },
       { name: "Bronze", type: "Profile Picture Frame" },
       { name: "Quaint", type: "Profile Picture Frame" },
       { name: "Friends In Scales", type: "Profile Picture Frame" },
@@ -40,7 +41,6 @@ describe("Settings - Inventory", () => {
       { name: "Robotic", type: "Profile Picture Frame" },
       { name: "Disc", type: "Profile Picture Frame" },
       { name: "Gems", type: "Profile Picture Frame" },
-      { name: "Skull Party", type: "Profile Picture Frame" },
     ];
 
     settingsInventory.validateInventoryFrames(expectedFrames);
