@@ -16,6 +16,7 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
+    cy.contains('Create New Account').click()
     loginPinPage.enterPin(pinNumber);
     loginPinPage.pinButtonConfirm.click();
     authNewAccount.validateLoadingHeader();
