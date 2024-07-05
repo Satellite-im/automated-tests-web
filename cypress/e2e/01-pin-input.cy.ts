@@ -4,6 +4,11 @@ import loginPinPage from "./PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
 import SettingsProfile from "./PageObjects/Settings/SettingsProfile";
 
+const username =
+  faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
+const status = faker.lorem.sentence(3);
+const pinNumber = "1234";
+
 beforeEach(() => {
     cy.visit('/')
     cy.contains('Create New Account').click()
@@ -22,11 +27,6 @@ beforeEach(() => {
   })
 
 describe("Create Account and Login Tests", () => {
-  const username =
-    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
-  const status = faker.lorem.sentence(3);
-  const pinNumber = "1234";
-
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {    
     loginPinPage.enterPin(pinNumber);
     loginPinPage.pinButtonConfirm.click();
