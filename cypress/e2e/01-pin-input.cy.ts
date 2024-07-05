@@ -4,6 +4,10 @@ import loginPinPage from "./PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
 import SettingsProfile from "./PageObjects/Settings/SettingsProfile";
 
+beforeEach(() => {
+    cy.visit('/')
+  })
+
 describe("Create Account and Login Tests", () => {
   const username =
     faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
