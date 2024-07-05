@@ -10,11 +10,6 @@ describe("Create Account and Login Tests", () => {
   const status = faker.lorem.sentence(3);
   const pinNumber = "1234";
 
-  beforeEach(() => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
-  });
-
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
     cy.contains('Create New Account').click()
     authNewAccount.textNewAccountSecondary.should(
