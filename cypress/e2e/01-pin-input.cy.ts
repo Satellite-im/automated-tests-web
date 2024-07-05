@@ -97,7 +97,7 @@ describe("Create Account and Login Tests", () => {
     authNewAccount.validateLoadingHeader();
     authNewAccount.typeOnUsername(username);
     authNewAccount.typeOnStatus(status);
-    authNewAccount.buttonNewAccountCreate.click();
+    cy.contains('Saved It, Next Step').click()
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
     cy.reload();
