@@ -33,7 +33,7 @@ describe("Create Account and Login Tests", () => {
     cy.contains('Saved It, Next Step').click()
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
-    cy.get('[data-cy="button-Settings"]')
+    cy.get('[data-cy="button-Settings"]').click()
     cy.get('[data-cy="button-log-out"]').click()
   });
 
