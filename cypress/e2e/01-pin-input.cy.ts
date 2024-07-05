@@ -27,6 +27,7 @@ describe("Create Account and Login Tests", () => {
     authNewAccount.buttonNewAccountCreate.click();
     loginPinPage.enterPin(pinNumber);
     loginPinPage.pinButtonConfirm.click();
+    cy.contains('Saved It, Next Step').click()
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
   });
