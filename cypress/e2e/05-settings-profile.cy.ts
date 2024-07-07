@@ -4,6 +4,8 @@ import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Settings Profile Tests", () => {
   const username =
@@ -12,11 +14,14 @@ describe("Settings Profile Tests", () => {
 
   beforeEach(() => {
     // Login with pin and wrap data from creating a new account
-    loginPinPage.loginWithPin("1234");
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin("1234");
+    saveRecoverySeed.clickOnSavedIt();
+    chatsMainPage.validateChatsMainPageIsShown();
 
     // Go to settings profile
-    chatsMainPage.validateChatsMainPageIsShown();
     chatsMainPage.goToSettings();
     cy.location("href").should("include", "/settings/profile");
   });

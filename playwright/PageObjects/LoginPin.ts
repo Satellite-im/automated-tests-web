@@ -103,6 +103,5 @@ export class LoginPinPage extends MainPage {
 
   async waitUntilPageIsLoaded() {
     await expect(this.pinKeypad).toBeVisible();
-    await expect(this.page.url()).toContain("/auth/unlock");
   }
 }

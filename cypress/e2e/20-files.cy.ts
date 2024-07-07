@@ -4,6 +4,8 @@ import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import filesScreen from "./PageObjects/Files";
 import SettingsProfile from "./PageObjects/Settings/SettingsProfile";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Files", () => {
   const username =
@@ -13,8 +15,11 @@ describe("Files", () => {
 
   beforeEach(() => {
     // Login and set up user before each test
-    loginPinPage.loginWithPin(pin);
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin(pin);
+    saveRecoverySeed.clickOnSavedIt();
     chatsMainPage.validateChatsMainPageIsShown();
     chatsMainPage.goToFiles();
   });

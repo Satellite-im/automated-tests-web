@@ -4,6 +4,8 @@ import chatsMain from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 import settingsNotifications from "./PageObjects/Settings/SettingsNotifications";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Settings - Accessibility", () => {
   const username =
@@ -11,8 +13,11 @@ describe("Settings - Accessibility", () => {
   const status = faker.lorem.sentence(3);
 
   beforeEach(() => {
-    loginPinPage.loginWithPin("1234");
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin("1234");
+    saveRecoverySeed.clickOnSavedIt();
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
     settingsProfile.buttonNotifications.click();

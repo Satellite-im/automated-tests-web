@@ -1,8 +1,10 @@
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMainPage from "./PageObjects/ChatsMain";
+import createOrImport from "./PageObjects/CreateOrImport";
 import loginPinPage from "./PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
 import SettingsProfile from "./PageObjects/Settings/SettingsProfile";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Create Account and Login Tests", () => {
   const username =
@@ -11,15 +13,17 @@ describe("Create Account and Login Tests", () => {
   const pinNumber = "1234";
 
   beforeEach(() => {
-    loginPinPage.launchApplication();
-    loginPinPage.waitUntilPageIsLoaded();
+    createOrImport.launchCleanApplication();
   });
 
   it("A1, A9, A11 - Enter valid PIN redirects to Main Page", () => {
-    loginPinPage.enterPin(pinNumber);
-    loginPinPage.pinButtonConfirm.click();
+    createOrImport.labelCreateTitle.should("have.text", "Account Creation");
+    createOrImport.textCreateDescription.should(
+      "have.text",
+      "We're going to create an account for you. On the next screen, you'll see a set of words. Screenshot this or write it down. This is the only way to backup your account.",
+    );
+    createOrImport.buttonCreateAccount.click();
     authNewAccount.validateLoadingHeader();
-    cy.location("href").should("include", "/auth/new_account");
     authNewAccount.textNewAccountSecondary.should(
       "have.text",
       "Let's set up your new account. Please choose a username below.",
@@ -32,27 +36,57 @@ describe("Create Account and Login Tests", () => {
     authNewAccount.typeOnUsername(username);
     authNewAccount.typeOnStatus(status);
     authNewAccount.buttonNewAccountCreate.click();
+    loginPinPage.labelChooseEnterPin.should("have.text", "Choose a new pin.");
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    saveRecoverySeed.titleRecoveryPage.should("have.text", "Backup your seed!");
+    saveRecoverySeed.textRecoveryPageWarning.should(
+      "have.text",
+      "Please ensure you write down this message with all words recorded in the order they appear. It can be helpful to write down the numbers along with the words.",
+    );
+    saveRecoverySeed.validateRecoveryPhraseIsShown();
+    saveRecoverySeed.buttonSavedPhrase.click();
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
   });
 
   it("A2 - Pin should have at least 4 digits", () => {
+    createOrImport.buttonCreateAccount.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     loginPinPage.enterPin("123");
     loginPinPage.validateConfirmButtonIsDisabled();
   });
 
   it("A3 - Pin cannot have more than 8 digits", () => {
+    createOrImport.buttonCreateAccount.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     loginPinPage.enterPin("12345678901234");
     loginPinPage.pinDotFilled.should("have.length", 8);
   });
 
   it("A4 - Clicking red reset button should erase any inputs made", () => {
+    createOrImport.buttonCreateAccount.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     loginPinPage.enterPin("12345678");
     loginPinPage.clearInputButton.click();
     loginPinPage.pinDotFilled.should("have.length", 0);
   });
 
   it("A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked", () => {
+    createOrImport.buttonCreateAccount.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     loginPinPage.goToSettings();
     loginPinPage.scrambleKeypadLabel
       .should("exist")
@@ -63,6 +97,11 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A6, A7 - Scramble Keypad will change the order of pin input buttons", () => {
+    createOrImport.buttonCreateAccount.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     // Scramble keypad is disabled by default
     loginPinPage.pinKeypad.should(
       "have.attr",
@@ -88,15 +127,18 @@ describe("Create Account and Login Tests", () => {
   });
 
   it("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", () => {
+    createOrImport.buttonCreateAccount.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     loginPinPage.goToSettings();
     loginPinPage.clickStayUnlockedSwitch();
     loginPinPage.stayUnlockedCheckbox.should("be.checked");
     loginPinPage.enterPin(pinNumber);
     loginPinPage.pinButtonConfirm.click();
-    authNewAccount.validateLoadingHeader();
-    authNewAccount.typeOnUsername(username);
-    authNewAccount.typeOnStatus(status);
-    authNewAccount.buttonNewAccountCreate.click();
+    saveRecoverySeed.validateRecoveryPhraseIsShown();
+    saveRecoverySeed.buttonSavedPhrase.click();
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
     cy.reload();
@@ -105,6 +147,11 @@ describe("Create Account and Login Tests", () => {
 
   // Needs investigation to unskip
   it.skip("A10 - User can see menu to switch to a different profile", () => {
+    createOrImport.buttonCreateAccount.click();
+    authNewAccount.validateLoadingHeader();
+    authNewAccount.typeOnUsername(username);
+    authNewAccount.typeOnStatus(status);
+    authNewAccount.buttonNewAccountCreate.click();
     loginPinPage.changeUserButton.click();
     loginPinPage.selectProfileModal.should("be.visible");
     loginPinPage.selectProfileLabel.should("have.text", "Profiles");
@@ -113,14 +160,17 @@ describe("Create Account and Login Tests", () => {
   });
 
   it.skip("A12 - If incorrect pin is entered, error message should be displayed", () => {
-    loginPinPage.goToSettings();
-    loginPinPage.clickStayUnlockedSwitch();
-    loginPinPage.enterPin(pinNumber);
-    loginPinPage.pinButtonConfirm.click();
+    createOrImport.buttonCreateAccount.click();
     authNewAccount.validateLoadingHeader();
     authNewAccount.typeOnUsername(username);
     authNewAccount.typeOnStatus(status);
     authNewAccount.buttonNewAccountCreate.click();
+    loginPinPage.goToSettings();
+    loginPinPage.clickStayUnlockedSwitch();
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    saveRecoverySeed.validateRecoveryPhraseIsShown();
+    saveRecoverySeed.buttonSavedPhrase.click();
     cy.url().should("contain", "/chat");
     chatsMainPage.addSomeone.should("exist");
     cy.reload();
@@ -133,12 +183,15 @@ describe("Create Account and Login Tests", () => {
   });
 
   it.skip("A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page", () => {
-    loginPinPage.enterPin(pinNumber);
-    loginPinPage.pinButtonConfirm.click();
+    createOrImport.buttonCreateAccount.click();
     authNewAccount.validateLoadingHeader();
     authNewAccount.typeOnUsername(username);
     authNewAccount.typeOnStatus(status);
     authNewAccount.buttonNewAccountCreate.click();
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    saveRecoverySeed.validateRecoveryPhraseIsShown();
+    saveRecoverySeed.buttonSavedPhrase.click();
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
     cy.reload();
@@ -146,14 +199,17 @@ describe("Create Account and Login Tests", () => {
   });
 
   it.skip("A14 - If Stay Unlocked is toggled on, user should be redirected to enter PIN after logging off", () => {
-    loginPinPage.goToSettings();
-    loginPinPage.clickStayUnlockedSwitch();
-    loginPinPage.enterPin(pinNumber);
-    loginPinPage.pinButtonConfirm.click();
+    createOrImport.buttonCreateAccount.click();
     authNewAccount.validateLoadingHeader();
     authNewAccount.typeOnUsername(username);
     authNewAccount.typeOnStatus(status);
     authNewAccount.buttonNewAccountCreate.click();
+    loginPinPage.goToSettings();
+    loginPinPage.clickStayUnlockedSwitch();
+    loginPinPage.enterPin(pinNumber);
+    loginPinPage.pinButtonConfirm.click();
+    saveRecoverySeed.validateRecoveryPhraseIsShown();
+    saveRecoverySeed.buttonSavedPhrase.click();
     chatsMainPage.addSomeone.should("exist");
     cy.location("href").should("include", "/chat");
     chatsMainPage.buttonSettings.click();

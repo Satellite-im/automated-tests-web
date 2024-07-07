@@ -2,6 +2,8 @@ import { faker } from "@faker-js/faker";
 import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Friends Tests", () => {
   const username =
@@ -9,8 +11,11 @@ describe("Friends Tests", () => {
   const status = faker.lorem.sentence(3);
 
   beforeEach(() => {
-    loginPinPage.loginWithPin("1234");
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin("1234");
+    saveRecoverySeed.clickOnSavedIt();
     chatsMainPage.validateChatsMainPageIsShown();
   });
 

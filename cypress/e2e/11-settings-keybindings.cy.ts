@@ -5,6 +5,8 @@ import loginPinPage from "./PageObjects/LoginPin";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 import settingsKeybinds from "./PageObjects/Settings/SettingsKeybinds";
 import friendsPage from "./PageObjects/Friends";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Settings - Keybindings", () => {
   const username =
@@ -12,8 +14,11 @@ describe("Settings - Keybindings", () => {
   const status = faker.lorem.sentence(3);
 
   beforeEach(() => {
-    loginPinPage.loginWithPin("1234");
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin("1234");
+    saveRecoverySeed.clickOnSavedIt();
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
     settingsProfile.buttonKeybinds.click();

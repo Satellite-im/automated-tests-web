@@ -60,6 +60,5 @@ export class AuthNewAccount extends MainPage {
   async validateLoadingHeader() {
     await expect(this.titleNewAccount).toBeVisible();
     await expect(this.titleNewAccount).toHaveText("Make It Yours");
-    await this.page.waitForURL("/auth/new_account");
   }
 }

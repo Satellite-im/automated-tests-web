@@ -144,24 +144,7 @@ class LoginPinPage extends MainPage {
     this.settingsButton.click();
   }
 
-  public launchApplication() {
-    cy.visit("/");
-  }
-
   public loginWithPin(pin: string) {
-    if (Cypress.browser.name === "chrome") {
-      cy.window().then((win) => {
-        win.sessionStorage.clear();
-        win.indexedDB.databases().then((r) => {
-          for (var i = 0; i < r.length; i++)
-            win.indexedDB.deleteDatabase(r[i].name);
-        });
-      });
-    }
-    cy.clearAllSessionStorage();
-    cy.clearAllCookies();
-    cy.clearAllLocalStorage();
-    this.launchApplication();
     this.waitUntilPageIsLoaded();
     this.enterPin(pin);
     this.pinButtonConfirm.click();
@@ -173,7 +156,6 @@ class LoginPinPage extends MainPage {
 
   public waitUntilPageIsLoaded() {
     this.pinKeypad.should("exist");
-    cy.location("href").should("include", "/auth/unlock");
   }
 }
 

@@ -25,7 +25,6 @@ test.describe("Create Account and Login Tests", () => {
     await loginPinPage.enterPin(pinNumber);
     await loginPinPage.pinButtonConfirm.click();
     await authNewAccount.validateLoadingHeader();
-    await page.waitForURL("/auth/new_account");
     await expect(authNewAccount.textNewAccountSecondary).toHaveText(
       "Let's set up your new account. Please choose a username below.",
     );
@@ -116,7 +115,6 @@ test.describe("Create Account and Login Tests", () => {
     await loginPinPage.enterPin(pinNumber);
     await loginPinPage.pinButtonConfirm.click();
     await authNewAccount.validateLoadingHeader();
-    await page.waitForURL("/auth/new_account");
     await authNewAccount.typeOnUsername(username);
     await authNewAccount.typeOnStatus(status);
     await authNewAccount.buttonNewAccountCreate.click();
