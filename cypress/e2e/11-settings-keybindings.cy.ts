@@ -74,20 +74,20 @@ describe("Settings - Keybindings", () => {
     settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
 
     // Pressing "Shift + P" on app
-    settingsKeybinds.newKeybindKeyButton.realPress(["Shift", "P"]);
+    settingsKeybinds.revertKeybindSectionAllButton.type("{shift+p}");
 
     // Select Push to Talk and save changes
     settingsKeybinds.selectKeybind("Push to talk.");
     settingsKeybinds.newKeybindSaveButton.click();
 
     // Validate keybind buttons for "Push to talk." set to "Shift + P"
-    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["P", "shift"]);
+    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["p", "shift"]);
 
     // Go out of Settings Keybinds and return to page and validate that keybind is still saved
     settingsKeybinds.goToFriends();
     friendsPage.goToSettings();
     settingsProfile.buttonKeybinds.click();
-    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["P", "shift"]);
+    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["p", "shift"]);
   });
 
   it("O3 - Action dropdown should display correct keybind actions", () => {
@@ -121,7 +121,7 @@ describe("Settings - Keybindings", () => {
     settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
 
     // Pressing "Shift + P" on app
-    settingsKeybinds.newKeybindKeyButton.realPress(["Shift", "P"]);
+    settingsKeybinds.revertKeybindSectionAllButton.type("{shift+p}");
 
     // Select Push to Talk and cancel
     settingsKeybinds.selectKeybind("Push to talk.");
@@ -153,12 +153,12 @@ describe("Settings - Keybindings", () => {
   it("O8 - Clicking Revert Keybindings should revert any custom keybindings the user has saved", () => {
     // Setup a keybind and revert the changes
     settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
-    settingsKeybinds.newKeybindKeyButton.realPress(["Shift", "P"]);
+    settingsKeybinds.revertKeybindSectionAllButton.type("{shift+p}");
     settingsKeybinds.selectKeybind("Push to talk.");
 
     // Save changes and validate keybind buttons for "Push to talk." set to "Shift + P"
     settingsKeybinds.newKeybindSaveButton.click();
-    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["P", "shift"]);
+    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["p", "shift"]);
 
     // Revert changes by pressing revert all keybinds button and validate keybind buttons for "Push to talk." set to "."
     settingsKeybinds.revertKeybindSectionAllButton.click();
@@ -187,12 +187,12 @@ describe("Settings - Keybindings", () => {
   it("O10 - Clicking the backwards arrow should revert specific custom keybinding", () => {
     // Setup a keybind and revert the changes
     settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
-    settingsKeybinds.newKeybindKeyButton.realPress(["Shift", "P"]);
+    settingsKeybinds.revertKeybindSectionAllButton.type("{shift+p}");
     settingsKeybinds.selectKeybind("Push to talk.");
 
     // Save changes and validate keybind buttons for "Push to talk." set to "Shift + P"
     settingsKeybinds.newKeybindSaveButton.click();
-    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["P", "shift"]);
+    settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["p", "shift"]);
 
     // Revert changes by pressing revert single keybind button and validate keybind buttons for "Push to talk." set to "."
     settingsKeybinds.clickOnRevertSingleKeybind("Push to talk.");
