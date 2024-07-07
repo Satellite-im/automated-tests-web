@@ -174,7 +174,7 @@ describe("Create Account and Login Tests", () => {
     cy.url().should("contain", "/chat");
     chatsMainPage.addSomeone.should("exist");
     cy.reload();
-    cy.url().should("contain", "/auth/unlock");
+    cy.url().should("contain", "/auth");
     loginPinPage.pinKeypad.should("exist");
     loginPinPage.enterPin("9876");
     loginPinPage.pinButtonConfirm.click();

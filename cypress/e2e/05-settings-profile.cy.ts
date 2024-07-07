@@ -383,6 +383,6 @@ describe("Settings Profile Tests", () => {
 
     // Click on Log Out and validate user is redirected to unlock page
     settingsProfile.logOutSectionButton.click();
-    cy.location("href").should("include", "/auth/unlock");
+    cy.location("href").should("include", "/auth");
   });
 });

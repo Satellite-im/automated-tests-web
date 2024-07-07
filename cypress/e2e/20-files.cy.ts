@@ -144,7 +144,7 @@ describe("Files", () => {
     filesScreen.goToSettings();
     cy.location("href").should("include", "/settings/profile");
     SettingsProfile.logOutSectionButton.click();
-    cy.url().should("include", "/auth/unlock");
+    cy.url().should("include", "/auth");
 
     // Log in again entering the same pin
     loginPinPage.waitUntilPageIsLoaded();

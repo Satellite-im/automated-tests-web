@@ -154,7 +154,7 @@ test.describe("Create Account and Login Tests", () => {
     await authNewAccount.typeOnStatus(status);
     await authNewAccount.buttonNewAccountCreate.click();
     await page.waitForURL("/chat");
-    await chatsMainPage.visitOtherSite("/auth/unlock");
+    await chatsMainPage.visitOtherSite("/auth");
     await loginPinPage.enterPin("9876");
     await page.keyboard.press("Enter");
     await expect(loginPinPage.toastNotification).toBeVisible();
