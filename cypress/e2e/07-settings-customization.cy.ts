@@ -4,6 +4,8 @@ import chatsMain from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import settingsCustomizations from "./PageObjects/Settings/SettingsCustomizations";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Settings - Customization", () => {
   const username =
@@ -13,8 +15,11 @@ describe("Settings - Customization", () => {
 
   beforeEach(() => {
     // Login and setup user before each test
-    loginPinPage.loginWithPin(pin);
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin(pin);
+    saveRecoverySeed.clickOnSavedIt();
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
     settingsProfile.buttonCustomization.click();

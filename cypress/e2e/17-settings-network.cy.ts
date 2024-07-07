@@ -3,6 +3,8 @@ import authNewAccount from "./PageObjects/AuthNewAccount";
 import chatsMain from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Settings - Network", () => {
   const username =
@@ -10,8 +12,11 @@ describe("Settings - Network", () => {
   const status = faker.lorem.sentence(3);
 
   beforeEach(() => {
-    loginPinPage.loginWithPin("1234");
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin("1234");
+    saveRecoverySeed.clickOnSavedIt();
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
     settingsProfile.buttonAudioAndVideo.click();

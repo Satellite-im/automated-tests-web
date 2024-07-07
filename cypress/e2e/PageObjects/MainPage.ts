@@ -94,6 +94,11 @@ export default class MainPage {
     this.buttonWallet.click();
   }
 
+  public launchApplication() {
+    cy.visit("/");
+    cy.url().should("include", "/auth");
+  }
+
   public validateToastNotification(toastText: string) {
     this.toastNotification.should("be.visible");
     this.toastNotificationText.should("have.text", toastText);

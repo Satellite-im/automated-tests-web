@@ -4,6 +4,8 @@ import chatsMain from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
 import settingsAbout from "./PageObjects/Settings/SettingsAbout";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 const USERNAME =
   faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
@@ -16,8 +18,11 @@ const GITHUB_URL = "https://github.com/Satellite-im";
 describe("Settings - About", () => {
   // Reusable function for logging in and navigating to the About section
   const loginAndNavigateToAbout = () => {
-    loginPinPage.loginWithPin(PIN);
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(USERNAME, STATUS);
+    loginPinPage.loginWithPin(PIN);
+    saveRecoverySeed.clickOnSavedIt();
     chatsMain.validateChatsMainPageIsShown();
     chatsMain.goToSettings();
     settingsProfile.buttonAbout.click();

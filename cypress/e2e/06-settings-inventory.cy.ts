@@ -4,6 +4,8 @@ import chatsMainPage from "./PageObjects/ChatsMain";
 import loginPinPage from "./PageObjects/LoginPin";
 import settingsInventory from "./PageObjects/Settings/SettingsInventory";
 import settingsProfile from "./PageObjects/Settings/SettingsProfile";
+import createOrImport from "./PageObjects/CreateOrImport";
+import saveRecoverySeed from "./PageObjects/SaveRecoverySeed";
 
 describe("Settings - Inventory", () => {
   const username =
@@ -13,8 +15,11 @@ describe("Settings - Inventory", () => {
 
   beforeEach(() => {
     // Login and set up user before each test
-    loginPinPage.loginWithPin(pin);
+    createOrImport.launchCleanApplication();
+    createOrImport.clickCreateNewAccount();
     authNewAccount.createRandomUser(username, status);
+    loginPinPage.loginWithPin(pin);
+    saveRecoverySeed.clickOnSavedIt();
     chatsMainPage.validateChatsMainPageIsShown();
     chatsMainPage.goToSettings();
     settingsProfile.buttonInventory.click();
