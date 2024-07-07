@@ -123,7 +123,7 @@ test.describe("Create Account and Login Tests", () => {
     await chatsMainPage.addSomeone.waitFor({ state: "visible" });
     await page.waitForURL("/chat");
     await chatsMainPage.reloadPage();
-    await page.waitForURL("/chat");
+    await page.waitForURL("/auth/unlock");
   });
 
   test("A10 - User can see menu to switch to a different profile", async ({
