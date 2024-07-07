@@ -114,11 +114,11 @@ test.describe("Friends tests", () => {
 
     // With First User, go to All Friends and click on Chat Button
     await friendsPage.goToAllFriendsList();
-    await friendsPage.chatWithFriend(didKeySecondUser);
+    await friendsPage.chatWithFriend(usernameTwo);
 
     // With Second User, go to All Friends and click on Chat Button
     await friendPageSecond.goToRequestList();
     await friendPageSecond.goToAllFriendsList();
-    await friendPageSecond.chatWithFriend(didKeyFirstUser);
+    await friendPageSecond.chatWithFriend(username);
   });
 });
