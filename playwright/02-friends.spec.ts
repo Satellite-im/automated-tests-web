@@ -9,14 +9,20 @@ import { LoginPinPage } from "./PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
 import { AuthNewAccount } from "./PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "./PageObjects/ChatsMain";
+import { CreateOrImportPage } from "./PageObjects/CreateOrImport";
 import { FriendsScreen } from "./PageObjects/FriendsScreen";
+import { SaveRecoverySeedPage } from "./PageObjects/SaveRecoverySeed";
 
 let browser1: Browser, context1: BrowserContext, page1: Page;
 let browser2: Browser, context2: BrowserContext, page2: Page;
 let loginPinPage: LoginPinPage, loginPinPageSecond: LoginPinPage;
 let authNewAccount: AuthNewAccount, authNewAccountSecond: AuthNewAccount;
 let chatsMainPage: ChatsMainPage, chatsMainPageSecond: ChatsMainPage;
+let createOrImport: CreateOrImportPage,
+  createOrImportSecond: CreateOrImportPage;
 let friendsPage: FriendsScreen, friendPageSecond: FriendsScreen;
+let saveRecoverySeed: SaveRecoverySeedPage,
+  saveRecoverySeedSecond: SaveRecoverySeedPage;
 
 test.describe("Friends tests", () => {
   const username: string =
@@ -38,17 +44,15 @@ test.describe("Friends tests", () => {
     context2 = await browser2.newContext();
     page2 = await context2.newPage();
 
-    // Create new login page classes
-    loginPinPage = new LoginPinPage(page1);
-    loginPinPageSecond = new LoginPinPage(page2);
+    // Create create or import page classes
+    createOrImport = new CreateOrImportPage(page1);
+    createOrImportSecond = new CreateOrImportPage(page2);
 
     // Start browser one
-    await loginPinPage.navigateTo();
-    await loginPinPage.waitUntilPageIsLoaded();
+    await createOrImport.navigateTo();
 
     // Start browser two
-    await loginPinPageSecond.navigateTo();
-    await loginPinPageSecond.waitUntilPageIsLoaded();
+    await createOrImportSecond.navigateTo();
   });
 
   test("Create two accounts and add them as friends", async () => {
@@ -56,21 +60,30 @@ test.describe("Friends tests", () => {
     authNewAccount = new AuthNewAccount(page1);
     chatsMainPage = new ChatsMainPage(page1);
     friendsPage = new FriendsScreen(page1);
+    saveRecoverySeed = new SaveRecoverySeedPage(page1);
 
     // Start page objects from user two
     authNewAccountSecond = new AuthNewAccount(page2);
     chatsMainPageSecond = new ChatsMainPage(page2);
     friendPageSecond = new FriendsScreen(page2);
+    saveRecoverySeedSecond = new SaveRecoverySeedPage(page2);
 
-    // Enter Pin
-    await loginPinPage.enterPin(pinNumber);
-    await loginPinPage.clickConfirmButton();
+    // Click on Create New Account
+    await createOrImport.clickCreateNewAccount();
 
     // Enter username and Status and click on create account
     await authNewAccount.validateLoadingHeader();
     await authNewAccount.typeOnUsername(username);
     await authNewAccount.typeOnStatus(status);
     await authNewAccount.clickOnCreateAccount();
+
+    // Enter Pin
+    await loginPinPage.enterPin(pinNumber);
+    await loginPinPage.clickConfirmButton();
+
+    // Click on I Saved It
+    await saveRecoverySeed.validateRecoveryPhraseIsShown();
+    await saveRecoverySeed.clickOnSavedIt();
 
     // Go to Friends
     await chatsMainPage.goToFriends();
@@ -83,15 +96,22 @@ test.describe("Friends tests", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Now with the second user, enter a valid pin
-    await loginPinPageSecond.enterPin(pinNumber);
-    await loginPinPageSecond.clickConfirmButton();
+    // Now with the second user, click on Create New Account
+    await createOrImportSecond.clickCreateNewAccount();
 
     // Enter username, status and click on create account
     await authNewAccountSecond.validateLoadingHeader();
     await authNewAccountSecond.typeOnUsername(usernameTwo);
     await authNewAccountSecond.typeOnStatus(statusTwo);
     await authNewAccountSecond.clickOnCreateAccount();
+
+    // Enter a valid pin
+    await loginPinPageSecond.enterPin(pinNumber);
+    await loginPinPageSecond.clickConfirmButton();
+
+    // Click on I Saved It
+    await saveRecoverySeedSecond.validateRecoveryPhraseIsShown();
+    await saveRecoverySeedSecond.clickOnSavedIt();
 
     // Go to Friends
     await chatsMainPageSecond.goToFriends();
