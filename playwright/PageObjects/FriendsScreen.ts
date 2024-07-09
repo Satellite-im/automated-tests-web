@@ -89,7 +89,6 @@ export class FriendsScreen extends MainPage {
 
   async acceptFriendRequest(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
-    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-accept").click();
   }
 
@@ -102,19 +101,16 @@ export class FriendsScreen extends MainPage {
 
   async blockFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
-    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-block").click();
   }
 
   async cancelFriendRequest(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
-    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-cancel").click();
   }
 
   async chatWithFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
-    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-chat").click();
   }
 
@@ -131,7 +127,6 @@ export class FriendsScreen extends MainPage {
 
   async denyFriendRequest(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
-    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-deny").click();
   }
 
@@ -149,17 +144,18 @@ export class FriendsScreen extends MainPage {
 
   async removeFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
-    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-remove").click();
   }
 
   async getFriendFromList(didKey: string) {
+    await this.page
+      .locator(`[data-cy^="friend-${didKey}"]`)
+      .waitFor({ state: "attached", timeout: 60_000 });
     return this.page.locator(`[data-cy^="friend-${didKey}"]`);
   }
 
   async unblockFriend(didKey: string) {
     const friendUser = await this.getFriendFromList(didKey);
-    await friendUser.waitFor({ state: "attached" });
     await friendUser.getByTestId("button-friend-unblock").click();
   }
 
