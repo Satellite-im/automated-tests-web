@@ -1,7 +1,7 @@
-import MainPage from "../MainPage";
+import { SettingsBase } from "./SettingsBase";
 import { expect, type Locator, type Page } from "@playwright/test";
 
-export class SettingsAbout extends MainPage {
+export class SettingsAudio extends SettingsBase {
   readonly page: Page;
   readonly callTimerSection: Locator;
   readonly callTimerSectionCheckbox: Locator;

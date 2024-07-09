@@ -1,7 +1,7 @@
 import MainPage from "../MainPage";
 import { type Locator, type Page } from "@playwright/test";
 
-export class SettingsAbout extends MainPage {
+export class SettingsBase extends MainPage {
   readonly page: Page;
   readonly buttonAbout: Locator;
   readonly buttonAccessibility: Locator;

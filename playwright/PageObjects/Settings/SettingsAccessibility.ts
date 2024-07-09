@@ -1,7 +1,7 @@
-import MainPage from "../MainPage";
+import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
-export class SettingsAccessibility extends MainPage {
+export class SettingsAccessibility extends SettingsBase {
   readonly page: Page;
   readonly openDyslexicSection: Locator;
   readonly openDyslexicSectionCheckbox: Locator;
