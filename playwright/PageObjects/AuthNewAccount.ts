@@ -39,7 +39,6 @@ export class AuthNewAccount extends MainPage {
 
   async clickOnCreateAccount() {
     await this.buttonNewAccountCreate.click();
-    await this.page.waitForURL("/chat");
   }
 
   async createRandomUser(username: string, status: string) {
