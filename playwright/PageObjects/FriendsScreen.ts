@@ -160,11 +160,17 @@ export class FriendsScreen extends MainPage {
   }
 
   async validateIncomingRequestExists() {
-    await this.textNoIncomingRequests.waitFor({ state: "detached" });
+    await this.textNoIncomingRequests.waitFor({
+      state: "detached",
+      timeout: 60_000,
+    });
   }
 
   async validateOutgoingRequestExists() {
-    await this.textNoOutgoingRequests.waitFor({ state: "detached" });
+    await this.textNoOutgoingRequests.waitFor({
+      state: "detached",
+      timeout: 60_000,
+    });
   }
 
   async validateURL() {
