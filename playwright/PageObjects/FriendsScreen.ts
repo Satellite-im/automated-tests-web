@@ -87,8 +87,8 @@ export class FriendsScreen extends MainPage {
     );
   }
 
-  async acceptFriendRequest(didKey: string) {
-    const friendUser = await this.getFriendFromList(didKey);
+  async acceptFriendRequest(username: string, didkey: string) {
+    const friendUser = await this.getFriendWithNameOrKey(username, didkey);
     await friendUser.getByTestId("button-friend-accept").click();
   }
 
@@ -99,18 +99,18 @@ export class FriendsScreen extends MainPage {
     await this.toastNotification.waitFor({ state: "detached" });
   }
 
-  async blockFriend(didKey: string) {
-    const friendUser = await this.getFriendFromList(didKey);
+  async blockFriend(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-block").click();
   }
 
-  async cancelFriendRequest(didKey: string) {
-    const friendUser = await this.getFriendFromList(didKey);
+  async cancelFriendRequest(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-cancel").click();
   }
 
-  async chatWithFriend(didKey: string) {
-    const friendUser = await this.getFriendFromList(didKey);
+  async chatWithFriend(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-chat").click();
   }
 
@@ -125,8 +125,8 @@ export class FriendsScreen extends MainPage {
     await this.page.keyboard.press("Control+V");
   }
 
-  async denyFriendRequest(didKey: string) {
-    const friendUser = await this.getFriendFromList(didKey);
+  async denyFriendRequest(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-deny").click();
   }
 
@@ -142,20 +142,43 @@ export class FriendsScreen extends MainPage {
     await this.buttonFriendsActive.click();
   }
 
-  async removeFriend(didKey: string) {
-    const friendUser = await this.getFriendFromList(didKey);
+  async removeFriend(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-remove").click();
   }
 
-  async getFriendFromList(didKey: string) {
-    await this.page
-      .locator(`[data-cy^="friend-${didKey}"]`)
-      .waitFor({ state: "attached" });
-    return this.page.locator(`[data-cy^="friend-${didKey}"]`);
+  async getFriendWithNameOrKey(username: string, didkey: string) {
+    // Array of possible locators
+    const locators = [
+      `[data-cy^="friend-${username}"]`,
+      `[data-cy^="friend-${didkey}"]`,
+    ];
+
+    for (const locator of locators) {
+      try {
+        await this.page
+          .locator(locator)
+          .waitFor({ state: "attached", timeout: 5000 });
+        return this.page.locator(locator);
+      } catch (error) {
+        // Ignore the error and try the next locator
+      }
+    }
+
+    throw new Error(
+      `Friend with username ${username} or ID ${didkey} not found.`,
+    );
   }
 
-  async unblockFriend(didKey: string) {
-    const friendUser = await this.getFriendFromList(didKey);
+  async getFriendFromList(username: string) {
+    await this.page
+      .locator(`[data-cy^="friend-${username}"]`)
+      .waitFor({ state: "attached" });
+    return this.page.locator(`[data-cy^="friend-${username}"]`);
+  }
+
+  async unblockFriend(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-unblock").click();
   }
 

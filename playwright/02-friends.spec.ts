@@ -136,7 +136,7 @@ test.describe("Friends tests", () => {
     await friendsPage.goToAllFriendsList();
     await friendsPage.goToRequestList();
     await friendsPage.validateIncomingRequestExists();
-    await friendsPage.acceptFriendRequest(didKeySecondUser);
+    await friendsPage.acceptFriendRequest(usernameTwo, didKeySecondUser);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsPage.goToAllFriendsList();
