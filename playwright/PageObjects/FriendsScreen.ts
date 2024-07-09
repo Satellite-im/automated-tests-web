@@ -154,6 +154,9 @@ export class FriendsScreen extends MainPage {
   }
 
   async getFriendFromList(didKey: string) {
+    await this.page
+      .locator(`[data-cy^="friend-${didKey}"]`)
+      .waitFor({ state: "attached" });
     return this.page.locator(`[data-cy^="friend-${didKey}"]`);
   }
 
