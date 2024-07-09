@@ -128,8 +128,12 @@ test.describe("Friends tests", () => {
 
     // Now, add the first user as a friend
     await friendPageSecond.addFriend(didKeyFirstUser);
+    await friendPageSecond.goToBlockedList();
+    await friendPageSecond.goToRequestList();
 
     // With First User, go to requests list and accept friend request
+    await friendsPage.goToRequestList();
+    await friendsPage.goToAllFriendsList();
     await friendsPage.goToRequestList();
     await friendsPage.validateIncomingRequestExists();
     await friendsPage.acceptFriendRequest(didKeySecondUser);
