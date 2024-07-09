@@ -150,7 +150,7 @@ export class FriendsScreen extends MainPage {
   async getFriendFromList(didKey: string) {
     await this.page
       .locator(`[data-cy^="friend-${didKey}"]`)
-      .waitFor({ state: "attached", timeout: 60_000 });
+      .waitFor({ state: "attached" });
     return this.page.locator(`[data-cy^="friend-${didKey}"]`);
   }
 
@@ -162,14 +162,12 @@ export class FriendsScreen extends MainPage {
   async validateIncomingRequestExists() {
     await this.textNoIncomingRequests.waitFor({
       state: "detached",
-      timeout: 60_000,
     });
   }
 
   async validateOutgoingRequestExists() {
     await this.textNoOutgoingRequests.waitFor({
       state: "detached",
-      timeout: 60_000,
     });
   }
 
