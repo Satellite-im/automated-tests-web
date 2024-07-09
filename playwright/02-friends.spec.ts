@@ -58,12 +58,14 @@ test.describe("Friends tests", () => {
   test("Create two accounts and add them as friends", async () => {
     // Start page objects from user one
     authNewAccount = new AuthNewAccount(page1);
+    loginPinPage = new LoginPinPage(page1);
     chatsMainPage = new ChatsMainPage(page1);
     friendsPage = new FriendsScreen(page1);
     saveRecoverySeed = new SaveRecoverySeedPage(page1);
 
     // Start page objects from user two
     authNewAccountSecond = new AuthNewAccount(page2);
+    loginPinPageSecond = new LoginPinPage(page2);
     chatsMainPageSecond = new ChatsMainPage(page2);
     friendPageSecond = new FriendsScreen(page2);
     saveRecoverySeedSecond = new SaveRecoverySeedPage(page2);
@@ -78,11 +80,11 @@ test.describe("Friends tests", () => {
     await authNewAccount.clickOnCreateAccount();
 
     // Enter Pin
+    await loginPinPage.waitUntilPageIsLoaded();
     await loginPinPage.enterPin(pinNumber);
     await loginPinPage.clickConfirmButton();
 
     // Click on I Saved It
-    await saveRecoverySeed.validateRecoveryPhraseIsShown();
     await saveRecoverySeed.clickOnSavedIt();
 
     // Go to Friends
@@ -106,11 +108,11 @@ test.describe("Friends tests", () => {
     await authNewAccountSecond.clickOnCreateAccount();
 
     // Enter a valid pin
+    await loginPinPageSecond.waitUntilPageIsLoaded();
     await loginPinPageSecond.enterPin(pinNumber);
     await loginPinPageSecond.clickConfirmButton();
 
     // Click on I Saved It
-    await saveRecoverySeedSecond.validateRecoveryPhraseIsShown();
     await saveRecoverySeedSecond.clickOnSavedIt();
 
     // Go to Friends

@@ -21,16 +21,14 @@ test.describe("Create Account and Login Tests", () => {
   const status = faker.lorem.sentence(3);
   const pinNumber = "1234";
 
-  test.beforeEach(async () => {
-    // Setup for first user
-    browser = await chromium.launch();
-    context = await browser.newContext();
-    page = await context.newPage();
+  test.beforeEach(async ({ page }) => {
     const createOrImport = new CreateOrImportPage(page);
     await createOrImport.navigateTo();
   });
 
-  test("A1, A9, A11 - Enter valid PIN redirects to Main Page", async () => {
+  test("A1, A9, A11 - Enter valid PIN redirects to Main Page", async ({
+    page,
+  }) => {
     const loginPinPage = new LoginPinPage(page);
     const authNewAccount = new AuthNewAccount(page);
     const chatsMainPage = new ChatsMainPage(page);
@@ -105,7 +103,9 @@ test.describe("Create Account and Login Tests", () => {
     expect(count).toEqual(8);
   });
 
-  test("A4 - Clicking red reset button should erase any inputs made", async () => {
+  test("A4 - Clicking red reset button should erase any inputs made", async ({
+    page,
+  }) => {
     const authNewAccount = new AuthNewAccount(page);
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
@@ -127,7 +127,9 @@ test.describe("Create Account and Login Tests", () => {
     expect(count).toEqual(0);
   });
 
-  test("A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked", async () => {
+  test("A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked", async ({
+    page,
+  }) => {
     const authNewAccount = new AuthNewAccount(page);
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
@@ -152,7 +154,9 @@ test.describe("Create Account and Login Tests", () => {
     await expect(loginPinPage.stayUnlockedLabel).toHaveText("Stay unlocked?");
   });
 
-  test("A6, A7 - Scramble Keypad will change the order of pin input buttons", async () => {
+  test("A6, A7 - Scramble Keypad will change the order of pin input buttons", async ({
+    page,
+  }) => {
     const authNewAccount = new AuthNewAccount(page);
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
@@ -189,7 +193,9 @@ test.describe("Create Account and Login Tests", () => {
     );
   });
 
-  test("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", async () => {
+  test("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", async ({
+    page,
+  }) => {
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
     const authNewAccount = new AuthNewAccount(page);
@@ -223,7 +229,9 @@ test.describe("Create Account and Login Tests", () => {
     await page.waitForURL("/auth");
   });
 
-  test("A10 - User can see menu to switch to a different profile", async () => {
+  test("A10 - User can see menu to switch to a different profile", async ({
+    page,
+  }) => {
     const authNewAccount = new AuthNewAccount(page);
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
@@ -250,7 +258,9 @@ test.describe("Create Account and Login Tests", () => {
     );
   });
 
-  test.skip("A12 - If incorrect pin is entered, error message should be displayed", async () => {
+  test.skip("A12 - If incorrect pin is entered, error message should be displayed", async ({
+    page,
+  }) => {
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
     const authNewAccount = new AuthNewAccount(page);
@@ -287,7 +297,9 @@ test.describe("Create Account and Login Tests", () => {
     );
   });
 
-  test("A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page", async () => {
+  test("A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page", async ({
+    page,
+  }) => {
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
     const authNewAccount = new AuthNewAccount(page);
@@ -317,7 +329,9 @@ test.describe("Create Account and Login Tests", () => {
     await chatsMainPage.reloadPage();
   });
 
-  test("A14 - If Stay Unlocked is toggled on, user should be redirected to enter PIN after logging off", async () => {
+  test("A14 - If Stay Unlocked is toggled on, user should be redirected to enter PIN after logging off", async ({
+    page,
+  }) => {
     const createOrImport = new CreateOrImportPage(page);
     const loginPinPage = new LoginPinPage(page);
     const authNewAccount = new AuthNewAccount(page);
