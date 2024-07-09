@@ -1,7 +1,7 @@
-import MainPage from "../MainPage";
 import { type Locator, type Page } from "@playwright/test";
+import { SettingsBase } from "./SettingsBase";
 
-export class SettingsProfile extends MainPage {
+export class SettingsProfile extends SettingsBase {
   readonly page: Page;
   readonly inputSettingsProfileShortID: Locator;
   readonly inputSettingsProfileShortIDGroup: Locator;
