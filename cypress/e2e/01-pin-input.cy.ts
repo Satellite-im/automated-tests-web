@@ -20,7 +20,7 @@ describe("Create Account and Login Tests", () => {
     createOrImport.labelCreateTitle.should("have.text", "Account Creation");
     createOrImport.textCreateDescription.should(
       "have.text",
-      "We're going to create an account for you. On the next screen, you'll see a set of words. Screenshot this or write it down. This is the only way to backup your account.",
+      "Let's get started! Begin by either creating a new account, or if you already have one we can import your existing account instead.",
     );
     createOrImport.buttonCreateAccount.click();
     authNewAccount.validateLoadingHeader();
