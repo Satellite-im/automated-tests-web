@@ -1,19 +1,10 @@
-import {
-  test,
-  expect,
-  chromium,
-  Browser,
-  BrowserContext,
-  Page,
-} from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { LoginPinPage } from "./PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
 import { AuthNewAccount } from "./PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "./PageObjects/ChatsMain";
 import { CreateOrImportPage } from "./PageObjects/CreateOrImport";
 import { SaveRecoverySeedPage } from "./PageObjects/SaveRecoverySeed";
-
-let browser: Browser, context: BrowserContext, page: Page;
 
 test.describe("Create Account and Login Tests", () => {
   const username =

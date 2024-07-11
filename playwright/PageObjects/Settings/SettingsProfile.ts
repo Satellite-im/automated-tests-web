@@ -1,8 +1,11 @@
-import { type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 import { SettingsBase } from "./SettingsBase";
 
 export class SettingsProfile extends SettingsBase {
   readonly page: Page;
+  readonly contextMenuUserID: Locator;
+  readonly contextMenuOptionCopyDID: Locator;
+  readonly contextMenuOptionCopyID: Locator;
   readonly inputSettingsProfileShortID: Locator;
   readonly inputSettingsProfileShortIDGroup: Locator;
   readonly inputSettingsProfileStatus: Locator;
@@ -17,6 +20,7 @@ export class SettingsProfile extends SettingsBase {
   readonly profileBannerInput: Locator;
   readonly profileImageFrame: Locator;
   readonly profilePicture: Locator;
+  readonly profilePictureContainer: Locator;
   readonly profilePictureInput: Locator;
   readonly profilePictureUploadButton: Locator;
   readonly profilePictureImage: Locator;
@@ -46,12 +50,19 @@ export class SettingsProfile extends SettingsBase {
   constructor(page: Page) {
     super(page);
     this.page = page;
+    this.contextMenuUserID = page.locator("#context-menu");
+    this.contextMenuOptionCopyDID = page.getByTestId(
+      "context-menu-option-Copy DID",
+    );
+    this.contextMenuOptionCopyID = page.getByTestId(
+      "context-menu-option-Copy ID",
+    );
     this.inputSettingsProfileShortID = page.getByTestId(
       "input-settings-profile-short-id",
     );
-    this.inputSettingsProfileShortIDGroup = this.inputSettingsProfileShortID
-      .locator("..")
-      .locator(".input-group");
+    this.inputSettingsProfileShortIDGroup = page.locator(
+      '[data-tooltip="Copy"]',
+    );
     this.inputSettingsProfileStatus = page.getByTestId(
       "input-settings-profile-status-message",
     );
@@ -75,20 +86,15 @@ export class SettingsProfile extends SettingsBase {
       '[data-cy="setting-section-text"]',
     );
     this.profileBanner = page.getByTestId("profile-banner");
-    this.profileBannerInput = this.profilePictureUploadButton
-      .locator("..")
-      .locator("..")
+    this.profileBannerInput = page
       .locator(".profile-picture-container")
       .locator("input");
     this.profileImageFrame = page.getByTestId("profile-image-frame");
     this.profilePicture = page.getByTestId("profile-picture");
-    this.profilePictureInput = page
-      .getByTestId("profile-picture-input")
-      .locator("..")
-      .locator("input");
-    this.profilePictureUploadButton = page.getByTestId(
-      "profile-picture-upload",
-    );
+    this.profilePictureContainer = page.locator(".profile-picture-container");
+    this.profilePictureInput = this.profilePictureContainer.locator("input");
+    this.profilePictureUploadButton =
+      this.profilePictureContainer.getByTestId("button-file-upload");
     this.profilePictureImage = this.profilePicture.locator("img");
     this.revealPhraseSection = page.getByTestId("section-reveal-phrase");
     this.revealPhraseSectionHideButton = this.revealPhraseSection.locator(
@@ -209,6 +215,11 @@ export class SettingsProfile extends SettingsBase {
     return phrase;
   }
 
+  async openUserIDContextMenu() {
+    await this.inputSettingsProfileShortIDGroup.click({ button: "right" });
+    await this.contextMenuUserID.waitFor({ state: "visible" });
+  }
+
   async validateRecoveryPhraseIsHidden() {
     // Ensure the phrase number and word elements do not exist
     for (let i = 1; i <= 12; i++) {
@@ -234,22 +245,20 @@ export class SettingsProfile extends SettingsBase {
   }
 
   async uploadProfileBanner(file: string) {
+    await this.profileBanner.click();
     await this.profileBannerInput.setInputFiles(file);
   }
 
   async uploadProfilePicture(file: string) {
+    await this.profilePictureUploadButton.click();
     await this.profilePictureInput.setInputFiles(file);
   }
 
-  async validateProfileBannerURLIsValid() {
-    const style = await this.profileBanner.getAttribute("style");
-    expect(
-      style.startsWith('background-image: url("data:image/jpeg;base64'),
-    ).eq(true);
+  async validateBannerDisplayed() {
+    await expect(this.page).toHaveScreenshot({ maxDiffPixels: 400 });
   }
 
-  async validateProfilePictureURLIsValid() {
-    const style = await this.profilePictureImage.getAttribute("src");
-    expect(style.startsWith("data:image/jpeg;base64")).eq(true);
+  async validateProfilePictureDisplayed() {
+    await expect(this.page).toHaveScreenshot({ maxDiffPixels: 400 });
   }
 }
