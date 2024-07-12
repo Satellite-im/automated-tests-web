@@ -1,16 +1,16 @@
 import { test, expect } from "@playwright/test";
-import { LoginPinPage } from "./PageObjects/LoginPin";
+import { LoginPinPage } from "../PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
-import { AuthNewAccount } from "./PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "./PageObjects/ChatsMain";
-import { CreateOrImportPage } from "./PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "./PageObjects/SaveRecoverySeed";
+import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
+import { ChatsMainPage } from "../PageObjects/ChatsMain";
+import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
+import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
 
 test.describe("Create Account and Login Tests", () => {
   const username =
     faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status = faker.lorem.sentence(3);
-  const pinNumber = "1234";
+  const pinNumber = "123456";
 
   test.beforeEach(async ({ page }) => {
     const createOrImport = new CreateOrImportPage(page);
@@ -42,8 +42,7 @@ test.describe("Create Account and Login Tests", () => {
     await authNewAccount.typeOnStatus(status);
     await authNewAccount.buttonNewAccountCreate.click();
     await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterPin(pinNumber);
-    await loginPinPage.pinButtonConfirm.click();
+    await loginPinPage.enterDefaultPin();
 
     // Click on I Saved It
     await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
@@ -207,6 +206,7 @@ test.describe("Create Account and Login Tests", () => {
     await loginPinPage.goToPinSettings();
     await loginPinPage.clickStayUnlockedSwitch();
     await expect(loginPinPage.stayUnlockedCheckbox).toBeChecked();
+    await loginPinPage.goToPinSettings();
     await loginPinPage.enterPin(pinNumber);
     await loginPinPage.pinButtonConfirm.click();
 

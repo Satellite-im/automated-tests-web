@@ -1,10 +1,10 @@
 import { test, expect } from "@playwright/test";
-import { LoginPinPage } from "./PageObjects/LoginPin";
-import { AuthNewAccount } from "./PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "./PageObjects/ChatsMain";
-import { CreateOrImportPage } from "./PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "./PageObjects/SaveRecoverySeed";
-import { SettingsProfile } from "./PageObjects/Settings/SettingsProfile";
+import { LoginPinPage } from "../PageObjects/LoginPin";
+import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
+import { ChatsMainPage } from "../PageObjects/ChatsMain";
+import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
+import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
+import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
 
 test.describe("Settings Profile Tests", () => {
   const username = "test123";
@@ -31,7 +31,6 @@ test.describe("Settings Profile Tests", () => {
     // Enter PIN
     await loginPinPage.waitUntilPageIsLoaded();
     await loginPinPage.enterDefaultPin();
-    await loginPinPage.pinButtonConfirm.click();
 
     // Click on I Saved It
     await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
@@ -55,10 +54,8 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I2, I3 - Banner Picture - User can upload banner", async ({ page }) => {
-    // Shows tooltip when hovering
-    const settingsProfile = new SettingsProfile(page);
-
     // User can upload a banner picture
+    const settingsProfile = new SettingsProfile(page);
     await settingsProfile.uploadProfileBanner("cypress/fixtures/banner.jpg");
 
     // Property Style is reassigned to Background Image after uploading banner
@@ -70,15 +67,17 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     // Profile Picture Upload Button tooltip shows "Change profile photo"
     const settingsProfile = new SettingsProfile(page);
+
+    // Validate user can upload profile pictures
+    await settingsProfile.uploadProfilePicture("cypress/fixtures/logo.jpg");
+    await settingsProfile.validateProfilePictureDisplayed();
+
+    // Validate tooltip is displayed when hovering over the Profile Picture Upload Button
     await settingsProfile.profilePictureUploadButton.hover();
     await settingsProfile.validateTooltipAttribute(
       "[data-cy='button-file-upload']",
       "Change profile photo",
     );
-
-    // Validate user can upload profile pictures
-    await settingsProfile.uploadProfilePicture("cypress/fixtures/logo.jpg");
-    await settingsProfile.validateProfilePictureDisplayed();
   });
 
   test("I5 - Profile picture appears blank until custom profile picture is set", async ({

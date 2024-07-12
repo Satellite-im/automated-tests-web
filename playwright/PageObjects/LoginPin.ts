@@ -84,17 +84,12 @@ export class LoginPinPage extends MainPage {
   }
 
   async enterPin(pin: string) {
-    const pinLength = pin.length;
-    for (let i = 0; i < pinLength; i++) {
-      await this.page.locator(`[data-cy='button-pin-${pin[i]}']`).click();
-    }
+    await this.page.keyboard.type(pin, { delay: 100 });
   }
 
   async enterDefaultPin() {
-    await this.page.getByTestId("button-pin-1").click();
-    await this.page.getByTestId("button-pin-2").click();
-    await this.page.getByTestId("button-pin-3").click();
-    await this.page.getByTestId("button-pin-4").click();
+    await this.page.keyboard.type("123456", { delay: 100 });
+    await this.pinButtonConfirm.click();
   }
 
   async goToPinSettings() {

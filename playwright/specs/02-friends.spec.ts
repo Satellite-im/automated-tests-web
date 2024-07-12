@@ -5,13 +5,13 @@ import {
   BrowserContext,
   Page,
 } from "@playwright/test";
-import { LoginPinPage } from "./PageObjects/LoginPin";
+import { LoginPinPage } from "../PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
-import { AuthNewAccount } from "./PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "./PageObjects/ChatsMain";
-import { CreateOrImportPage } from "./PageObjects/CreateOrImport";
-import { FriendsScreen } from "./PageObjects/FriendsScreen";
-import { SaveRecoverySeedPage } from "./PageObjects/SaveRecoverySeed";
+import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
+import { ChatsMainPage } from "../PageObjects/ChatsMain";
+import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
+import { FriendsScreen } from "../PageObjects/FriendsScreen";
+import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
 
 let browser1: Browser, context1: BrowserContext, page1: Page;
 let browser2: Browser, context2: BrowserContext, page2: Page;
@@ -31,7 +31,6 @@ test.describe("Friends tests", () => {
     faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status: string = faker.lorem.sentence(3);
   const statusTwo: string = faker.lorem.sentence(3);
-  const pinNumber: string = "1234";
 
   test.beforeEach(async () => {
     // Setup for first user
@@ -81,8 +80,7 @@ test.describe("Friends tests", () => {
 
     // Enter Pin
     await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterPin(pinNumber);
-    await loginPinPage.clickConfirmButton();
+    await loginPinPage.enterDefaultPin();
 
     // Click on I Saved It
     await saveRecoverySeed.clickOnSavedIt();
@@ -109,8 +107,7 @@ test.describe("Friends tests", () => {
 
     // Enter a valid pin
     await loginPinPageSecond.waitUntilPageIsLoaded();
-    await loginPinPageSecond.enterPin(pinNumber);
-    await loginPinPageSecond.clickConfirmButton();
+    await loginPinPageSecond.enterDefaultPin();
 
     // Click on I Saved It
     await saveRecoverySeedSecond.clickOnSavedIt();

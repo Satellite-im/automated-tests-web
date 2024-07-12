@@ -17,6 +17,7 @@ export class SettingsProfile extends SettingsBase {
   readonly logOutSectionLabel: Locator;
   readonly logOutSectionText: Locator;
   readonly profileBanner: Locator;
+  readonly profileBannerContainer: Locator;
   readonly profileBannerInput: Locator;
   readonly profileImageFrame: Locator;
   readonly profilePicture: Locator;
@@ -86,9 +87,8 @@ export class SettingsProfile extends SettingsBase {
       '[data-cy="setting-section-text"]',
     );
     this.profileBanner = page.getByTestId("profile-banner");
-    this.profileBannerInput = page
-      .locator(".profile-picture-container")
-      .locator("input");
+    this.profileBannerContainer = page.locator(".profile-header");
+    this.profileBannerInput = this.profileBannerContainer.locator("input");
     this.profileImageFrame = page.getByTestId("profile-image-frame");
     this.profilePicture = page.getByTestId("profile-picture");
     this.profilePictureContainer = page.locator(".profile-picture-container");
@@ -255,10 +255,14 @@ export class SettingsProfile extends SettingsBase {
   }
 
   async validateBannerDisplayed() {
-    await expect(this.page).toHaveScreenshot({ maxDiffPixels: 400 });
+    await expect(this.page).toHaveScreenshot({
+      maxDiffPixels: 400,
+    });
   }
 
   async validateProfilePictureDisplayed() {
-    await expect(this.page).toHaveScreenshot({ maxDiffPixels: 400 });
+    await expect(this.page).toHaveScreenshot({
+      maxDiffPixels: 400,
+    });
   }
 }
