@@ -354,7 +354,7 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.inputSettingsProfileStatus.click();
     await settingsProfile.inputSettingsProfileStatus.clear();
     await settingsProfile.inputSettingsProfileStatus.fill(
-      "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+      "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
     );
     await settingsProfile.warningMessage.waitFor({ state: "visible" });
     await expect(settingsProfile.warningMessage).toHaveText(

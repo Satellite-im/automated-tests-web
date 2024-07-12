@@ -78,14 +78,12 @@ export class SettingsProfile extends SettingsBase {
       "label-settings-profile-username",
     );
     this.logOutSection = page.getByTestId("section-log-out");
-    this.logOutSectionButton = this.logOutSection.locator(
-      '[data-cy="button-log-out"]',
+    this.logOutSectionButton = this.logOutSection.getByTestId("button-log-out");
+    this.logOutSectionLabel = this.logOutSection.getByTestId(
+      "setting-section-label",
     );
-    this.logOutSectionLabel = this.logOutSection.locator(
-      '[data-cy="setting-section-label"]',
-    );
-    this.logOutSectionText = this.logOutSection.locator(
-      '[data-cy="setting-section-text"]',
+    this.logOutSectionText = this.logOutSection.getByTestId(
+      "setting-section-text",
     );
     this.profileBanner = page.getByTestId("profile-banner");
     this.profileBannerContainer = page.locator(".profile-header");
@@ -98,59 +96,45 @@ export class SettingsProfile extends SettingsBase {
       this.profilePictureContainer.getByTestId("button-file-upload");
     this.profilePictureImage = this.profilePicture.locator("img");
     this.revealPhraseSection = page.getByTestId("section-reveal-phrase");
-    this.revealPhraseSectionHideButton = this.revealPhraseSection.locator(
-      '[data-cy="button-hide-phrase"]',
+    this.revealPhraseSectionHideButton =
+      this.revealPhraseSection.getByTestId("button-hide-phrase");
+    this.revealPhraseSectionRevealButton = this.revealPhraseSection.getByTestId(
+      "button-reveal-phrase",
     );
-    this.revealPhraseSectionRevealButton = this.revealPhraseSection.locator(
-      '[data-cy="button-reveal-phrase"]',
+    this.revealPhraseSectionButtonCopyPhrase =
+      this.revealPhraseSection.getByTestId("button-copy-phrase");
+    this.revealPhraseSectionLabel = this.revealPhraseSection.getByTestId(
+      "setting-section-label",
     );
-    this.revealPhraseSectionButtonCopyPhrase = this.revealPhraseSection.locator(
-      '[data-cy="button-copy-phrase"]',
+    this.revealPhraseSectionText = this.revealPhraseSection.getByTestId(
+      "setting-section-text",
     );
-    this.revealPhraseSectionLabel = this.revealPhraseSection.locator(
-      '[data-cy="setting-section-label"]',
-    );
-    this.revealPhraseSectionText = this.revealPhraseSection.locator(
-      '[data-cy="setting-section-text"]',
-    );
-    this.revealPhraseSectionWordNumber = this.revealPhraseSection.locator(
-      '[data-cy="word-number"]',
-    );
-    this.revealPhraseSectionWordValue = this.revealPhraseSection.locator(
-      '[data-cy="word-value"]',
-    );
+    this.revealPhraseSectionWordNumber =
+      this.revealPhraseSection.getByTestId("word-number");
+    this.revealPhraseSectionWordValue =
+      this.revealPhraseSection.getByTestId("word-value");
     this.saveControls = page.getByTestId("save-controls");
-    this.saveControlsButtonCancel = this.saveControls.locator(
-      '[data-cy="button-cancel"]',
-    );
-    this.saveControlsButtonSave = this.saveControls.locator(
-      '[data-cy="button-save"]',
-    );
+    this.saveControlsButtonCancel =
+      this.saveControls.getByTestId("button-cancel");
+    this.saveControlsButtonSave = this.saveControls.getByTestId("button-save");
     this.onlineStatusSection = page.getByTestId("section-online-status");
-    this.onlineStatusSectionLabel = this.onlineStatusSection.locator(
-      '[data-cy="setting-section-label"]',
+    this.onlineStatusSectionLabel = this.onlineStatusSection.getByTestId(
+      "setting-section-label",
     );
     this.onlineStatusSectionSelectorCurrentlyDoNotDisturb =
-      this.onlineStatusSection.locator(
-        '[data-cy="selector-current-status-do-not-disturb"]',
+      this.onlineStatusSection.getByTestId(
+        "selector-current-status-do-not-disturb",
       );
     this.onlineStatusSectionSelectorCurrentlyIdle =
-      this.onlineStatusSection.locator(
-        '[data-cy="selector-current-status-idle"]',
-      );
+      this.onlineStatusSection.getByTestId("selector-current-status-idle");
     this.onlineStatusSectionSelectorCurrentlyOffline =
-      this.onlineStatusSection.locator(
-        '[data-cy="selector-current-status-offline"]',
-      );
+      this.onlineStatusSection.getByTestId("selector-current-status-offline");
     this.onlineStatusSectionSelectorCurrentlyOnline =
-      this.onlineStatusSection.locator(
-        '[data-cy="selector-current-status-online"]',
-      );
-    this.onlineStatusSectionSelectOptions = this.onlineStatusSection.locator(
-      '[data-cy="select-options"]',
-    );
-    this.onlineStatusSectionText = this.onlineStatusSection.locator(
-      '[data-cy="setting-section-text"]',
+      this.onlineStatusSection.getByTestId("selector-current-status-online");
+    this.onlineStatusSectionSelectOptions =
+      this.onlineStatusSection.getByTestId("select-options");
+    this.onlineStatusSectionText = this.onlineStatusSection.getByTestId(
+      "setting-section-text",
     );
     this.storeRecoverySeedSection = page.getByTestId(
       "section-store-recovery-seed",
