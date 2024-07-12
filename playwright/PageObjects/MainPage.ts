@@ -46,7 +46,14 @@ export default class MainPage {
     const inputField = this.page.locator(selector);
 
     // Get the value of the input field
+    await inputField.click();
     const inputValue = await inputField.inputValue();
+
+    // Explicitly select the text in the input field
+    await this.page.evaluate((selector) => {
+      const input = document.querySelector(selector) as HTMLInputElement;
+      input.select();
+    }, selector);
 
     // Evaluate the selection start and end
     const selectionRange = await this.page.evaluate((selector) => {

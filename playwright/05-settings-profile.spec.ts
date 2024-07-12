@@ -9,7 +9,6 @@ import { SettingsProfile } from "./PageObjects/Settings/SettingsProfile";
 test.describe("Settings Profile Tests", () => {
   const username = "test123";
   const status = "fixed status";
-  const pinNumber = "1234";
 
   test.beforeEach(async ({ page }) => {
     // Declare the page object implementations
@@ -31,7 +30,7 @@ test.describe("Settings Profile Tests", () => {
 
     // Enter PIN
     await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterPin(pinNumber);
+    await loginPinPage.enterDefaultPin();
     await loginPinPage.pinButtonConfirm.click();
 
     // Click on I Saved It
@@ -224,7 +223,6 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     // User clicks on username textbox and all text is selected
     const settingsProfile = new SettingsProfile(page);
-    await settingsProfile.inputSettingsProfileUsername.click();
     await settingsProfile.assertInputTextSelected(
       "[data-cy='input-settings-profile-username']",
     );
