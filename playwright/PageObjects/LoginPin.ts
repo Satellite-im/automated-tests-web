@@ -84,9 +84,12 @@ export class LoginPinPage extends MainPage {
   }
 
   async enterPin(pin: string) {
-    for (const digit of pin.split("")) {
-      await this.page.locator(`[data-cy='button-pin-${digit}']`).click();
-    }
+    await this.page.keyboard.type(pin, { delay: 100 });
+  }
+
+  async enterDefaultPin() {
+    await this.page.keyboard.type("123456", { delay: 100 });
+    await this.pinButtonConfirm.click();
   }
 
   async goToPinSettings() {

@@ -1,8 +1,11 @@
-import { type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 import { SettingsBase } from "./SettingsBase";
 
 export class SettingsProfile extends SettingsBase {
   readonly page: Page;
+  readonly contextMenuUserID: Locator;
+  readonly contextMenuOptionCopyDID: Locator;
+  readonly contextMenuOptionCopyID: Locator;
   readonly inputSettingsProfileShortID: Locator;
   readonly inputSettingsProfileShortIDGroup: Locator;
   readonly inputSettingsProfileStatus: Locator;
@@ -14,9 +17,11 @@ export class SettingsProfile extends SettingsBase {
   readonly logOutSectionLabel: Locator;
   readonly logOutSectionText: Locator;
   readonly profileBanner: Locator;
+  readonly profileBannerContainer: Locator;
   readonly profileBannerInput: Locator;
   readonly profileImageFrame: Locator;
   readonly profilePicture: Locator;
+  readonly profilePictureContainer: Locator;
   readonly profilePictureInput: Locator;
   readonly profilePictureUploadButton: Locator;
   readonly profilePictureImage: Locator;
@@ -39,19 +44,27 @@ export class SettingsProfile extends SettingsBase {
   readonly onlineStatusSectionSelectorCurrentlyOnline: Locator;
   readonly onlineStatusSectionSelectOptions: Locator;
   readonly onlineStatusSectionText: Locator;
-  readonly startRecoverySeedSection: Locator;
-  readonly startRecoverySeedCheckbox: Locator;
-  readonly startRecoverySeedText: Locator;
+  readonly storeRecoverySeedSection: Locator;
+  readonly storeRecoverySeedCheckbox: Locator;
+  readonly storeRecoverySeedText: Locator;
+  readonly warningMessage: Locator;
 
   constructor(page: Page) {
     super(page);
     this.page = page;
+    this.contextMenuUserID = page.locator("#context-menu");
+    this.contextMenuOptionCopyDID = page.getByTestId(
+      "context-menu-option-Copy DID",
+    );
+    this.contextMenuOptionCopyID = page.getByTestId(
+      "context-menu-option-Copy ID",
+    );
     this.inputSettingsProfileShortID = page.getByTestId(
       "input-settings-profile-short-id",
     );
-    this.inputSettingsProfileShortIDGroup = this.inputSettingsProfileShortID
-      .locator("..")
-      .locator(".input-group");
+    this.inputSettingsProfileShortIDGroup = page.locator(
+      '[data-tooltip="Copy"]',
+    );
     this.inputSettingsProfileStatus = page.getByTestId(
       "input-settings-profile-status-message",
     );
@@ -65,91 +78,74 @@ export class SettingsProfile extends SettingsBase {
       "label-settings-profile-username",
     );
     this.logOutSection = page.getByTestId("section-log-out");
-    this.logOutSectionButton = this.logOutSection.locator(
-      '[data-cy="button-log-out"]',
+    this.logOutSectionButton = this.logOutSection.getByTestId("button-log-out");
+    this.logOutSectionLabel = this.logOutSection.getByTestId(
+      "setting-section-label",
     );
-    this.logOutSectionLabel = this.logOutSection.locator(
-      '[data-cy="setting-section-label"]',
-    );
-    this.logOutSectionText = this.logOutSection.locator(
-      '[data-cy="setting-section-text"]',
+    this.logOutSectionText = this.logOutSection.getByTestId(
+      "setting-section-text",
     );
     this.profileBanner = page.getByTestId("profile-banner");
-    this.profileBannerInput = this.profilePictureUploadButton
-      .locator("..")
-      .locator("..")
-      .locator(".profile-picture-container")
-      .locator("input");
+    this.profileBannerContainer = page.locator(".profile-header");
+    this.profileBannerInput = this.profileBannerContainer.locator("input");
     this.profileImageFrame = page.getByTestId("profile-image-frame");
     this.profilePicture = page.getByTestId("profile-picture");
-    this.profilePictureInput = page
-      .getByTestId("profile-picture-input")
-      .locator("..")
-      .locator("input");
-    this.profilePictureUploadButton = page.getByTestId(
-      "profile-picture-upload",
-    );
+    this.profilePictureContainer = page.locator(".profile-picture-container");
+    this.profilePictureInput = this.profilePictureContainer.locator("input");
+    this.profilePictureUploadButton =
+      this.profilePictureContainer.getByTestId("button-file-upload");
     this.profilePictureImage = this.profilePicture.locator("img");
     this.revealPhraseSection = page.getByTestId("section-reveal-phrase");
-    this.revealPhraseSectionHideButton = this.revealPhraseSection.locator(
-      '[data-cy="button-hide-phrase"]',
+    this.revealPhraseSectionHideButton =
+      this.revealPhraseSection.getByTestId("button-hide-phrase");
+    this.revealPhraseSectionRevealButton = this.revealPhraseSection.getByTestId(
+      "button-reveal-phrase",
     );
-    this.revealPhraseSectionRevealButton = this.revealPhraseSection.locator(
-      '[data-cy="button-reveal-phrase"]',
+    this.revealPhraseSectionButtonCopyPhrase =
+      this.revealPhraseSection.getByTestId("button-copy-phrase");
+    this.revealPhraseSectionLabel = this.revealPhraseSection.getByTestId(
+      "setting-section-label",
     );
-    this.revealPhraseSectionButtonCopyPhrase = this.revealPhraseSection.locator(
-      '[data-cy="button-copy-phrase"]',
+    this.revealPhraseSectionText = this.revealPhraseSection.getByTestId(
+      "setting-section-text",
     );
-    this.revealPhraseSectionLabel = this.revealPhraseSection.locator(
-      '[data-cy="setting-section-label"]',
-    );
-    this.revealPhraseSectionText = this.revealPhraseSection.locator(
-      '[data-cy="setting-section-text"]',
-    );
-    this.revealPhraseSectionWordNumber = this.revealPhraseSection.locator(
-      '[data-cy="word-number"]',
-    );
-    this.revealPhraseSectionWordValue = this.revealPhraseSection.locator(
-      '[data-cy="word-value"]',
-    );
+    this.revealPhraseSectionWordNumber =
+      this.revealPhraseSection.getByTestId("word-number");
+    this.revealPhraseSectionWordValue =
+      this.revealPhraseSection.getByTestId("word-value");
     this.saveControls = page.getByTestId("save-controls");
-    this.saveControlsButtonCancel = this.saveControls.locator(
-      '[data-cy="button-cancel"]',
-    );
-    this.saveControlsButtonSave = this.saveControls.locator(
-      '[data-cy="button-save"]',
-    );
+    this.saveControlsButtonCancel =
+      this.saveControls.getByTestId("button-cancel");
+    this.saveControlsButtonSave = this.saveControls.getByTestId("button-save");
     this.onlineStatusSection = page.getByTestId("section-online-status");
-    this.onlineStatusSectionLabel = this.onlineStatusSection.locator(
-      '[data-cy="setting-section-label"]',
+    this.onlineStatusSectionLabel = this.onlineStatusSection.getByTestId(
+      "setting-section-label",
     );
     this.onlineStatusSectionSelectorCurrentlyDoNotDisturb =
-      this.onlineStatusSection.locator(
-        '[data-cy="selector-currently-do-not-disturb"]',
+      this.onlineStatusSection.getByTestId(
+        "selector-current-status-do-not-disturb",
       );
     this.onlineStatusSectionSelectorCurrentlyIdle =
-      this.onlineStatusSection.locator('[data-cy="selector-currently-idle"]');
+      this.onlineStatusSection.getByTestId("selector-current-status-idle");
     this.onlineStatusSectionSelectorCurrentlyOffline =
-      this.onlineStatusSection.locator(
-        '[data-cy="selector-currently-offline"]',
-      );
+      this.onlineStatusSection.getByTestId("selector-current-status-offline");
     this.onlineStatusSectionSelectorCurrentlyOnline =
-      this.onlineStatusSection.locator('[data-cy="selector-currently-online"]');
-    this.onlineStatusSectionSelectOptions = this.onlineStatusSection.locator(
-      '[data-cy="select-options"]',
+      this.onlineStatusSection.getByTestId("selector-current-status-online");
+    this.onlineStatusSectionSelectOptions =
+      this.onlineStatusSection.getByTestId("select-options");
+    this.onlineStatusSectionText = this.onlineStatusSection.getByTestId(
+      "setting-section-text",
     );
-    this.onlineStatusSectionText = this.onlineStatusSection.locator(
-      '[data-cy="setting-section-text"]',
+    this.storeRecoverySeedSection = page.getByTestId(
+      "section-store-recovery-seed",
     );
-    this.startRecoverySeedSection = page.getByTestId(
-      "section-start-recovery-seed",
+    this.storeRecoverySeedCheckbox = this.storeRecoverySeedSection.getByTestId(
+      "checkbox-store-recovery-seed",
     );
-    this.startRecoverySeedCheckbox = this.startRecoverySeedSection.locator(
-      '[data-cy="checkbox-start-recovery-seed"]',
+    this.storeRecoverySeedText = this.storeRecoverySeedSection.getByTestId(
+      "text-store-recovery-seed",
     );
-    this.startRecoverySeedText = this.startRecoverySeedSection.locator(
-      '[data-cy="setting-section-text"]',
-    );
+    this.warningMessage = page.locator(".warning");
   }
 
   // Rewrite everything here in playwright
@@ -171,9 +167,7 @@ export class SettingsProfile extends SettingsBase {
     // Iterate through each element and extract the value
     for (let i = 0; i < count; i++) {
       const element = elements.nth(i);
-      const value = await element.getAttribute("value"); // Assuming the value you want is an attribute
-      console.log("Option: ", await element.innerText());
-      console.log("Option Val: ", value);
+      const value = await element.innerText(); // Assuming the value you want is an attribute
       options.push(value);
     }
 
@@ -190,17 +184,17 @@ export class SettingsProfile extends SettingsBase {
     for (let i = 1; i <= 12; i++) {
       // Ensure the phrase number element exists
       await this.page
-        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-number-${i}"]`)
         .waitFor({ state: "visible" });
 
       // Ensure the phrase word element exists
       await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .waitFor({ state: "visible" });
 
       // Get the text from the <p> tag inside the phrase word element
       const text = await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .locator("p")
         .innerText();
       phrase.push(text);
@@ -209,14 +203,46 @@ export class SettingsProfile extends SettingsBase {
     return phrase;
   }
 
+  async openUserIDContextMenu() {
+    await this.inputSettingsProfileShortIDGroup.click({ button: "right" });
+    await this.contextMenuUserID.waitFor({ state: "visible" });
+  }
+
+  async selectOnlineStatus(
+    option: "online" | "idle" | "do-not-disturb" | "offline",
+  ) {
+    switch (option) {
+      case "online":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Online" });
+        break;
+      case "idle":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Idle" });
+        break;
+      case "do-not-disturb":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Do Not Disturb" });
+        break;
+      case "offline":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Offline" });
+        break;
+    }
+  }
+
   async validateRecoveryPhraseIsHidden() {
     // Ensure the phrase number and word elements do not exist
     for (let i = 1; i <= 12; i++) {
       await this.page
-        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-number-${i}"]`)
         .waitFor({ state: "hidden" });
       await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .waitFor({ state: "hidden" });
     }
   }
@@ -225,31 +251,33 @@ export class SettingsProfile extends SettingsBase {
     // Ensure the phrase number and word elements exist
     for (let i = 1; i <= 12; i++) {
       await this.page
-        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-number-${i}"]`)
         .waitFor({ state: "visible" });
       await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .waitFor({ state: "visible" });
     }
   }
 
   async uploadProfileBanner(file: string) {
+    await this.profileBanner.click();
     await this.profileBannerInput.setInputFiles(file);
   }
 
   async uploadProfilePicture(file: string) {
+    await this.profilePictureUploadButton.click();
     await this.profilePictureInput.setInputFiles(file);
   }
 
-  async validateProfileBannerURLIsValid() {
-    const style = await this.profileBanner.getAttribute("style");
-    expect(
-      style.startsWith('background-image: url("data:image/jpeg;base64'),
-    ).eq(true);
+  async validateBannerDisplayed() {
+    await expect(this.page).toHaveScreenshot({
+      maxDiffPixels: 400,
+    });
   }
 
-  async validateProfilePictureURLIsValid() {
-    const style = await this.profilePictureImage.getAttribute("src");
-    expect(style.startsWith("data:image/jpeg;base64")).eq(true);
+  async validateProfilePictureDisplayed() {
+    await expect(this.page).toHaveScreenshot({
+      maxDiffPixels: 400,
+    });
   }
 }

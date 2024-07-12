@@ -41,6 +41,34 @@ export default class MainPage {
     this.toastNotificationText = page.getByTestId("toast-notification-text");
   }
 
+  async assertInputTextSelected(selector: string) {
+    // Locate the input field
+    const inputField = this.page.locator(selector);
+
+    // Get the value of the input field
+    await inputField.click();
+    const inputValue = await inputField.inputValue();
+
+    // Explicitly select the text in the input field
+    await this.page.evaluate((selector) => {
+      const input = document.querySelector(selector) as HTMLInputElement;
+      input.select();
+    }, selector);
+
+    // Evaluate the selection start and end
+    const selectionRange = await this.page.evaluate((selector) => {
+      const input = document.querySelector(selector) as HTMLInputElement;
+      return {
+        selectionStart: input.selectionStart,
+        selectionEnd: input.selectionEnd,
+      };
+    }, selector);
+
+    // Assert that the whole text is selected
+    expect(selectionRange.selectionStart).toBe(0);
+    expect(selectionRange.selectionEnd).toBe(inputValue.length);
+  }
+
   async ensureSidebarIsDisplayed() {
     const hasVerticalClass: boolean = await this.navigationBar.evaluate((el) =>
       el.classList.contains("vertical"),
@@ -92,5 +120,40 @@ export default class MainPage {
     return await this.page.evaluate(async () => {
       return await navigator.clipboard.readText();
     });
+  }
+
+  async validatePseudoElementContent(
+    selector: string,
+    expectedContent: string,
+  ) {
+    // Hover over the element to trigger the pseudo-element
+    await this.page.hover(selector);
+
+    // Evaluate the content of the ::after pseudo-element
+    const content = await this.page.evaluate((selector) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        const style = window.getComputedStyle(element, "::after");
+        return style.content;
+      }
+      return null;
+    }, selector);
+
+    // Validate the content
+    expect(content).toBe(`"${expectedContent}"`);
+  }
+
+  async validateTooltipAttribute(
+    selector: string,
+    expectedTooltipText: string,
+  ) {
+    // Locate the element that should have the data-tooltip attribute
+    const element = this.page.locator(selector);
+
+    // Get the value of the data-tooltip attribute
+    const tooltipText = await element.getAttribute("data-tooltip");
+
+    // Validate that the data-tooltip attribute has the expected value
+    expect(tooltipText).toBe(expectedTooltipText);
   }
 }
