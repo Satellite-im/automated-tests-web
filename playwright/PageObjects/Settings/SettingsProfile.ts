@@ -44,9 +44,10 @@ export class SettingsProfile extends SettingsBase {
   readonly onlineStatusSectionSelectorCurrentlyOnline: Locator;
   readonly onlineStatusSectionSelectOptions: Locator;
   readonly onlineStatusSectionText: Locator;
-  readonly startRecoverySeedSection: Locator;
-  readonly startRecoverySeedCheckbox: Locator;
-  readonly startRecoverySeedText: Locator;
+  readonly storeRecoverySeedSection: Locator;
+  readonly storeRecoverySeedCheckbox: Locator;
+  readonly storeRecoverySeedText: Locator;
+  readonly warningMessage: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -131,31 +132,36 @@ export class SettingsProfile extends SettingsBase {
     );
     this.onlineStatusSectionSelectorCurrentlyDoNotDisturb =
       this.onlineStatusSection.locator(
-        '[data-cy="selector-currently-do-not-disturb"]',
+        '[data-cy="selector-current-status-do-not-disturb"]',
       );
     this.onlineStatusSectionSelectorCurrentlyIdle =
-      this.onlineStatusSection.locator('[data-cy="selector-currently-idle"]');
+      this.onlineStatusSection.locator(
+        '[data-cy="selector-current-status-idle"]',
+      );
     this.onlineStatusSectionSelectorCurrentlyOffline =
       this.onlineStatusSection.locator(
-        '[data-cy="selector-currently-offline"]',
+        '[data-cy="selector-current-status-offline"]',
       );
     this.onlineStatusSectionSelectorCurrentlyOnline =
-      this.onlineStatusSection.locator('[data-cy="selector-currently-online"]');
+      this.onlineStatusSection.locator(
+        '[data-cy="selector-current-status-online"]',
+      );
     this.onlineStatusSectionSelectOptions = this.onlineStatusSection.locator(
       '[data-cy="select-options"]',
     );
     this.onlineStatusSectionText = this.onlineStatusSection.locator(
       '[data-cy="setting-section-text"]',
     );
-    this.startRecoverySeedSection = page.getByTestId(
-      "section-start-recovery-seed",
+    this.storeRecoverySeedSection = page.getByTestId(
+      "section-store-recovery-seed",
     );
-    this.startRecoverySeedCheckbox = this.startRecoverySeedSection.locator(
-      '[data-cy="checkbox-start-recovery-seed"]',
+    this.storeRecoverySeedCheckbox = this.storeRecoverySeedSection.getByTestId(
+      "checkbox-store-recovery-seed",
     );
-    this.startRecoverySeedText = this.startRecoverySeedSection.locator(
-      '[data-cy="setting-section-text"]',
+    this.storeRecoverySeedText = this.storeRecoverySeedSection.getByTestId(
+      "text-store-recovery-seed",
     );
+    this.warningMessage = page.locator(".warning");
   }
 
   // Rewrite everything here in playwright
@@ -177,9 +183,7 @@ export class SettingsProfile extends SettingsBase {
     // Iterate through each element and extract the value
     for (let i = 0; i < count; i++) {
       const element = elements.nth(i);
-      const value = await element.getAttribute("value"); // Assuming the value you want is an attribute
-      console.log("Option: ", await element.innerText());
-      console.log("Option Val: ", value);
+      const value = await element.innerText(); // Assuming the value you want is an attribute
       options.push(value);
     }
 
@@ -196,17 +200,17 @@ export class SettingsProfile extends SettingsBase {
     for (let i = 1; i <= 12; i++) {
       // Ensure the phrase number element exists
       await this.page
-        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-number-${i}"]`)
         .waitFor({ state: "visible" });
 
       // Ensure the phrase word element exists
       await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .waitFor({ state: "visible" });
 
       // Get the text from the <p> tag inside the phrase word element
       const text = await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .locator("p")
         .innerText();
       phrase.push(text);
@@ -220,14 +224,41 @@ export class SettingsProfile extends SettingsBase {
     await this.contextMenuUserID.waitFor({ state: "visible" });
   }
 
+  async selectOnlineStatus(
+    option: "online" | "idle" | "do-not-disturb" | "offline",
+  ) {
+    switch (option) {
+      case "online":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Online" });
+        break;
+      case "idle":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Idle" });
+        break;
+      case "do-not-disturb":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Do Not Disturb" });
+        break;
+      case "offline":
+        await this.onlineStatusSection
+          .locator("select")
+          .selectOption({ label: "Offline" });
+        break;
+    }
+  }
+
   async validateRecoveryPhraseIsHidden() {
     // Ensure the phrase number and word elements do not exist
     for (let i = 1; i <= 12; i++) {
       await this.page
-        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-number-${i}"]`)
         .waitFor({ state: "hidden" });
       await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .waitFor({ state: "hidden" });
     }
   }
@@ -236,10 +267,10 @@ export class SettingsProfile extends SettingsBase {
     // Ensure the phrase number and word elements exist
     for (let i = 1; i <= 12; i++) {
       await this.page
-        .locator(`[data-test="ordered-phrase-number-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-number-${i}"]`)
         .waitFor({ state: "visible" });
       await this.page
-        .locator(`[data-test="ordered-phrase-word-${i}"]`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .waitFor({ state: "visible" });
     }
   }

@@ -242,139 +242,183 @@ test.describe("Settings Profile Tests", () => {
     );
   });
 
-  // Skipped since this is not working in Uplink Web as expected per test
-  /*test.skip("I13 - Error message should appear if user tries to input chars that are not allowed or exceeds chars amount", async ({
+  test("I13 - Error message should appear if user tries to input chars that are not allowed or exceeds chars amount", async ({
     page,
-  }) => {});
+  }) => {
+    // User leaves empty username - Warning message is displayed
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.inputSettingsProfileUsername.click();
+    await settingsProfile.inputSettingsProfileUsername.clear();
+    await settingsProfile.warningMessage.waitFor({ state: "visible" });
+    await expect(settingsProfile.warningMessage).toHaveText(
+      "This field is required.",
+    );
+
+    // User types less characters than expected into username - Warning message is displayed
+    await settingsProfile.inputSettingsProfileUsername.fill("123");
+    await expect(settingsProfile.warningMessage).toHaveText(
+      "Minimum length is 4 characters.",
+    );
+
+    // User types long username - Warning message is displayed
+    await settingsProfile.inputSettingsProfileUsername.clear();
+    await settingsProfile.inputSettingsProfileUsername.fill(
+      "123456789012345678901234567890123",
+    );
+    await expect(settingsProfile.warningMessage).toHaveText(
+      "Maximum length is 32 characters.",
+    );
+
+    // User types invalid  username - Warning message is displayed
+    await settingsProfile.inputSettingsProfileUsername.clear();
+    await settingsProfile.inputSettingsProfileUsername.fill("&*&*&&*");
+    await expect(settingsProfile.warningMessage).toHaveText("Invalid format.");
+  });
 
   test("I14 - Highlighted border should appear when user is clicked into Status textbox", async ({
     page,
   }) => {
     // Click on Status textbox and validate border is highlighted
     const settingsProfile = new SettingsProfile(page);
-    settingsProfile.inputSettingsProfileUsername.focus();
-    settingsProfile.inputSettingsProfileUsername
-      .parent()
-      .should("have.css", "box-shadow", "rgb(77, 77, 255) 0px 0px 0px 1px");
+    await settingsProfile.inputSettingsProfileStatus.focus();
+
+    const usernameStatusBox =
+      await settingsProfile.inputSettingsProfileStatus.locator("xpath=..");
+    await expect(usernameStatusBox).toHaveCSS(
+      "box-shadow",
+      "rgb(77, 77, 255) 0px 0px 0px 1px",
+    );
   });
 
-  // Skipped since test its failing when clicking on cancel button
-  test.skip("I15, I16 - User should be able to change Status Message and see toast notification for update", async ({
+  test("I15, I16 - User should be able to change Status Message and see toast notification for update", async ({
     page,
   }) => {
-    // User types into status and change value
-    settingsProfile.inputSettingsProfileStatus
-      .click()
-      .clear()
-      .type("newStatusTest");
+    // User types into username and change value
+    const settingsProfile = new SettingsProfile(page);
+    const chatsMainPage = new ChatsMainPage(page);
+    const newStatus = "this is my new status";
+    await settingsProfile.inputSettingsProfileStatus.click();
+    await settingsProfile.inputSettingsProfileStatus.clear();
+    await settingsProfile.inputSettingsProfileStatus.fill(newStatus);
 
-    // Save modal is displayed, user selects cancel and status is not changed
-    settingsProfile.saveControls.should("exist");
-    settingsProfile.saveControlsButtonCancel.click();
+    // Save modal is displayed, user selects cancel and username is not changed
+    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControlsButtonCancel.click();
+
     // Username displayed will be equal to the username assigned randomly when creating account
-    settingsProfile.inputSettingsProfileStatus.should("have.value", status);
-
-    // User types into status and change value
-    settingsProfile.inputSettingsProfileStatus
-      .click()
-      .clear()
-      .type("newStatusTest");
-
-    // Save modal is displayed, user selects save and status is changed
-    settingsProfile.saveControls.should("exist");
-    settingsProfile.saveControlsButtonSave.click();
-    chatsMainPage.toastNotification.should("exist");
-
-    // Validate status is changed
-    settingsProfile.inputSettingsProfileStatus.should(
-      "have.value",
-      "newStatusTest",
+    await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
+      status,
     );
 
-    // User goes to another page and returns to settings profile, status is still changed
-    chatsMainPage.buttonFriends.click();
-    cy.location("href").should("include", "/friends");
-    chatsMainPage.goToSettings();
-    settingsProfile.inputSettingsProfileStatus.should(
-      "have.value",
-      "newStatusTest",
+    // User types into username and change value
+    await settingsProfile.inputSettingsProfileStatus.click();
+    await settingsProfile.inputSettingsProfileStatus.clear();
+    await settingsProfile.inputSettingsProfileStatus.fill(newStatus);
+
+    // Save modal is displayed, user selects save and username is changed
+    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControlsButtonSave.click();
+    await settingsProfile.toastNotification.waitFor({ state: "visible" });
+    await expect(settingsProfile.toastNotificationText).toHaveText(
+      "Profile Updated!",
+    );
+    await settingsProfile.toastNotification.waitFor({ state: "detached" });
+    await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
+      newStatus,
+    );
+
+    // User goes to another page and returns to settings profile, username is still changed
+    await settingsProfile.goToFriends();
+    await page.waitForURL("/friends");
+    await chatsMainPage.goToSettings();
+    await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
+      newStatus,
     );
   });
 
-  // Skipped since this is not working in Uplink Web as expected per test
-  test.skip("I17 - All text in StatusMessage should be selected after clicking into the text field a single time", async ({
+  test("I17 - All text in StatusMessage should be selected after clicking into the text field a single time", async ({
     page,
-  }) => {});
+  }) => {
+    // User clicks on status textbox and all text is selected
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.assertInputTextSelected(
+      "[data-cy='input-settings-profile-status-message']",
+    );
+  });
 
-  // Skipped since this is not working in Uplink Web as expected per test
-  test.skip("I18 - Error message should appear if user inputs chars that are not allowed or exceeds limit", async ({
+  test("I18 - Error message should appear if user inputs chars that are not allowed or exceeds limit", async ({
     page,
-  }) => {});
+  }) => {
+    // User types more characters than expected into status - Warning message is displayed
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.inputSettingsProfileStatus.click();
+    await settingsProfile.inputSettingsProfileStatus.clear();
+    await settingsProfile.inputSettingsProfileStatus.fill(
+      "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
+    );
+    await settingsProfile.warningMessage.waitFor({ state: "visible" });
+    await expect(settingsProfile.warningMessage).toHaveText(
+      "Maximum length is 128 characters.",
+    );
+  });
 
   test("I19 - Status dropdown should show Online, Offline, Idle, Do not Disturb", async ({
     page,
   }) => {
     // Validate Settings Section contents
-    settingsProfile.onlineStatusSectionLabel.should("have.text", "Status");
-    settingsProfile.onlineStatusSectionText.should(
-      "have.text",
+    const settingsProfile = new SettingsProfile(page);
+    await expect(settingsProfile.onlineStatusSectionLabel).toHaveText("Status");
+    await expect(settingsProfile.onlineStatusSectionText).toHaveText(
       "Set status appearance",
     );
 
     // Default Status selected is Online
-    settingsProfile.onlineStatusSectionSelectorCurrentlyOnline.should("exist");
+    await settingsProfile.onlineStatusSectionSelectorCurrentlyOnline.waitFor({
+      state: "attached",
+    });
 
     // Validate list of options
-    let options = [];
-    cy.get("[data-cy='selector-current-status-online']")
-      .find("[data-cy='select-option']")
-      .each(($option) => {
-        cy.log("Option: ", $option);
-        cy.log("Option Val: ", $option.text());
-        options.push($option.text());
-      })
-      .then(() => {
-        expect(options).to.have.length(4);
-        // To deep equal to the array of options
-        expect(options).to.deep.eq([
-          "Online",
-          "Offline",
-          "Idle",
-          "Do Not Disturb",
-        ]);
-      });
+    let options = ["Online", "Offline", "Idle", "Do Not Disturb"];
+    const actualOptions = await settingsProfile.getSelectorOptions(
+      "[data-cy='selector-current-status-online']",
+    );
+    await expect(actualOptions).toEqual(options);
   });
 
   test("I20 - Status should show correctly depending on which status user has set", async ({
     page,
   }) => {
     // Change Status to Offline and validate is displayed correctly
-    settingsProfile.onlineStatusSectionSelectorCurrentlyOnline
-      .find("select")
-      .select("offline");
-    settingsProfile.onlineStatusSectionSelectorCurrentlyOffline.should("exist");
+    const settingsProfile = new SettingsProfile(page);
+    const chatsMainPage = new ChatsMainPage(page);
+    await settingsProfile.selectOnlineStatus("offline");
+    await settingsProfile.onlineStatusSectionSelectorCurrentlyOffline.waitFor({
+      state: "visible",
+    });
 
     // Change Status to Idle and validate is displayed correctly
-    settingsProfile.onlineStatusSectionSelectorCurrentlyOffline
-      .find("select")
-      .select("idle");
-    settingsProfile.onlineStatusSectionSelectorCurrentlyIdle.should("exist");
+    await settingsProfile.selectOnlineStatus("idle");
+    await settingsProfile.onlineStatusSectionSelectorCurrentlyIdle.waitFor({
+      state: "visible",
+    });
 
     // Change Status to Do not Disturb and validate is displayed correctly
-    settingsProfile.onlineStatusSectionSelectorCurrentlyIdle
-      .find("select")
-      .select("do-not-disturb");
-    settingsProfile.onlineStatusSectionSelectorCurrentlyDoNotDisturb.should(
-      "exist",
+    await settingsProfile.selectOnlineStatus("do-not-disturb");
+    await settingsProfile.onlineStatusSectionSelectorCurrentlyDoNotDisturb.waitFor(
+      {
+        state: "visible",
+      },
     );
 
     // Go to friends page and return to Settings Profile and validate status is still the same
-    chatsMainPage.buttonFriends.click();
-    cy.location("href").should("include", "/friends");
-    chatsMainPage.goToSettings();
-    cy.location("href").should("include", "/settings/profile");
-    settingsProfile.onlineStatusSectionSelectorCurrentlyDoNotDisturb.should(
-      "exist",
+    await settingsProfile.goToFriends();
+    await page.waitForURL("/friends");
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
+    await settingsProfile.onlineStatusSectionSelectorCurrentlyDoNotDisturb.waitFor(
+      {
+        state: "visible",
+      },
     );
   });
 
@@ -383,28 +427,23 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     // Validate Settings Section contents
     const settingsProfile = new SettingsProfile(page);
-    settingsProfile.revealPhraseSectionLabel.should(
-      "have.text",
+    await expect(settingsProfile.revealPhraseSectionLabel).toHaveText(
       "Reveal recovery phrase",
     );
-    settingsProfile.revealPhraseSectionText.should(
-      "have.text",
+    await expect(settingsProfile.revealPhraseSectionText).toHaveText(
       "Click the button to reveal your recovery seed, please do not share this with anybody, it is the master-key for your account.",
     );
-    settingsProfile.storeRecoverySeedText.should(
-      "have.text",
+    await expect(settingsProfile.storeRecoverySeedText).toHaveText(
       "Store recovery seed on account (disable for increased security, irreversible)",
     );
 
     // Show Recovery Phrase and ensure is displayed now
-    settingsProfile.revealPhraseSectionRevealButton.click().then(() => {
-      settingsProfile.validateRecoveryPhraseIsShown();
-    });
+    await settingsProfile.revealPhraseSectionRevealButton.click();
+    await settingsProfile.validateRecoveryPhraseIsShown();
 
     // Click on Hide Phrase and validate is hidden
-    settingsProfile.revealPhraseSectionHideButton.click().then(() => {
-      settingsProfile.validateRecoveryPhraseIsHidden();
-    });
+    await settingsProfile.revealPhraseSectionHideButton.click();
+    await settingsProfile.validateRecoveryPhraseIsHidden();
   });
 
   // Cannot be automated for now since copy button does not perform any action
@@ -422,14 +461,13 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     // Validate Settings Section contents
     const settingsProfile = new SettingsProfile(page);
-    settingsProfile.logOutSectionLabel.should("have.text", "Log Out");
-    settingsProfile.logOutSectionText.should(
-      "have.text",
+    await expect(settingsProfile.logOutSectionLabel).toHaveText("Log Out");
+    await expect(settingsProfile.logOutSectionText).toHaveText(
       "Log out of the current account and return to the unlock page.",
     );
 
     // Click on Log Out and validate user is redirected to unlock page
-    settingsProfile.logOutSectionButton.click();
-    cy.location("href").should("include", "/auth");
-  });*/
+    await settingsProfile.logOutSectionButton.click();
+    await page.waitForURL("/auth");
+  });
 });
