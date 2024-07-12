@@ -29,23 +29,24 @@ describe("Settings - Inventory", () => {
     cy.url().should("include", "/settings/inventory");
 
     const expectedFrames = [
+      { name: "Moon", type: "Profile Picture Frame" },
+      { name: "Skull Dance", type: "Profile Picture Frame" },
+      { name: "Kitsune", type: "Profile Picture Frame" },
+      { name: "Gamer Headset", type: "Profile Picture Frame" },
+      { name: "Doom", type: "Profile Picture Frame" },
+      { name: "Ice", type: "Profile Picture Frame" },
+      { name: "Elegant", type: "Profile Picture Frame" },
       { name: "Foxy", type: "Profile Picture Frame" },
-      { name: "Far Too Epic", type: "Profile Picture Frame" },
-      { name: "Natural", type: "Profile Picture Frame" },
-      { name: "Orbiting Moon", type: "Profile Picture Frame" },
-      { name: "Skull Party", type: "Profile Picture Frame" },
-      { name: "Bronze", type: "Profile Picture Frame" },
-      { name: "Quaint", type: "Profile Picture Frame" },
-      { name: "Friends In Scales", type: "Profile Picture Frame" },
-      { name: "Dragon Born", type: "Profile Picture Frame" },
-      { name: "Magma", type: "Profile Picture Frame" },
-      { name: "Cat", type: "Profile Picture Frame" },
-      { name: "Porthole", type: "Profile Picture Frame" },
-      { name: "Stone", type: "Profile Picture Frame" },
-      { name: "Marble", type: "Profile Picture Frame" },
-      { name: "Robotic", type: "Profile Picture Frame" },
-      { name: "Disc", type: "Profile Picture Frame" },
+      { name: "Cat Ears", type: "Profile Picture Frame" },
       { name: "Gems", type: "Profile Picture Frame" },
+      { name: "Dragonborn", type: "Profile Picture Frame" },
+      { name: "Scale Friends", type: "Profile Picture Frame" },
+      { name: "Magma", type: "Profile Picture Frame" },
+      { name: "Marble", type: "Profile Picture Frame" },
+      { name: "Nature", type: "Profile Picture Frame" },
+      { name: "Quaint", type: "Profile Picture Frame" },
+      { name: "Robot", type: "Profile Picture Frame" },
+      { name: "Stone", type: "Profile Picture Frame" },
     ];
 
     settingsInventory.validateInventoryFrames(expectedFrames);
@@ -64,7 +65,11 @@ describe("Settings - Inventory", () => {
     settingsInventory.buttonProfile.click();
     settingsProfile.profileImageFrame
       .should("exist")
-      .and("have.attr", "src", "/assets/frames/quaint.png");
+      .and(
+        "have.attr",
+        "src",
+        "https://cdn.deepspaceshipping.co/frames/quaint.png",
+      );
 
     // Navigate back to Inventory and unequip the frame
     settingsProfile.buttonInventory.click();
