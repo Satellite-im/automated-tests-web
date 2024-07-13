@@ -30,9 +30,10 @@ export class SettingsInventory extends SettingsBase {
     this.inventoryFrameButton = this.inventoryFrame.getByTestId(
       "inventory-item-button",
     );
-    this.inventoryFrameEquippedButton = this.inventoryFrame
-      .locator('[data-cy="inventory-frame"].equipped')
-      .getByTestId("inventory-item-button");
+    this.inventoryFrameEquippedButton = this.inventoryFrame.getByRole(
+      "button",
+      { name: "Equipped" },
+    );
     this.inventoryFrameName = this.inventoryFrame.getByTestId(
       "inventory-item-name",
     );
@@ -69,9 +70,8 @@ export class SettingsInventory extends SettingsBase {
   async getFrame(name: string) {
     // Locate the element with the test attribute and containing the specified text
     return this.page
-      .locator('[data-cy="inventory-item-name"]')
-      .locator(`text=${name}`)
-      .locator("..");
+      .locator('[data-cy="inventory-item-name"]', { hasText: name })
+      .locator("xpath=..");
   }
 
   async getFrameButtonText(name: string) {
@@ -81,39 +81,53 @@ export class SettingsInventory extends SettingsBase {
 
   async getFrameContainer(name: string) {
     return this.page
-      .locator('[data-cy="inventory-item-name"]')
-      .locator(`text=${name}`)
+      .locator('[data-cy="inventory-item-name"]', { hasText: name })
       .last()
-      .locator("..");
+      .locator("xpath=..");
   }
 
-  public async validateInventoryFrames2(
+  async validateInventoryFrames(
     expectedFrames: { name: string; type: string }[],
   ) {
-    // Array to store the extracted frames
     let frames: { name: string; type: string }[] = [];
+    const inventoryFrames = await this.inventoryFrameName;
+    const inventoryFramesCount = await inventoryFrames.count();
 
-    // Locate all inventory frame names
-    const frameNames = await this.inventoryFrameName;
-
-    // Get the count of the frame names
-    const count = await frameNames.count();
-
-    for (let i = 0; i < count; i++) {
-      // Get the text of the frame name
-      const name = await frameNames.nth(i).innerText();
-
-      // Locate the corresponding type element and get its text
-      const type = await frameNames
-        .nth(i)
-        .locator("[data-cy='inventory-item-type']")
-        .innerText();
-
-      // Push the extracted data to the frames array
-      frames.push({ name, type });
+    for (let i = 0; i < inventoryFramesCount; i++) {
+      frames.push({
+        name: await inventoryFrames.nth(i).textContent(),
+        type: await inventoryFrames
+          .nth(i)
+          .locator('~ [data-cy="inventory-item-type"]')
+          .textContent(),
+      });
     }
 
-    // Validate that the extracted frames match the expected frames
     expect(frames).toEqual(expectedFrames);
+  }
+
+  async equipFrame(frameName: string) {
+    const frameButtonText = await this.getFrameButtonText(frameName);
+    expect(frameButtonText).toHaveText("Equip");
+
+    await this.clickOnFrameButton(frameName);
+    const frameButtonTextTwo = await this.getFrameButtonText(frameName);
+    expect(frameButtonTextTwo).toHaveText("Equipped");
+  }
+
+  async unequipFrame(frameName: string) {
+    const unequipButton = this.profilePictureFrameUnequipButton;
+    expect(unequipButton).toHaveText("Unequip");
+
+    const frameContainer = await this.getFrameContainer(frameName);
+    await expect(frameContainer).not.toHaveClass("equipped");
+    await unequipButton.click();
+  }
+
+  async validateEquippedFrame(frameName: string) {
+    await expect(this.profilePictureFrameName).toHaveText(frameName);
+    await expect(this.profilePictureFrameType).toHaveText(
+      "Profile Picture Frame",
+    );
   }
 }
