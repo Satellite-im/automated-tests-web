@@ -96,7 +96,7 @@ export class SettingsAudio extends SettingsBase {
     );
     this.inputDeviceSectionMeter = page.locator(".meter-mask").first();
     this.inputDeviceSectionSelector = this.inputDeviceSection.getByTestId(
-      "select-input-device",
+      "selector-input-device",
     );
     this.inputDeviceSectionSelectorOption =
       this.inputDeviceSectionSelector.getByTestId("select-option");
