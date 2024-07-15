@@ -3,41 +3,39 @@ import { expect, type Locator, type Page } from "@playwright/test";
 
 export class SettingsCustomizations extends SettingsBase {
   readonly page: Page;
-  private readonly appLanguageSection: Locator;
-  private readonly appLanguageSectionLabel: Locator;
-  private readonly appLanguageSectionSelector: Locator;
-  private readonly appLanguageSectionSelectorOption: Locator;
-  private readonly appLanguageSectionText: Locator;
-  private readonly customColorInput: Locator;
-  private readonly customColorPicker: Locator;
-  private readonly customCSSSection: Locator;
-  private readonly customCSSSectionLabel: Locator;
-  private readonly customCSSSectionText: Locator;
-  private readonly customCSSSectionTextArea: Locator;
-  private readonly fontSection: Locator;
-  private readonly fontSectionButton: Locator;
-  private readonly fontSectionLabel: Locator;
-  private readonly fontSectionSelector: Locator;
-  private readonly fontSectionSelectorOption: Locator;
-  private readonly fontSectionText: Locator;
-  private readonly fontScalingSection: Locator;
-  private readonly fontScalingSectionDecreaseButton: Locator;
-  private readonly fontScalingSectionIncreaseButton: Locator;
-  private readonly fontScalingSectionInput: Locator;
-  private readonly fontScalingSectionLabel: Locator;
-  private readonly fontScalingSectionText: Locator;
-  private readonly primaryColorSection: Locator;
-  private readonly primaryColorSectionColorSwatchButton: Locator;
-  private readonly primaryColorSectionLabel: Locator;
-  private readonly primaryColorSectionPopUpButton: Locator;
-  private readonly primaryColorSectionText: Locator;
-  private readonly themeSection: Locator;
-  private readonly themeSectionOpenFolderButton: Locator;
-  private readonly themeSectionThemeMoonButton: Locator;
-  private readonly themeSectionLabel: Locator;
-  private readonly themeSectionSelector: Locator;
-  private readonly themeSectionSelectorOption: Locator;
-  private readonly themeSectionText: Locator;
+  readonly appLanguageSection: Locator;
+  readonly appLanguageSectionLabel: Locator;
+  readonly appLanguageSectionSelector: Locator;
+  readonly appLanguageSectionSelectorOption: Locator;
+  readonly appLanguageSectionText: Locator;
+  readonly customCSSSection: Locator;
+  readonly customCSSSectionLabel: Locator;
+  readonly customCSSSectionText: Locator;
+  readonly customCSSSectionTextArea: Locator;
+  readonly fontSection: Locator;
+  readonly fontSectionButton: Locator;
+  readonly fontSectionLabel: Locator;
+  readonly fontSectionSelector: Locator;
+  readonly fontSectionSelectorOption: Locator;
+  readonly fontSectionText: Locator;
+  readonly fontScalingSection: Locator;
+  readonly fontScalingSectionDecreaseButton: Locator;
+  readonly fontScalingSectionIncreaseButton: Locator;
+  readonly fontScalingSectionInput: Locator;
+  readonly fontScalingSectionLabel: Locator;
+  readonly fontScalingSectionText: Locator;
+  readonly primaryColorSection: Locator;
+  readonly primaryColorSectionColorSwatchButton: Locator;
+  readonly primaryColorSectionLabel: Locator;
+  readonly primaryColorSectionPopUpButton: Locator;
+  readonly primaryColorSectionText: Locator;
+  readonly themeSection: Locator;
+  readonly themeSectionOpenFolderButton: Locator;
+  readonly themeSectionThemeMoonButton: Locator;
+  readonly themeSectionLabel: Locator;
+  readonly themeSectionSelector: Locator;
+  readonly themeSectionSelectorOption: Locator;
+  readonly themeSectionText: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -52,8 +50,6 @@ export class SettingsCustomizations extends SettingsBase {
     this.appLanguageSectionText = this.appLanguageSection.getByTestId(
       "setting-section-text",
     );
-    this.customColorInput = this.customColorPicker.locator(".text-input");
-    this.customColorPicker = page.locator(".color-picker");
     this.customCSSSection = page.getByTestId("section-custom-css");
     this.customCSSSectionLabel = this.customCSSSection.getByTestId(
       "setting-section-label",
@@ -68,7 +64,7 @@ export class SettingsCustomizations extends SettingsBase {
       "setting-section-label",
     );
     this.fontSectionSelector = page.locator(
-      "[data-cy^=selector-current-font-]",
+      '[data-cy^="selector-current-font-"]',
     );
     this.fontSectionSelectorOption =
       this.fontSectionSelector.getByTestId("select-option");

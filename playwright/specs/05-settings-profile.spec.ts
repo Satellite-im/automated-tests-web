@@ -410,16 +410,20 @@ test.describe("Settings Profile Tests", () => {
       },
     );
 
+    // Change Status back to Online and validate is displayed correctly
+    await settingsProfile.selectOnlineStatus("online");
+    await settingsProfile.onlineStatusSectionSelectorCurrentlyOnline.waitFor({
+      state: "visible",
+    });
+
     // Go to friends page and return to Settings Profile and validate status is still the same
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
-    await settingsProfile.onlineStatusSectionSelectorCurrentlyDoNotDisturb.waitFor(
-      {
-        state: "visible",
-      },
-    );
+    await settingsProfile.onlineStatusSectionSelectorCurrentlyOnline.waitFor({
+      state: "visible",
+    });
   });
 
   test("I21 - Clicking Reveal Phrase should display the users Recovery Phrases", async ({
