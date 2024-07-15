@@ -48,9 +48,9 @@ export class SettingsMessages extends SettingsBase {
     this.markdownSupportSectionSlider = page.locator(
       '[data-cy="section-markdown-support"] > .body > .content > .switch > .slider',
     );
-    this.spamBotDetectionSection = page.getByTestId(
-      "section-spam-bot-detection",
-    );
+    this.spamBotDetectionSection = page
+      .getByTestId("section-spam-bot-detection")
+      .first();
     this.spamBotDetectionSectionCheckbox = page.getByTestId(
       "checkbox-spam-bot-detection",
     );
@@ -59,8 +59,7 @@ export class SettingsMessages extends SettingsBase {
     this.spamBotDetectionSectionText = this.spamBotDetectionSection.getByTestId(
       "setting-section-text",
     );
-    this.spamBotDetectionSectionSlider = page.locator(
-      '[data-cy="section-spam-bot-detection"] > .body > .content > .switch > .slider',
-    );
+    this.spamBotDetectionSectionSlider =
+      this.spamBotDetectionSection.locator(".slider");
   }
 }
