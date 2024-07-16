@@ -145,8 +145,7 @@ test.describe("Friends tests", () => {
     await friendPageSecond.chatWithFriend(username);
   });
 
-  test.afterEach(async () => {
-    await browser1.close();
-    await browser2.close();
+  test.afterAll(async () => {
+    await page2.close();
   });
 });

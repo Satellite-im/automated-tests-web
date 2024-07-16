@@ -1,11 +1,4 @@
-import {
-  expect,
-  test,
-  chromium,
-  Browser,
-  BrowserContext,
-  Page,
-} from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "../PageObjects/ChatsMain";
@@ -14,25 +7,11 @@ import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
 import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
 import { SettingsAudio } from "../PageObjects/Settings/SettingsAudio";
 
-let browser: Browser, context: BrowserContext, page: Page;
-
 test.describe("Settings Audio and Video Tests", () => {
   const username = "test123";
   const status = "test status";
 
-  test.beforeEach(async () => {
-    // Setup for custom browser
-    browser = await chromium.launch({
-      headless: false, // Set to false if you want to see the browser
-      args: [
-        "--use-fake-device-for-media-stream",
-        "--use-fake-ui-for-media-stream",
-      ],
-    });
-
-    context = await browser.newContext();
-    page = await context.newPage();
-
+  test.beforeEach(async ({ page }) => {
     // Declare the page object implementations
     const createOrImport = new CreateOrImportPage(page);
     const authNewAccount = new AuthNewAccount(page);
@@ -68,7 +47,9 @@ test.describe("Settings Audio and Video Tests", () => {
     await page.waitForURL("/settings/audio_video");
   });
 
-  test("M1 and M2 - Input dropdown and input volume indicator should display", async () => {
+  test("M1 and M2 - Input dropdown and input volume indicator should display", async ({
+    page,
+  }) => {
     const settingsAudio = new SettingsAudio(page);
     const expectedInputDevices = ["Default"];
 
@@ -82,7 +63,9 @@ test.describe("Settings Audio and Video Tests", () => {
     await settingsAudio.validateInputDevices(expectedInputDevices);
   });
 
-  test("M3 and M4 - Output device dropdown and output volume indicator should display", async () => {
+  test("M3 and M4 - Output device dropdown and output volume indicator should display", async ({
+    page,
+  }) => {
     const settingsAudio = new SettingsAudio(page);
     const expectedOutputDevices = ["Default"];
     await expect(settingsAudio.outputDeviceSectionLabel).toHaveText(
@@ -95,7 +78,9 @@ test.describe("Settings Audio and Video Tests", () => {
     await settingsAudio.validateOutputDevices(expectedOutputDevices);
   });
 
-  test("M5 - User should be able to toggle on and off Echo Cancellation", async () => {
+  test("M5 - User should be able to toggle on and off Echo Cancellation", async ({
+    page,
+  }) => {
     // Label and texts for settings section are correct
     const settingsAudio = new SettingsAudio(page);
     await expect(settingsAudio.echoCancellationSectionLabel).toHaveText(
@@ -119,7 +104,9 @@ test.describe("Settings Audio and Video Tests", () => {
     await expect(settingsAudio.echoCancellationSectionCheckbox).toBeChecked();
   });
 
-  test("M6 - User should be able to toggle on and off Interface Sounds", async () => {
+  test("M6 - User should be able to toggle on and off Interface Sounds", async ({
+    page,
+  }) => {
     // Label and texts for settings section are correct
     const settingsAudio = new SettingsAudio(page);
 
@@ -146,7 +133,9 @@ test.describe("Settings Audio and Video Tests", () => {
     ).not.toBeChecked();
   });
 
-  test("M7 - User should be able to toggle on and off Control Sounds", async () => {
+  test("M7 - User should be able to toggle on and off Control Sounds", async ({
+    page,
+  }) => {
     // Label and texts for settings section are correct
     const settingsAudio = new SettingsAudio(page);
     await expect(settingsAudio.controlSoundsSectionLabel).toHaveText(
@@ -168,7 +157,9 @@ test.describe("Settings Audio and Video Tests", () => {
     await expect(settingsAudio.controlSoundsSectionCheckbox).toBeChecked();
   });
 
-  test("M8 - User should be able to toggle on and off Message Sounds", async () => {
+  test("M8 - User should be able to toggle on and off Message Sounds", async ({
+    page,
+  }) => {
     // Label and texts for settings section are correct
     const settingsAudio = new SettingsAudio(page);
     await expect(settingsAudio.messageSoundsSectionLabel).toHaveText(
@@ -190,7 +181,9 @@ test.describe("Settings Audio and Video Tests", () => {
     await expect(settingsAudio.messageSoundsSectionCheckbox).toBeChecked();
   });
 
-  test("M9 - User should be able to toggle on and off Call Timer", async () => {
+  test("M9 - User should be able to toggle on and off Call Timer", async ({
+    page,
+  }) => {
     // Label and texts for settings section are correct
     const settingsAudio = new SettingsAudio(page);
     await expect(settingsAudio.callTimerSectionLabel).toHaveText("Call Timer");
@@ -210,7 +203,7 @@ test.describe("Settings Audio and Video Tests", () => {
     await expect(settingsAudio.callTimerSectionCheckbox).toBeChecked();
   });
 
-  test("M10 - User should be able to test video device", async () => {
+  test("M10 - User should be able to test video device", async ({ page }) => {
     const settingsAudio = new SettingsAudio(page);
     await expect(settingsAudio.videoDeviceSectionLabel).toHaveText(
       "Video Device",
