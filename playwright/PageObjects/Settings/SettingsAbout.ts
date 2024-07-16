@@ -74,7 +74,7 @@ export class SettingsAbout extends SettingsBase {
       "setting-section-text",
     );
     this.websiteSection = page.getByTestId("section-about-website");
-    this.websiteSectionButton = page.getByTestId("button-about-website");
+    this.websiteSectionButton = page.getByTestId("button-open-website");
     this.websiteSectionLabel = this.websiteSection.getByTestId(
       "setting-section-label",
     );

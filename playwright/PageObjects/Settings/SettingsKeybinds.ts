@@ -37,42 +37,38 @@ export class SettingsKeybinds extends SettingsBase {
       "button-keybind-revert-single",
     );
     this.newKeybindSection = page.getByTestId("section-new-keybind");
-    this.newKeybindActionLabel = this.newKeybindSection.locator(
-      "[data-cy='label-keybind-action']",
+    this.newKeybindActionLabel = this.newKeybindSection.getByTestId(
+      "label-keybind-action",
     );
-    this.newKeybindActionSelector = this.newKeybindSection.locator(
-      "[data-cy='selector-keybind-action']",
+    this.newKeybindActionSelector = this.newKeybindSection.getByTestId(
+      "selector-keybind-action",
     );
-    this.newKeybindActionSelectorOption = this.newKeybindActionSelector.locator(
-      "[data-cy='select-option']",
+    this.newKeybindActionSelectorOption =
+      this.newKeybindActionSelector.getByTestId("select-option");
+    this.newKeybindRecordedKeysLabel = this.newKeybindSection.getByTestId(
+      "label-keybind-recorded-keys",
     );
-    this.newKeybindRecordedKeysLabel = this.newKeybindSection.locator(
-      "[data-cy='label-keybind-recorded-keys']",
+    this.newKeybindKeyButton = this.newKeybindSection.getByTestId("key-button");
+    this.newKeybindKeyButtonText =
+      this.newKeybindSection.getByTestId("key-button-text");
+    this.newKeybindCancelButton = this.newKeybindSection.getByTestId(
+      "button-keybind-cancel",
     );
-    this.newKeybindKeyButton = this.newKeybindSection.locator(
-      "[data-cy='key-button']",
-    );
-    this.newKeybindKeyButtonText = this.newKeybindSection.locator(
-      "[data-cy='key-button-text']",
-    );
-    this.newKeybindCancelButton = this.newKeybindSection.locator(
-      "[data-cy='button-keybind-cancel']",
-    );
-    this.newKeybindSaveButton = this.newKeybindSection.locator(
-      "[data-cy='button-keybind-save']",
+    this.newKeybindSaveButton = this.newKeybindSection.getByTestId(
+      "button-keybind-save",
     );
     this.recordKeybindLabel = page.getByTestId("label-record-keybind");
     this.recordKeybindInstructionsText = page.getByTestId(
       "text-keybind-instructions",
     );
     this.revertKeybindSection = page.getByTestId("section-revert-keybind");
-    this.revertKeybindSectionLabel = this.revertKeybindSection.locator(
-      "[data-cy='setting-section-label']",
+    this.revertKeybindSectionLabel = this.revertKeybindSection.getByTestId(
+      "setting-section-label",
     );
-    this.revertKeybindSectionText = this.revertKeybindSection.locator(
-      "[data-cy='setting-section-text']",
+    this.revertKeybindSectionText = this.revertKeybindSection.getByTestId(
+      "setting-section-text",
     );
-    this.revertKeybindSectionAllButton = this.page.getByTestId(
+    this.revertKeybindSectionAllButton = page.getByTestId(
       "button-keybind-revert-all",
     );
   }
