@@ -14,7 +14,9 @@ export default class MainPage {
   readonly inputSidebarSearch: Locator;
   readonly navigationBar: Locator;
   readonly sidebar: Locator;
+  readonly sidebarChatPreview: Locator;
   readonly slimbar: Locator;
+  readonly slimbarFavorite: Locator;
   readonly toastNotification: Locator;
   readonly toastNotificationButton: Locator;
   readonly toastNotificationText: Locator;
@@ -33,7 +35,9 @@ export default class MainPage {
     this.inputSidebarSearch = page.getByTestId("input-sidebar-search");
     this.navigationBar = page.getByTestId(".navigation");
     this.sidebar = page.getByTestId("sidebar");
+    this.sidebarChatPreview = this.sidebar.locator(".chat-preview");
     this.slimbar = page.getByTestId("slimbar");
+    this.slimbarFavorite = this.slimbar.locator(".fave");
     this.toastNotification = page.getByTestId("toast-notification");
     this.toastNotificationButton = page.getByTestId(
       "toast-notification-button",
