@@ -57,7 +57,7 @@ jobs:
       - uses: daun/playwright-report-summary@v3
         if: always()
         with:
-          report-file: ./automated-tests/playwright-report/results.json
+          report-file: ./automated-tests/playwright-report/report.json
           job-summary: false
           comment-title: "Automated Test Results"
 
