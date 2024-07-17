@@ -52,7 +52,14 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: automated-tests
-        run: npx playwright test
+        run: PLAYWRIGHT_JSON_OUTPUT_NAME=results.json npx playwright test --reporter=json
+
+      - uses: daun/playwright-report-summary@v3
+        if: always()
+        with:
+          report-file: results.json
+          job-summary: false
+          comment-title: "Automated Test Results"
 
       - uses: actions/upload-artifact@v4
         if: always()
