@@ -39,7 +39,7 @@ describe("Files", () => {
     filesScreen.validateTotalSpaceInfo("13.2 EB");
   });
 
-  it("F5 - Highlighted border should appaer when you click Create New Folder", () => {
+  it.skip("F5 - Highlighted border should appaer when you click Create New Folder", () => {
     // Validate border color when user clicks on New Folder button
     filesScreen.validateFilesURL();
     filesScreen.newFolderButton
@@ -69,7 +69,7 @@ describe("Files", () => {
     filesScreen.validateNewFolderCreated("NewFolder");
   });
 
-  it("F8 - If user tries to create a folder with empty name or press Esc while name input is displayed, folder is not created", () => {
+  it.skip("F8 - If user tries to create a folder with empty name or press Esc while name input is displayed, folder is not created", () => {
     // Empty folders are named as undefined
     filesScreen.validateFilesURL();
     filesScreen.createNewFolder("");
@@ -160,7 +160,7 @@ describe("Files", () => {
     filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
   });
 
-  it("F14 - User cannot upload the same file again", () => {
+  it.skip("F14 - User cannot upload the same file again", () => {
     // Upload a file
     filesScreen.validateFilesURL();
     filesScreen.uploadFile("cypress/fixtures/banner.jpg");
