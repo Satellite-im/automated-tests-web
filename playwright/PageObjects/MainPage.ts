@@ -92,6 +92,7 @@ export default class MainPage {
 
   async goToFiles() {
     await this.buttonFiles.click();
+    await this.page.waitForURL("/files");
   }
 
   async goToFriends() {
