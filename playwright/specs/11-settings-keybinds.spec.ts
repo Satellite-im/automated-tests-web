@@ -141,8 +141,11 @@ test.describe("Settings Keybinds Tests", () => {
 
     // Go out of Settings Keybinds and return to page and validate that keybind is still saved
     await settingsKeybinds.goToFriends();
+    await page.waitForURL("/friends");
     await friendsPage.goToSettings();
+    await page.waitForURL("/settings/profile");
     await settingsProfile.buttonKeybinds.click();
+    await page.waitForURL("/settings/keybinds");
 
     // Validate keybind buttons for "Push to talk." set to "Shift + P"
     const modifiedKeybindButtonsPushToTalk2 =
