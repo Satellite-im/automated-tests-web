@@ -14,7 +14,6 @@ export class FilesPage extends MainPage {
   readonly goBackButton: Locator;
   readonly newFolderButton: Locator;
   readonly progressButton: Locator;
-  readonly statsButton: Locator;
   readonly totalSpaceLabel: Locator;
   readonly totalSpaceValue: Locator;
   readonly uploadFileButton: Locator;
@@ -30,35 +29,38 @@ export class FilesPage extends MainPage {
       "context-menu-option-Download",
     );
     this.contextOptionRename = page.getByTestId("context-menu-option-Rename");
-    this.freeSpaceLabel = this.statsButton.first().locator("label");
-    this.freeSpaceValue = this.statsButton.first().locator("p");
+    this.freeSpaceLabel = page.locator(".stat").first().locator("label");
+    this.freeSpaceValue = page.locator(".stat").first().locator("p");
     this.inputFileFolderName = page.getByTestId("input-file-folder-name");
     this.goBackButton = page.getByTestId("button-folder-back");
     this.newFolderButton = page.getByTestId("button-new-folder");
     this.progressButton = page.getByTestId("progress-button");
-    this.statsButton = page.locator(".stat");
-    this.totalSpaceLabel = this.statsButton.last().locator("label");
-    this.totalSpaceValue = this.statsButton.last().locator("p");
+    this.totalSpaceLabel = page.locator(".stat").last().locator("label");
+    this.totalSpaceValue = page.locator(".stat").last().locator("p");
     this.uploadFileButton = page.getByTestId("button-upload-file");
-    this.uploadFileInput = page.getByTestId("input=upload-file");
+    this.uploadFileInput = page.getByTestId("input=upload-files");
   }
 
   async createNewFolder(folderName: string) {
     await this.newFolderButton.click();
     await this.inputFileFolderName.fill(folderName);
-    await this.inputFileFolderName.press("Enter");
+    await this.page.keyboard.press("Enter");
+    await this.page
+      .locator(`[data-cy="folder-${folderName}"]`)
+      .waitFor({ state: "attached" });
   }
 
   async getFileByName(fileName: string) {
     return this.page.locator(`[data-cy="file-${fileName}"]`);
   }
 
-  async getFolderByName(folderName: string) {
+  async getFolderByName(folderName) {
     return this.page.locator(`[data-cy="folder-${folderName}"]`);
   }
 
   async navigateToFolder(folderName: string) {
-    await this.getFolderByName(folderName).click();
+    const folder = await this.getFolderByName(folderName);
+    await folder.click();
   }
 
   async renameFile(fileName: string, newName: string) {
@@ -67,7 +69,7 @@ export class FilesPage extends MainPage {
     await this.contextMenuFile.click();
     await this.contextOptionRename.click();
     await this.inputFileFolderName.fill(newName);
-    await this.inputFileFolderName.press("Enter");
+    await this.page.keyboard.press("Enter");
   }
 
   async renameFolder(folderName: string, newName: string) {
@@ -76,25 +78,42 @@ export class FilesPage extends MainPage {
     await this.contextMenuFolder.click();
     await this.contextOptionRename.click();
     await this.inputFileFolderName.fill(newName);
-    await this.inputFileFolderName.press("Enter");
+    await this.page.keyboard.press("Enter");
   }
 
   async validateNewFolderCreated(
-    folderName: string,
-    emptyName: boolean = true,
+    name: string,
+    emptyName: boolean = false,
     folderSize: string = "0 B",
   ) {
-    const folder = await this.getFolderByName(folderName);
-    await expect(folder).toBeTruthy();
-    if (!emptyName) {
-      await expect(folder.textContent()).toBe(folderName);
+    await this.page
+      .locator(`[data-cy="folder-${name}"]`)
+      .waitFor({ state: "attached" });
+    if (emptyName === true) {
+      await expect(
+        this.page
+          .locator(`[data-cy="folder-${name}"]`)
+          .getByTestId("file-folder-name"),
+      ).toHaveText("undefined");
+    } else {
+      await expect(
+        this.page
+          .locator(`[data-cy="folder-${name}"]`)
+          .getByTestId("file-folder-name"),
+      ).toHaveText(name);
     }
-    const folderSizeElement = await folder.locator("[data-cy='folder-size']");
-    await expect(folderSizeElement.textContent()).toBe(folderSize);
+    await expect(
+      this.page
+        .locator(`[data-cy="folder-${name}"]`)
+        .getByTestId("file-folder-size"),
+    ).toHaveText(folderSize);
+    await expect(
+      this.page.locator(`[data-cy="folder-${name}"]`).locator(".svg-icon"),
+    ).toBeVisible();
   }
 
   async validateFilesURL() {
-    await expect(this.page.url()).toContain("/files");
+    expect(this.page.url()).toContain("/files");
   }
 
   async validateFreeSpaceInfo(value: string) {
@@ -109,31 +128,41 @@ export class FilesPage extends MainPage {
 
   async validateRenamedFileInfo(
     oldName: string,
-    newName: strin,
+    newName: string,
     extension: string,
-    size: string,
+    expectedSize: string,
   ) {
-    const file = await this.getFileByName(newName);
-    await expect(file).toBeTruthy();
-    await expect(file.textContent()).toBe(`${newName}.${extension}`);
-    const fileSizeElement = await file.locator("[data-cy='file-size']");
-    await expect(fileSizeElement.textContent()).toBe(size);
+    const file = await this.getFileByName(oldName);
+    expect(file).toBeTruthy();
+    const fileName = file.getByTestId("file-folder-name");
+    expect(fileName).toHaveText(`${newName}.${extension}`);
+    const fileSizeElement = file.getByTestId("file-folder-size");
+    expect(fileSizeElement).toHaveText(expectedSize);
+    const svgIcon = file.locator(".svg-icon");
+    await expect(svgIcon).toBeVisible();
   }
 
   async validateUploadedFileInfo(
     name: string,
     extension: string,
-    size: string,
+    expectedSize: string,
   ) {
     const file = await this.getFileByName(name);
-    await expect(file).toBeTruthy();
-    await expect(file.textContent()).toBe(`${name}.${extension}`);
-    const fileSizeElement = await file.locator("[data-cy='file-size']");
-    await expect(fileSizeElement.textContent()).toBe(size);
+    expect(file).toBeTruthy();
+    const fileName = file.getByTestId("file-folder-name");
+    expect(fileName).toHaveText(`${name}.${extension}`);
+    const fileSizeElement = file.getByTestId("file-folder-size");
+    expect(fileSizeElement).toHaveText(expectedSize);
+    const svgIcon = file.locator(".svg-icon");
+    await expect(svgIcon).toBeVisible();
   }
 
   async uploadFile(filePath: string) {
     await this.uploadFileButton.click();
     await this.uploadFileInput.setInputFiles(filePath);
+    const filename = await this.getFileName(filePath);
+    await this.page
+      .locator(`[data-cy="file-${filename}"]`)
+      .waitFor({ state: "attached" });
   }
 }

@@ -74,20 +74,18 @@ export class SettingsKeybinds extends SettingsBase {
   }
 
   async clickOnRevertSingleKeybind(action: string) {
-    return this.page
-      .getByTestId("text-keybind-action")
-      .locator(`text=${action}`)
-      .locator("..")
-      .getByTestId("button-keybind-revert-single")
-      .click();
+    const button = this.page
+      .getByText(action)
+      .locator("xpath=..")
+      .getByTestId("button-keybind-revert-single");
+    await button.click();
   }
 
   async validateKeybindButtonKeys(action: string, expectedKeys: string[]) {
     let keysArray: string[] = [];
     const options: string[] = await this.page
-      .getByTestId("text-keybind-action")
-      .locator(`text=${action}`)
-      .locator("..")
+      .getByText(action)
+      .locator("xpath=..")
       .getByTestId("key-button-text")
       .allTextContents();
     keysArray = options.map((option) => option.trim());
