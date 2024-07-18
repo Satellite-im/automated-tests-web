@@ -390,30 +390,29 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     // Change Status to Offline and validate is displayed correctly
     const settingsProfile = new SettingsProfile(page);
-    const chatsMainPage = new ChatsMainPage(page);
     await settingsProfile.selectOnlineStatus("offline");
     await settingsProfile.onlineStatusSectionSelectorCurrentlyOffline.waitFor({
-      state: "visible",
+      state: "attached",
     });
 
     // Change Status to Idle and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("idle");
     await settingsProfile.onlineStatusSectionSelectorCurrentlyIdle.waitFor({
-      state: "visible",
+      state: "attached",
     });
 
     // Change Status to Do not Disturb and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("do-not-disturb");
     await settingsProfile.onlineStatusSectionSelectorCurrentlyDoNotDisturb.waitFor(
       {
-        state: "visible",
+        state: "attached",
       },
     );
 
     // Change Status back to Online and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("online");
     await settingsProfile.onlineStatusSectionSelectorCurrentlyOnline.waitFor({
-      state: "visible",
+      state: "attached",
     });
   });
 

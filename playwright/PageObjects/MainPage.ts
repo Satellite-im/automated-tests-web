@@ -28,7 +28,7 @@ export default class MainPage {
     this.buttonFriends = page.getByTestId("button-Friends");
     this.buttonHideSidebar = page.getByTestId("button-hide-sidebar");
     this.buttonSettings = page.getByTestId("button-Settings");
-    this.buttonShowSidebar = page.getByTestId("button-show-sidebar");
+    this.buttonShowSidebar = page.getByTestId("button-show-sidebar").first();
     this.buttonSidebarChats = page.getByTestId("button-sidebar-chats");
     this.buttonSidebarFiles = page.getByTestId("button-sidebar-files");
     this.buttonWallet = page.getByTestId("button-Wallet");
@@ -73,17 +73,13 @@ export default class MainPage {
     expect(selectionRange.selectionEnd).toBe(inputValue.length);
   }
 
-  async ensureSidebarIsDisplayed() {
-    const hasVerticalClass: boolean = await this.navigationBar.evaluate((el) =>
-      el.classList.contains("vertical"),
+  async expectElementToHaveClass(selector: string, className: string) {
+    const element = this.page.locator(selector);
+    const hasClass = await element.evaluate(
+      (el, className) => el.classList.contains(className),
+      className,
     );
-
-    if (hasVerticalClass) {
-      await this.buttonShowSidebar.click();
-      await expect(this.sidebar).toBeVisible();
-    } else {
-      await expect(this.sidebar).toBeVisible();
-    }
+    expect(hasClass).toBe(true);
   }
 
   async getFileName(filePath: string) {

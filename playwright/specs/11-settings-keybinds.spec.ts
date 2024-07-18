@@ -59,41 +59,53 @@ test.describe("Settings Keybinds Tests", () => {
     );
 
     // Validate existing keybinds listed
-    await settingsKeybinds.validateKeybindButtonKeys(
-      "Increase font size within Uplink.",
-      [".", "shift", "ctrl"],
-    );
+    const keybindButtonsIncreaseFontSize =
+      await settingsKeybinds.getKeybindButtonKeys(
+        "Increase font size within Uplink.",
+      );
+    expect(keybindButtonsIncreaseFontSize).toEqual([".", "shift", "ctrl"]);
 
-    await settingsKeybinds.validateKeybindButtonKeys(
-      "Decrease font size within Uplink.",
-      [",", "shift", "ctrl"],
-    );
-    await settingsKeybinds.validateKeybindButtonKeys(
-      "Mute & un-mute your microphone.",
-      ["M", "shift", "ctrl"],
-    );
-    await settingsKeybinds.validateKeybindButtonKeys(
-      "Toggle turning off all sounds including your microphone and headphones.",
-      ["D", "shift", "ctrl"],
-    );
-    await settingsKeybinds.validateKeybindButtonKeys(
-      "Open/Close Web Inspector.",
-      ["I", "shift", "ctrl"],
-    );
-    await settingsKeybinds.validateKeybindButtonKeys("Toggle Developer Mode.", [
-      "~",
-    ]);
-    await settingsKeybinds.validateKeybindButtonKeys("Hide/Focus Uplink.", [
-      "U",
-      "shift",
-      "ctrl",
-    ]);
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
-    await settingsKeybinds.validateKeybindButtonKeys("Push to mute.", [
-      ".",
-      "ctrl",
-    ]);
-    await settingsKeybinds.validateKeybindButtonKeys("Push to deafen.", [","]);
+    const keybindButtonsDecreaseFontSize =
+      await settingsKeybinds.getKeybindButtonKeys(
+        "Decrease font size within Uplink.",
+      );
+    expect(keybindButtonsDecreaseFontSize).toEqual([",", "shift", "ctrl"]);
+
+    const keybindButtonsMuteMicrophone =
+      await settingsKeybinds.getKeybindButtonKeys(
+        "Mute & un-mute your microphone.",
+      );
+    expect(keybindButtonsMuteMicrophone).toEqual(["M", "shift", "ctrl"]);
+
+    const keybindButtonsToggleSounds =
+      await settingsKeybinds.getKeybindButtonKeys(
+        "Toggle turning off all sounds including your microphone and headphones.",
+      );
+    expect(keybindButtonsToggleSounds).toEqual(["D", "shift", "ctrl"]);
+
+    const keybindButtonsOpenCloseWebInspector =
+      await settingsKeybinds.getKeybindButtonKeys("Open/Close Web Inspector.");
+    expect(keybindButtonsOpenCloseWebInspector).toEqual(["I", "shift", "ctrl"]);
+
+    const keybindButtonsToggleDeveloperMode =
+      await settingsKeybinds.getKeybindButtonKeys("Toggle Developer Mode.");
+    expect(keybindButtonsToggleDeveloperMode).toEqual(["~"]);
+
+    const keybindButtonsHideFocusUplink =
+      await settingsKeybinds.getKeybindButtonKeys("Hide/Focus Uplink.");
+    expect(keybindButtonsHideFocusUplink).toEqual(["U", "shift", "ctrl"]);
+
+    const keybindButtonsPushToTalk =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(keybindButtonsPushToTalk).toEqual(["."]);
+
+    const keybindButtonsPushToMute =
+      await settingsKeybinds.getKeybindButtonKeys("Push to mute.");
+    expect(keybindButtonsPushToMute).toEqual([".", "ctrl"]);
+
+    const keybindButtonsPushToDeafen =
+      await settingsKeybinds.getKeybindButtonKeys("Push to deafen.");
+    expect(keybindButtonsPushToDeafen).toEqual([","]);
   });
 
   test("O2, 04 - Clicking a key should activate the Recorded Keys - User can save keybind", async ({
@@ -111,7 +123,9 @@ test.describe("Settings Keybinds Tests", () => {
     );
 
     // Validate keybind buttons for "Push to talk." initially set to "."
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
+    const keybindButtonsPushToTalk =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(keybindButtonsPushToTalk).toEqual(["."]);
 
     // Pressing "Shift + P" on app
     await page.keyboard.press("Shift+p");
@@ -121,19 +135,22 @@ test.describe("Settings Keybinds Tests", () => {
     await settingsKeybinds.newKeybindSaveButton.click();
 
     // Validate keybind buttons for "Push to talk." set to "Shift + P"
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", [
-      "p",
-      "shift",
-    ]);
+    const modifiedKeybindButtonsPushToTalk =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(modifiedKeybindButtonsPushToTalk).toEqual(["p", "shift"]);
 
     // Go out of Settings Keybinds and return to page and validate that keybind is still saved
     await settingsKeybinds.goToFriends();
+    await page.waitForURL("/friends");
     await friendsPage.goToSettings();
+    await page.waitForURL("/settings/profile");
     await settingsProfile.buttonKeybinds.click();
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", [
-      "p",
-      "shift",
-    ]);
+    await page.waitForURL("/settings/keybinds");
+
+    // Validate keybind buttons for "Push to talk." set to "Shift + P"
+    const modifiedKeybindButtonsPushToTalk2 =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(modifiedKeybindButtonsPushToTalk2).toEqual(["p", "shift"]);
   });
 
   test("O3 - Action dropdown should display correct keybind actions", async ({
@@ -173,7 +190,9 @@ test.describe("Settings Keybinds Tests", () => {
     );
 
     // Validate keybind buttons for "Push to talk." initially set to "."
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
+    const keybindButtonsPushToTalk =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(keybindButtonsPushToTalk).toEqual(["."]);
 
     // Pressing "Shift + P" on app
     await page.keyboard.press("Shift+p");
@@ -183,7 +202,9 @@ test.describe("Settings Keybinds Tests", () => {
     await settingsKeybinds.newKeybindCancelButton.click();
 
     // Validate keybind buttons for "Push to talk." is still set to "."
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
+    const modifiedKeybindButtonsPushToTalk =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(modifiedKeybindButtonsPushToTalk).toEqual(["."]);
   });
 
   test("O7 - Highlighted border should display when user clicks cancel", async ({
@@ -211,20 +232,24 @@ test.describe("Settings Keybinds Tests", () => {
   }) => {
     // Setup a keybind and revert the changes
     const settingsKeybinds = new SettingsKeybinds(page);
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
+    const pushToTalkKeybind =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(pushToTalkKeybind).toEqual(["."]);
+
     await page.keyboard.press("Shift+p");
     await settingsKeybinds.selectKeybind("Push to talk.");
 
     // Save changes and validate keybind buttons for "Push to talk." set to "Shift + P"
     await settingsKeybinds.newKeybindSaveButton.click();
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", [
-      "p",
-      "shift",
-    ]);
+    const pushToTalkKeybindModified =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(pushToTalkKeybindModified).toEqual(["p", "shift"]);
 
     // Revert changes by pressing revert all keybinds button and validate keybind buttons for "Push to talk." set to "."
     await settingsKeybinds.revertKeybindSectionAllButton.click();
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
+    const pushToTalkKeybindReverted =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(pushToTalkKeybindReverted).toEqual(["."]);
   });
 
   test("O9 - Highlighted border should be displayed when clicking Revert Keybindings", async ({
@@ -252,19 +277,23 @@ test.describe("Settings Keybinds Tests", () => {
   }) => {
     // Setup a keybind and revert the changes
     const settingsKeybinds = new SettingsKeybinds(page);
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
+    const pushToTalkKeybind =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(pushToTalkKeybind).toEqual(["."]);
+
     await page.keyboard.press("Shift+p");
     await settingsKeybinds.selectKeybind("Push to talk.");
 
     // Save changes and validate keybind buttons for "Push to talk." set to "Shift + P"
     await settingsKeybinds.newKeybindSaveButton.click();
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", [
-      "p",
-      "shift",
-    ]);
+    const pushToTalkKeybindModified =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(pushToTalkKeybindModified).toEqual(["p", "shift"]);
 
     // Revert changes by pressing revert single keybind button and validate keybind buttons for "Push to talk." set to "."
     await settingsKeybinds.clickOnRevertSingleKeybind("Push to talk.");
-    await settingsKeybinds.validateKeybindButtonKeys("Push to talk.", ["."]);
+    const pushToTalkKeybindReverted =
+      await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
+    expect(pushToTalkKeybindReverted).toEqual(["."]);
   });
 });
