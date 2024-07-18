@@ -86,21 +86,30 @@ export class FilesPage extends MainPage {
     emptyName: boolean = false,
     folderSize: string = "0 B",
   ) {
-    const folder = await this.getFolderByName(name);
-    expect(folder).toBeTruthy();
+    await this.page
+      .locator(`[data-cy="folder-${name}"]`)
+      .waitFor({ state: "attached" });
     if (emptyName === true) {
-      expect(folder).toBeAttached();
-      const folderNameValue = folder.getByTestId("file-folder-name");
-      expect(folderNameValue).toHaveText("undefined");
+      await expect(
+        this.page
+          .locator(`[data-cy="folder-${name}"]`)
+          .getByTestId("file-folder-name"),
+      ).toHaveText("undefined");
     } else {
-      expect(folder).toBeAttached();
-      const folderNameValue = folder.getByTestId("file-folder-name");
-      expect(folderNameValue).toHaveText(name);
+      await expect(
+        this.page
+          .locator(`[data-cy="folder-${name}"]`)
+          .getByTestId("file-folder-name"),
+      ).toHaveText(name);
     }
-    const folderSizeElement = folder.getByTestId("file-folder-size");
-    expect(folderSizeElement).toHaveText(folderSize);
-    const svgIcon = folder.locator(".svg-icon");
-    await expect(svgIcon).toBeVisible();
+    await expect(
+      this.page
+        .locator(`[data-cy="folder-${name}"]`)
+        .getByTestId("file-folder-size"),
+    ).toHaveText(folderSize);
+    await expect(
+      this.page.locator(`[data-cy="folder-${name}"]`).locator(".svg-icon"),
+    ).toBeVisible();
   }
 
   async validateFilesURL() {
