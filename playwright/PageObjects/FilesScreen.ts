@@ -45,6 +45,9 @@ export class FilesPage extends MainPage {
     await this.newFolderButton.click();
     await this.inputFileFolderName.fill(folderName);
     await this.page.keyboard.press("Enter");
+    await this.page
+      .locator(`[data-cy="folder-${folderName}"]`)
+      .waitFor({ state: "attached" });
   }
 
   async getFileByName(fileName: string) {
@@ -148,5 +151,9 @@ export class FilesPage extends MainPage {
   async uploadFile(filePath: string) {
     await this.uploadFileButton.click();
     await this.uploadFileInput.setInputFiles(filePath);
+    const filename = await this.getFileName(filePath);
+    await this.page
+      .locator(`[data-cy="file-${filename}"]`)
+      .waitFor({ state: "attached" });
   }
 }

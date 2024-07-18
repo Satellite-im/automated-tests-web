@@ -86,6 +86,12 @@ export default class MainPage {
     }
   }
 
+  async getFileName(filePath: string) {
+    // Extract the file name without the extension
+    const match = filePath.match(/([^\/]+)(?=\.\w+$)/);
+    return match ? match[0] : null;
+  }
+
   async goToChat() {
     await this.buttonChat.click();
   }
