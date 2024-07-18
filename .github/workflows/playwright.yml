@@ -19,7 +19,7 @@ on:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: macos-latest
+    runs-on: macos-14
     steps:
       - name: Checkout Uplink Web directory 🔖
         uses: actions/checkout@v4
