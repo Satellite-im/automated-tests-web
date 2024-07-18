@@ -76,18 +76,37 @@ test.describe("Chats Sidebar Tests", () => {
     page,
   }) => {
     const chatsMainPage = new ChatsMainPage(page);
-    const buttonsWithTooltips = [
-      { locator: '[data-cy="button-Wallet"]', tooltip: "Wallet" },
-      { locator: '[data-cy="button-Files"]', tooltip: "Files" },
-      { locator: '[data-cy="button-Chat"]', tooltip: "Chat" },
-      { locator: '[data-cy="button-Friends"]', tooltip: "Friends" },
-      { locator: '[data-cy="button-Settings"]', tooltip: "Settings" },
-    ];
 
-    buttonsWithTooltips.forEach(({ locator, tooltip }) => {
-      page.locator(locator).hover();
-      chatsMainPage.validateTooltipAttribute(locator, tooltip);
-    });
+    // Hover on each button and validate the tooltip
+    await chatsMainPage.buttonWallet.hover();
+    await chatsMainPage.validateTooltipAttribute(
+      '[data-cy="button-Wallet"]"',
+      "Wallet",
+    );
+
+    await chatsMainPage.buttonFiles.hover();
+    await chatsMainPage.validateTooltipAttribute(
+      '[data-cy="button-Files"]"',
+      "Files",
+    );
+
+    await chatsMainPage.buttonChat.hover();
+    await chatsMainPage.validateTooltipAttribute(
+      '[data-cy="button-Chat"]"',
+      "Chat",
+    );
+
+    await chatsMainPage.buttonFriends.hover();
+    await chatsMainPage.validateTooltipAttribute(
+      '[data-cy="button-Friends"]"',
+      "Friends",
+    );
+
+    await chatsMainPage.buttonSettings.hover();
+    await chatsMainPage.validateTooltipAttribute(
+      '[data-cy="button-Settings"]"',
+      "Settings",
+    );
   });
 
   test("C4 - Clicking hamburger button should collapse sidebar", async ({
