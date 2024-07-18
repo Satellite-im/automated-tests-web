@@ -80,31 +80,31 @@ test.describe("Chats Sidebar Tests", () => {
     // Hover on each button and validate the tooltip
     await chatsMainPage.buttonWallet.hover();
     await chatsMainPage.validateTooltipAttribute(
-      '[data-cy="button-Wallet"]"',
+      '[data-cy="button-Wallet"]',
       "Wallet",
     );
 
     await chatsMainPage.buttonFiles.hover();
     await chatsMainPage.validateTooltipAttribute(
-      '[data-cy="button-Files"]"',
+      '[data-cy="button-Files"]',
       "Files",
     );
 
     await chatsMainPage.buttonChat.hover();
     await chatsMainPage.validateTooltipAttribute(
-      '[data-cy="button-Chat"]"',
+      '[data-cy="button-Chat"]',
       "Chat",
     );
 
     await chatsMainPage.buttonFriends.hover();
     await chatsMainPage.validateTooltipAttribute(
-      '[data-cy="button-Friends"]"',
+      '[data-cy="button-Friends"]',
       "Friends",
     );
 
     await chatsMainPage.buttonSettings.hover();
     await chatsMainPage.validateTooltipAttribute(
-      '[data-cy="button-Settings"]"',
+      '[data-cy="button-Settings"]',
       "Settings",
     );
   });

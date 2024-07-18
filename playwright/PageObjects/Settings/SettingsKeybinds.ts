@@ -81,7 +81,7 @@ export class SettingsKeybinds extends SettingsBase {
     await button.click();
   }
 
-  async validateKeybindButtonKeys(action: string, expectedKeys: string[]) {
+  async getKeybindButtonKeys(action: string) {
     let keysArray: string[] = [];
     const options: string[] = await this.page
       .getByText(action)
@@ -89,7 +89,7 @@ export class SettingsKeybinds extends SettingsBase {
       .getByTestId("key-button-text")
       .allTextContents();
     keysArray = options.map((option) => option.trim());
-    expect(keysArray).toEqual(expectedKeys);
+    return keysArray;
   }
 
   async selectKeybind(name: string) {
