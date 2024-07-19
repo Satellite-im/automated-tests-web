@@ -56,7 +56,7 @@ test.describe("Settings Profile Tests", () => {
   test("I2, I3 - Banner Picture - User can upload banner", async ({ page }) => {
     // User can upload a banner picture
     const settingsProfile = new SettingsProfile(page);
-    await settingsProfile.uploadProfileBanner("cypress/fixtures/banner.jpg");
+    await settingsProfile.uploadProfileBanner("playwright/fixtures/banner.jpg");
 
     // Property Style is reassigned to Background Image after uploading banner
     await settingsProfile.validateBannerDisplayed();
@@ -69,7 +69,7 @@ test.describe("Settings Profile Tests", () => {
     const settingsProfile = new SettingsProfile(page);
 
     // Validate user can upload profile pictures
-    await settingsProfile.uploadProfilePicture("cypress/fixtures/logo.jpg");
+    await settingsProfile.uploadProfilePicture("playwright/fixtures/logo.jpg");
     await settingsProfile.validateProfilePictureDisplayed();
 
     // Validate tooltip is displayed when hovering over the Profile Picture Upload Button

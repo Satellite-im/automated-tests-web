@@ -76,12 +76,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-# Cypress Assets
-cypress/downloads/
-cypress/screenshots/
-cypress/videos/
-/test-results/
-
 # Playwright Assets
 /playwright-report/
 /blob-report/

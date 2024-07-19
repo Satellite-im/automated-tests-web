@@ -86,7 +86,7 @@ test.describe("Files Page Tests", () => {
   }) => {
     // User can upload an image file
     const filesScreen = new FilesPage(page);
-    await filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
 
     // File uploaded should be displayed
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
@@ -151,7 +151,7 @@ test.describe("Files Page Tests", () => {
     await filesScreen.validateNewFolderCreated("Subfolder");
 
     // User can upload an image file in subfolder
-    await filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
   });
 
@@ -164,7 +164,7 @@ test.describe("Files Page Tests", () => {
     const settingsProfile = new SettingsProfile(page);
     const loginPinPage = new LoginPinPage(page);
     const chatsMainPage = new ChatsMainPage(page);
-    await filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
 
     // Create a folder in root and enter on it
@@ -172,7 +172,7 @@ test.describe("Files Page Tests", () => {
     await filesScreen.navigateToFolder("NewFolder");
 
     // User can upload an image file in folder
-    await filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
 
     // Go back to root
@@ -204,11 +204,11 @@ test.describe("Files Page Tests", () => {
   }) => {
     // Upload a file
     const filesScreen = new FilesPage(page);
-    await filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
 
     // Attempt to upload the same file again
-    await filesScreen.uploadFile("cypress/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
 
     // File banner.jpg is uploaded again but with name "banner (1).jpg"
     await filesScreen.validateUploadedFileInfo("banner (1)", "jpg", "61.4 kB");
