@@ -204,6 +204,9 @@ test.describe("Create Account and Login Tests", () => {
     // Login Page Test
     await loginPinPage.waitUntilPageIsLoaded();
     await loginPinPage.goToPinSettings();
+    await expect(loginPinPage.stayUnlockedCheckbox).toBeChecked();
+    await loginPinPage.clickStayUnlockedSwitch();
+    await expect(loginPinPage.stayUnlockedCheckbox).not.toBeChecked();
     await loginPinPage.clickStayUnlockedSwitch();
     await expect(loginPinPage.stayUnlockedCheckbox).toBeChecked();
     await loginPinPage.goToPinSettings();
