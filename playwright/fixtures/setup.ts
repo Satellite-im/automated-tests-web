@@ -4,21 +4,21 @@ import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "../PageObjects/ChatsMain";
 import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
 import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
-import { SettingsInventory } from "playwright/PageObjects/Settings/SettingsInventory";
-import { SettingsCustomizations } from "playwright/PageObjects/Settings/SettingsCustomizations";
-import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessages";
-import { SettingsAudio } from "playwright/PageObjects/Settings/SettingsAudio";
-import { SettingsExtensions } from "playwright/PageObjects/Settings/SettingsExtensions";
-import { SettingsKeybinds } from "playwright/PageObjects/Settings/SettingsKeybinds";
-import { SettingsNotifications } from "playwright/PageObjects/Settings/SettingsNotifications";
-import { SettingsAbout } from "playwright/PageObjects/Settings/SettingsAbout";
-import { SettingsLicenses } from "playwright/PageObjects/Settings/SettingsLicenses";
-import { SettingsDeveloper } from "playwright/PageObjects/Settings/SettingsDeveloper";
-import { SettingsAccessibility } from "playwright/PageObjects/Settings/SettingsAccessibility";
-import { SettingsNetwork } from "playwright/PageObjects/Settings/SettingsNetwork";
-import { FilesPage } from "playwright/PageObjects/FilesScreen";
-import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
+import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
+import { SettingsInventory } from "../PageObjects/Settings/SettingsInventory";
+import { SettingsCustomizations } from "../PageObjects/Settings/SettingsCustomizations";
+import { SettingsMessages } from "../PageObjects/Settings/SettingsMessages";
+import { SettingsAudio } from "../PageObjects/Settings/SettingsAudio";
+import { SettingsExtensions } from "../PageObjects/Settings/SettingsExtensions";
+import { SettingsKeybinds } from "../PageObjects/Settings/SettingsKeybinds";
+import { SettingsNotifications } from "../PageObjects/Settings/SettingsNotifications";
+import { SettingsAbout } from "../PageObjects/Settings/SettingsAbout";
+import { SettingsLicenses } from "../PageObjects/Settings/SettingsLicenses";
+import { SettingsDeveloper } from "../PageObjects/Settings/SettingsDeveloper";
+import { SettingsAccessibility } from "../PageObjects/Settings/SettingsAccessibility";
+import { SettingsNetwork } from "../PageObjects/Settings/SettingsNetwork";
+import { FilesPage } from "../PageObjects/FilesScreen";
+import { FriendsScreen } from "../PageObjects/FriendsScreen";
 
 // Declare the types of your fixtures.
 type MyFixtures = {
@@ -78,54 +78,55 @@ export const test = base.extend<MyFixtures>({
 
   settingsCustomizations: async ({ page }, use) => {
     await use(new SettingsCustomizations(page));
-  }
+  },
 
   settingsMessages: async ({ page }, use) => {
     await use(new SettingsMessages(page));
-  }
+  },
 
   settingsAudio: async ({ page }, use) => {
     await use(new SettingsAudio(page));
-  }
+  },
 
   settingsExtensions: async ({ page }, use) => {
     await use(new SettingsExtensions(page));
-  }
+  },
 
   settingsKeybinds: async ({ page }, use) => {
     await use(new SettingsKeybinds(page));
-  }
+  },
 
   settingsNotifications: async ({ page }, use) => {
     await use(new SettingsNotifications(page));
-  }
+  },
 
   settingsAbout: async ({ page }, use) => {
     await use(new SettingsAbout(page));
-  }
+  },
 
   settingsLicenses: async ({ page }, use) => {
     await use(new SettingsLicenses(page));
-  }
+  },
 
   settingsDeveloper: async ({ page }, use) => {
     await use(new SettingsDeveloper(page));
-  }
+  },
 
   settingsAccessibility: async ({ page }, use) => {
     await use(new SettingsAccessibility(page));
-  }
+  },
 
   settingsNetwork: async ({ page }, use) => {
     await use(new SettingsNetwork(page));
-  }
+  },
 
   filesPage: async ({ page }, use) => {
     await use(new FilesPage(page));
-  }
+  },
 
   friendsScreen: async ({ page }, use) => {
     await use(new FriendsScreen(page));
-  }
+  },
 });
+
 export { expect } from "@playwright/test";
