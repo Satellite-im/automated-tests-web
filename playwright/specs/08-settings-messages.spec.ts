@@ -1,11 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { LoginPinPage } from "../PageObjects/LoginPin";
-import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "../PageObjects/ChatsMain";
-import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
-import { SettingsMessages } from "../PageObjects/Settings/SettingsMessages";
+import { test, expect } from "../fixtures/setup";
 
 test.describe("Settings Messages Tests", () => {
   const username = "test123";

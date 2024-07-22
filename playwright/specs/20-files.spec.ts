@@ -1,11 +1,4 @@
-import { test, expect } from "@playwright/test";
-import { LoginPinPage } from "../PageObjects/LoginPin";
-import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "../PageObjects/ChatsMain";
-import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-import { FilesPage } from "../PageObjects/FilesScreen";
-import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
+import { test, expect } from "../fixtures/setup";
 
 test.describe("Files Page Tests", () => {
   const username = "test123";
@@ -86,7 +79,7 @@ test.describe("Files Page Tests", () => {
   }) => {
     // User can upload an image file
     const filesScreen = new FilesPage(page);
-    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/assets/banner.jpg");
 
     // File uploaded should be displayed
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
@@ -151,7 +144,7 @@ test.describe("Files Page Tests", () => {
     await filesScreen.validateNewFolderCreated("Subfolder");
 
     // User can upload an image file in subfolder
-    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/assets/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
   });
 
@@ -164,7 +157,7 @@ test.describe("Files Page Tests", () => {
     const settingsProfile = new SettingsProfile(page);
     const loginPinPage = new LoginPinPage(page);
     const chatsMainPage = new ChatsMainPage(page);
-    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/assets/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
 
     // Create a folder in root and enter on it
@@ -172,7 +165,7 @@ test.describe("Files Page Tests", () => {
     await filesScreen.navigateToFolder("NewFolder");
 
     // User can upload an image file in folder
-    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/assets/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
 
     // Go back to root
@@ -204,11 +197,11 @@ test.describe("Files Page Tests", () => {
   }) => {
     // Upload a file
     const filesScreen = new FilesPage(page);
-    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/assets/banner.jpg");
     await filesScreen.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
 
     // Attempt to upload the same file again
-    await filesScreen.uploadFile("playwright/fixtures/banner.jpg");
+    await filesScreen.uploadFile("playwright/assets/banner.jpg");
 
     // File banner.jpg is uploaded again but with name "banner (1).jpg"
     await filesScreen.validateUploadedFileInfo("banner (1)", "jpg", "61.4 kB");

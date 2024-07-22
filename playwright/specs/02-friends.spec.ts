@@ -1,10 +1,5 @@
-import {
-  test,
-  chromium,
-  Browser,
-  BrowserContext,
-  Page,
-} from "@playwright/test";
+import { chromium, Browser, BrowserContext, Page } from "@playwright/test";
+import { test, expect } from "../fixtures/setup";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
