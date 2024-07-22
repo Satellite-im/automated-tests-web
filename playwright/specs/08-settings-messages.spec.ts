@@ -53,7 +53,7 @@ test.describe("Settings Messages Tests", () => {
     // Label and texts for settings section are correct
     const settingsMessages = new SettingsMessages(page);
     await expect(settingsMessages.convertToEmojiSectionLabel).toHaveText(
-      "Convert to Emoji",
+      "Convert to EmojiZZZZ",
     );
     await expect(settingsMessages.convertToEmojiSectionText).toHaveText(
       "Convert smileys and other symbols like <3 to ❤️",
