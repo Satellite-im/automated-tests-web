@@ -57,9 +57,6 @@ test.describe("Settings Profile Tests", () => {
     // User can upload a banner picture
     const settingsProfile = new SettingsProfile(page);
     await settingsProfile.uploadProfileBanner("playwright/fixtures/banner.jpg");
-
-    // Property Style is reassigned to Background Image after uploading banner
-    await settingsProfile.validateBannerDisplayed();
   });
 
   test("I4 - Clicking upload picture on Profile picture should open File Browser", async ({
@@ -70,7 +67,6 @@ test.describe("Settings Profile Tests", () => {
 
     // Validate user can upload profile pictures
     await settingsProfile.uploadProfilePicture("playwright/fixtures/logo.jpg");
-    await settingsProfile.validateProfilePictureDisplayed();
 
     // Validate tooltip is displayed when hovering over the Profile Picture Upload Button
     await settingsProfile.profilePictureUploadButton.hover();
@@ -85,6 +81,14 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     // Profile Picture should not have a src attribute
     const settingsProfile = new SettingsProfile(page);
+
+    // Upload Profile Picture
+    await settingsProfile.uploadProfilePicture("playwright/fixtures/logo.jpg");
+
+    // Upload Profile Banner
+    await settingsProfile.uploadProfileBanner("playwright/fixtures/banner.jpg");
+
+    // Validate snapshot after uploading both pictures
     await settingsProfile.validateProfilePictureDisplayed();
   });
 
