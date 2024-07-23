@@ -16,46 +16,46 @@ test.describe("Friends tests", () => {
   });
 
   test("Create two accounts and add them as friends", async ({
-    authNewAccount,
+    authNewAccountFirst,
     authNewAccountSecond,
-    createOrImport,
+    createOrImportFirst,
     createOrImportSecond,
-    loginPinPage,
+    loginPinPageFirst,
     loginPinPageSecond,
-    chatsMainPage,
+    chatsMainPageFirst,
     chatsMainPageSecond,
-    friendsScreen,
+    friendsScreenFirst,
     friendsScreenSecond,
-    saveRecoverySeed,
+    saveRecoverySeedFirst,
     saveRecoverySeedSecond,
-    context,
+    context1,
     context2,
-    page,
+    page1,
     page2,
   }) => {
     // Click on Create New Account
-    await createOrImport.clickCreateNewAccount();
+    await createOrImportFirst.clickCreateNewAccount();
 
     // Enter username and Status and click on create account
-    await authNewAccount.validateLoadingHeader();
-    await authNewAccount.typeOnUsername(username);
-    await authNewAccount.typeOnStatus(status);
-    await authNewAccount.clickOnCreateAccount();
+    await authNewAccountFirst.validateLoadingHeader();
+    await authNewAccountFirst.typeOnUsername(username);
+    await authNewAccountFirst.typeOnStatus(status);
+    await authNewAccountFirst.clickOnCreateAccount();
 
     // Enter Pin
-    await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterDefaultPin();
+    await loginPinPageFirst.waitUntilPageIsLoaded();
+    await loginPinPageFirst.enterDefaultPin();
 
     // Click on I Saved It
-    await saveRecoverySeed.clickOnSavedIt();
+    await saveRecoverySeedFirst.clickOnSavedIt();
 
     // Go to Friends
-    await chatsMainPage.goToFriends();
+    await chatsMainPageFirst.goToFriends();
 
     // Grant clipboard permissions, Copy DID and save it into a constant
-    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreen.copyDID();
-    const handle = await page.evaluateHandle(() =>
+    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenFirst.copyDID();
+    const handle = await page1.evaluateHandle(() =>
       navigator.clipboard.readText(),
     );
     const didKeyFirstUser = await handle.jsonValue();
@@ -93,15 +93,15 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.goToRequestList();
 
     // With First User, go to requests list and accept friend request
-    await friendsScreen.goToRequestList();
-    await friendsScreen.goToAllFriendsList();
-    await friendsScreen.goToRequestList();
-    await friendsScreen.validateIncomingRequestExists();
-    await friendsScreen.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
 
     // With First User, go to All Friends and click on Chat Button
-    await friendsScreen.goToAllFriendsList();
-    await friendsScreen.chatWithFriend(usernameTwo);
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
 
     // With Second User, go to All Friends and click on Chat Button
     await friendsScreenSecond.goToRequestList();
@@ -109,8 +109,8 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.chatWithFriend(username);
   });
 
-  test.afterAll(async ({ page, page2 }) => {
-    await page.close();
+  test.afterAll(async ({ page1, page2 }) => {
+    await page1.close();
     await page2.close();
   });
 });
