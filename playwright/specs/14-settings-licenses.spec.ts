@@ -4,47 +4,49 @@ test.describe("Settings Licenses Tests", () => {
   const username = "test123";
   const status = "test status";
 
-  test.beforeEach(async ({ page }) => {
-    // Declare the page object implementations
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const settingsProfile = new SettingsProfile(page);
+  test.beforeEach(
+    async ({
+      createOrImport,
+      authNewAccount,
+      loginPinPage,
+      saveRecoverySeed,
+      chatsMainPage,
+      settingsProfile,
+      page,
+    }) => {
+      // Select Create Account
+      await createOrImport.navigateTo();
+      await createOrImport.clickCreateNewAccount();
 
-    // Select Create Account
-    await createOrImport.navigateTo();
-    await createOrImport.clickCreateNewAccount();
+      // Enter Username and Status
+      await authNewAccount.validateLoadingHeader();
+      await authNewAccount.typeOnUsername(username);
+      await authNewAccount.typeOnStatus(status);
+      await authNewAccount.buttonNewAccountCreate.click();
 
-    // Enter Username and Status
-    await authNewAccount.validateLoadingHeader();
-    await authNewAccount.typeOnUsername(username);
-    await authNewAccount.typeOnStatus(status);
-    await authNewAccount.buttonNewAccountCreate.click();
+      // Enter PIN
+      await loginPinPage.waitUntilPageIsLoaded();
+      await loginPinPage.enterDefaultPin();
 
-    // Enter PIN
-    await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterDefaultPin();
+      // Click on I Saved It
+      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
+      await saveRecoverySeed.clickOnSavedIt();
+      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
+      await page.waitForURL("/chat");
 
-    // Click on I Saved It
-    await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-    await saveRecoverySeed.clickOnSavedIt();
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-    await page.waitForURL("/chat");
+      await chatsMainPage.goToSettings();
+      await page.waitForURL("/settings/profile");
 
-    // Go to Settings Profile and then Settings Inventory page
-    await chatsMainPage.goToSettings();
-    await page.waitForURL("/settings/profile");
-    await settingsProfile.buttonLicenses.click();
-    await page.waitForURL("/settings/licenses");
-  });
+      await settingsProfile.buttonLicenses.click();
+      await page.waitForURL("/settings/licenses");
+    },
+  );
 
   test("S1 - Clicking View License should take user to our licenses page", async ({
+    settingsLicenses,
     page,
   }) => {
     // Declare the page object implementations and constants
-    const settingsLicenses = new SettingsLicenses(page);
     const LICENSE_URL =
       "https://github.com/Satellite-im/UplinkWeb/blob/dev/LICENSE-MIT";
 

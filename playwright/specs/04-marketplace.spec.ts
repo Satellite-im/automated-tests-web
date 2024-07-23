@@ -1,4 +1,4 @@
-import { test, expect } from "../fixtures/setup";
+import { test } from "../fixtures/setup";
 
 test.describe("Marketplace Tests", () => {
   const username = "test123";
