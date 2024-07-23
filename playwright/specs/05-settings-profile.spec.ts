@@ -75,10 +75,10 @@ test.describe("Settings Profile Tests", () => {
     settingsProfile,
   }) => {
     // Upload Profile Picture
-    await settingsProfile.uploadProfilePicture("playwright/fixtures/logo.jpg");
+    await settingsProfile.uploadProfilePicture("playwright/assets/logo.jpg");
 
     // Upload Profile Banner
-    await settingsProfile.uploadProfileBanner("playwright/fixtures/banner.jpg");
+    await settingsProfile.uploadProfileBanner("playwright/assets/banner.jpg");
 
     // Validate snapshot after uploading both pictures
     await settingsProfile.validateProfilePictureDisplayed();
