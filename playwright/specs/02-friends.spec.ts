@@ -1,53 +1,13 @@
-import {
-  chromium,
-  Browser,
-  BrowserContext,
-  Page,
-  test,
-  expect,
-} from "@playwright/test";
-import { LoginPinPage } from "../PageObjects/LoginPin";
+import { test } from "../fixtures/setup";
 import { faker } from "@faker-js/faker";
-import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "../PageObjects/ChatsMain";
-import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
-import { FriendsScreen } from "../PageObjects/FriendsScreen";
-import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-
-let browser1: Browser, context1: BrowserContext, page1: Page;
-let browser2: Browser, context2: BrowserContext, page2: Page;
-let loginPinPage: LoginPinPage, loginPinPageSecond: LoginPinPage;
-let authNewAccount: AuthNewAccount, authNewAccountSecond: AuthNewAccount;
-let chatsMainPage: ChatsMainPage, chatsMainPageSecond: ChatsMainPage;
-let createOrImport: CreateOrImportPage,
-  createOrImportSecond: CreateOrImportPage;
-let friendsPage: FriendsScreen, friendPageSecond: FriendsScreen;
-let saveRecoverySeed: SaveRecoverySeedPage,
-  saveRecoverySeedSecond: SaveRecoverySeedPage;
 
 test.describe("Friends tests", () => {
-  const username: string =
-    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
-  const usernameTwo: string =
-    faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
+  const username: string = "ChatUserA";
+  const usernameTwo: string = "ChatUserB";
   const status: string = faker.lorem.sentence(3);
   const statusTwo: string = faker.lorem.sentence(3);
 
-  test.beforeEach(async () => {
-    // Setup for first user
-    browser1 = await chromium.launch();
-    context1 = await browser1.newContext();
-    page1 = await context1.newPage();
-
-    // Setup for second user
-    browser2 = await chromium.launch();
-    context2 = await browser2.newContext();
-    page2 = await context2.newPage();
-
-    // Create create or import page classes
-    createOrImport = new CreateOrImportPage(page1);
-    createOrImportSecond = new CreateOrImportPage(page2);
-
+  test.beforeEach(async ({ createOrImport, createOrImportSecond }) => {
     // Start browser one
     await createOrImport.navigateTo();
 
@@ -55,21 +15,24 @@ test.describe("Friends tests", () => {
     await createOrImportSecond.navigateTo();
   });
 
-  test("Create two accounts and add them as friends", async () => {
-    // Start page objects from user one
-    authNewAccount = new AuthNewAccount(page1);
-    loginPinPage = new LoginPinPage(page1);
-    chatsMainPage = new ChatsMainPage(page1);
-    friendsPage = new FriendsScreen(page1);
-    saveRecoverySeed = new SaveRecoverySeedPage(page1);
-
-    // Start page objects from user two
-    authNewAccountSecond = new AuthNewAccount(page2);
-    loginPinPageSecond = new LoginPinPage(page2);
-    chatsMainPageSecond = new ChatsMainPage(page2);
-    friendPageSecond = new FriendsScreen(page2);
-    saveRecoverySeedSecond = new SaveRecoverySeedPage(page2);
-
+  test("Create two accounts and add them as friends", async ({
+    authNewAccount,
+    authNewAccountSecond,
+    createOrImport,
+    createOrImportSecond,
+    loginPinPage,
+    loginPinPageSecond,
+    chatsMainPage,
+    chatsMainPageSecond,
+    friendsScreen,
+    friendsScreenSecond,
+    saveRecoverySeed,
+    saveRecoverySeedSecond,
+    context,
+    context2,
+    page,
+    page2,
+  }) => {
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -90,9 +53,9 @@ test.describe("Friends tests", () => {
     await chatsMainPage.goToFriends();
 
     // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsPage.copyDID();
-    const handle = await page1.evaluateHandle(() =>
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreen.copyDID();
+    const handle = await page.evaluateHandle(() =>
       navigator.clipboard.readText(),
     );
     const didKeyFirstUser = await handle.jsonValue();
@@ -118,35 +81,36 @@ test.describe("Friends tests", () => {
 
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendPageSecond.copyDID();
+    await friendsScreenSecond.copyDID();
     const handleTwo = await page2.evaluateHandle(() =>
       navigator.clipboard.readText(),
     );
     const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
-    await friendPageSecond.addFriend(didKeyFirstUser);
-    await friendPageSecond.goToBlockedList();
-    await friendPageSecond.goToRequestList();
+    await friendsScreenSecond.addFriend(didKeyFirstUser);
+    await friendsScreenSecond.goToBlockedList();
+    await friendsScreenSecond.goToRequestList();
 
     // With First User, go to requests list and accept friend request
-    await friendsPage.goToRequestList();
-    await friendsPage.goToAllFriendsList();
-    await friendsPage.goToRequestList();
-    await friendsPage.validateIncomingRequestExists();
-    await friendsPage.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreen.goToRequestList();
+    await friendsScreen.goToAllFriendsList();
+    await friendsScreen.goToRequestList();
+    await friendsScreen.validateIncomingRequestExists();
+    await friendsScreen.acceptFriendRequest(usernameTwo, didKeySecondUser);
 
     // With First User, go to All Friends and click on Chat Button
-    await friendsPage.goToAllFriendsList();
-    await friendsPage.chatWithFriend(usernameTwo);
+    await friendsScreen.goToAllFriendsList();
+    await friendsScreen.chatWithFriend(usernameTwo);
 
     // With Second User, go to All Friends and click on Chat Button
-    await friendPageSecond.goToRequestList();
-    await friendPageSecond.goToAllFriendsList();
-    await friendPageSecond.chatWithFriend(username);
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.chatWithFriend(username);
   });
 
-  test.afterAll(async () => {
+  test.afterAll(async ({ page, page2 }) => {
+    await page.close();
     await page2.close();
   });
 });

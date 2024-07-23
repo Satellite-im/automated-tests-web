@@ -1,4 +1,4 @@
-import { test as base } from "@playwright/test";
+import { test as base, BrowserContext, chromium, Page } from "@playwright/test";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "../PageObjects/ChatsMain";
@@ -23,11 +23,17 @@ import { FriendsScreen } from "../PageObjects/FriendsScreen";
 // Declare the types of your fixtures.
 type MyFixtures = {
   loginPinPage: LoginPinPage;
+  loginPinPageSecond: LoginPinPage;
   authNewAccount: AuthNewAccount;
+  authNewAccountSecond: AuthNewAccount;
   chatsMainPage: ChatsMainPage;
+  chatsMainPageSecond: ChatsMainPage;
   createOrImport: CreateOrImportPage;
+  createOrImportSecond: CreateOrImportPage;
   saveRecoverySeed: SaveRecoverySeedPage;
+  saveRecoverySeedSecond: SaveRecoverySeedPage;
   chatsPageLogged: ChatsMainPage;
+  chatsPageLoggedSecond: ChatsMainPage;
   settingsProfile: SettingsProfile;
   settingsInventory: SettingsInventory;
   settingsCustomizations: SettingsCustomizations;
@@ -43,6 +49,11 @@ type MyFixtures = {
   settingsNetwork: SettingsNetwork;
   filesPage: FilesPage;
   friendsScreen: FriendsScreen;
+  friendsScreenSecond: FriendsScreen;
+  context: BrowserContext;
+  context2: BrowserContext;
+  page: Page;
+  page2: Page;
 };
 
 // Extend base test by providing page object classes as fixtures.
@@ -52,20 +63,40 @@ export const test = base.extend<MyFixtures>({
     await use(new CreateOrImportPage(page));
   },
 
+  createOrImportSecond: async ({ page2 }, use) => {
+    await use(new CreateOrImportPage(page2));
+  },
+
   authNewAccount: async ({ page }, use) => {
     await use(new AuthNewAccount(page));
+  },
+
+  authNewAccountSecond: async ({ page2 }, use) => {
+    await use(new AuthNewAccount(page2));
   },
 
   loginPinPage: async ({ page }, use) => {
     await use(new LoginPinPage(page));
   },
 
+  loginPinPageSecond: async ({ page2 }, use) => {
+    await use(new LoginPinPage(page2));
+  },
+
   saveRecoverySeed: async ({ page }, use) => {
     await use(new SaveRecoverySeedPage(page));
   },
 
+  saveRecoverySeedSecond: async ({ page2 }, use) => {
+    await use(new SaveRecoverySeedPage(page2));
+  },
+
   chatsMainPage: async ({ page }, use) => {
     await use(new ChatsMainPage(page));
+  },
+
+  chatsMainPageSecond: async ({ page2 }, use) => {
+    await use(new ChatsMainPage(page2));
   },
 
   settingsProfile: async ({ page }, use) => {
@@ -126,6 +157,36 @@ export const test = base.extend<MyFixtures>({
 
   friendsScreen: async ({ page }, use) => {
     await use(new FriendsScreen(page));
+  },
+
+  friendsScreenSecond: async ({ page2 }, use) => {
+    await use(new FriendsScreen(page2));
+  },
+
+  context: async ({}, use) => {
+    const browser1 = await chromium.launch();
+    const context1 = await browser1.newContext();
+    await use(context1);
+    await context1.close();
+  },
+
+  context2: async ({}, use) => {
+    const browser2 = await chromium.launch();
+    const context2 = await browser2.newContext();
+    await use(context2);
+    await context2.close();
+  },
+
+  page: async ({ context }, use) => {
+    const page = await context.newPage();
+    await use(page);
+    await page.close();
+  },
+
+  page2: async ({ context2 }, use) => {
+    const page2 = await context2.newPage();
+    await use(page2);
+    await page2.close();
   },
 });
 
