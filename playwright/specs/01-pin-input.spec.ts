@@ -1,10 +1,5 @@
-import { test, expect } from "@playwright/test";
-import { LoginPinPage } from "../PageObjects/LoginPin";
+import { test, expect } from "../fixtures/setup";
 import { faker } from "@faker-js/faker";
-import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "../PageObjects/ChatsMain";
-import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
 
 test.describe("Create Account and Login Tests", () => {
   const username =
@@ -12,20 +7,18 @@ test.describe("Create Account and Login Tests", () => {
   const status = faker.lorem.sentence(3);
   const pinNumber = "123456";
 
-  test.beforeEach(async ({ page }) => {
-    const createOrImport = new CreateOrImportPage(page);
+  test.beforeEach(async ({ createOrImport }) => {
     await createOrImport.navigateTo();
   });
 
   test("A1, A9, A11 - Enter valid PIN redirects to Main Page", async ({
+    authNewAccount,
+    chatsMainPage,
+    createOrImport,
+    loginPinPage,
     page,
+    saveRecoverySeed,
   }) => {
-    const loginPinPage = new LoginPinPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const createOrImport = new CreateOrImportPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-
     await createOrImport.clickCreateNewAccount();
     await authNewAccount.validateLoadingHeader();
     await expect(authNewAccount.textNewAccountSecondary).toHaveText(
@@ -52,11 +45,11 @@ test.describe("Create Account and Login Tests", () => {
     await page.waitForURL("/chat");
   });
 
-  test("A2 - Pin should have at least 4 digits", async ({ page }) => {
-    const authNewAccount = new AuthNewAccount(page);
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-
+  test("A2 - Pin should have at least 4 digits", async ({
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
+  }) => {
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -72,11 +65,11 @@ test.describe("Create Account and Login Tests", () => {
     await loginPinPage.validateConfirmButtonIsDisabled();
   });
 
-  test("A3 - Pin cannot have more than 8 digits", async ({ page }) => {
-    const authNewAccount = new AuthNewAccount(page);
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-
+  test("A3 - Pin cannot have more than 8 digits", async ({
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
+  }) => {
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -94,12 +87,10 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A4 - Clicking red reset button should erase any inputs made", async ({
-    page,
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
   }) => {
-    const authNewAccount = new AuthNewAccount(page);
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -118,12 +109,10 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked", async ({
-    page,
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
   }) => {
-    const authNewAccount = new AuthNewAccount(page);
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -145,12 +134,10 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A6, A7 - Scramble Keypad will change the order of pin input buttons", async ({
-    page,
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
   }) => {
-    const authNewAccount = new AuthNewAccount(page);
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -184,14 +171,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", async ({
+    authNewAccount,
+    createOrImport,
+    chatsMainPage,
+    loginPinPage,
     page,
+    saveRecoverySeed,
   }) => {
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -224,12 +210,10 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A10 - User can see menu to switch to a different profile", async ({
-    page,
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
   }) => {
-    const authNewAccount = new AuthNewAccount(page);
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -253,14 +237,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test.skip("A12 - If incorrect pin is entered, error message should be displayed", async ({
+    authNewAccount,
+    chatsMainPage,
+    createOrImport,
+    loginPinPage,
     page,
+    saveRecoverySeed,
   }) => {
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -292,14 +275,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page", async ({
+    authNewAccount,
+    createOrImport,
     page,
+    loginPinPage,
+    saveRecoverySeed,
+    chatsMainPage,
   }) => {
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -324,14 +306,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A14 - If Stay Unlocked is toggled on, user should be redirected to enter PIN after logging off", async ({
+    authNewAccount,
+    createOrImport,
     page,
+    loginPinPage,
+    saveRecoverySeed,
+    chatsMainPage,
   }) => {
-    const createOrImport = new CreateOrImportPage(page);
-    const loginPinPage = new LoginPinPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
