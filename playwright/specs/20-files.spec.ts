@@ -55,8 +55,8 @@ test.describe("Files Page Tests", () => {
     filesPage,
   }) => {
     // Validate Free and Total space data
-    await filesPage.validateFreeSpaceInfo("885 TB");
-    await filesPage.validateTotalSpaceInfo("13.2 EB");
+    await filesPage.validateFreeSpaceInfo("2.15 GB");
+    await filesPage.validateTotalSpaceInfo("2.15 GB");
   });
 
   test("F5 - Highlighted border should appaer when you click Create New Folder", async ({
