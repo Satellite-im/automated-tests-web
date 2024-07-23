@@ -7,9 +7,9 @@ test.describe("Friends tests", () => {
   const status: string = faker.lorem.sentence(3);
   const statusTwo: string = faker.lorem.sentence(3);
 
-  test.beforeEach(async ({ createOrImport, createOrImportSecond }) => {
+  test.beforeEach(async ({ createOrImportFirst, createOrImportSecond }) => {
     // Start browser one
-    await createOrImport.navigateTo();
+    await createOrImportFirst.navigateTo();
 
     // Start browser two
     await createOrImportSecond.navigateTo();
