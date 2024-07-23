@@ -1,4 +1,4 @@
-import { test as base } from "@playwright/test";
+import { test as base, BrowserContext, chromium, Page } from "@playwright/test";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "../PageObjects/ChatsMain";
@@ -23,11 +23,20 @@ import { FriendsScreen } from "../PageObjects/FriendsScreen";
 // Declare the types of your fixtures.
 type MyFixtures = {
   loginPinPage: LoginPinPage;
+  loginPinPageFirst: LoginPinPage;
+  loginPinPageSecond: LoginPinPage;
   authNewAccount: AuthNewAccount;
+  authNewAccountFirst: AuthNewAccount;
+  authNewAccountSecond: AuthNewAccount;
   chatsMainPage: ChatsMainPage;
+  chatsMainPageFirst: ChatsMainPage;
+  chatsMainPageSecond: ChatsMainPage;
   createOrImport: CreateOrImportPage;
+  createOrImportFirst: CreateOrImportPage;
+  createOrImportSecond: CreateOrImportPage;
   saveRecoverySeed: SaveRecoverySeedPage;
-  chatsPageLogged: ChatsMainPage;
+  saveRecoverySeedFirst: SaveRecoverySeedPage;
+  saveRecoverySeedSecond: SaveRecoverySeedPage;
   settingsProfile: SettingsProfile;
   settingsInventory: SettingsInventory;
   settingsCustomizations: SettingsCustomizations;
@@ -43,6 +52,12 @@ type MyFixtures = {
   settingsNetwork: SettingsNetwork;
   filesPage: FilesPage;
   friendsScreen: FriendsScreen;
+  friendsScreenFirst: FriendsScreen;
+  friendsScreenSecond: FriendsScreen;
+  context1: BrowserContext;
+  context2: BrowserContext;
+  page1: Page;
+  page2: Page;
 };
 
 // Extend base test by providing page object classes as fixtures.
@@ -52,20 +67,60 @@ export const test = base.extend<MyFixtures>({
     await use(new CreateOrImportPage(page));
   },
 
+  createOrImportFirst: async ({ page1 }, use) => {
+    await use(new CreateOrImportPage(page1));
+  },
+
+  createOrImportSecond: async ({ page2 }, use) => {
+    await use(new CreateOrImportPage(page2));
+  },
+
   authNewAccount: async ({ page }, use) => {
     await use(new AuthNewAccount(page));
+  },
+
+  authNewAccountFirst: async ({ page1 }, use) => {
+    await use(new AuthNewAccount(page1));
+  },
+
+  authNewAccountSecond: async ({ page2 }, use) => {
+    await use(new AuthNewAccount(page2));
   },
 
   loginPinPage: async ({ page }, use) => {
     await use(new LoginPinPage(page));
   },
 
+  loginPinPageFirst: async ({ page1 }, use) => {
+    await use(new LoginPinPage(page1));
+  },
+
+  loginPinPageSecond: async ({ page2 }, use) => {
+    await use(new LoginPinPage(page2));
+  },
+
   saveRecoverySeed: async ({ page }, use) => {
     await use(new SaveRecoverySeedPage(page));
   },
 
+  saveRecoverySeedFirst: async ({ page1 }, use) => {
+    await use(new SaveRecoverySeedPage(page1));
+  },
+
+  saveRecoverySeedSecond: async ({ page2 }, use) => {
+    await use(new SaveRecoverySeedPage(page2));
+  },
+
   chatsMainPage: async ({ page }, use) => {
     await use(new ChatsMainPage(page));
+  },
+
+  chatsMainPageFirst: async ({ page1 }, use) => {
+    await use(new ChatsMainPage(page1));
+  },
+
+  chatsMainPageSecond: async ({ page2 }, use) => {
+    await use(new ChatsMainPage(page2));
   },
 
   settingsProfile: async ({ page }, use) => {
@@ -126,6 +181,40 @@ export const test = base.extend<MyFixtures>({
 
   friendsScreen: async ({ page }, use) => {
     await use(new FriendsScreen(page));
+  },
+
+  friendsScreenFirst: async ({ page1 }, use) => {
+    await use(new FriendsScreen(page1));
+  },
+
+  friendsScreenSecond: async ({ page2 }, use) => {
+    await use(new FriendsScreen(page2));
+  },
+
+  context1: async ({}, use) => {
+    const browser1 = await chromium.launch();
+    const context1 = await browser1.newContext();
+    await use(context1);
+    await context1.close();
+  },
+
+  context2: async ({}, use) => {
+    const browser2 = await chromium.launch();
+    const context2 = await browser2.newContext();
+    await use(context2);
+    await context2.close();
+  },
+
+  page1: async ({ context1 }, use) => {
+    const page1 = await context1.newPage();
+    await use(page1);
+    await page1.close();
+  },
+
+  page2: async ({ context2 }, use) => {
+    const page2 = await context2.newPage();
+    await use(page2);
+    await page2.close();
   },
 });
 
