@@ -1,57 +1,51 @@
-import { test, expect } from "@playwright/test";
-import { LoginPinPage } from "../PageObjects/LoginPin";
-import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "../PageObjects/ChatsMain";
-import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
-import { SettingsMessages } from "../PageObjects/Settings/SettingsMessages";
+import { test, expect } from "../fixtures/setup";
 
 test.describe("Settings Messages Tests", () => {
   const username = "test123";
-  const status = "test status";
+  const status = "fixed status";
 
-  test.beforeEach(async ({ page }) => {
-    // Declare the page object implementations
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const settingsProfile = new SettingsProfile(page);
+  test.beforeEach(
+    async ({
+      createOrImport,
+      authNewAccount,
+      loginPinPage,
+      saveRecoverySeed,
+      chatsMainPage,
+      settingsProfile,
+      page,
+    }) => {
+      // Select Create Account
+      await createOrImport.navigateTo();
+      await createOrImport.clickCreateNewAccount();
 
-    // Select Create Account
-    await createOrImport.navigateTo();
-    await createOrImport.clickCreateNewAccount();
+      // Enter Username and Status
+      await authNewAccount.validateLoadingHeader();
+      await authNewAccount.typeOnUsername(username);
+      await authNewAccount.typeOnStatus(status);
+      await authNewAccount.buttonNewAccountCreate.click();
 
-    // Enter Username and Status
-    await authNewAccount.validateLoadingHeader();
-    await authNewAccount.typeOnUsername(username);
-    await authNewAccount.typeOnStatus(status);
-    await authNewAccount.buttonNewAccountCreate.click();
+      // Enter PIN
+      await loginPinPage.waitUntilPageIsLoaded();
+      await loginPinPage.enterDefaultPin();
 
-    // Enter PIN
-    await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterDefaultPin();
+      // Click on I Saved It
+      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
+      await saveRecoverySeed.clickOnSavedIt();
+      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
+      await page.waitForURL("/chat");
 
-    // Click on I Saved It
-    await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-    await saveRecoverySeed.clickOnSavedIt();
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-    await page.waitForURL("/chat");
+      await chatsMainPage.goToSettings();
+      await page.waitForURL("/settings/profile");
 
-    // Go to Settings Profile and then Settings Inventory page
-    await chatsMainPage.goToSettings();
-    await page.waitForURL("/settings/profile");
-    await settingsProfile.buttonMessages.click();
-    await page.waitForURL("/settings/messages");
-  });
+      await settingsProfile.buttonMessages.click();
+      await page.waitForURL("/settings/messages");
+    },
+  );
 
   test("L1 - User should be able to toggle on and off emoji conversion", async ({
-    page,
+    settingsMessages,
   }) => {
     // Label and texts for settings section are correct
-    const settingsMessages = new SettingsMessages(page);
     await expect(settingsMessages.convertToEmojiSectionLabel).toHaveText(
       "Convert to Emoji",
     );
@@ -74,10 +68,9 @@ test.describe("Settings Messages Tests", () => {
   });
 
   test("L2 - User should be able to toggle on and off Markdown support", async ({
-    page,
+    settingsMessages,
   }) => {
     // Label and texts for settings section are correct
-    const settingsMessages = new SettingsMessages(page);
     await expect(settingsMessages.markdownSupportSectionLabel).toHaveText(
       "Markdown Support",
     );
@@ -100,10 +93,9 @@ test.describe("Settings Messages Tests", () => {
   });
 
   test("L3 - User should be able to toggle on and off emoji Spam/Bot detection & rejection", async ({
-    page,
+    settingsMessages,
   }) => {
     // Label and texts for settings section are correct
-    const settingsMessages = new SettingsMessages(page);
     await expect(settingsMessages.spamBotDetectionSectionLabel).toHaveText(
       "Spam/Bot Detection & Rejection",
     );
