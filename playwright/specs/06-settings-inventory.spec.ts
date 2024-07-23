@@ -1,57 +1,50 @@
-import { test, expect } from "@playwright/test";
-import { LoginPinPage } from "../PageObjects/LoginPin";
-import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "../PageObjects/ChatsMain";
-import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
-import { SettingsInventory } from "playwright/PageObjects/Settings/SettingsInventory";
+import { test, expect } from "../fixtures/setup";
 
 test.describe("Settings Inventory Tests", () => {
   const username = "test123";
-  const status = "test status";
+  const status = "fixed status";
 
-  test.beforeEach(async ({ page }) => {
-    // Declare the page object implementations
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const settingsProfile = new SettingsProfile(page);
+  test.beforeEach(
+    async ({
+      createOrImport,
+      authNewAccount,
+      loginPinPage,
+      saveRecoverySeed,
+      chatsMainPage,
+      settingsProfile,
+      page,
+    }) => {
+      // Select Create Account
+      await createOrImport.navigateTo();
+      await createOrImport.clickCreateNewAccount();
 
-    // Select Create Account
-    await createOrImport.navigateTo();
-    await createOrImport.clickCreateNewAccount();
+      // Enter Username and Status
+      await authNewAccount.validateLoadingHeader();
+      await authNewAccount.typeOnUsername(username);
+      await authNewAccount.typeOnStatus(status);
+      await authNewAccount.buttonNewAccountCreate.click();
 
-    // Enter Username and Status
-    await authNewAccount.validateLoadingHeader();
-    await authNewAccount.typeOnUsername(username);
-    await authNewAccount.typeOnStatus(status);
-    await authNewAccount.buttonNewAccountCreate.click();
+      // Enter PIN
+      await loginPinPage.waitUntilPageIsLoaded();
+      await loginPinPage.enterDefaultPin();
 
-    // Enter PIN
-    await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterDefaultPin();
+      // Click on I Saved It
+      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
+      await saveRecoverySeed.clickOnSavedIt();
+      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
+      await page.waitForURL("/chat");
 
-    // Click on I Saved It
-    await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-    await saveRecoverySeed.clickOnSavedIt();
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-    await page.waitForURL("/chat");
+      await chatsMainPage.goToSettings();
+      await page.waitForURL("/settings/profile");
 
-    // Go to Settings Profile and then Settings Inventory page
-    await chatsMainPage.goToSettings();
-    await page.waitForURL("/settings/profile");
-    await settingsProfile.buttonInventory.click();
-    await page.waitForURL("/settings/inventory");
-  });
+      await settingsProfile.buttonInventory.click();
+      await page.waitForURL("/settings/inventory");
+    },
+  );
 
   test("J1 - Page should display items purchased from Marketplace", async ({
-    page,
+    settingsInventory,
   }) => {
-    const settingsInventory = new SettingsInventory(page);
-
     const expectedFrames = [
       { name: "Moon", type: "Profile Picture Frame" },
       { name: "Skull Dance", type: "Profile Picture Frame" },
@@ -77,11 +70,10 @@ test.describe("Settings Inventory Tests", () => {
   });
 
   test("J2 - After user selects Profile Picture Frame it should be properly displayed everywhere in the app where the user's profile picture appears", async ({
-    page,
+    settingsInventory,
+    settingsProfile,
   }) => {
     // Equip Quaint inventory frame
-    const settingsInventory = new SettingsInventory(page);
-    const settingsProfile = new SettingsProfile(page);
     await settingsInventory.equipFrame("Quaint");
 
     // Validate the frame is equipped and displayed correctly
@@ -105,10 +97,8 @@ test.describe("Settings Inventory Tests", () => {
   });
 
   test("J3, J4, J5, J6 - Equipping and unequipping inventory item", async ({
-    page,
+    settingsInventory,
   }) => {
-    const settingsInventory = new SettingsInventory(page);
-
     // Equip Quaint inventory frame
     await settingsInventory.equipFrame("Quaint");
 

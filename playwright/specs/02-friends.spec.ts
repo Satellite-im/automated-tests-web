@@ -1,9 +1,10 @@
 import {
-  test,
   chromium,
   Browser,
   BrowserContext,
   Page,
+  test,
+  expect,
 } from "@playwright/test";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { faker } from "@faker-js/faker";
