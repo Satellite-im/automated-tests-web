@@ -20,7 +20,9 @@ export class FriendsScreen extends MainPage {
   readonly friendProfilePictureImage: Locator;
   readonly friendUser: Locator;
   readonly inputAddFriend: Locator;
+  readonly inputContainerAddFriend: Locator;
   readonly inputSearchFriends: Locator;
+  readonly inputContainerSearchFriends: Locator;
   readonly labelAddSomeone: Locator;
   readonly labelBlockedUsers: Locator;
   readonly labelFriendList: Locator;
@@ -61,6 +63,9 @@ export class FriendsScreen extends MainPage {
     this.friendProfilePictureImage = page.getByTestId("profile-image");
     this.friendUser = page.locator('[data-cy^="friend-did:key:"]');
     this.inputAddFriend = page.getByTestId("input-add-friend");
+    this.inputContainerAddFriend = this.inputAddFriend.locator("xpath=..");
+    this.inputContainerSearchFriends =
+      this.inputSearchFriends.locator("xpath=..");
     this.inputSearchFriends = page.getByTestId("input-search-friends");
     this.labelAddSomeone = page.getByTestId("label-add-someone");
     this.labelBlockedUsers = page.getByTestId("label-blocked-users");
@@ -96,6 +101,7 @@ export class FriendsScreen extends MainPage {
     await this.inputAddFriend.fill(didKey);
     await this.buttonAddFriend.click();
     await this.toastNotification.waitFor({ state: "attached" });
+    await expect(this.toastNotificationText).toHaveText("");
     await this.toastNotification.waitFor({ state: "detached" });
   }
 
