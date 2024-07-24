@@ -94,7 +94,7 @@ export class FilesPage extends MainPage {
         this.page
           .locator(`[data-cy="folder-${name}"]`)
           .getByTestId("file-folder-name"),
-      ).toHaveText("undefined");
+      ).toHaveText("");
     } else {
       await expect(
         this.page
