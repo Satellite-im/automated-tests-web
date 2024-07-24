@@ -1,5 +1,5 @@
 import MainPage from "./MainPage";
-import { type Locator, type Page } from "@playwright/test";
+import { type Locator, type Page, expect } from "@playwright/test";
 
 export class FriendsScreen extends MainPage {
   readonly page: Page;
@@ -63,9 +63,12 @@ export class FriendsScreen extends MainPage {
     this.friendProfilePictureImage = page.getByTestId("profile-image");
     this.friendUser = page.locator('[data-cy^="friend-did:key:"]');
     this.inputAddFriend = page.getByTestId("input-add-friend");
-    this.inputContainerAddFriend = this.inputAddFriend.locator("xpath=..");
-    this.inputContainerSearchFriends =
-      this.inputSearchFriends.locator("xpath=..");
+    this.inputContainerAddFriend = page
+      .getByTestId("input-add-friend")
+      .locator("xpath=..");
+    this.inputContainerSearchFriends = page
+      .getByTestId("input-search-friends")
+      .locator("xpath=..");
     this.inputSearchFriends = page.getByTestId("input-search-friends");
     this.labelAddSomeone = page.getByTestId("label-add-someone");
     this.labelBlockedUsers = page.getByTestId("label-blocked-users");
@@ -86,7 +89,7 @@ export class FriendsScreen extends MainPage {
     );
     this.textNoBlockedUsers = page.getByTestId("text-no-blocked-users");
     this.textNoIncomingRequests = page.getByTestId("text-no-incoming-requests");
-    this.textNoOutgoingRequests = page.getByTestId("text-no-outgoing-requests");
+    this.textNoOutgoingRequests = page.getByTestId("text-no-outbound-requests");
     this.textSearchFriendNoResults = page.getByTestId(
       "text-search-friend-no-results",
     );
@@ -100,9 +103,6 @@ export class FriendsScreen extends MainPage {
   async addFriend(didKey: string) {
     await this.inputAddFriend.fill(didKey);
     await this.buttonAddFriend.click();
-    await this.toastNotification.waitFor({ state: "attached" });
-    await expect(this.toastNotificationText).toHaveText("");
-    await this.toastNotification.waitFor({ state: "detached" });
   }
 
   async blockFriend(username: string) {
@@ -198,6 +198,20 @@ export class FriendsScreen extends MainPage {
     await this.textNoOutgoingRequests.waitFor({
       state: "detached",
     });
+  }
+
+  async validateToastRequestReceived(username: string) {
+    await this.toastNotification.waitFor({ state: "attached" });
+    await expect(this.toastNotificationText).toHaveText(
+      `${username} sent a request.`,
+    );
+  }
+
+  async validateToastRequestSent() {
+    await this.toastNotification.waitFor({ state: "attached" });
+    await expect(this.toastNotificationText).toHaveText(
+      "Your request is making it's way!",
+    );
   }
 
   async validateURL() {

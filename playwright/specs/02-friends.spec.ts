@@ -92,12 +92,15 @@ test.describe("Friends tests", () => {
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenSecond.goToBlockedList();
-    await friendsScreenSecond.goToRequestList();
+
+    // Validate toast notifications for friend request sent and received are shown on both users
+    await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and accept friend request
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.goToAllFriendsList();
+
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
     await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
@@ -131,25 +134,46 @@ test.describe("Friends tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDID();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
+    await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
+
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
     await friendsScreenSecond.goToBlockedList();
     await friendsScreenSecond.goToRequestList();
 
-    // With First User, go to requests list and accept friend request
+    // With First User, go to requests list and deny friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.goToAllFriendsList();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
     await friendsScreenFirst.denyFriendRequest(usernameTwo);
+
+    // Validate incoming list now shows empty on user who received and denied the friend request
+    await friendsScreenFirst.textNoIncomingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(friendsScreenFirst.textNoIncomingRequests).toHaveText(
+      "No inbound requests.",
+    );
+
+    // Validate outgoing list now shows empty on user who sent the friend request
+    await friendsScreenSecond.textNoOutgoingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(friendsScreenSecond.textNoOutgoingRequests).toHaveText(
+      "No outbound requests.",
+    );
   });
 
-  test.only("H1, H2, H3, H4, H5 - User can navigate through friends pages", async ({
+  test("H1, H2, H3, H4, H5 - User can navigate through friends pages", async ({
     friendsScreenFirst,
+    page1,
+    page2,
   }) => {
     // H2 - Clicking Active should take you to Active page within Friends
     await friendsScreenFirst.goToRequestList();
@@ -159,7 +183,7 @@ test.describe("Friends tests", () => {
     );
     await expect(friendsScreenFirst.buttonFriendsActive).toHaveCSS(
       "background-color",
-      "rgb(77, 77, 255)",
+      "color(srgb 0.371765 0.371765 1)",
     );
     await expect(friendsScreenFirst.buttonFriendsBlocked).toHaveCSS(
       "background-color",
@@ -193,7 +217,7 @@ test.describe("Friends tests", () => {
     );
     await expect(friendsScreenFirst.buttonFriendsBlocked).toHaveCSS(
       "background-color",
-      "rgb(77, 77, 255)",
+      "color(srgb 0.371765 0.371765 1)",
     );
     await expect(friendsScreenFirst.labelBlockedUsers).toBeVisible();
     await expect(friendsScreenFirst.labelBlockedUsers).toHaveText(
@@ -208,7 +232,7 @@ test.describe("Friends tests", () => {
     await friendsScreenFirst.goToAllFriendsList();
     await expect(friendsScreenFirst.buttonFriendsAll).toHaveCSS(
       "background-color",
-      "rgb(77, 77, 255)",
+      "color(srgb 0.371765 0.371765 1)",
     );
     await expect(friendsScreenFirst.buttonFriendsActive).toHaveCSS(
       "background-color",
@@ -219,12 +243,10 @@ test.describe("Friends tests", () => {
       "rgb(33, 38, 58)",
     );
     await expect(friendsScreenFirst.labelAddSomeone).toBeVisible();
-    await expect(friendsScreenFirst.labelAddSomeone).toHaveText(
-      "Add Someone Users",
-    );
+    await expect(friendsScreenFirst.labelAddSomeone).toHaveText("Add Someone");
     await expect(friendsScreenFirst.labelSearchFriends).toBeVisible();
     await expect(friendsScreenFirst.labelSearchFriends).toHaveText(
-      "Search Friends",
+      "Search friends",
     );
 
     // H4 - Highlighted border should appear after clicking into Add Someone - Search Friends input box

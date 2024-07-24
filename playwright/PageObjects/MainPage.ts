@@ -20,6 +20,7 @@ export default class MainPage {
   readonly toastNotification: Locator;
   readonly toastNotificationButton: Locator;
   readonly toastNotificationText: Locator;
+  readonly toastNotificationTitle: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -43,6 +44,7 @@ export default class MainPage {
       "toast-notification-button",
     );
     this.toastNotificationText = page.getByTestId("toast-notification-text");
+    this.toastNotificationTitle = page.getByTestId("toast-notification-title");
   }
 
   async assertInputTextSelected(selector: string) {
@@ -162,5 +164,9 @@ export default class MainPage {
 
     // Validate that the data-tooltip attribute has the expected value
     expect(tooltipText).toBe(expectedTooltipText);
+  }
+
+  async waitForToastNotificationToDisappear() {
+    await this.toastNotification.waitFor({ state: "detached" });
   }
 }
