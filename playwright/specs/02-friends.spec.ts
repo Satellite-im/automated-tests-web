@@ -66,114 +66,8 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test("Send a friend request to remote user - Remote user accepts friend request", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDID();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenSecond.copyDID();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
-
-    // Now, add the first user as a friend
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
-
-    // Validate toast notifications for friend request sent and received are shown on both users
-    await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
-
-    // With First User, go to requests list and accept friend request
-
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
-
-    // With First User, go to All Friends and click on Chat Button
-    await friendsScreenFirst.goToAllFriendsList();
-    await friendsScreenFirst.chatWithFriend(usernameTwo);
-
-    // With Second User, go to All Friends and click on Chat Button
-    await friendsScreenSecond.goToRequestList();
-    await friendsScreenSecond.goToAllFriendsList();
-    await friendsScreenSecond.chatWithFriend(username);
-  });
-
-  test("Send a friend request to remote user - Remote user denies friend request", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDID();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenSecond.copyDID();
-
-    // Now, add the first user as a friend
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
-
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.goToBlockedList();
-    await friendsScreenSecond.goToRequestList();
-
-    // With First User, go to requests list and deny friend request
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.goToAllFriendsList();
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.denyFriendRequest(usernameTwo);
-
-    // Validate incoming list now shows empty on user who received and denied the friend request
-    await friendsScreenFirst.textNoIncomingRequests.waitFor({
-      state: "attached",
-    });
-    await expect(friendsScreenFirst.textNoIncomingRequests).toHaveText(
-      "No inbound requests.",
-    );
-
-    // Validate outgoing list now shows empty on user who sent the friend request
-    await friendsScreenSecond.textNoOutgoingRequests.waitFor({
-      state: "attached",
-    });
-    await expect(friendsScreenSecond.textNoOutgoingRequests).toHaveText(
-      "No outbound requests.",
-    );
-  });
-
   test("H1, H2, H3, H4, H5 - User can navigate through friends pages", async ({
     friendsScreenFirst,
-    page1,
-    page2,
   }) => {
     // H2 - Clicking Active should take you to Active page within Friends
     await friendsScreenFirst.goToRequestList();
@@ -266,113 +160,108 @@ test.describe("Friends tests", () => {
     await expect(friendsScreenFirst.buttonAddFriend).toBeDisabled();
   });
 
-  test.skip("H6 - Checkmark with Request Dispatched! Your request is making it's way should appear after adding a user", async ({
+  test("H20 - User can send a friend request and remote user can accept it", async ({
     friendsScreenFirst,
     friendsScreenSecond,
     context1,
     context2,
     page1,
     page2,
-  }) => {});
+  }) => {
+    // Grant clipboard permissions, Copy DID and save it into a constant
+    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenFirst.copyDID();
+    const handle = await page1.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    const didKeyFirstUser = await handle.jsonValue();
 
-  test.skip("H7 - Green border should appear around Add Someone textbox when user pastes a correct did:key into the input box", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // Grant clipboard permissions, Copy DID and save it into a constant
+    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenSecond.copyDID();
+    const handleTwo = await page2.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    const didKeySecondUser = await handleTwo.jsonValue();
 
-  test.skip("H8 - Highlighted border should appear when clicking into the Search Friends input box", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // Now, add the first user as a friend
+    await friendsScreenSecond.addFriend(didKeyFirstUser);
 
-  test.skip("H9 - Clicking the Copy button should copy your personal did:key", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // Validate toast notifications for friend request sent and received are shown on both users
+    await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-  test.skip("H10 - Friends should be listed in alphabetical order", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // With First User, go to requests list and accept friend request
 
-  test.skip("H11 - Incoming friend requests should be listed by Newest to Oldest", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
 
-  test.skip("H12 - Outgoing friend requests should be listed by last sent", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // With First User, go to All Friends and click on Chat Button
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
 
-  test.skip("H13 - Blocked users should be displayed alphabetically", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // With Second User, go to All Friends and click on Chat Button
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.chatWithFriend(username);
+  });
 
-  test.skip("H14 - User should be removed from friends list after clicking unfriend", async ({
+  test("H21 - User can send a friend request and remote user can deny it", async ({
     friendsScreenFirst,
     friendsScreenSecond,
     context1,
     context2,
     page1,
-    page2,
-  }) => {});
+  }) => {
+    // Grant clipboard permissions, Copy DID and save it into a constant
+    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenFirst.copyDID();
+    const handle = await page1.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    const didKeyFirstUser = await handle.jsonValue();
 
-  test.skip("H15 - Clicking block should block user", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // Grant clipboard permissions, Copy DID and save it into a constant
+    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenSecond.copyDID();
 
-  test.skip("H16 - User should be displayed under Blocked Users after you block them", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    // Now, add the first user as a friend
+    await friendsScreenSecond.addFriend(didKeyFirstUser);
+    await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-  test.skip("H17 - User should be cleared from Blocked Users after you unblock them", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    context2,
-    page1,
-    page2,
-  }) => {});
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
+    await friendsScreenSecond.goToBlockedList();
+    await friendsScreenSecond.goToRequestList();
+
+    // With First User, go to requests list and deny friend request
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.denyFriendRequest(usernameTwo);
+
+    // Validate incoming list now shows empty on user who received and denied the friend request
+    await friendsScreenFirst.textNoIncomingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(friendsScreenFirst.textNoIncomingRequests).toHaveText(
+      "No inbound requests.",
+    );
+
+    // Validate outgoing list now shows empty on user who sent the friend request
+    await friendsScreenSecond.textNoOutgoingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(friendsScreenSecond.textNoOutgoingRequests).toHaveText(
+      "No outbound requests.",
+    );
+  });
 
   test.afterAll(async ({ page1, page2 }) => {
     await page1.close();
