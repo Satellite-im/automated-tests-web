@@ -201,14 +201,14 @@ export class FriendsScreen extends MainPage {
   }
 
   async validateToastRequestReceived(username: string) {
-    await this.toastNotification.waitFor({ state: "attached" });
+    await this.toastNotificationText.waitFor({ state: "visible" });
     await expect(this.toastNotificationText).toHaveText(
       `${username} sent a request.`,
     );
   }
 
   async validateToastRequestSent() {
-    await this.toastNotification.waitFor({ state: "attached" });
+    await this.toastNotificationText.waitFor({ state: "visible" });
     await expect(this.toastNotificationText).toHaveText(
       "Your request is making it's way!",
     );
