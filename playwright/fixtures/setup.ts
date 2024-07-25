@@ -25,18 +25,23 @@ type MyFixtures = {
   loginPinPage: LoginPinPage;
   loginPinPageFirst: LoginPinPage;
   loginPinPageSecond: LoginPinPage;
+  loginPinPageThird: LoginPinPage;
   authNewAccount: AuthNewAccount;
   authNewAccountFirst: AuthNewAccount;
   authNewAccountSecond: AuthNewAccount;
+  authNewAccountThird: AuthNewAccount;
   chatsMainPage: ChatsMainPage;
   chatsMainPageFirst: ChatsMainPage;
   chatsMainPageSecond: ChatsMainPage;
+  chatsMainPageThird: ChatsMainPage;
   createOrImport: CreateOrImportPage;
   createOrImportFirst: CreateOrImportPage;
   createOrImportSecond: CreateOrImportPage;
+  createOrImportThird: CreateOrImportPage;
   saveRecoverySeed: SaveRecoverySeedPage;
   saveRecoverySeedFirst: SaveRecoverySeedPage;
   saveRecoverySeedSecond: SaveRecoverySeedPage;
+  saveRecoverySeedThird: SaveRecoverySeedPage;
   settingsProfile: SettingsProfile;
   settingsInventory: SettingsInventory;
   settingsCustomizations: SettingsCustomizations;
@@ -54,10 +59,13 @@ type MyFixtures = {
   friendsScreen: FriendsScreen;
   friendsScreenFirst: FriendsScreen;
   friendsScreenSecond: FriendsScreen;
+  friendsScreenThird: FriendsScreen;
   context1: BrowserContext;
   context2: BrowserContext;
+  context3: BrowserContext;
   page1: Page;
   page2: Page;
+  page3: Page;
 };
 
 // Extend base test by providing page object classes as fixtures.
@@ -75,6 +83,10 @@ export const test = base.extend<MyFixtures>({
     await use(new CreateOrImportPage(page2));
   },
 
+  createOrImportThird: async ({ page3 }, use) => {
+    await use(new CreateOrImportPage(page3));
+  },
+
   authNewAccount: async ({ page }, use) => {
     await use(new AuthNewAccount(page));
   },
@@ -85,6 +97,10 @@ export const test = base.extend<MyFixtures>({
 
   authNewAccountSecond: async ({ page2 }, use) => {
     await use(new AuthNewAccount(page2));
+  },
+
+  authNewAccountThird: async ({ page3 }, use) => {
+    await use(new AuthNewAccount(page3));
   },
 
   loginPinPage: async ({ page }, use) => {
@@ -99,6 +115,10 @@ export const test = base.extend<MyFixtures>({
     await use(new LoginPinPage(page2));
   },
 
+  loginPinPageThird: async ({ page3 }, use) => {
+    await use(new LoginPinPage(page3));
+  },
+
   saveRecoverySeed: async ({ page }, use) => {
     await use(new SaveRecoverySeedPage(page));
   },
@@ -111,6 +131,10 @@ export const test = base.extend<MyFixtures>({
     await use(new SaveRecoverySeedPage(page2));
   },
 
+  saveRecoverySeedThird: async ({ page3 }, use) => {
+    await use(new SaveRecoverySeedPage(page3));
+  },
+
   chatsMainPage: async ({ page }, use) => {
     await use(new ChatsMainPage(page));
   },
@@ -121,6 +145,10 @@ export const test = base.extend<MyFixtures>({
 
   chatsMainPageSecond: async ({ page2 }, use) => {
     await use(new ChatsMainPage(page2));
+  },
+
+  chatsMainPageThird: async ({ page3 }, use) => {
+    await use(new ChatsMainPage(page3));
   },
 
   settingsProfile: async ({ page }, use) => {
@@ -191,6 +219,10 @@ export const test = base.extend<MyFixtures>({
     await use(new FriendsScreen(page2));
   },
 
+  friendsScreenThird: async ({ page3 }, use) => {
+    await use(new FriendsScreen(page3));
+  },
+
   context1: async ({}, use) => {
     const browser1 = await chromium.launch();
     const context1 = await browser1.newContext();
@@ -205,6 +237,13 @@ export const test = base.extend<MyFixtures>({
     await context2.close();
   },
 
+  context3: async ({}, use) => {
+    const browser3 = await chromium.launch();
+    const context3 = await browser3.newContext();
+    await use(context3);
+    await context3.close();
+  },
+
   page1: async ({ context1 }, use) => {
     const page1 = await context1.newPage();
     await use(page1);
@@ -215,6 +254,12 @@ export const test = base.extend<MyFixtures>({
     const page2 = await context2.newPage();
     await use(page2);
     await page2.close();
+  },
+
+  page3: async ({ context3 }, use) => {
+    const page3 = await context3.newPage();
+    await use(page3);
+    await page3.close();
   },
 });
 

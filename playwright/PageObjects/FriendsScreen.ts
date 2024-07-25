@@ -1,5 +1,5 @@
 import MainPage from "./MainPage";
-import { type Locator, type Page } from "@playwright/test";
+import { type Locator, type Page, expect } from "@playwright/test";
 
 export class FriendsScreen extends MainPage {
   readonly page: Page;
@@ -20,7 +20,9 @@ export class FriendsScreen extends MainPage {
   readonly friendProfilePictureImage: Locator;
   readonly friendUser: Locator;
   readonly inputAddFriend: Locator;
+  readonly inputContainerAddFriend: Locator;
   readonly inputSearchFriends: Locator;
+  readonly inputContainerSearchFriends: Locator;
   readonly labelAddSomeone: Locator;
   readonly labelBlockedUsers: Locator;
   readonly labelFriendList: Locator;
@@ -54,13 +56,19 @@ export class FriendsScreen extends MainPage {
       "context-menu-option-Copy DID",
     );
     this.contextOptionCopyID = this.contextMenuCopyID.getByTestId(
-      "context-menu-option-Copy id",
+      "context-menu-option-Copy ID",
     );
     this.friendName = page.getByTestId("friend-name");
     this.friendProfilePicture = page.getByTestId("friend-profile-picture");
     this.friendProfilePictureImage = page.getByTestId("profile-image");
     this.friendUser = page.locator('[data-cy^="friend-did:key:"]');
     this.inputAddFriend = page.getByTestId("input-add-friend");
+    this.inputContainerAddFriend = page
+      .getByTestId("input-add-friend")
+      .locator("xpath=..");
+    this.inputContainerSearchFriends = page
+      .getByTestId("input-search-friends")
+      .locator("xpath=..");
     this.inputSearchFriends = page.getByTestId("input-search-friends");
     this.labelAddSomeone = page.getByTestId("label-add-someone");
     this.labelBlockedUsers = page.getByTestId("label-blocked-users");
@@ -81,7 +89,7 @@ export class FriendsScreen extends MainPage {
     );
     this.textNoBlockedUsers = page.getByTestId("text-no-blocked-users");
     this.textNoIncomingRequests = page.getByTestId("text-no-incoming-requests");
-    this.textNoOutgoingRequests = page.getByTestId("text-no-outgoing-requests");
+    this.textNoOutgoingRequests = page.getByTestId("text-no-outbound-requests");
     this.textSearchFriendNoResults = page.getByTestId(
       "text-search-friend-no-results",
     );
@@ -95,8 +103,6 @@ export class FriendsScreen extends MainPage {
   async addFriend(didKey: string) {
     await this.inputAddFriend.fill(didKey);
     await this.buttonAddFriend.click();
-    await this.toastNotification.waitFor({ state: "attached" });
-    await this.toastNotification.waitFor({ state: "detached" });
   }
 
   async blockFriend(username: string) {
@@ -114,15 +120,25 @@ export class FriendsScreen extends MainPage {
     await friendUser.getByTestId("button-friend-chat").click();
   }
 
-  async copyDID() {
+  async clearAddFriendInput() {
+    await this.inputAddFriend.clear();
+  }
+
+  async copyDIDFromContextMenu() {
     await this.buttonCopyID.click({ button: "right" });
     await this.contextMenuCopyID.waitFor({ state: "attached" });
     await this.contextOptionCopyDid.click();
   }
 
+  async copyIDFromContextMenu() {
+    await this.buttonCopyID.click({ button: "right" });
+    await this.contextMenuCopyID.waitFor({ state: "attached" });
+    await this.contextOptionCopyID.click();
+  }
+
   async pasteClipboardOnAddInput() {
     await this.inputAddFriend.click();
-    await this.page.keyboard.press("Control+V");
+    await this.page.keyboard.press("Meta+v");
   }
 
   async denyFriendRequest(username: string) {
@@ -145,6 +161,14 @@ export class FriendsScreen extends MainPage {
   async removeFriend(username: string) {
     const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-remove").click();
+  }
+
+  async getListOfCurrentFriends() {
+    const friends = await this.page.locator(".body").getByTestId("friend-name");
+    let displayedFriends: string[] = [];
+    const options: string[] = await friends.allTextContents();
+    displayedFriends = options.map((option) => option.trim());
+    return displayedFriends;
   }
 
   async getFriendWithNameOrKey(username: string, didkey: string) {
@@ -177,9 +201,38 @@ export class FriendsScreen extends MainPage {
     return this.page.locator(`[data-cy^="friend-${username}"]`);
   }
 
+  async typeOnAddFriendInput(value: string) {
+    await this.clearAddFriendInput();
+    await this.inputAddFriend.fill(value);
+  }
+
   async unblockFriend(username: string) {
     const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-unblock").click();
+  }
+
+  async validateUserIsBlocked(username: string) {
+    const users = this.page.locator(".body").getByTestId("friend-name");
+    let displayedUsers: string[] = [];
+    const options: string[] = await users.allTextContents();
+    displayedUsers = options.map((option) => option.trim());
+    expect(displayedUsers).toContain(username);
+  }
+
+  async validateFriendListIsDisplayed(letter: string) {
+    const list = this.page.locator(`[data-cy="label-friend-list-${letter}"]`);
+    await list.waitFor({ state: "attached" });
+  }
+
+  async validateFriendListDoesNotExist(letter: string) {
+    const list = this.page.locator(`[data-cy="label-friend-list-${letter}"]`);
+    await list.waitFor({ state: "detached" });
+  }
+
+  async validateBlockedUserExists() {
+    await this.textNoBlockedUsers.waitFor({
+      state: "detached",
+    });
   }
 
   async validateIncomingRequestExists() {
@@ -188,10 +241,59 @@ export class FriendsScreen extends MainPage {
     });
   }
 
+  async validateNoBlockedUsersExist() {
+    // Validate blocked list now shows empty
+    await this.textNoBlockedUsers.waitFor({
+      state: "attached",
+    });
+    await expect(this.textNoBlockedUsers).toHaveText("No users blocked.");
+  }
+
+  async validateNoIncomingRequestsExist() {
+    // Validate incoming list now shows empty on user who received and denied the friend request
+    await this.textNoIncomingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(this.textNoIncomingRequests).toHaveText(
+      "No inbound requests.",
+    );
+  }
+
+  async validateNoOutgoingRequestsExist() {
+    // Validate outgoing list now shows empty on user who sent the friend request
+    await this.textNoOutgoingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(this.textNoOutgoingRequests).toHaveText(
+      "No outbound requests.",
+    );
+  }
+
   async validateOutgoingRequestExists() {
     await this.textNoOutgoingRequests.waitFor({
       state: "detached",
     });
+  }
+
+  async validateToastCannotAddYourself() {
+    await this.toastNotificationText.waitFor({ state: "visible" });
+    await expect(this.toastNotificationText).toHaveText(
+      "You cannot send yourself a friend request",
+    );
+  }
+
+  async validateToastRequestReceived(username: string) {
+    await this.toastNotificationText.waitFor({ state: "visible" });
+    await expect(this.toastNotificationText).toHaveText(
+      `${username} sent a request.`,
+    );
+  }
+
+  async validateToastRequestSent() {
+    await this.toastNotificationText.waitFor({ state: "visible" });
+    await expect(this.toastNotificationText).toHaveText(
+      "Your request is making it's way!",
+    );
   }
 
   async validateURL() {
