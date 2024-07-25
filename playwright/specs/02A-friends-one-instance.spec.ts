@@ -110,15 +110,9 @@ test.describe("Friends tests", () => {
     await expect(friendsScreen.labelSearchFriends).toBeVisible();
     await expect(friendsScreen.labelSearchFriends).toHaveText("Search friends");
 
-    // H4 - Highlighted border should appear after clicking into Add Someone - Search Friends input box
+    // H4 - Highlighted border should appear after clicking into Add Someone when user enters a text on input field
     await friendsScreen.inputAddFriend.focus();
     await expect(friendsScreen.inputContainerAddFriend).toHaveCSS(
-      "box-shadow",
-      "rgb(77, 77, 255) 0px 0px 0px 1px",
-    );
-
-    await friendsScreen.inputSearchFriends.focus();
-    await expect(friendsScreen.inputContainerSearchFriends).toHaveCSS(
       "box-shadow",
       "rgb(77, 77, 255) 0px 0px 0px 1px",
     );
@@ -126,20 +120,114 @@ test.describe("Friends tests", () => {
     // H5 - User should not be able to click Add until they have pasted did:key
     await expect(friendsScreen.buttonAddFriend).toBeDisabled();
 
-    // H8 - Green border should appear around Add Someone textbox when user pastes a correct did:key into the input box
+    // H8 - Highlighted border should appear around Search Friends textbox when user enters a text on input field
+    await friendsScreen.inputSearchFriends.focus();
+    await expect(friendsScreen.inputContainerSearchFriends).toHaveCSS(
+      "box-shadow",
+      "rgb(77, 77, 255) 0px 0px 0px 1px",
+    );
   });
 
-  test.skip("H10, H27 - Copy Button Tests", async ({ friendsScreen }) => {
-    // H10 - Clicking the Copy button should copy your personal did:key
-    // H27 - User can copy its username and did key from context menu of copy button
-  });
-
-  test.skip("H22, H23, H24, H25 - Invalid attempts for sending friend request", async ({
+  test("H10, H27, H28, H29 - Copy Button Tests", async ({
     friendsScreen,
+    context,
+  }) => {
+    // H10 - Clicking the Copy button should copy your personal did:key
+    // Grant clipboard permissions
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+
+    // Validate hovering on Copy ID button shows "Copy"
+
+    // Click on Copy ID button to copy did:key
+    await friendsScreen.buttonCopyID.click();
+
+    // Save copied value from clipboard into a constant
+    const clipboardContentFirst = await friendsScreen.getClipboardContent();
+
+    // Paste value from Clipboard into Add Input field and assert it is the did key
+    await friendsScreen.pasteClipboardOnAddInput();
+    await expect(friendsScreen.inputAddFriend).toHaveValue(
+      clipboardContentFirst,
+    );
+
+    // H27 - User can copy its username from context menu of copy button
+    // Open Context Menu for Copy ID button and select Copy ID option
+    await friendsScreen.clearAddFriendInput();
+    await friendsScreen.copyIDFromContextMenu();
+
+    // Save copied value from clipboard into a constant
+    const clipboardContentSecond = await friendsScreen.getClipboardContent();
+
+    // Paste value from Clipboard into Add Input field and assert it is the did key
+    await friendsScreen.pasteClipboardOnAddInput();
+    await expect(friendsScreen.inputAddFriend).toHaveValue(
+      clipboardContentSecond,
+    );
+    await friendsScreen.inputAddFriend.clear();
+
+    // H28 - User can copy its DID Key from context menu of copy button
+    // Open Context Menu for Copy ID button and select Copy DID option
+    await friendsScreen.clearAddFriendInput();
+    await friendsScreen.copyDIDFromContextMenu();
+
+    // Save copied value from clipboard into a constant
+    const clipboardContentThird = await friendsScreen.getClipboardContent();
+
+    // Paste value from Clipboard into Add Input field and assert it is the did key
+    await friendsScreen.pasteClipboardOnAddInput();
+    await expect(friendsScreen.inputAddFriend).toHaveValue(
+      clipboardContentThird,
+    );
+    await friendsScreen.clearAddFriendInput();
+
+    // H29 - Copy button shows tooltip "Copy ID" when hovering on it
+    await friendsScreen.validateTooltipAttribute(
+      '[data-cy="button-copy-id"]',
+      "Copy ID",
+    );
+  });
+
+  test("H22, H23, H24, H25 - Invalid attempts for sending friend request", async ({
+    friendsScreen,
+    context,
+    page,
   }) => {
     // H22 - User cannot add himself as a friend
+    // Grant clipboard permissions
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+
+    // Click on Copy ID button to copy did:key
+    await friendsScreen.buttonCopyID.click();
+
+    // Save copied value from clipboard into a constant
+    const clipboardContent = await friendsScreen.getClipboardContent();
+
+    // Paste value from Clipboard into Add Input field and assert it is the did key
+    await friendsScreen.pasteClipboardOnAddInput();
+    await expect(friendsScreen.inputAddFriend).toHaveValue(clipboardContent);
+
+    // Click on Add button
+    await friendsScreen.buttonAddFriend.click();
+
+    // Validate Toast Notification with "You cannot add yourself as a friend" appears
+    await friendsScreen.validateToastCannotAddYourself();
+    await friendsScreen.waitForToastNotificationToDisappear();
+
     // H23 - Add Someone input shows error if input text is less than 13 characters
+    await friendsScreen.typeOnAddFriendInput("1");
+    let errorMessage = page.getByText("Minimum length is 13 characters.");
+    await expect(errorMessage).toBeVisible();
+
     // H24 - Add Someone input shows error if input text has invalid format
+    await friendsScreen.typeOnAddFriendInput("123456789012345");
+    errorMessage = page.getByText("Invalid format.");
+    await expect(errorMessage).toBeVisible();
+
     // H25 - Add Someone input shows error if input text is more than 56 characters
+    await friendsScreen.typeOnAddFriendInput(
+      "123456789012345678901234567890123456789012345678901234567890",
+    );
+    errorMessage = page.getByText("Maximum length is 56 characters.");
+    await expect(errorMessage).toBeVisible();
   });
 });

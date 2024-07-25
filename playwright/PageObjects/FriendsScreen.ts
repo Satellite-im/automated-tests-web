@@ -56,7 +56,7 @@ export class FriendsScreen extends MainPage {
       "context-menu-option-Copy DID",
     );
     this.contextOptionCopyID = this.contextMenuCopyID.getByTestId(
-      "context-menu-option-Copy id",
+      "context-menu-option-Copy ID",
     );
     this.friendName = page.getByTestId("friend-name");
     this.friendProfilePicture = page.getByTestId("friend-profile-picture");
@@ -120,15 +120,25 @@ export class FriendsScreen extends MainPage {
     await friendUser.getByTestId("button-friend-chat").click();
   }
 
-  async copyDID() {
+  async clearAddFriendInput() {
+    await this.inputAddFriend.clear();
+  }
+
+  async copyDIDFromContextMenu() {
     await this.buttonCopyID.click({ button: "right" });
     await this.contextMenuCopyID.waitFor({ state: "attached" });
     await this.contextOptionCopyDid.click();
   }
 
+  async copyIDFromContextMenu() {
+    await this.buttonCopyID.click({ button: "right" });
+    await this.contextMenuCopyID.waitFor({ state: "attached" });
+    await this.contextOptionCopyID.click();
+  }
+
   async pasteClipboardOnAddInput() {
     await this.inputAddFriend.click();
-    await this.page.keyboard.press("Control+V");
+    await this.page.keyboard.press("Meta+v");
   }
 
   async denyFriendRequest(username: string) {
@@ -183,6 +193,11 @@ export class FriendsScreen extends MainPage {
     return this.page.locator(`[data-cy^="friend-${username}"]`);
   }
 
+  async typeOnAddFriendInput(value: string) {
+    await this.clearAddFriendInput();
+    await this.inputAddFriend.fill(value);
+  }
+
   async unblockFriend(username: string) {
     const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-unblock").click();
@@ -198,6 +213,13 @@ export class FriendsScreen extends MainPage {
     await this.textNoOutgoingRequests.waitFor({
       state: "detached",
     });
+  }
+
+  async validateToastCannotAddYourself() {
+    await this.toastNotificationText.waitFor({ state: "visible" });
+    await expect(this.toastNotificationText).toHaveText(
+      "You cannot send yourself a friend request",
+    );
   }
 
   async validateToastRequestReceived(username: string) {

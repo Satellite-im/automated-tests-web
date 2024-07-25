@@ -1,4 +1,9 @@
-import { expect, type Locator, type Page } from "@playwright/test";
+import {
+  BrowserContext,
+  expect,
+  type Locator,
+  type Page,
+} from "@playwright/test";
 
 export default class MainPage {
   readonly page: Page;
@@ -86,6 +91,14 @@ export default class MainPage {
     // Extract the file name without the extension
     const match = filePath.match(/([^\/]+)(?=\.\w+$)/);
     return match ? match[0] : null;
+  }
+
+  async getClipboardContent() {
+    let handle = await this.page.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    let clipboardContent = await handle.jsonValue();
+    return clipboardContent;
   }
 
   async goToChat() {
