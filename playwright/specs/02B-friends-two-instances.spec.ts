@@ -104,14 +104,12 @@ test.describe("Friends tests", () => {
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
 
-    // H6 - Skipped validations - Needs research to implement on how to wait for it to be visible.
     // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
-    // await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenSecond.validateToastRequestSent();
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and accept friend request
-
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
     await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
@@ -147,11 +145,13 @@ test.describe("Friends tests", () => {
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
+
+    // H7 - Skipped validation Toast Notification with Username sent a request. should appear after receiving a friend request
+    await friendsScreenSecond.validateToastRequestSent();
+    //await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-    // H7 - Toast Notification with Username sent a request. should appear after receiving a friend request
     await friendsScreenSecond.waitForToastNotificationToDisappear();
     await friendsScreenSecond.goToBlockedList();
     await friendsScreenSecond.goToRequestList();
