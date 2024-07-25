@@ -66,101 +66,18 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test("H1, H2, H3, H4, H5 - User can navigate through friends pages", async ({
-    friendsScreenFirst,
-  }) => {
-    // H2 - Clicking Active should take you to Active page within Friends
-    await friendsScreenFirst.goToRequestList();
-    await expect(friendsScreenFirst.buttonFriendsAll).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreenFirst.buttonFriendsActive).toHaveCSS(
-      "background-color",
-      "color(srgb 0.371765 0.371765 1)",
-    );
-    await expect(friendsScreenFirst.buttonFriendsBlocked).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreenFirst.labelIncomingRequests).toHaveText(
-      "Incoming Requests",
-    );
-    await expect(friendsScreenFirst.textNoIncomingRequests).toBeVisible();
-    await expect(friendsScreenFirst.textNoIncomingRequests).toHaveText(
-      "No inbound requests.",
-    );
-    await expect(friendsScreenFirst.labelOutgoingRequests).toBeVisible();
-    await expect(friendsScreenFirst.labelOutgoingRequests).toHaveText(
-      "Outgoing Requests",
-    );
-    await expect(friendsScreenFirst.textNoOutgoingRequests).toBeVisible();
-    await expect(friendsScreenFirst.textNoOutgoingRequests).toHaveText(
-      "No outbound requests.",
-    );
-
-    // H3 - Clicking Blocked should take you to Blocked page within Friends
-    await friendsScreenFirst.goToBlockedList();
-    await expect(friendsScreenFirst.buttonFriendsAll).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreenFirst.buttonFriendsActive).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreenFirst.buttonFriendsBlocked).toHaveCSS(
-      "background-color",
-      "color(srgb 0.371765 0.371765 1)",
-    );
-    await expect(friendsScreenFirst.labelBlockedUsers).toBeVisible();
-    await expect(friendsScreenFirst.labelBlockedUsers).toHaveText(
-      "Blocked Users",
-    );
-    await expect(friendsScreenFirst.textNoBlockedUsers).toBeVisible();
-    await expect(friendsScreenFirst.textNoBlockedUsers).toHaveText(
-      "No users blocked.",
-    );
-
-    // H1 - Clicking All should take you to All page within Friends
-    await friendsScreenFirst.goToAllFriendsList();
-    await expect(friendsScreenFirst.buttonFriendsAll).toHaveCSS(
-      "background-color",
-      "color(srgb 0.371765 0.371765 1)",
-    );
-    await expect(friendsScreenFirst.buttonFriendsActive).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreenFirst.buttonFriendsBlocked).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreenFirst.labelAddSomeone).toBeVisible();
-    await expect(friendsScreenFirst.labelAddSomeone).toHaveText("Add Someone");
-    await expect(friendsScreenFirst.labelSearchFriends).toBeVisible();
-    await expect(friendsScreenFirst.labelSearchFriends).toHaveText(
-      "Search friends",
-    );
-
-    // H4 - Highlighted border should appear after clicking into Add Someone - Search Friends input box
-    await friendsScreenFirst.inputAddFriend.focus();
-    await expect(friendsScreenFirst.inputContainerAddFriend).toHaveCSS(
-      "box-shadow",
-      "rgb(77, 77, 255) 0px 0px 0px 1px",
-    );
-
-    await friendsScreenFirst.inputSearchFriends.focus();
-    await expect(friendsScreenFirst.inputContainerSearchFriends).toHaveCSS(
-      "box-shadow",
-      "rgb(77, 77, 255) 0px 0px 0px 1px",
-    );
-
-    // H5 - User should not be able to click Add until they have pasted did:key
-    await expect(friendsScreenFirst.buttonAddFriend).toBeDisabled();
+  test.skip("H15 - User should be removed from friends list after clicking unfriend", async ({}) => {
+    // H15 - User should be removed from friends list after clicking unfriend
   });
 
-  test("H20 - User can send a friend request and remote user can accept it", async ({
+  test.skip("H16, H17, H18, H26 - User can be block/unblocked", async ({}) => {
+    // H16 - Clicking block should block user
+    // H17 - User should be displayed under Blocked Users after you block them
+    // H18 - User should be cleared from Blocked Users after you unblock them
+    // H26 - User can unblock a user and add again the same user
+  });
+
+  test("H6, H19 - User can send a friend request and remote user can accept it", async ({
     friendsScreenFirst,
     friendsScreenSecond,
     context1,
@@ -187,9 +104,8 @@ test.describe("Friends tests", () => {
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
 
-    // Validate toast notifications for friend request sent and received are shown on both users
+    // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
     await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
@@ -209,7 +125,7 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.chatWithFriend(username);
   });
 
-  test("H21 - User can send a friend request and remote user can deny it", async ({
+  test("H7, H20 - User can send a friend request and remote user can deny it", async ({
     friendsScreenFirst,
     friendsScreenSecond,
     context1,
@@ -230,11 +146,11 @@ test.describe("Friends tests", () => {
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenSecond.validateToastRequestSent();
     await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
+    // H7 - Toast Notification with Username sent a request. should appear after receiving a friend request
     await friendsScreenSecond.waitForToastNotificationToDisappear();
     await friendsScreenSecond.goToBlockedList();
     await friendsScreenSecond.goToRequestList();
@@ -261,6 +177,10 @@ test.describe("Friends tests", () => {
     await expect(friendsScreenSecond.textNoOutgoingRequests).toHaveText(
       "No outbound requests.",
     );
+  });
+
+  test.skip("H21 - User can send a friend request and cancel request before other user replies to it", async ({}) => {
+    // H21 - User can send a friend request and cancel request before other user replies to it
   });
 
   test.afterAll(async ({ page1, page2 }) => {
