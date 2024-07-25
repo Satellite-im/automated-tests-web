@@ -163,6 +163,14 @@ export class FriendsScreen extends MainPage {
     await friendUser.getByTestId("button-friend-remove").click();
   }
 
+  async getListOfCurrentFriends() {
+    const friends = await this.page.locator(".body").getByTestId("friend-name");
+    let displayedFriends: string[] = [];
+    const options: string[] = await friends.allTextContents();
+    displayedFriends = options.map((option) => option.trim());
+    return displayedFriends;
+  }
+
   async getFriendWithNameOrKey(username: string, didkey: string) {
     // Array of possible locators
     const locators = [
@@ -203,10 +211,62 @@ export class FriendsScreen extends MainPage {
     await friendUser.getByTestId("button-friend-unblock").click();
   }
 
+  async validateUserIsBlocked(username: string) {
+    const users = this.page.locator(".body").getByTestId("friend-name");
+    let displayedUsers: string[] = [];
+    const options: string[] = await users.allTextContents();
+    displayedUsers = options.map((option) => option.trim());
+    expect(displayedUsers).toContain(username);
+  }
+
+  async validateFriendListIsDisplayed(letter: string) {
+    const list = this.page.locator(`[data-cy="label-friend-list-${letter}"]`);
+    await list.waitFor({ state: "attached" });
+  }
+
+  async validateFriendListDoesNotExist(letter: string) {
+    const list = this.page.locator(`[data-cy="label-friend-list-${letter}"]`);
+    await list.waitFor({ state: "detached" });
+  }
+
+  async validateBlockedUserExists() {
+    await this.textNoBlockedUsers.waitFor({
+      state: "detached",
+    });
+  }
+
   async validateIncomingRequestExists() {
     await this.textNoIncomingRequests.waitFor({
       state: "detached",
     });
+  }
+
+  async validateNoBlockedUsersExist() {
+    // Validate blocked list now shows empty
+    await this.textNoBlockedUsers.waitFor({
+      state: "attached",
+    });
+    await expect(this.textNoBlockedUsers).toHaveText("No users blocked.");
+  }
+
+  async validateNoIncomingRequestsExist() {
+    // Validate incoming list now shows empty on user who received and denied the friend request
+    await this.textNoIncomingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(this.textNoIncomingRequests).toHaveText(
+      "No inbound requests.",
+    );
+  }
+
+  async validateNoOutgoingRequestsExist() {
+    // Validate outgoing list now shows empty on user who sent the friend request
+    await this.textNoOutgoingRequests.waitFor({
+      state: "attached",
+    });
+    await expect(this.textNoOutgoingRequests).toHaveText(
+      "No outbound requests.",
+    );
   }
 
   async validateOutgoingRequestExists() {

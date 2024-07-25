@@ -78,6 +78,10 @@ export default class MainPage {
     expect(selectionRange.selectionEnd).toBe(inputValue.length);
   }
 
+  async closeToastNotification() {
+    await this.toastNotificationButton.click();
+  }
+
   async expectElementToHaveClass(selector: string, className: string) {
     const element = this.page.locator(selector);
     const hasClass = await element.evaluate(
