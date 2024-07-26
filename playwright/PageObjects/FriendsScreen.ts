@@ -136,39 +136,16 @@ export class FriendsScreen extends MainPage {
     await this.contextOptionCopyID.click();
   }
 
-  async pasteClipboardOnAddInput() {
-    await this.inputAddFriend.click();
-    await this.page.keyboard.press("Meta+v");
-  }
-
   async denyFriendRequest(username: string) {
     const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-deny").click();
   }
 
-  async goToAllFriendsList() {
-    await this.buttonFriendsAll.click();
-  }
-
-  async goToBlockedList() {
-    await this.buttonFriendsBlocked.click();
-  }
-
-  async goToRequestList() {
-    await this.buttonFriendsActive.click();
-  }
-
-  async removeFriend(username: string) {
-    const friendUser = await this.getFriendFromList(username);
-    await friendUser.getByTestId("button-friend-remove").click();
-  }
-
-  async getListOfCurrentFriends() {
-    const friends = await this.page.locator(".body").getByTestId("friend-name");
-    let displayedFriends: string[] = [];
-    const options: string[] = await friends.allTextContents();
-    displayedFriends = options.map((option) => option.trim());
-    return displayedFriends;
+  async getFriendFromList(username: string) {
+    await this.page
+      .locator(`[data-cy^="friend-${username}"]`)
+      .waitFor({ state: "attached" });
+    return this.page.locator(`[data-cy^="friend-${username}"]`);
   }
 
   async getFriendWithNameOrKey(username: string, didkey: string) {
@@ -194,11 +171,26 @@ export class FriendsScreen extends MainPage {
     );
   }
 
-  async getFriendFromList(username: string) {
-    await this.page
-      .locator(`[data-cy^="friend-${username}"]`)
-      .waitFor({ state: "attached" });
-    return this.page.locator(`[data-cy^="friend-${username}"]`);
+  async goToAllFriendsList() {
+    await this.buttonFriendsAll.click();
+  }
+
+  async goToBlockedList() {
+    await this.buttonFriendsBlocked.click();
+  }
+
+  async goToRequestList() {
+    await this.buttonFriendsActive.click();
+  }
+
+  async pasteClipboardOnAddInput() {
+    await this.inputAddFriend.click();
+    await this.page.keyboard.press("Meta+v");
+  }
+
+  async removeFriend(username: string) {
+    const friendUser = await this.getFriendFromList(username);
+    await friendUser.getByTestId("button-friend-remove").click();
   }
 
   async typeOnAddFriendInput(value: string) {
@@ -211,34 +203,31 @@ export class FriendsScreen extends MainPage {
     await friendUser.getByTestId("button-friend-unblock").click();
   }
 
-  async validateUserIsBlocked(username: string) {
-    const users = this.page.locator(".body").getByTestId("friend-name");
-    let displayedUsers: string[] = [];
-    const options: string[] = await users.allTextContents();
-    displayedUsers = options.map((option) => option.trim());
-    expect(displayedUsers).toContain(username);
-  }
-
-  async validateFriendListIsDisplayed(letter: string) {
-    const list = this.page.locator(`[data-cy="label-friend-list-${letter}"]`);
-    await list.waitFor({ state: "attached" });
-  }
-
   async validateFriendListDoesNotExist(letter: string) {
     const list = this.page.locator(`[data-cy="label-friend-list-${letter}"]`);
     await list.waitFor({ state: "detached" });
   }
 
-  async validateBlockedUserExists() {
-    await this.textNoBlockedUsers.waitFor({
-      state: "detached",
-    });
+  async validateFriendListIsDisplayed(letter: string) {
+    const list = this.page.locator(`[data-cy="label-friend-list-${letter}"]`);
+    await list.waitFor({ state: "visible" });
   }
 
-  async validateIncomingRequestExists() {
-    await this.textNoIncomingRequests.waitFor({
-      state: "detached",
-    });
+  async validateFriendsList(users: string[]) {
+    // Ensure friends are already in the list
+    for (const user of users) {
+      await this.page.getByText(user).waitFor({
+        state: "attached",
+      });
+    }
+    // Save the list of friends into an array
+    const friends = this.page.getByTestId("friend-name");
+    let displayedFriends: string[] = [];
+    const options: string[] = await friends.allTextContents();
+    displayedFriends = options.map((option) => option.trim());
+
+    // Validate the list of friends is the same as the one provided
+    expect(displayedFriends).toEqual(users);
   }
 
   async validateNoBlockedUsersExist() {
@@ -267,12 +256,6 @@ export class FriendsScreen extends MainPage {
     await expect(this.textNoOutgoingRequests).toHaveText(
       "No outbound requests.",
     );
-  }
-
-  async validateOutgoingRequestExists() {
-    await this.textNoOutgoingRequests.waitFor({
-      state: "detached",
-    });
   }
 
   async validateToastCannotAddYourself() {

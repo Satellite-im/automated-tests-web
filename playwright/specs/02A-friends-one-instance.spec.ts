@@ -37,7 +37,7 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test("H1, H2, H3, H4, H5, H8 - Navigate through friends pages and validate UI elements", async ({
+  test("H1, H2, H3, H4, H5, H8, H9 - Navigate through friends pages and validate UI elements", async ({
     friendsScreen,
   }) => {
     // H2 - Clicking Active should take you to Active page within Friends
@@ -120,7 +120,7 @@ test.describe("Friends tests", () => {
     // H5 - User should not be able to click Add until they have pasted did:key
     await expect(friendsScreen.buttonAddFriend).toBeDisabled();
 
-    // H8 - Highlighted border should appear around Search Friends textbox when user enters a text on input field
+    // H9 - Highlighted border should appear around Search Friends textbox when user enters a text on input field
     await friendsScreen.inputSearchFriends.focus();
     await expect(friendsScreen.inputContainerSearchFriends).toHaveCSS(
       "box-shadow",
@@ -211,7 +211,7 @@ test.describe("Friends tests", () => {
 
     // Validate Toast Notification with "You cannot add yourself as a friend" appears
     await friendsScreen.validateToastCannotAddYourself();
-    await friendsScreen.waitForToastNotificationToDisappear();
+    await friendsScreen.closeToastNotification();
 
     // H23 - Add Someone input shows error if input text is less than 13 characters
     await friendsScreen.typeOnAddFriendInput("1");

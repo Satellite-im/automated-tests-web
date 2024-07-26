@@ -1,10 +1,10 @@
-import { test, expect } from "../fixtures/setup";
+import { test } from "../fixtures/setup";
 import { faker } from "@faker-js/faker";
 
 test.describe("Friends tests", () => {
-  const username: string = "ChatUserA";
-  const usernameTwo: string = "ChatUserB";
-  const usernameThree: string = "ChatUserC";
+  const username: string = "FirstUser";
+  const usernameTwo: string = "SecondUser";
+  const usernameThree: string = "ThirdUser";
   const status: string = faker.lorem.sentence(3);
   const statusTwo: string = faker.lorem.sentence(3);
   const statusThree: string = faker.lorem.sentence(3);
@@ -95,23 +95,79 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test.skip("H9 - Search Friends tests", async ({
+  test("H11, H12, H13, H14 - Friend Lists sort and Search Friends tests", async ({
+    context1,
+    context2,
+    context3,
     friendsScreenFirst,
     friendsScreenSecond,
     friendsScreenThird,
   }) => {
-    // H9 - Highlighted border should appear when clicking into the Search Friends input box
-  });
+    // For first user, grant clipboard permissions, Copy DID and save it into a constant
+    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenFirst.copyDIDFromContextMenu();
+    const didKeyFirstUser = await friendsScreenFirst.getClipboardContent();
 
-  test.skip("H11, H12, H13, H14 - Friend Lists are sorted alphabetically", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    friendsScreenThird,
-  }) => {
-    // H11 - Friends should be listed in alphabetical order
+    // For second user, grant clipboard permissions, Copy DID and save it into a constant
+    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenSecond.copyDIDFromContextMenu();
+    const didKeySecondUser = await friendsScreenSecond.getClipboardContent();
+
+    // For third user, grant clipboard permissions, Copy DID and save it into a constant
+    await context3.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenThird.copyDIDFromContextMenu();
+    const didKeyThirdUser = await friendsScreenThird.getClipboardContent();
+
+    // Now, first user adds the third user as friend
+    await friendsScreenFirst.addFriend(didKeyThirdUser);
+    await friendsScreenFirst.closeToastNotification();
+    await friendsScreenThird.closeToastNotification();
+
+    // After that, first user adds the second user as friend
+    await friendsScreenFirst.addFriend(didKeySecondUser);
+    await friendsScreenFirst.closeToastNotification();
+    await friendsScreenSecond.closeToastNotification();
+
+    // Finally, second user adds the third user as friend
+    await friendsScreenSecond.addFriend(didKeyThirdUser);
+    await friendsScreenSecond.closeToastNotification();
+    await friendsScreenThird.closeToastNotification();
+
+    // Validate order of outgoing requests list is showing first the third user and then the second user
+    // H13 - Outgoing friend requests should be listed by first sent
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateFriendsList([usernameThree, usernameTwo]);
+    await friendsScreenFirst.goToAllFriendsList();
+
     // H12 - Incoming friend requests should be listed by Newest to Oldest
-    // H13 - Outgoing friend requests should be listed by last sent
+    await friendsScreenThird.goToRequestList();
+    await friendsScreenThird.validateFriendsList([username, usernameTwo]);
+    await friendsScreenThird.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenThird.goToAllFriendsList();
+
+    // With Second User, go to requests list and accept friend request
+    await friendsScreenSecond.validateFriendsList([usernameThree]);
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.validateFriendsList([username]);
+    await friendsScreenSecond.acceptFriendRequest(username, didKeyFirstUser);
+    await friendsScreenSecond.goToAllFriendsList();
+
+    // With Third User, go to requests list and accept friend request
+    await friendsScreenThird.goToRequestList();
+    await friendsScreenThird.validateFriendsList([username]);
+    await friendsScreenThird.acceptFriendRequest(username, didKeyFirstUser);
+    await friendsScreenThird.goToAllFriendsList();
+
+    // With First User, go to All Friends and validate list is sorted alphabetically
+    // H11 - Friends should be listed in alphabetical order
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.validateFriendsList([usernameTwo, usernameThree]);
+
     // H14 - Blocked users should be displayed alphabetically
+    await friendsScreenFirst.blockFriend(usernameThree);
+    await friendsScreenFirst.blockFriend(usernameTwo);
+    await friendsScreenFirst.goToBlockedList();
+    await friendsScreenFirst.validateFriendsList([usernameThree, usernameTwo]);
   });
 
   test.afterAll(async ({ page1, page2, page3 }) => {
