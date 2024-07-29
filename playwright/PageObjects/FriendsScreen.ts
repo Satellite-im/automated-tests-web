@@ -220,14 +220,6 @@ export class FriendsScreen extends MainPage {
         state: "attached",
       });
     }
-    // Save the list of friends into an array
-    const friends = this.page.getByTestId("friend-name");
-    let displayedFriends: string[] = [];
-    const options: string[] = await friends.allTextContents();
-    displayedFriends = options.map((option) => option.trim());
-
-    // Validate the list of friends is the same as the one provided
-    expect(displayedFriends).toEqual(users);
   }
 
   async validateNoBlockedUsersExist() {

@@ -121,17 +121,32 @@ test.describe("Friends tests", () => {
     // Now, first user adds the third user as friend
     await friendsScreenFirst.addFriend(didKeyThirdUser);
     await friendsScreenFirst.closeToastNotification();
-    await friendsScreenThird.closeToastNotification();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateFriendsList([usernameThree]);
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenThird.waitForToastNotificationToDisappear();
+    await friendsScreenThird.goToRequestList();
+    await friendsScreenThird.validateFriendsList([username]);
+    await friendsScreenThird.goToAllFriendsList();
 
     // After that, first user adds the second user as friend
     await friendsScreenFirst.addFriend(didKeySecondUser);
     await friendsScreenFirst.closeToastNotification();
-    await friendsScreenSecond.closeToastNotification();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateFriendsList([usernameTwo]);
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.validateFriendsList([username]);
+    await friendsScreenSecond.goToAllFriendsList();
 
     // Finally, second user adds the third user as friend
     await friendsScreenSecond.addFriend(didKeyThirdUser);
     await friendsScreenSecond.closeToastNotification();
-    await friendsScreenThird.closeToastNotification();
+    await friendsScreenThird.waitForToastNotificationToDisappear();
+    await friendsScreenThird.goToRequestList();
+    await friendsScreenThird.validateFriendsList([username, usernameTwo]);
+    await friendsScreenThird.goToAllFriendsList();
 
     // Validate order of outgoing requests list is showing first the third user and then the second user
     // H13 - Outgoing friend requests should be listed by first sent
