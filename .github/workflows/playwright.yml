@@ -62,11 +62,14 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: automated-tests/playwright-report
 
-      - name: Archive and upload test videos
+      - name: Prepare video files for upload
         if: always()
         run: |
           mkdir -p upload-videos
           cp -r automated-tests/playwright-report/videos/* upload-videos/
+
+      - name: Upload test videos as artifacts
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-videos
