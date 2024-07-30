@@ -1,0 +1,442 @@
+{
+  "config": {
+    "configFile": "/Users/runner/work/automated-tests-web/automated-tests-web/automated-tests/playwright.config.ts",
+    "rootDir": "/Users/runner/work/automated-tests-web/automated-tests-web/automated-tests/playwright/specs",
+    "forbidOnly": true,
+    "fullyParallel": true,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "globalTimeout": 0,
+    "grep": {},
+    "grepInvert": null,
+    "maxFailures": 0,
+    "metadata": {
+      "actualWorkers": 1
+    },
+    "preserveOutput": "always",
+    "reporter": [
+      [
+        "html",
+        {
+          "outputFolder": "playwright-report"
+        }
+      ],
+      [
+        "json",
+        {
+          "outputFile": "playwright-report/report.json"
+        }
+      ]
+    ],
+    "reportSlowTests": {
+      "max": 5,
+      "threshold": 15000
+    },
+    "quiet": false,
+    "projects": [
+      {
+        "outputDir": "/Users/runner/work/automated-tests-web/automated-tests-web/automated-tests/test-results",
+        "repeatEach": 1,
+        "retries": 2,
+        "metadata": {},
+        "id": "chromium",
+        "name": "chromium",
+        "testDir": "/Users/runner/work/automated-tests-web/automated-tests-web/automated-tests/playwright/specs",
+        "testIgnore": [],
+        "testMatch": [
+          "**/*.@(spec|test).?(c|m)[jt]s?(x)"
+        ],
+        "timeout": 120000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "missing",
+    "version": "1.45.2",
+    "workers": 1,
+    "webServer": null
+  },
+  "suites": [
+    {
+      "title": "01-pin-input.spec.ts",
+      "file": "01-pin-input.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Create Account and Login Tests",
+          "file": "01-pin-input.spec.ts",
+          "line": 4,
+          "column": 6,
+          "specs": [
+            {
+              "title": "A1, A9, A11 - Enter valid PIN redirects to Main Page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 8638,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:18.848Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-74a38e592e3983f162fc",
+              "file": "01-pin-input.spec.ts",
+              "line": 14,
+              "column": 7
+            },
+            {
+              "title": "A2 - Pin should have at least 4 digits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 1578,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:28.366Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-dd71992e57729fddd182",
+              "file": "01-pin-input.spec.ts",
+              "line": 48,
+              "column": 7
+            },
+            {
+              "title": "A3 - Pin cannot have more than 8 digits",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 2644,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:29.950Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-7152b28f7138a62a1b1c",
+              "file": "01-pin-input.spec.ts",
+              "line": 68,
+              "column": 7
+            },
+            {
+              "title": "A4 - Clicking red reset button should erase any inputs made",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 2075,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:32.599Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-87129ca8fd2e6a040b10",
+              "file": "01-pin-input.spec.ts",
+              "line": 89,
+              "column": 7
+            },
+            {
+              "title": "A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 1342,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:34.680Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-da5faa234ad26a4e9ca3",
+              "file": "01-pin-input.spec.ts",
+              "line": 111,
+              "column": 7
+            },
+            {
+              "title": "A6, A7 - Scramble Keypad will change the order of pin input buttons",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 1368,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:36.027Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-2b053d31cdebef3449c2",
+              "file": "01-pin-input.spec.ts",
+              "line": 136,
+              "column": 7
+            },
+            {
+              "title": "A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 4264,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:37.402Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-989e3e94d488de8a26ba",
+              "file": "01-pin-input.spec.ts",
+              "line": 173,
+              "column": 7
+            },
+            {
+              "title": "A10 - User can see menu to switch to a different profile",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 1494,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:41.672Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-5b0ff26e2346bb257f3d",
+              "file": "01-pin-input.spec.ts",
+              "line": 212,
+              "column": 7
+            },
+            {
+              "title": "A12 - If incorrect pin is entered, error message should be displayed",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [
+                    {
+                      "type": "skip"
+                    }
+                  ],
+                  "expectedStatus": "skipped",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": -1,
+                      "status": "skipped",
+                      "duration": 0,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:43.171Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "skipped"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-894e16a19d3ff610d521",
+              "file": "01-pin-input.spec.ts",
+              "line": 239,
+              "column": 8
+            },
+            {
+              "title": "A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 3252,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:43.171Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-8a1332431b00ddb69235",
+              "file": "01-pin-input.spec.ts",
+              "line": 277,
+              "column": 7
+            },
+            {
+              "title": "A14 - If Stay Unlocked is toggled on, user should be redirected to enter PIN after logging off",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 120000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "passed",
+                      "duration": 3755,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2024-07-30T20:51:46.430Z",
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "318fc2494548d7efe00c-be99aac35c7177bdf653",
+              "file": "01-pin-input.spec.ts",
+              "line": 308,
+              "column": 7
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2024-07-30T20:51:16.774Z",
+    "duration": 33439.67,
+    "expected": 10,
+    "skipped": 1,
+    "unexpected": 0,
+    "flaky": 0
+  }
+}
