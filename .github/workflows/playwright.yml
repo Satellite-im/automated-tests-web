@@ -84,6 +84,3 @@ jobs:
         with:
           message: |
             Playwright test execution is complete! You can find the test results report [here](https://satellite-im.github.io/automated-tests-web/)
-
-      - name: Install GitHub CLI
-        run: sudo apt-get install -y gh
