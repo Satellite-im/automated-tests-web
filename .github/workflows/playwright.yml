@@ -83,4 +83,6 @@ jobs:
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            Playwright test execution is complete! You can find the test results report [here](https://satellite-im.github.io/automated-tests-web/)
+            Playwright test execution is complete! You can find the test results report [here](https://satellite-im.github.io/automated-tests-web/${{ github.run_number }})
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
