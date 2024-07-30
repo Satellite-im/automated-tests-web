@@ -55,26 +55,35 @@ jobs:
         working-directory: automated-tests
         run: npx playwright test specs/01-pin-input.spec.ts
 
-      - name: Generate unique branch name
-        id: vars
-        run: echo "BRANCH_NAME=gh-pages-${GITHUB_RUN_ID}" >> $GITHUB_ENV
-
-      - name: Upload Playwright report to GitHub Pages
+      - name: Upload Playwright report as artifact
         if: always()
-        uses: peaceiris/actions-gh-pages@v3
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: automated-tests/playwright-report/
+
+      - name: Get Playwright report history
+        uses: actions/checkout@v4
+        if: always()
+        with:
+          repository: Satellite-im/test-reports
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Deploy Playwright report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: automated-tests/playwright-report
-          publish_branch: ${{ env.BRANCH_NAME }}
 
-      - name: Post comment with report link
+      - name: Comment PR with Playwright test results
         if: always() && github.event_name == 'pull_request'
-        run: |
-          REPORT_URL="https://satellite-im.github.io/automated-tests-web/${{ env.BRANCH_NAME }}/"
-          COMMENT="Playwright test report: [View Report]($REPORT_URL)"
-          gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: mshick/add-pr-comment@v2
+        with:
+          message: |
+            Playwright test execution is complete! You can find the test results report [here](https://satellite-im.github.io/automated-tests-web/)
 
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
