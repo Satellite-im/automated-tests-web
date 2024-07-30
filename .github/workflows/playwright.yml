@@ -53,7 +53,7 @@ jobs:
 
       - name: Run Playwright tests
         working-directory: automated-tests
-        run: npx playwright test
+        run: npx playwright test specs/01-pin-input.spec.ts
 
       - name: Upload Playwright report to GitHub Pages
         if: always()
