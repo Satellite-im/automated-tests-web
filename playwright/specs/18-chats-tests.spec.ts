@@ -1,39 +1,127 @@
 import { test, expect } from "../fixtures/setup";
+import { faker } from "@faker-js/faker";
 
 test.describe("Chats Tests", () => {
-  const username = "test123";
-  const status = "test status";
+  const username: string = "ChatUserA";
+  const usernameTwo: string = "ChatUserB";
+  const status: string = faker.lorem.sentence(3);
+  const statusTwo: string = faker.lorem.sentence(3);
 
   test.beforeEach(
     async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      page,
+      authNewAccountFirst,
+      authNewAccountSecond,
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      context2,
+      createOrImportFirst,
+      createOrImportSecond,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      loginPinPageFirst,
+      loginPinPageSecond,
+      page1,
+      page2,
+      saveRecoverySeedFirst,
+      saveRecoverySeedSecond,
     }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
+      // Start browser one
+      await createOrImportFirst.navigateTo();
 
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
+      // Start browser two
+      await createOrImportSecond.navigateTo();
 
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
+      // Click on Create New Account
+      await createOrImportFirst.clickCreateNewAccount();
+
+      // Enter username and Status and click on create account
+      await authNewAccountFirst.validateLoadingHeader();
+      await authNewAccountFirst.typeOnUsername(username);
+      await authNewAccountFirst.typeOnStatus(status);
+      await authNewAccountFirst.clickOnCreateAccount();
+
+      // Enter Pin
+      await loginPinPageFirst.waitUntilPageIsLoaded();
+      await loginPinPageFirst.enterDefaultPin();
 
       // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
+      await saveRecoverySeedFirst.clickOnSavedIt();
+
+      // Go to Friends
+      await chatsMainPageFirst.goToFriends();
+
+      // Now with the second user, click on Create New Account
+      await createOrImportSecond.clickCreateNewAccount();
+
+      // Enter username, status and click on create account
+      await authNewAccountSecond.validateLoadingHeader();
+      await authNewAccountSecond.typeOnUsername(usernameTwo);
+      await authNewAccountSecond.typeOnStatus(statusTwo);
+      await authNewAccountSecond.clickOnCreateAccount();
+
+      // Enter a valid pin
+      await loginPinPageSecond.waitUntilPageIsLoaded();
+      await loginPinPageSecond.enterDefaultPin();
+
+      // Click on I Saved It
+      await saveRecoverySeedSecond.clickOnSavedIt();
+
+      // Go to Friends
+      await chatsMainPageSecond.goToFriends();
+
+      // Grant clipboard permissions, Copy DID and save it into a constant
+      await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+      await friendsScreenFirst.copyDIDFromContextMenu();
+      const handle = await page1.evaluateHandle(() =>
+        navigator.clipboard.readText(),
+      );
+      const didKeyFirstUser = await handle.jsonValue();
+
+      // Grant clipboard permissions, Copy DID and save it into a constant
+      await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+      await friendsScreenSecond.copyDIDFromContextMenu();
+      const handleTwo = await page2.evaluateHandle(() =>
+        navigator.clipboard.readText(),
+      );
+      const didKeySecondUser = await handleTwo.jsonValue();
+
+      // Now, add the first user as a friend
+      await friendsScreenSecond.addFriend(didKeyFirstUser);
+
+      // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
+      await friendsScreenSecond.validateToastRequestSent();
+      await friendsScreenFirst.waitForToastNotificationToDisappear();
+      await friendsScreenSecond.waitForToastNotificationToDisappear();
+
+      // With First User, go to requests list and accept friend request
+      await friendsScreenFirst.goToRequestList();
+      await friendsScreenFirst.validateIncomingRequestExists();
+      await friendsScreenFirst.acceptFriendRequest(
+        usernameTwo,
+        didKeySecondUser,
+      );
     },
   );
+
+  test("User can send a message and remote user will receive it", async ({
+    chatsMainPageFirst,
+    chatsMainPageSecond,
+    friendsScreenFirst,
+    friendsScreenSecond,
+  }) => {
+    // With First User, go to All Friends and click on Chat Button
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
+
+    // With Second User, go to All Friends and click on Chat Button
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.chatWithFriend(username);
+
+    // With First User, send a message to second user
+    await chatsMainPageFirst.sendMessage("Hello World!");
+  });
 
   test.skip("B1 - User should land on this page after logging in", async ({
     page,
