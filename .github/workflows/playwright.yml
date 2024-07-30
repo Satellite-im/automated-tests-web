@@ -62,14 +62,6 @@ jobs:
           name: playwright-report
           path: automated-tests/playwright-report/
 
-      - name: Get Playwright report history
-        uses: actions/checkout@v4
-        if: always()
-        with:
-          repository: Satellite-im/test-reports
-          ref: gh-pages
-          path: gh-pages
-
       - name: Deploy Playwright report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v4
@@ -78,6 +70,26 @@ jobs:
           publish_branch: gh-pages
           publish_dir: automated-tests/playwright-report
 
+      - name: Allure Report action from marketplace
+        uses: simple-elf/allure-report-action@master
+        if: success()
+        id: allure-report
+        with:
+          gh_pages: gh-pages
+          allure_results: testing-uplink/allure
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 100
+
+      - name: Deploy report to Github Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: Satellite-im/test-reports
+          publish_branch: gh-pages
+          publish_dir: allure-history
+          
       - name: Comment PR with Playwright test results
         if: always() && github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
