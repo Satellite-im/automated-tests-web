@@ -48,19 +48,22 @@ jobs:
         working-directory: automated-tests
         run: npx playwright install --with-deps
 
+      - name: Install Allure Commandline
+        run: npm install -g allure-commandline
+
       - name: Run server for Uplink Web
         run: npm run dev &
 
-      - name: Run Playwright tests
+      - name: Run Playwright tests with Allure reporter
         working-directory: automated-tests
-        run: npx playwright test specs/01-pin-input.spec.ts
+        run: npx playwright test specs/01-pin-input.spec.ts --reporter=line,allure-playwright
 
-      - name: Upload Playwright report as artifact
+      - name: Upload Allure results as artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: playwright-report
-          path: automated-tests/playwright-report/
+          name: allure-results
+          path: automated-tests/allure-results
 
       - name: Deploy Playwright report to GitHub Pages
         if: always()
@@ -70,9 +73,9 @@ jobs:
           publish_branch: gh-pages
           publish_dir: automated-tests/playwright-report
 
-      - name: Allure Report action from marketplace
+      - name: Generate Allure Report
+        if: always()
         uses: simple-elf/allure-report-action@master
-        if: success()
         id: allure-report
         with:
           gh_pages: gh-pages
@@ -81,7 +84,7 @@ jobs:
           allure_history: allure-history
           keep_reports: 100
 
-      - name: Deploy report to Github Pages
+      - name: Deploy Allure report to GitHub Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -89,8 +92,8 @@ jobs:
           external_repository: Satellite-im/test-reports
           publish_branch: gh-pages
           publish_dir: allure-history
-          
-      - name: Comment PR with Playwright test results
+
+      - name: Comment PR with Allure test results
         if: always() && github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
