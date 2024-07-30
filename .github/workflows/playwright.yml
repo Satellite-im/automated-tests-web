@@ -56,7 +56,7 @@ jobs:
 
       - name: Run Playwright tests with Allure reporter
         working-directory: automated-tests
-        run: npx playwright test specs/01-pin-input.spec.ts --reporter=line,allure-playwright
+        run: npx playwright test --reporter=line,allure-playwright
 
       - name: Upload Allure results as artifact
         if: always()
