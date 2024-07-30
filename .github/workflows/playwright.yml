@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: "0 0/6 * * 1-5"
   pull_request:
-    types: [opened, synchronize, reopened, edited]
+    types: [opened, synchronize, reopened]
     paths-ignore:
       - ".github/workflows/**"
       - "!.github/workflows/automated-tests.yml"
@@ -20,7 +20,6 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Uplink Web directory 🔖
         uses: actions/checkout@v4
