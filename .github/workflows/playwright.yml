@@ -62,32 +62,11 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: automated-tests/playwright-report
 
-      - name: Prepare video files for upload
-        if: always()
-        run: |
-          mkdir -p upload-videos
-          cp -r automated-tests/playwright-report/videos/* upload-videos/
-
-      - name: Upload test videos as artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-videos
-          path: upload-videos/
-
-      - name: Post comment with report and video links
+      - name: Post comment with report link
         if: always() && github.event_name == 'pull_request'
         run: |
           REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.repository }}/playwright-report/index.html"
-          VIDEO_DIR_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts"
-          VIDEOS=$(find upload-videos -type f)
-          VIDEO_LINKS=""
-          for VIDEO in $VIDEOS; do
-            VIDEO_NAME=$(basename $VIDEO)
-            VIDEO_LINK="$VIDEO_DIR_URL/$VIDEO_NAME"
-            VIDEO_LINKS="$VIDEO_LINKS\n- [$VIDEO_NAME]($VIDEO_LINK)"
-          done
-          COMMENT="Playwright test report: [View Report]($REPORT_URL)\n\nTest videos:$VIDEO_LINKS"
+          COMMENT="Playwright test report: [View Report]($REPORT_URL)"
           gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
