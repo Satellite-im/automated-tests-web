@@ -1,9 +1,14 @@
 name: Playwright Tests
 
 on:
+  schedule:
+    - cron: "0 0/6 * * 1-5"
   pull_request:
     types: [opened, synchronize, reopened, edited]
     paths-ignore:
+      - ".github/workflows/**"
+      - "!.github/workflows/automated-tests.yml"
+      - "!.github/workflows/playwright.yml"
       - ".gitignore"
       - ".prettierignore"
       - ".prettierrc.json"
