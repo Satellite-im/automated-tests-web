@@ -55,22 +55,26 @@ jobs:
         working-directory: automated-tests
         run: npx playwright test specs/01-pin-input.spec.ts
 
+      - name: Generate unique branch name
+        id: vars
+        run: echo "BRANCH_NAME=gh-pages-${GITHUB_RUN_ID}" >> $GITHUB_ENV
+
       - name: Upload Playwright report to GitHub Pages
         if: always()
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: automated-tests/playwright-report
+          publish_branch: ${{ env.BRANCH_NAME }}
 
       - name: Post comment with report link
         if: always() && github.event_name == 'pull_request'
         run: |
-          REPORT_URL="https://${{ github.repository_owner }}.github.io/${{ github.repository }}/playwright-report/index.html"
+          REPORT_URL="https://satellite-im.github.io/automated-tests-web/${{ env.BRANCH_NAME }}/"
           COMMENT="Playwright test report: [View Report]($REPORT_URL)"
           gh pr comment ${{ github.event.pull_request.number }} --body "$COMMENT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
