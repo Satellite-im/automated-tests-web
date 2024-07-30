@@ -83,7 +83,7 @@ jobs:
           publish_dir: automated-tests/playwright-report
 
       - name: Deploy report to Github Pages
-        if: success()
+        if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
