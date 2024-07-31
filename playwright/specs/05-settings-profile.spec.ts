@@ -115,7 +115,7 @@ test.describe("Settings Profile Tests", () => {
     // Paste value from Clipboard into Status and assert it is the did key
     await settingsProfile.inputSettingsProfileStatus.click();
     await settingsProfile.inputSettingsProfileStatus.clear();
-    await settingsProfile.inputSettingsProfileStatus.press("Meta+v");
+    await settingsProfile.inputSettingsProfileStatus.press("ControlOrMeta+v");
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       clipboardContent,
     );
@@ -140,7 +140,7 @@ test.describe("Settings Profile Tests", () => {
     // Paste value from Clipboard into Status and assert it is the did key
     await settingsProfile.inputSettingsProfileStatus.click();
     await settingsProfile.inputSettingsProfileStatus.clear();
-    await settingsProfile.inputSettingsProfileStatus.press("Meta+v");
+    await settingsProfile.inputSettingsProfileStatus.press("ControlOrMeta+v");
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       clipboardContent,
     );
@@ -158,7 +158,7 @@ test.describe("Settings Profile Tests", () => {
     // Paste value from Clipboard into Status and assert it is the did key
     await settingsProfile.inputSettingsProfileStatus.click();
     await settingsProfile.inputSettingsProfileStatus.clear();
-    await settingsProfile.inputSettingsProfileStatus.press("Meta+v");
+    await settingsProfile.inputSettingsProfileStatus.press("ControlOrMeta+v");
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       clipboardContent2,
     );
