@@ -24,6 +24,7 @@ export default defineConfig({
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "playwright-report/report.json" }],
+    ["allure-playwright", { outputFolder: "allure-results" }],
     [
       "@estruyf/github-actions-reporter",
       { title: "Automated Test Report", useDetails: true },
