@@ -138,7 +138,7 @@ export class FriendsScreen extends MainPage {
 
   async pasteClipboardOnAddInput() {
     await this.inputAddFriend.click();
-    await this.page.keyboard.press("Meta+v");
+    await this.page.keyboard.press("ControlOrMeta+v");
   }
 
   async denyFriendRequest(username: string) {
