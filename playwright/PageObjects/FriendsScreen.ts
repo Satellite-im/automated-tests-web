@@ -188,11 +188,6 @@ export class FriendsScreen extends MainPage {
     await this.buttonFriendsActive.click();
   }
 
-  async pasteClipboardOnAddInput() {
-    await this.inputAddFriend.click();
-    await this.page.keyboard.press("Meta+v");
-  }
-
   async removeFriend(username: string) {
     const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-remove").click();
