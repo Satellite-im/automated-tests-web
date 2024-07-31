@@ -14,5 +14,8 @@
     "prettier": "3.2.5",
     "typescript": "^5.4.5"
   },
-  "scripts": {}
+  "scripts": {},
+  "dependencies": {
+    "@estruyf/github-actions-reporter": "^1.8.0"
+  }
 }
