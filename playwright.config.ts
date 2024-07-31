@@ -24,6 +24,10 @@ export default defineConfig({
   reporter: [
     ["html", { outputFolder: "playwright-report" }],
     ["json", { outputFile: "playwright-report/report.json" }],
+    [
+      "@estruyf/github-actions-reporter",
+      { title: "Automated Test Report", useDetails: true },
+    ],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   timeout: 120000,
