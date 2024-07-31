@@ -136,6 +136,11 @@ export class FriendsScreen extends MainPage {
     await this.contextOptionCopyID.click();
   }
 
+  async pasteClipboardOnAddInput() {
+    await this.inputAddFriend.click();
+    await this.page.keyboard.press("ControlOrMeta+v");
+  }
+
   async denyFriendRequest(username: string) {
     const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-deny").click();
