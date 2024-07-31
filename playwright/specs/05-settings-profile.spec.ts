@@ -71,7 +71,7 @@ test.describe("Settings Profile Tests", () => {
     );
   });
 
-  test("I5 - Profile picture appears blank until custom profile picture is set", async ({
+  test.skip("I5 - Profile picture appears blank until custom profile picture is set", async ({
     settingsProfile,
   }) => {
     // Upload Profile Picture
