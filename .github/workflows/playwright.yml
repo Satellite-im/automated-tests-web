@@ -5,6 +5,8 @@ on:
     - cron: "0 0/6 * * 1-5"
   pull_request:
     types: [opened, synchronize, reopened]
+  pull_request_target:
+    types: [opened, synchronize, reopened]
     paths-ignore:
       - ".github/workflows/**"
       - "!.github/workflows/automated-tests.yml"
