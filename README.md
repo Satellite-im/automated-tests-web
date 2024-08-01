@@ -7,7 +7,7 @@ Tests running using GitHub Actions:
 <p align="left">
     <a href="https://github.com/Satellite-im/automated-tests-web/actions"><img src="https://github.com/Satellite-im/automated-tests-web/actions/workflows/playwright.yml/badge.svg" /></a>
 </p>
-
+ 
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
