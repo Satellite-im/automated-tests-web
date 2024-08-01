@@ -46,7 +46,7 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "chromium",
+      name: "Automated Tests on Chrome Desktop",
       use: { ...devices["Desktop Chrome"] },
     },
 

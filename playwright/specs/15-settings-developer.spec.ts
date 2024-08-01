@@ -52,7 +52,7 @@ test.describe("Settings Developer Tests", () => {
     await page.waitForURL("/settings/developer");
 
     // Validate header and description texts
-    await expect(settingsDeveloper.devModeSectionLabel).toHaveText("Devmode");
+    await expect(settingsDeveloper.devModeSectionLabel).toHaveText("Dev Mode");
     await expect(settingsDeveloper.devModeSectionText).toHaveText(
       "Disable devmode.",
     );
