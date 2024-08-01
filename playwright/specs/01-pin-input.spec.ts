@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 test.describe("Create Account and Login Tests", () => {
   const username =
     faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
-  const status = faker.lorem.sentence(3);
+  const status = faker.lorem.sentence(3);    
   const pinNumber = "123456";
 
   test.beforeEach(async ({ createOrImport }) => {
