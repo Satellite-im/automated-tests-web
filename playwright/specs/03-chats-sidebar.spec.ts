@@ -42,7 +42,7 @@ test.describe("Chats Sidebar Tests", () => {
 
     await expect(chatsMainPage.createGroupLabelGroupName).toBeVisible();
     await expect(chatsMainPage.createGroupLabelGroupName).toHaveText(
-      "Group Name:",
+      "Group name:",
     );
     await expect(chatsMainPage.createGroupInputGroupName).toBeVisible();
     await expect(chatsMainPage.createGroupLabelGroupMembers).toHaveText(
