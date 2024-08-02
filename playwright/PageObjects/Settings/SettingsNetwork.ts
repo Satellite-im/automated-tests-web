@@ -3,8 +3,12 @@ import { type Locator, type Page } from "@playwright/test";
 
 export class SettingsNetwork extends SettingsBase {
   readonly page: Page;
+  readonly buttonCdnSave: Locator;
+  readonly inputCdnAddress: Locator;
+  readonly inputCdnName: Locator;
   readonly inputRelayAddress: Locator;
   readonly inputRelayName: Locator;
+  readonly labelCdn: Locator;
   readonly labelRelayAddress: Locator;
   readonly labelRelayName: Locator;
   readonly modalAddRelay: Locator;
@@ -17,12 +21,17 @@ export class SettingsNetwork extends SettingsBase {
   readonly relayListToggleButton: Locator;
   readonly relayRevertButton: Locator;
   readonly relaySaveButton: Locator;
+  readonly underConstruction: Locator;
 
   constructor(page: Page) {
     super(page);
     this.page = page;
+    this.buttonCdnSave = page.getByTestId("button-cdn-save");
+    this.inputCdnAddress = page.getByTestId("input-cdn-address");
+    this.inputCdnName = page.getByTestId("input-cdn-name");
     this.inputRelayAddress = page.getByTestId("input-relay-address");
     this.inputRelayName = page.getByTestId("input-relay-name");
+    this.labelCdn = page.getByTestId("label-cdn");
     this.labelRelayAddress = page.getByTestId("label-relay-address");
     this.labelRelayName = page.getByTestId("label-relay-name");
     this.modalAddRelay = page.getByTestId("modal-relay-add");
@@ -39,5 +48,6 @@ export class SettingsNetwork extends SettingsBase {
     this.relayListToggleButton = page.getByTestId("button-relay-toggle");
     this.relayRevertButton = page.getByTestId("button-relay-revert");
     this.relaySaveButton = page.getByTestId("button-relay-save");
+    this.underConstruction = page.getByTestId("under-construction");
   }
 }
