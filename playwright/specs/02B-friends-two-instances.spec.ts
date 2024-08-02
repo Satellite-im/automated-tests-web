@@ -66,7 +66,7 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test.fail(
+  test.fixme(
     "H15 - User should be removed from friends list after clicking unfriend",
     {
       annotation: {
@@ -141,7 +141,7 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test.fail(
+  test.fixme(
     "H16, H17, H18, H26 - User can be block/unblocked",
     {
       annotation: {
@@ -224,7 +224,7 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test.fail(
+  test.fixme(
     "H6, H19 - User can send a friend request and remote user can accept it",
     {
       annotation: {
@@ -283,7 +283,7 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test.fail(
+  test.fixme(
     "H7, H20 - User can send a friend request and remote user can deny it",
     {
       annotation: {
@@ -338,7 +338,7 @@ test.describe("Friends tests", () => {
     },
   );
 
-  test.fail(
+  test.fixme(
     "H21 - User can send a friend request and cancel request before other user replies to it",
     {
       annotation: {

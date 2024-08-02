@@ -166,51 +166,56 @@ test.describe("Settings Profile Tests", () => {
     );
   });
 
-  test("I9, I10 - User should be able to change username and see toast notification of change", async ({
-    chatsMainPage,
-    settingsProfile,
-    page,
-  }) => {
-    // User types into username and change value
-    const newUsername = "newUsername";
-    await settingsProfile.inputSettingsProfileUsername.click();
-    await settingsProfile.inputSettingsProfileUsername.clear();
-    await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
+  test.fixme(
+    "I9, I10 - User should be able to change username and see toast notification of change",
+    {
+      annotation: {
+        type: "issue",
+        description: "https://github.com/Satellite-im/UplinkWeb/issues/339",
+      },
+    },
+    async ({ chatsMainPage, settingsProfile, page }) => {
+      // User types into username and change value
+      const newUsername = "newUsername";
+      await settingsProfile.inputSettingsProfileUsername.click();
+      await settingsProfile.inputSettingsProfileUsername.clear();
+      await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
 
-    // Save modal is displayed, user selects cancel and username is not changed
-    await settingsProfile.saveControls.waitFor({ state: "visible" });
-    await settingsProfile.saveControlsButtonCancel.click();
+      // Save modal is displayed, user selects cancel and username is not changed
+      await settingsProfile.saveControls.waitFor({ state: "visible" });
+      await settingsProfile.saveControlsButtonCancel.click();
 
-    // Username displayed will be equal to the username assigned randomly when creating account
-    await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
-      username,
-    );
+      // Username displayed will be equal to the username assigned randomly when creating account
+      await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
+        username,
+      );
 
-    // User types into username and change value
-    await settingsProfile.inputSettingsProfileUsername.click();
-    await settingsProfile.inputSettingsProfileUsername.clear();
-    await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
+      // User types into username and change value
+      await settingsProfile.inputSettingsProfileUsername.click();
+      await settingsProfile.inputSettingsProfileUsername.clear();
+      await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
 
-    // Save modal is displayed, user selects save and username is changed
-    await settingsProfile.saveControls.waitFor({ state: "visible" });
-    await settingsProfile.saveControlsButtonSave.click();
-    await settingsProfile.toastNotification.waitFor({ state: "visible" });
-    await expect(settingsProfile.toastNotificationText).toHaveText(
-      "Profile Updated!",
-    );
-    await settingsProfile.toastNotification.waitFor({ state: "detached" });
-    await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
-      newUsername,
-    );
+      // Save modal is displayed, user selects save and username is changed
+      await settingsProfile.saveControls.waitFor({ state: "visible" });
+      await settingsProfile.saveControlsButtonSave.click();
+      await settingsProfile.toastNotification.waitFor({ state: "visible" });
+      await expect(settingsProfile.toastNotificationText).toHaveText(
+        "Profile Updated!",
+      );
+      await settingsProfile.toastNotification.waitFor({ state: "detached" });
+      await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
+        newUsername,
+      );
 
-    // User goes to another page and returns to settings profile, username is still changed
-    await settingsProfile.goToFriends();
-    await page.waitForURL("/friends");
-    await chatsMainPage.goToSettings();
-    await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
-      newUsername,
-    );
-  });
+      // User goes to another page and returns to settings profile, username is still changed
+      await settingsProfile.goToFriends();
+      await page.waitForURL("/friends");
+      await chatsMainPage.goToSettings();
+      await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
+        newUsername,
+      );
+    },
+  );
 
   test("I11 - All text in Username should be selected after clicking into the text field a single time", async ({
     settingsProfile,

@@ -124,7 +124,7 @@ test.describe("Settings About Tests", () => {
     page,
   }) => {
     // Label and texts for settings section are correct
-    await expect(settingsAbout.devModeSectionLabel).toHaveText("DevMode");
+    await expect(settingsAbout.devModeSectionLabel).toHaveText("Dev Mode");
     await expect(settingsAbout.devModeSectionText).toHaveText(
       "Click 10 times to enable developer settings.",
     );
