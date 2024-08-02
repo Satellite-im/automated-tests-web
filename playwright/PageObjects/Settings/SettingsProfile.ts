@@ -3,6 +3,29 @@ import { SettingsBase } from "./SettingsBase";
 
 export class SettingsProfile extends SettingsBase {
   readonly page: Page;
+  readonly accountIntegrations: Locator;
+  readonly accountIntegrationsAddButton: Locator;
+  readonly accountIntegrationsAddNewLabel: Locator;
+  readonly accountIntegrationsItem: Locator;
+  readonly accountIntegrationsItemAddressInput: Locator;
+  readonly accountIntegrationsItemCopyButton: Locator;
+  readonly accountIntegrationsItemDeleteButton: Locator;
+  readonly accountIntegrationsItemEditButton: Locator;
+  readonly accountIntegrationsItemInput: Locator;
+  readonly accountIntegrationsItemLabel: Locator;
+  readonly accountIntegrationsItemLogo: Locator;
+  readonly accountIntegrationsItemPlatformInput: Locator;
+  readonly accountIntegrationsLabel: Locator;
+  readonly accountIntegrationsNewAddButton: Locator;
+  readonly accountIntegrationsNewCancelButton: Locator;
+  readonly accountIntegrationsNewAddressInput: Locator;
+  readonly accountIntegrationsNewAddressLabel: Locator;
+  readonly accountIntegrationsNewGenericInput: Locator;
+  readonly accountIntegrationsNewLogo: Locator;
+  readonly accountIntegrationsNewPlatformLabel: Locator;
+  readonly accountIntegrationsNewPlatformSelector: Locator;
+  readonly accountIntegrationsNewPlatformSelectorOption: Locator;
+  readonly accountIntegrationsText: Locator;
   readonly contextMenuUserID: Locator;
   readonly contextMenuOptionCopyDID: Locator;
   readonly contextMenuOptionCopyID: Locator;
@@ -52,6 +75,79 @@ export class SettingsProfile extends SettingsBase {
   constructor(page: Page) {
     super(page);
     this.page = page;
+    this.accountIntegrations = page.getByTestId("section-account-integrations");
+    this.accountIntegrationsAddButton = this.accountIntegrations.getByTestId(
+      "button-integrations-add",
+    );
+    this.accountIntegrationsAddNewLabel = page.getByTestId(
+      "label-account-integrations-new",
+    );
+    this.accountIntegrationsItem = page.getByTestId(
+      "account-integrations-item",
+    );
+    this.accountIntegrationsItemAddressInput =
+      this.accountIntegrationsItem.getByTestId(
+        "input-address-account-integration-item",
+      );
+    this.accountIntegrationsItemCopyButton =
+      this.accountIntegrationsItem.getByTestId(
+        "button-account-integration-item",
+      );
+    this.accountIntegrationsItemDeleteButton =
+      this.accountIntegrationsItem.getByTestId(
+        "button-account-integrations-item-delete",
+      );
+    this.accountIntegrationsItemEditButton =
+      this.accountIntegrationsItem.getByTestId(
+        "button-account-integrations-item-edit",
+      );
+    this.accountIntegrationsItemInput =
+      this.accountIntegrationsItem.getByTestId(
+        "input-account-integration-item",
+      );
+    this.accountIntegrationsItemLabel =
+      this.accountIntegrationsItem.getByTestId(
+        "label-account-integrations-item",
+      );
+    this.accountIntegrationsLabel = page.getByTestId(
+      "label-settings-profile-integrations",
+    );
+    this.accountIntegrationsItemLogo = this.accountIntegrationsItem.getByTestId(
+      "account-integration-item-logo",
+    );
+    this.accountIntegrationsItemPlatformInput =
+      this.accountIntegrationsItem.getByTestId(
+        "input-platform-account-integration-item",
+      );
+    this.accountIntegrationsNewAddButton = page.getByTestId(
+      "button-account-integrations-new-add",
+    );
+    this.accountIntegrationsNewCancelButton = page.getByTestId(
+      "button-account-integrations-new-cancel",
+    );
+    this.accountIntegrationsNewAddressInput = page.getByTestId(
+      "input-account-integrations-new-address",
+    );
+    this.accountIntegrationsNewAddressLabel = page.getByTestId(
+      "label-account-integration-new-address",
+    );
+    this.accountIntegrationsNewGenericInput = page.getByTestId(
+      "input-account-integrations-new-generic",
+    );
+    this.accountIntegrationsNewLogo = page.getByTestId(
+      "logo-account-integrations-new",
+    );
+    this.accountIntegrationsNewPlatformLabel = page.getByTestId(
+      "label-account-integrations-new-platform",
+    );
+    this.accountIntegrationsNewPlatformSelector = page.getByTestId(
+      "selector-account-integrations-new-platform",
+    );
+    this.accountIntegrationsNewPlatformSelectorOption =
+      this.accountIntegrationsNewPlatformSelector.getByTestId("select-option");
+    this.accountIntegrationsText = page.getByTestId(
+      "text-settings-profile-integrations",
+    );
     this.contextMenuUserID = page.locator("#context-menu");
     this.contextMenuOptionCopyDID = page.getByTestId(
       "context-menu-option-Copy DID",
