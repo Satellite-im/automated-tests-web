@@ -3,6 +3,10 @@ import { expect, type Locator, type Page } from "@playwright/test";
 
 export class FilesPage extends MainPage {
   readonly page: Page;
+  readonly buttonFilesSync: Locator;
+  readonly buttonFilesGiftSpace: Locator;
+  readonly buttonFilesRentSpace: Locator;
+  readonly buttonFilesCreateNode: Locator;
   readonly contextMenuFile: Locator;
   readonly contextMenuFolder: Locator;
   readonly contextOptionDelete: Locator;
@@ -14,14 +18,22 @@ export class FilesPage extends MainPage {
   readonly goBackButton: Locator;
   readonly newFolderButton: Locator;
   readonly progressButton: Locator;
+  readonly quickActionsLabel: Locator;
   readonly totalSpaceLabel: Locator;
   readonly totalSpaceValue: Locator;
+  readonly treeFolder: Locator;
+  readonly treeItem: Locator;
+  readonly treeNode: Locator;
   readonly uploadFileButton: Locator;
   readonly uploadFileInput: Locator;
 
   constructor(page: Page) {
     super(page);
     this.page = page;
+    this.buttonFilesSync = page.getByTestId("button-files-sync");
+    this.buttonFilesGiftSpace = page.getByTestId("button-files-gift-space");
+    this.buttonFilesRentSpace = page.getByTestId("button-files-rent-space");
+    this.buttonFilesCreateNode = page.getByTestId("button-files-create-node");
     this.contextMenuFile = page.getByTestId("context-menu-file");
     this.contextMenuFolder = page.getByTestId("context-menu-folder");
     this.contextOptionDelete = page.getByTestId("context-menu-option-Delete");
@@ -29,14 +41,18 @@ export class FilesPage extends MainPage {
       "context-menu-option-Download",
     );
     this.contextOptionRename = page.getByTestId("context-menu-option-Rename");
-    this.freeSpaceLabel = page.locator(".stat").first().locator("label");
-    this.freeSpaceValue = page.locator(".stat").first().locator("p");
+    this.freeSpaceLabel = page.getByTestId("label-files-free-space");
+    this.freeSpaceValue = page.getByTestId("text-files-free-space");
     this.inputFileFolderName = page.getByTestId("input-file-folder-name");
     this.goBackButton = page.getByTestId("button-folder-back");
     this.newFolderButton = page.getByTestId("button-new-folder");
     this.progressButton = page.getByTestId("progress-button");
-    this.totalSpaceLabel = page.locator(".stat").last().locator("label");
-    this.totalSpaceValue = page.locator(".stat").last().locator("p");
+    this.quickActionsLabel = page.getByTestId("label-quick-actions");
+    this.totalSpaceLabel = page.getByTestId("label-files-total-space");
+    this.totalSpaceValue = page.getByTestId("text-files-total-space");
+    this.treeFolder = page.locator('[data-cy^="tree-folder-"]');
+    this.treeItem = page.locator('[data-cy^="tree-item-"]');
+    this.treeNode = page.locator('[data-cy^="tree-node-"]');
     this.uploadFileButton = page.getByTestId("button-upload-file");
     this.uploadFileInput = page.getByTestId("input=upload-files");
   }

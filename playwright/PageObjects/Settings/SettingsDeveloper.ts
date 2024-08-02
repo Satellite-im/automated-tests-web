@@ -5,6 +5,7 @@ export class SettingsDeveloper extends SettingsBase {
   readonly page: Page;
   readonly batteryIndicator: Locator;
   readonly batteryIndicatorIcon: Locator;
+  readonly batteryIndicatorNotSupportedError: Locator;
   readonly clearStateSection: Locator;
   readonly clearStateSectionButton: Locator;
   readonly clearStateSectionLabel: Locator;
@@ -29,6 +30,7 @@ export class SettingsDeveloper extends SettingsBase {
   readonly loggerLevelSectionSelectorOption: Locator;
   readonly memoryIndicator: Locator;
   readonly memoryIndicatorBar: Locator;
+  readonly memoryIndicatorNotSupportedError: Locator;
   readonly mockIncomingCallSection: Locator;
   readonly mockIncomingCallSectionButton: Locator;
   readonly mockIncomingCallSectionLabel: Locator;
@@ -44,6 +46,9 @@ export class SettingsDeveloper extends SettingsBase {
     this.page = page;
     this.batteryIndicator = page.getByTestId("battery-indicator");
     this.batteryIndicatorIcon = page.getByTestId("battery-indicator-icon");
+    this.batteryIndicatorNotSupportedError = page.getByTestId(
+      "battery-indicator-not-supported-error",
+    );
     this.clearStateSection = page.getByTestId("section-clear-state");
     this.clearStateSectionButton = page.getByTestId("button-clear-state");
     this.clearStateSectionLabel = this.clearStateSection.getByTestId(
@@ -87,6 +92,9 @@ export class SettingsDeveloper extends SettingsBase {
       this.loggerLevelSectionSelector.getByTestId("select-option");
     this.memoryIndicator = page.getByTestId("memory-indicator");
     this.memoryIndicatorBar = page.getByTestId("memory-indicator-bar");
+    this.memoryIndicatorNotSupportedError = page.getByTestId(
+      "memory-indicator-not-supported-error",
+    );
     this.mockIncomingCallSection = page.getByTestId("section-test-call");
     this.mockIncomingCallSectionButton = page.getByTestId("button-test-call");
     this.mockIncomingCallSectionLabel =
