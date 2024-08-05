@@ -26,9 +26,14 @@ export class SettingsProfile extends SettingsBase {
   readonly accountIntegrationsNewPlatformSelector: Locator;
   readonly accountIntegrationsNewPlatformSelectorOption: Locator;
   readonly accountIntegrationsText: Locator;
+  readonly contextMenuBannerPicture: Locator;
+  readonly contextMenuCopyID: Locator;
+  readonly contextMenuProfilePicture: Locator;
   readonly contextMenuUserID: Locator;
   readonly contextMenuOptionCopyDID: Locator;
   readonly contextMenuOptionCopyID: Locator;
+  readonly contextMenuOptionDeleteBannerPicture: Locator;
+  readonly contextMenuOptionDeleteProfilePicture: Locator;
   readonly inputSettingsProfileShortID: Locator;
   readonly inputSettingsProfileShortIDGroup: Locator;
   readonly inputSettingsProfileStatus: Locator;
@@ -148,12 +153,25 @@ export class SettingsProfile extends SettingsBase {
     this.accountIntegrationsText = page.getByTestId(
       "text-settings-profile-integrations",
     );
+    this.contextMenuBannerPicture = page.getByTestId(
+      "context-menu-banner-picture",
+    );
+    this.contextMenuCopyID = page.getByTestId("context-menu-copy-id");
+    this.contextMenuProfilePicture = page.getByTestId(
+      "context-menu-profile-picture",
+    );
     this.contextMenuUserID = page.locator("#context-menu");
     this.contextMenuOptionCopyDID = page.getByTestId(
       "context-menu-option-Copy DID",
     );
     this.contextMenuOptionCopyID = page.getByTestId(
       "context-menu-option-Copy ID",
+    );
+    this.contextMenuOptionDeleteBannerPicture = page.getByTestId(
+      "context-menu-option-Delete Banner Picture",
+    );
+    this.contextMenuOptionDeleteProfilePicture = page.getByTestId(
+      "context-menu-option-Delete Profile Picture",
     );
     this.inputSettingsProfileShortID = page.getByTestId(
       "input-settings-profile-short-id",
