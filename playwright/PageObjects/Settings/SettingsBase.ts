@@ -9,12 +9,15 @@ export class SettingsBase extends MainPage {
   readonly buttonCustomization: Locator;
   readonly buttonDeveloper: Locator;
   readonly buttonExtensions: Locator;
+  readonly buttonGamepad: Locator;
   readonly buttonInventory: Locator;
   readonly buttonKeybinds: Locator;
   readonly buttonLicenses: Locator;
   readonly buttonMessages: Locator;
+  readonly buttonNetwork: Locator;
   readonly buttonNotifications: Locator;
   readonly buttonProfile: Locator;
+  readonly buttonRealms: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -25,11 +28,14 @@ export class SettingsBase extends MainPage {
     this.buttonCustomization = page.getByTestId("button-Customization");
     this.buttonDeveloper = page.getByTestId("button-Developer");
     this.buttonExtensions = page.getByTestId("button-Extensions");
+    this.buttonGamepad = page.getByTestId("button-Gamepad");
     this.buttonInventory = page.getByTestId("button-Inventory");
     this.buttonKeybinds = page.getByTestId("button-Keybinds");
     this.buttonLicenses = page.getByTestId("button-Licenses");
     this.buttonMessages = page.getByTestId("button-Messages");
+    this.buttonNetwork = page.getByTestId("button-Network");
     this.buttonNotifications = page.getByTestId("button-Notifications");
     this.buttonProfile = page.getByTestId("button-Profile");
+    this.buttonRealms = page.getByTestId("button-Realms");
   }
 }

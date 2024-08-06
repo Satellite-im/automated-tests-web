@@ -1,35 +1,36 @@
 import { test as base, BrowserContext, chromium, Page } from "@playwright/test";
-import { LoginPinPage } from "../PageObjects/LoginPin";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "../PageObjects/ChatsMain";
 import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
-import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
-import { SettingsInventory } from "../PageObjects/Settings/SettingsInventory";
-import { SettingsCustomizations } from "../PageObjects/Settings/SettingsCustomizations";
-import { SettingsMessages } from "../PageObjects/Settings/SettingsMessages";
-import { SettingsAudio } from "../PageObjects/Settings/SettingsAudio";
-import { SettingsExtensions } from "../PageObjects/Settings/SettingsExtensions";
-import { SettingsKeybinds } from "../PageObjects/Settings/SettingsKeybinds";
-import { SettingsNotifications } from "../PageObjects/Settings/SettingsNotifications";
-import { SettingsAbout } from "../PageObjects/Settings/SettingsAbout";
-import { SettingsLicenses } from "../PageObjects/Settings/SettingsLicenses";
-import { SettingsDeveloper } from "../PageObjects/Settings/SettingsDeveloper";
-import { SettingsAccessibility } from "../PageObjects/Settings/SettingsAccessibility";
-import { SettingsNetwork } from "../PageObjects/Settings/SettingsNetwork";
 import { FilesPage } from "../PageObjects/FilesScreen";
 import { FriendsScreen } from "../PageObjects/FriendsScreen";
+import { LoginPinPage } from "../PageObjects/LoginPin";
+import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
+import { SettingsAbout } from "../PageObjects/Settings/SettingsAbout";
+import { SettingsAccessibility } from "../PageObjects/Settings/SettingsAccessibility";
+import { SettingsAudio } from "../PageObjects/Settings/SettingsAudio";
+import { SettingsCustomizations } from "../PageObjects/Settings/SettingsCustomizations";
+import { SettingsDeveloper } from "../PageObjects/Settings/SettingsDeveloper";
+import { SettingsExtensions } from "../PageObjects/Settings/SettingsExtensions";
+import { SettingsGamepad } from "playwright/PageObjects/Settings/SettingsGamepad";
+import { SettingsInventory } from "../PageObjects/Settings/SettingsInventory";
+import { SettingsLicenses } from "../PageObjects/Settings/SettingsLicenses";
+import { SettingsNetwork } from "../PageObjects/Settings/SettingsNetwork";
+import { SettingsKeybinds } from "../PageObjects/Settings/SettingsKeybinds";
+import { SettingsMessages } from "../PageObjects/Settings/SettingsMessages";
+import { SettingsNotifications } from "../PageObjects/Settings/SettingsNotifications";
+import { SettingsProfile } from "../PageObjects/Settings/SettingsProfile";
+import { SettingsRealms } from "playwright/PageObjects/Settings/SettingsRealms";
 
 // Declare the types of your fixtures.
 type MyFixtures = {
-  loginPinPage: LoginPinPage;
-  loginPinPageFirst: LoginPinPage;
-  loginPinPageSecond: LoginPinPage;
-  loginPinPageThird: LoginPinPage;
   authNewAccount: AuthNewAccount;
   authNewAccountFirst: AuthNewAccount;
   authNewAccountSecond: AuthNewAccount;
   authNewAccountThird: AuthNewAccount;
+  context1: BrowserContext;
+  context2: BrowserContext;
+  context3: BrowserContext;
   chatsMainPage: ChatsMainPage;
   chatsMainPageFirst: ChatsMainPage;
   chatsMainPageSecond: ChatsMainPage;
@@ -38,55 +39,42 @@ type MyFixtures = {
   createOrImportFirst: CreateOrImportPage;
   createOrImportSecond: CreateOrImportPage;
   createOrImportThird: CreateOrImportPage;
-  saveRecoverySeed: SaveRecoverySeedPage;
-  saveRecoverySeedFirst: SaveRecoverySeedPage;
-  saveRecoverySeedSecond: SaveRecoverySeedPage;
-  saveRecoverySeedThird: SaveRecoverySeedPage;
-  settingsProfile: SettingsProfile;
-  settingsInventory: SettingsInventory;
-  settingsCustomizations: SettingsCustomizations;
-  settingsMessages: SettingsMessages;
-  settingsAudio: SettingsAudio;
-  settingsExtensions: SettingsExtensions;
-  settingsKeybinds: SettingsKeybinds;
-  settingsNotifications: SettingsNotifications;
-  settingsAbout: SettingsAbout;
-  settingsLicenses: SettingsLicenses;
-  settingsDeveloper: SettingsDeveloper;
-  settingsAccessibility: SettingsAccessibility;
-  settingsNetwork: SettingsNetwork;
   filesPage: FilesPage;
   friendsScreen: FriendsScreen;
   friendsScreenFirst: FriendsScreen;
   friendsScreenSecond: FriendsScreen;
   friendsScreenThird: FriendsScreen;
-  context1: BrowserContext;
-  context2: BrowserContext;
-  context3: BrowserContext;
+  loginPinPage: LoginPinPage;
+  loginPinPageFirst: LoginPinPage;
+  loginPinPageSecond: LoginPinPage;
+  loginPinPageThird: LoginPinPage;
   page1: Page;
   page2: Page;
   page3: Page;
+  saveRecoverySeed: SaveRecoverySeedPage;
+  saveRecoverySeedFirst: SaveRecoverySeedPage;
+  saveRecoverySeedSecond: SaveRecoverySeedPage;
+  saveRecoverySeedThird: SaveRecoverySeedPage;
+  settingsAbout: SettingsAbout;
+  settingsAccessibility: SettingsAccessibility;
+  settingsAudio: SettingsAudio;
+  settingsCustomizations: SettingsCustomizations;
+  settingsDeveloper: SettingsDeveloper;
+  settingsExtensions: SettingsExtensions;
+  settingsGamepad: SettingsGamepad;
+  settingsInventory: SettingsInventory;
+  settingsKeybinds: SettingsKeybinds;
+  settingsLicenses: SettingsLicenses;
+  settingsMessages: SettingsMessages;
+  settingsNetwork: SettingsNetwork;
+  settingsNotifications: SettingsNotifications;
+  settingsProfile: SettingsProfile;
+  settingsRealms: SettingsRealms;
 };
 
 // Extend base test by providing page object classes as fixtures.
 // This new "test" can be used in multiple test files, and each of them will get the fixtures.
 export const test = base.extend<MyFixtures>({
-  createOrImport: async ({ page }, use) => {
-    await use(new CreateOrImportPage(page));
-  },
-
-  createOrImportFirst: async ({ page1 }, use) => {
-    await use(new CreateOrImportPage(page1));
-  },
-
-  createOrImportSecond: async ({ page2 }, use) => {
-    await use(new CreateOrImportPage(page2));
-  },
-
-  createOrImportThird: async ({ page3 }, use) => {
-    await use(new CreateOrImportPage(page3));
-  },
-
   authNewAccount: async ({ page }, use) => {
     await use(new AuthNewAccount(page));
   },
@@ -103,38 +91,6 @@ export const test = base.extend<MyFixtures>({
     await use(new AuthNewAccount(page3));
   },
 
-  loginPinPage: async ({ page }, use) => {
-    await use(new LoginPinPage(page));
-  },
-
-  loginPinPageFirst: async ({ page1 }, use) => {
-    await use(new LoginPinPage(page1));
-  },
-
-  loginPinPageSecond: async ({ page2 }, use) => {
-    await use(new LoginPinPage(page2));
-  },
-
-  loginPinPageThird: async ({ page3 }, use) => {
-    await use(new LoginPinPage(page3));
-  },
-
-  saveRecoverySeed: async ({ page }, use) => {
-    await use(new SaveRecoverySeedPage(page));
-  },
-
-  saveRecoverySeedFirst: async ({ page1 }, use) => {
-    await use(new SaveRecoverySeedPage(page1));
-  },
-
-  saveRecoverySeedSecond: async ({ page2 }, use) => {
-    await use(new SaveRecoverySeedPage(page2));
-  },
-
-  saveRecoverySeedThird: async ({ page3 }, use) => {
-    await use(new SaveRecoverySeedPage(page3));
-  },
-
   chatsMainPage: async ({ page }, use) => {
     await use(new ChatsMainPage(page));
   },
@@ -149,78 +105,6 @@ export const test = base.extend<MyFixtures>({
 
   chatsMainPageThird: async ({ page3 }, use) => {
     await use(new ChatsMainPage(page3));
-  },
-
-  settingsProfile: async ({ page }, use) => {
-    await use(new SettingsProfile(page));
-  },
-
-  settingsInventory: async ({ page }, use) => {
-    await use(new SettingsInventory(page));
-  },
-
-  settingsCustomizations: async ({ page }, use) => {
-    await use(new SettingsCustomizations(page));
-  },
-
-  settingsMessages: async ({ page }, use) => {
-    await use(new SettingsMessages(page));
-  },
-
-  settingsAudio: async ({ page }, use) => {
-    await use(new SettingsAudio(page));
-  },
-
-  settingsExtensions: async ({ page }, use) => {
-    await use(new SettingsExtensions(page));
-  },
-
-  settingsKeybinds: async ({ page }, use) => {
-    await use(new SettingsKeybinds(page));
-  },
-
-  settingsNotifications: async ({ page }, use) => {
-    await use(new SettingsNotifications(page));
-  },
-
-  settingsAbout: async ({ page }, use) => {
-    await use(new SettingsAbout(page));
-  },
-
-  settingsLicenses: async ({ page }, use) => {
-    await use(new SettingsLicenses(page));
-  },
-
-  settingsDeveloper: async ({ page }, use) => {
-    await use(new SettingsDeveloper(page));
-  },
-
-  settingsAccessibility: async ({ page }, use) => {
-    await use(new SettingsAccessibility(page));
-  },
-
-  settingsNetwork: async ({ page }, use) => {
-    await use(new SettingsNetwork(page));
-  },
-
-  filesPage: async ({ page }, use) => {
-    await use(new FilesPage(page));
-  },
-
-  friendsScreen: async ({ page }, use) => {
-    await use(new FriendsScreen(page));
-  },
-
-  friendsScreenFirst: async ({ page1 }, use) => {
-    await use(new FriendsScreen(page1));
-  },
-
-  friendsScreenSecond: async ({ page2 }, use) => {
-    await use(new FriendsScreen(page2));
-  },
-
-  friendsScreenThird: async ({ page3 }, use) => {
-    await use(new FriendsScreen(page3));
   },
 
   context1: async ({}, use) => {
@@ -244,6 +128,58 @@ export const test = base.extend<MyFixtures>({
     await context3.close();
   },
 
+  createOrImport: async ({ page }, use) => {
+    await use(new CreateOrImportPage(page));
+  },
+
+  createOrImportFirst: async ({ page1 }, use) => {
+    await use(new CreateOrImportPage(page1));
+  },
+
+  createOrImportSecond: async ({ page2 }, use) => {
+    await use(new CreateOrImportPage(page2));
+  },
+
+  createOrImportThird: async ({ page3 }, use) => {
+    await use(new CreateOrImportPage(page3));
+  },
+
+  filesPage: async ({ page }, use) => {
+    await use(new FilesPage(page));
+  },
+
+  friendsScreen: async ({ page }, use) => {
+    await use(new FriendsScreen(page));
+  },
+
+  friendsScreenFirst: async ({ page1 }, use) => {
+    await use(new FriendsScreen(page1));
+  },
+
+  friendsScreenSecond: async ({ page2 }, use) => {
+    await use(new FriendsScreen(page2));
+  },
+
+  friendsScreenThird: async ({ page3 }, use) => {
+    await use(new FriendsScreen(page3));
+  },
+
+  loginPinPage: async ({ page }, use) => {
+    await use(new LoginPinPage(page));
+  },
+
+  loginPinPageFirst: async ({ page1 }, use) => {
+    await use(new LoginPinPage(page1));
+  },
+
+  loginPinPageSecond: async ({ page2 }, use) => {
+    await use(new LoginPinPage(page2));
+  },
+
+  loginPinPageThird: async ({ page3 }, use) => {
+    await use(new LoginPinPage(page3));
+  },
+
   page1: async ({ context1 }, use) => {
     const page1 = await context1.newPage();
     await use(page1);
@@ -260,6 +196,78 @@ export const test = base.extend<MyFixtures>({
     const page3 = await context3.newPage();
     await use(page3);
     await page3.close();
+  },
+
+  saveRecoverySeed: async ({ page }, use) => {
+    await use(new SaveRecoverySeedPage(page));
+  },
+
+  saveRecoverySeedFirst: async ({ page1 }, use) => {
+    await use(new SaveRecoverySeedPage(page1));
+  },
+
+  saveRecoverySeedSecond: async ({ page2 }, use) => {
+    await use(new SaveRecoverySeedPage(page2));
+  },
+
+  saveRecoverySeedThird: async ({ page3 }, use) => {
+    await use(new SaveRecoverySeedPage(page3));
+  },
+
+  settingsAbout: async ({ page }, use) => {
+    await use(new SettingsAbout(page));
+  },
+
+  settingsAccessibility: async ({ page }, use) => {
+    await use(new SettingsAccessibility(page));
+  },
+
+  settingsAudio: async ({ page }, use) => {
+    await use(new SettingsAudio(page));
+  },
+
+  settingsCustomizations: async ({ page }, use) => {
+    await use(new SettingsCustomizations(page));
+  },
+
+  settingsDeveloper: async ({ page }, use) => {
+    await use(new SettingsDeveloper(page));
+  },
+
+  settingsExtensions: async ({ page }, use) => {
+    await use(new SettingsExtensions(page));
+  },
+
+  settingsGamepad: async ({ page }, use) => {
+    await use(new SettingsGamepad(page));
+  },
+
+  settingsInventory: async ({ page }, use) => {
+    await use(new SettingsInventory(page));
+  },
+
+  settingsKeybinds: async ({ page }, use) => {
+    await use(new SettingsKeybinds(page));
+  },
+
+  settingsLicenses: async ({ page }, use) => {
+    await use(new SettingsLicenses(page));
+  },
+
+  settingsMessages: async ({ page }, use) => {
+    await use(new SettingsMessages(page));
+  },
+
+  settingsNetwork: async ({ page }, use) => {
+    await use(new SettingsNetwork(page));
+  },
+
+  settingsNotifications: async ({ page }, use) => {
+    await use(new SettingsNotifications(page));
+  },
+
+  settingsProfile: async ({ page }, use) => {
+    await use(new SettingsProfile(page));
   },
 });
 

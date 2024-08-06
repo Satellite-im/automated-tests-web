@@ -12,6 +12,13 @@ export class SettingsCustomizations extends SettingsBase {
   readonly customCSSSectionLabel: Locator;
   readonly customCSSSectionText: Locator;
   readonly customCSSSectionTextArea: Locator;
+  readonly emojiFontSection: Locator;
+  readonly emojiFontSectionButton: Locator;
+  readonly emojiFontSectionLabel: Locator;
+  readonly emojiFontSectionRandomEmoji: Locator;
+  readonly emojiFontSectionSelector: Locator;
+  readonly emojiFontSectionSelectorOption: Locator;
+  readonly emojiFontSectionText: Locator;
   readonly fontSection: Locator;
   readonly fontSectionButton: Locator;
   readonly fontSectionLabel: Locator;
@@ -24,6 +31,18 @@ export class SettingsCustomizations extends SettingsBase {
   readonly fontScalingSectionInput: Locator;
   readonly fontScalingSectionLabel: Locator;
   readonly fontScalingSectionText: Locator;
+  readonly identiconSection: Locator;
+  readonly identiconSectionButton: Locator;
+  readonly identiconSectionLabel: Locator;
+  readonly identiconSectionProfilePicture: Locator;
+  readonly identiconSectionSelector: Locator;
+  readonly identiconSectionSelectorOption: Locator;
+  readonly identiconSectionText: Locator;
+  readonly minimalCallingAlertsSection: Locator;
+  readonly minimalCallingAlertsSectionCheckbox: Locator;
+  readonly minimalCallingAlertsSectionLabel: Locator;
+  readonly minimalCallingAlertsSectionText: Locator;
+  readonly minimalCallingAlertsSectionSlider: Locator;
   readonly primaryColorSection: Locator;
   readonly primaryColorSectionColorSwatchButton: Locator;
   readonly primaryColorSectionLabel: Locator;
@@ -36,6 +55,11 @@ export class SettingsCustomizations extends SettingsBase {
   readonly themeSectionSelector: Locator;
   readonly themeSectionSelectorOption: Locator;
   readonly themeSectionText: Locator;
+  readonly widgetPanelSection: Locator;
+  readonly widgetPanelSectionCheckbox: Locator;
+  readonly widgetPanelSectionLabel: Locator;
+  readonly widgetPanelSectionSlider: Locator;
+  readonly widgetPanelSectionText: Locator;
 
   constructor(page: Page) {
     super(page);
@@ -58,6 +82,25 @@ export class SettingsCustomizations extends SettingsBase {
       "setting-section-text",
     );
     this.customCSSSectionTextArea = page.getByTestId("text-area-custom-css");
+
+    this.emojiFontSection = page.getByTestId("section-emoji-font");
+    this.emojiFontSectionLabel = this.emojiFontSection.getByTestId(
+      "setting-section-label",
+    );
+    this.emojiFontSectionButton = this.emojiFontSection.getByTestId(
+      "button-emoji-font-open-folder",
+    );
+    this.emojiFontSectionRandomEmoji = page.getByTestId(
+      "emoji-font-random-emoji",
+    );
+    this.emojiFontSectionSelector = page.locator(
+      '[data-cy^="selector-current-emoji-font-"]',
+    );
+    this.emojiFontSectionSelectorOption =
+      this.emojiFontSectionSelector.getByTestId("select-option");
+    this.emojiFontSectionText = this.emojiFontSection.getByTestId(
+      "setting-section-text",
+    );
     this.fontSection = page.getByTestId("section-font");
     this.fontSectionButton = page.getByTestId("button-font-open-folder");
     this.fontSectionLabel = this.fontSection.getByTestId(
@@ -84,6 +127,37 @@ export class SettingsCustomizations extends SettingsBase {
     this.fontScalingSectionText = this.fontScalingSection.getByTestId(
       "setting-section-text",
     );
+    this.identiconSection = page.getByTestId("section-identicon");
+    this.identiconSectionButton = this.identiconSection.getByTestId(
+      "button-identicon-open-folder",
+    );
+    this.identiconSectionLabel = this.identiconSection.getByTestId(
+      "setting-section-label",
+    );
+    this.identiconSectionProfilePicture = page.getByTestId(
+      "identicon-profile-picture",
+    );
+    this.identiconSectionSelector = page.locator(
+      '[data-cy^="selector-current-identicon-"]',
+    );
+    this.identiconSectionSelectorOption =
+      this.identiconSectionSelector.getByTestId("select-option");
+    this.identiconSectionText = this.identiconSection.getByTestId(
+      "setting-section-text",
+    );
+    this.minimalCallingAlertsSection = page.getByTestId(
+      "section-minimal-call-alerts",
+    );
+    this.minimalCallingAlertsSectionCheckbox =
+      this.minimalCallingAlertsSection.getByTestId(
+        "switch-minimal-call-alerts",
+      );
+    this.minimalCallingAlertsSectionLabel =
+      this.minimalCallingAlertsSection.getByTestId("setting-section-label");
+    this.minimalCallingAlertsSectionText =
+      this.minimalCallingAlertsSection.getByTestId("setting-section-text");
+    this.minimalCallingAlertsSectionSlider =
+      this.minimalCallingAlertsSection.locator(".slider");
     this.primaryColorSection = page.getByTestId("section-primary-color");
     this.primaryColorSectionColorSwatchButton =
       this.primaryColorSection.getByTestId("color-swatch");
@@ -110,6 +184,17 @@ export class SettingsCustomizations extends SettingsBase {
     this.themeSectionText = this.themeSection.getByTestId(
       "setting-section-text",
     );
+    this.widgetPanelSection = page.getByTestId("section-widget-panel");
+    this.widgetPanelSectionCheckbox = this.widgetPanelSection.getByTestId(
+      "switch-widget-panel",
+    );
+    this.widgetPanelSectionLabel = this.widgetPanelSection.getByTestId(
+      "setting-section-label",
+    );
+    this.widgetPanelSectionText = this.widgetPanelSection.getByTestId(
+      "setting-section-text",
+    );
+    this.widgetPanelSectionSlider = this.widgetPanelSection.locator(".slider");
   }
 
   async selectColorSwatch(color: string) {

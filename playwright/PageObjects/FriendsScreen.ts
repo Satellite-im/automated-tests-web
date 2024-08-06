@@ -18,6 +18,9 @@ export class FriendsScreen extends MainPage {
   readonly friendName: Locator;
   readonly friendProfilePicture: Locator;
   readonly friendProfilePictureImage: Locator;
+  readonly friendsSectionAll: Locator;
+  readonly friendsSectionBlocked: Locator;
+  readonly friendsSectionRequests: Locator;
   readonly friendUser: Locator;
   readonly inputAddFriend: Locator;
   readonly inputContainerAddFriend: Locator;
@@ -62,6 +65,9 @@ export class FriendsScreen extends MainPage {
     this.friendProfilePicture = page.getByTestId("friend-profile-picture");
     this.friendProfilePictureImage = page.getByTestId("profile-image");
     this.friendUser = page.locator('[data-cy^="friend-did:key:"]');
+    this.friendsSectionAll = page.getByTestId("friends-section-all");
+    this.friendsSectionBlocked = page.getByTestId("friends-section-blocked");
+    this.friendsSectionRequests = page.getByTestId("friends-section-requests");
     this.inputAddFriend = page.getByTestId("input-add-friend");
     this.inputContainerAddFriend = page
       .getByTestId("input-add-friend")
