@@ -154,6 +154,7 @@ test.describe("Chats Sidebar Tests", () => {
     );
   });
 
+  /*
   // Cannot be automated until app is wired
   test.skip("C11 - ProfilePicFrame should display for any friends that have one", async ({
     page,
@@ -216,4 +217,5 @@ test.describe("Chats Sidebar Tests", () => {
   }) => {
     // Test code for C19
   });
+  */
 });

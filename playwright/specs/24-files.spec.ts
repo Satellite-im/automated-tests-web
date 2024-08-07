@@ -39,6 +39,7 @@ test.describe("Files Page Tests", () => {
     },
   );
 
+  /*
   test.skip("F1 - Highlighted border should appear when user clicks Sync", async ({
     page,
   }) => {
@@ -51,6 +52,7 @@ test.describe("Files Page Tests", () => {
     // Test code for F2
   });
 
+  */
   test("F3, F4 - Amount of Free and Total should appear in Toolbar", async ({
     filesPage,
   }) => {

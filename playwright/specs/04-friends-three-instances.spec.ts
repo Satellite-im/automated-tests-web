@@ -95,6 +95,7 @@ test.describe("Friends tests", () => {
     },
   );
 
+  /*
   test.skip("H9 - Search Friends tests", async ({
     friendsScreenFirst,
     friendsScreenSecond,
@@ -113,6 +114,7 @@ test.describe("Friends tests", () => {
     // H13 - Outgoing friend requests should be listed by last sent
     // H14 - Blocked users should be displayed alphabetically
   });
+  */
 
   test.afterAll(async ({ page1, page2, page3 }) => {
     await page1.close();

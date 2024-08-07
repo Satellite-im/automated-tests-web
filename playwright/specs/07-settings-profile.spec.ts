@@ -432,6 +432,7 @@ test.describe("Settings Profile Tests", () => {
   });
 
   // Cannot be automated for now since copy button does not perform any action
+  /*
   test.skip("I22 - Clicking copy should copy the Recovery Phrase to the users clipboard", async ({
     page,
   }) => {});
@@ -440,6 +441,7 @@ test.describe("Settings Profile Tests", () => {
   test.skip("I23 - User should be able to click checkbox to determine whether they want to store Recovery Phrase on account", async ({
     page,
   }) => {});
+   */
 
   test("I24 - Clicking LogOut should log user out of the account", async ({
     settingsProfile,

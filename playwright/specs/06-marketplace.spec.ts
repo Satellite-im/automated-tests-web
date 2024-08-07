@@ -36,6 +36,7 @@ test.describe("Marketplace Tests", () => {
   );
 
   // Marketplace section is gone from the app
+  /*
   test.skip("D1 - Marketplace modal should appear when user clicks Marketplace", async ({
     page,
   }) => {});
@@ -92,5 +93,5 @@ test.describe("Marketplace Tests", () => {
     page,
   }) => {
     // Test code for D10
-  });
+  });*/
 });

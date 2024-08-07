@@ -35,6 +35,7 @@ test.describe("Files Sidebar Tests", () => {
     },
   );
 
+  /*
   test.skip("G1 - Sidebar should have an option to show either Chats or Files", async ({
     page,
   }) => {
@@ -52,4 +53,5 @@ test.describe("Files Sidebar Tests", () => {
   }) => {
     // Test code for G3
   });
+  */
 });

@@ -39,6 +39,7 @@ test.describe("Wallet Tests", () => {
     },
   );
 
+  /*
   test.skip("E1 - Sidebar should display New Payment modal", async ({
     page,
   }) => {
@@ -134,4 +135,5 @@ test.describe("Wallet Tests", () => {
   }) => {
     // Test code for E16
   });
+  */
 });
