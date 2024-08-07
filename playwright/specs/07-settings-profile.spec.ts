@@ -71,7 +71,7 @@ test.describe("Settings Profile Tests", () => {
     );
   });
 
-  test.skip("I5 - Profile picture appears blank until custom profile picture is set", async ({
+  test.skip("I5 - Profile picture shows default profile picture until custom profile picture is set", async ({
     settingsProfile,
   }) => {
     // Upload Profile Picture
@@ -431,11 +431,22 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.validateRecoveryPhraseIsHidden();
   });
 
+  test.skip(
+    "I22 - Clicking copy should copy the Recovery Phrase to the users clipboard",
+    {
+      annotation: {
+        type: "issue",
+        description: "https://github.com/Satellite-im/UplinkWeb/issues/378",
+      },
+    },
+    async ({ settingsProfile }) => {
+      await settingsProfile.revealPhraseSectionButtonCopyPhrase.click();
+    },
+  );
+
   // Cannot be automated for now since copy button does not perform any action
   /*
-  test.skip("I22 - Clicking copy should copy the Recovery Phrase to the users clipboard", async ({
-    page,
-  }) => {});
+  
 
   // Cannot be automated for now since checkbox checked or not checked works on the same way for now
   test.skip("I23 - User should be able to click checkbox to determine whether they want to store Recovery Phrase on account", async ({

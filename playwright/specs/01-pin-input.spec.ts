@@ -13,14 +13,37 @@ test.describe("Create Account and Login Tests", () => {
 
   test("A1, A9, A11 - Enter valid PIN redirects to Main Page", async ({
     authNewAccount,
-    chatsMainPage,
     createOrImport,
     loginPinPage,
     page,
     saveRecoverySeed,
   }) => {
+    // Validate Create or Import Page and then click on Create New Account
+    await createOrImport.labelCreateTitle.waitFor({ state: "attached" });
+    await expect(createOrImport.labelCreateTitle).toHaveText(
+      "Account Creation",
+    );
+    await expect(createOrImport.textCreateDescription).toHaveText(
+      "Let's get started! Begin by either creating a new account, or if you already have one we can import your existing account instead.",
+    );
+    await expect(createOrImport.buttonCreateAccount).toHaveText(
+      "Create New Account",
+    );
+    await expect(createOrImport.buttonImportAccount).toHaveText(
+      "Import Account",
+    );
     await createOrImport.clickCreateNewAccount();
+
+    // Validate Create New User/Status page, enter valid data and continue
     await authNewAccount.validateLoadingHeader();
+    await expect(authNewAccount.inputNewAccountUsername).toHaveAttribute(
+      "placeholder",
+      "Enter a username . . .",
+    );
+    await expect(authNewAccount.inputNewAccountStatus).toHaveAttribute(
+      "placeholder",
+      "Set status message . . .",
+    );
     await expect(authNewAccount.textNewAccountSecondary).toHaveText(
       "Let's set up your new account. Please choose a username below.",
     );
@@ -38,10 +61,14 @@ test.describe("Create Account and Login Tests", () => {
     await loginPinPage.enterDefaultPin();
 
     // Click on I Saved It
+    await expect(saveRecoverySeed.titleRecoveryPage).toHaveText(
+      "Backup your seed!",
+    );
+    await expect(saveRecoverySeed.textRecoveryPageWarning).toHaveText(
+      "Please ensure you write down this message with all words recorded in the order they appear. It can be helpful to write down the numbers along with the words.",
+    );
     await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
     await saveRecoverySeed.clickOnSavedIt();
-
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
     await page.waitForURL("/chat");
   });
 
@@ -203,7 +230,6 @@ test.describe("Create Account and Login Tests", () => {
     await saveRecoverySeed.clickOnSavedIt();
 
     // Once that user is in Chats page, reload the page
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
     await page.waitForURL("/chat");
     await chatsMainPage.reloadPage();
     await page.waitForURL("/chat");
@@ -300,7 +326,6 @@ test.describe("Create Account and Login Tests", () => {
     await saveRecoverySeed.clickOnSavedIt();
 
     // Once that user is in Chats page, reload the page
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
     await page.waitForURL("/chat");
     await chatsMainPage.reloadPage();
   });
@@ -333,9 +358,88 @@ test.describe("Create Account and Login Tests", () => {
     await saveRecoverySeed.clickOnSavedIt();
 
     // Once that user is in Chats page, log off
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
     await page.waitForURL("/chat");
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
+  });
+
+  test("A15 - User can setup a custom profile picture when creating a new account", async ({
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
+    saveRecoverySeed,
+    chatsMainPage,
+    settingsProfile,
+    page,
+  }) => {
+    // Click on Create New Account
+    await createOrImport.clickCreateNewAccount();
+
+    // Enter Username and Status
+    await authNewAccount.validateLoadingHeader();
+    await authNewAccount.typeOnUsername(username);
+    await authNewAccount.typeOnStatus(status);
+
+    // Upload custom profile picture
+    await authNewAccount.uploadProfilePicture("playwright/assets/logo.jpg");
+    const srcImageCreateUser =
+      await authNewAccount.profileImageNewAccount.getAttribute("src");
+    await authNewAccount.buttonNewAccountCreate.click();
+
+    // Login Page Test
+    await loginPinPage.waitUntilPageIsLoaded();
+    await loginPinPage.goToPinSettings();
+    await loginPinPage.clickStayUnlockedSwitch();
+    await loginPinPage.enterPin(pinNumber);
+    await loginPinPage.pinButtonConfirm.click();
+
+    // Click on I Saved It
+    await saveRecoverySeed.clickOnSavedIt();
+
+    // Once that user is in Chats page, log off
+    await page.waitForURL("/chat");
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
+    const srcImageSettingsProfile =
+      await settingsProfile.profileImage.getAttribute("src");
+    expect(srcImageSettingsProfile).toEqual(srcImageCreateUser);
+  });
+
+  test("A16 - Default identicon profile image is assigned to new user if user does not setup a custom profile picture", async ({
+    authNewAccount,
+    createOrImport,
+    loginPinPage,
+    saveRecoverySeed,
+    chatsMainPage,
+    settingsProfile,
+    page,
+  }) => {
+    // Click on Create New Account
+    await createOrImport.clickCreateNewAccount();
+
+    // Enter Username and Status
+    await authNewAccount.validateLoadingHeader();
+    await authNewAccount.typeOnUsername(username);
+    await authNewAccount.typeOnStatus(status);
+
+    // Validate identicon image is assigned to user
+    await expect(authNewAccount.identiconNewAccount).toBeVisible();
+    await authNewAccount.buttonNewAccountCreate.click();
+
+    // Login Page Test
+    await loginPinPage.waitUntilPageIsLoaded();
+    await loginPinPage.goToPinSettings();
+    await loginPinPage.clickStayUnlockedSwitch();
+    await loginPinPage.enterPin(pinNumber);
+    await loginPinPage.pinButtonConfirm.click();
+
+    // Click on I Saved It
+    await saveRecoverySeed.clickOnSavedIt();
+
+    // Once that user is in Chats page, log off
+    await page.waitForURL("/chat");
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
+    await expect(settingsProfile.identiconSettingsProfile).toBeVisible();
   });
 });

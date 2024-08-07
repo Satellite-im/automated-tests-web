@@ -17,9 +17,9 @@ export class SettingsProfile extends SettingsBase {
   readonly accountIntegrationsItemPlatformInput: Locator;
   readonly accountIntegrationsLabel: Locator;
   readonly accountIntegrationsNewAddButton: Locator;
-  readonly accountIntegrationsNewCancelButton: Locator;
   readonly accountIntegrationsNewAddressInput: Locator;
   readonly accountIntegrationsNewAddressLabel: Locator;
+  readonly accountIntegrationsNewCancelButton: Locator;
   readonly accountIntegrationsNewGenericInput: Locator;
   readonly accountIntegrationsNewLogo: Locator;
   readonly accountIntegrationsNewPlatformLabel: Locator;
@@ -34,6 +34,7 @@ export class SettingsProfile extends SettingsBase {
   readonly contextMenuOptionCopyID: Locator;
   readonly contextMenuOptionDeleteBannerPicture: Locator;
   readonly contextMenuOptionDeleteProfilePicture: Locator;
+  readonly identiconSettingsProfile: Locator;
   readonly inputSettingsProfileShortID: Locator;
   readonly inputSettingsProfileShortIDGroup: Locator;
   readonly inputSettingsProfileStatus: Locator;
@@ -44,9 +45,18 @@ export class SettingsProfile extends SettingsBase {
   readonly logOutSectionButton: Locator;
   readonly logOutSectionLabel: Locator;
   readonly logOutSectionText: Locator;
+  readonly onlineStatusSection: Locator;
+  readonly onlineStatusSectionLabel: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyDoNotDisturb: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyIdle: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyOffline: Locator;
+  readonly onlineStatusSectionSelectorCurrentlyOnline: Locator;
+  readonly onlineStatusSectionSelectOptions: Locator;
+  readonly onlineStatusSectionText: Locator;
   readonly profileBanner: Locator;
   readonly profileBannerContainer: Locator;
   readonly profileBannerInput: Locator;
+  readonly profileImage: Locator;
   readonly profileImageFrame: Locator;
   readonly profilePicture: Locator;
   readonly profilePictureContainer: Locator;
@@ -64,14 +74,6 @@ export class SettingsProfile extends SettingsBase {
   readonly saveControls: Locator;
   readonly saveControlsButtonCancel: Locator;
   readonly saveControlsButtonSave: Locator;
-  readonly onlineStatusSection: Locator;
-  readonly onlineStatusSectionLabel: Locator;
-  readonly onlineStatusSectionSelectorCurrentlyDoNotDisturb: Locator;
-  readonly onlineStatusSectionSelectorCurrentlyIdle: Locator;
-  readonly onlineStatusSectionSelectorCurrentlyOffline: Locator;
-  readonly onlineStatusSectionSelectorCurrentlyOnline: Locator;
-  readonly onlineStatusSectionSelectOptions: Locator;
-  readonly onlineStatusSectionText: Locator;
   readonly storeRecoverySeedSection: Locator;
   readonly storeRecoverySeedCheckbox: Locator;
   readonly storeRecoverySeedText: Locator;
@@ -173,6 +175,7 @@ export class SettingsProfile extends SettingsBase {
     this.contextMenuOptionDeleteProfilePicture = page.getByTestId(
       "context-menu-option-Delete Profile Picture",
     );
+    this.identiconSettingsProfile = page.locator(".identicon").locator("img");
     this.inputSettingsProfileShortID = page.getByTestId(
       "input-settings-profile-short-id",
     );
@@ -199,9 +202,29 @@ export class SettingsProfile extends SettingsBase {
     this.logOutSectionText = this.logOutSection.getByTestId(
       "setting-section-text",
     );
+    this.onlineStatusSection = page.getByTestId("section-online-status");
+    this.onlineStatusSectionLabel = this.onlineStatusSection.getByTestId(
+      "setting-section-label",
+    );
+    this.onlineStatusSectionSelectorCurrentlyDoNotDisturb =
+      this.onlineStatusSection.getByTestId(
+        "selector-current-status-do-not-disturb",
+      );
+    this.onlineStatusSectionSelectorCurrentlyIdle =
+      this.onlineStatusSection.getByTestId("selector-current-status-idle");
+    this.onlineStatusSectionSelectorCurrentlyOffline =
+      this.onlineStatusSection.getByTestId("selector-current-status-offline");
+    this.onlineStatusSectionSelectorCurrentlyOnline =
+      this.onlineStatusSection.getByTestId("selector-current-status-online");
+    this.onlineStatusSectionSelectOptions =
+      this.onlineStatusSection.getByTestId("select-options");
+    this.onlineStatusSectionText = this.onlineStatusSection.getByTestId(
+      "setting-section-text",
+    );
     this.profileBanner = page.getByTestId("profile-banner");
     this.profileBannerContainer = page.locator(".profile-header");
     this.profileBannerInput = this.profileBannerContainer.locator("input");
+    this.profileImage = page.getByTestId("profile-image");
     this.profileImageFrame = page.getByTestId("profile-image-frame");
     this.profilePicture = page.getByTestId("profile-picture");
     this.profilePictureContainer = page.locator(".profile-picture-container");
@@ -231,25 +254,7 @@ export class SettingsProfile extends SettingsBase {
     this.saveControlsButtonCancel =
       this.saveControls.getByTestId("button-cancel");
     this.saveControlsButtonSave = this.saveControls.getByTestId("button-save");
-    this.onlineStatusSection = page.getByTestId("section-online-status");
-    this.onlineStatusSectionLabel = this.onlineStatusSection.getByTestId(
-      "setting-section-label",
-    );
-    this.onlineStatusSectionSelectorCurrentlyDoNotDisturb =
-      this.onlineStatusSection.getByTestId(
-        "selector-current-status-do-not-disturb",
-      );
-    this.onlineStatusSectionSelectorCurrentlyIdle =
-      this.onlineStatusSection.getByTestId("selector-current-status-idle");
-    this.onlineStatusSectionSelectorCurrentlyOffline =
-      this.onlineStatusSection.getByTestId("selector-current-status-offline");
-    this.onlineStatusSectionSelectorCurrentlyOnline =
-      this.onlineStatusSection.getByTestId("selector-current-status-online");
-    this.onlineStatusSectionSelectOptions =
-      this.onlineStatusSection.getByTestId("select-options");
-    this.onlineStatusSectionText = this.onlineStatusSection.getByTestId(
-      "setting-section-text",
-    );
+
     this.storeRecoverySeedSection = page.getByTestId(
       "section-store-recovery-seed",
     );
