@@ -122,7 +122,10 @@ export class ChatsMainPage extends MainPage {
     this.chatPreviewPicture = page.getByTestId("chat-preview-picture");
     this.chatPreviewTimestamp = page.getByTestId("chat-preview-timestamp");
     this.chatbar = page.getByTestId("chatbar");
-    this.chatbarInput = page.getByTestId("chatbar-input");
+    this.chatbarInput = page
+      .locator('[data-cy="chatbar-input"]')
+      .locator("xpath=..")
+      .getByRole("textbox");
     this.chatTopbarProfilePicture = page.getByTestId(
       "chat-topbar-profile-picture",
     );
@@ -178,7 +181,10 @@ export class ChatsMainPage extends MainPage {
       .locator("xpath=..")
       .locator("input");
     this.labelPinnedMessages = page.getByTestId("label-pinned-messages");
-    this.messageBubbleContent = page.getByTestId("message-bubble-content");
+    this.messageBubbleContent = page
+      .getByTestId("message-bubble-content")
+      .locator("p")
+      .locator("p");
     this.messabeBubbleLocal = page.getByTestId("message-bubble-local");
     this.messageBubbleRemote = page.getByTestId("message-bubble-remote");
     this.messageGroupLocal = page.getByTestId("message-group-local");
@@ -235,7 +241,6 @@ export class ChatsMainPage extends MainPage {
   }
 
   async sendMessage(message: string) {
-    await this.chatbarInput.click();
     await this.chatbarInput.clear();
     await this.chatbarInput.fill(message);
     await this.buttonChatbarSendMessage.click();
