@@ -352,6 +352,35 @@ export class SettingsProfile extends SettingsBase {
           .selectOption({ label: "Offline" });
         break;
     }
+    await this.validateToastProfileUpdated();
+    await this.waitForToastNotificationToDisappear();
+  }
+
+  async validateOnlineStatus(
+    option: "online" | "idle" | "do-not-disturb" | "offline",
+  ) {
+    switch (option) {
+      case "online":
+        await this.onlineStatusSectionSelectorCurrentlyOnline.waitFor({
+          state: "attached",
+        });
+        break;
+      case "idle":
+        await this.onlineStatusSectionSelectorCurrentlyIdle.waitFor({
+          state: "attached",
+        });
+        break;
+      case "do-not-disturb":
+        await this.onlineStatusSectionSelectorCurrentlyDoNotDisturb.waitFor({
+          state: "attached",
+        });
+        break;
+      case "offline":
+        await this.onlineStatusSectionSelectorCurrentlyOffline.waitFor({
+          state: "attached",
+        });
+        break;
+    }
   }
 
   async validateRecoveryPhraseIsHidden() {
@@ -376,6 +405,11 @@ export class SettingsProfile extends SettingsBase {
         .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .waitFor({ state: "visible" });
     }
+  }
+
+  async validateToastProfileUpdated() {
+    await this.toastNotificationText.waitFor({ state: "visible" });
+    await expect(this.toastNotificationText).toHaveText("Profile Updated!");
   }
 
   async uploadProfileBanner(file: string) {
