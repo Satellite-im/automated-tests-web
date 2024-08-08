@@ -369,9 +369,7 @@ test.describe("Settings Profile Tests", () => {
     );
 
     // Default Status selected is Online
-    await settingsProfile.onlineStatusSectionSelectorCurrentlyOnline.waitFor({
-      state: "attached",
-    });
+    await settingsProfile.validateOnlineStatus("online");
 
     // Validate list of options
     let options = ["Online", "Offline", "Idle", "Do Not Disturb"];
@@ -386,29 +384,19 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     // Change Status to Offline and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("offline");
-    await settingsProfile.onlineStatusSectionSelectorCurrentlyOffline.waitFor({
-      state: "attached",
-    });
+    await settingsProfile.validateOnlineStatus("offline");
 
     // Change Status to Idle and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("idle");
-    await settingsProfile.onlineStatusSectionSelectorCurrentlyIdle.waitFor({
-      state: "attached",
-    });
+    await settingsProfile.validateOnlineStatus("idle");
 
     // Change Status to Do not Disturb and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("do-not-disturb");
-    await settingsProfile.onlineStatusSectionSelectorCurrentlyDoNotDisturb.waitFor(
-      {
-        state: "attached",
-      },
-    );
+    await settingsProfile.validateOnlineStatus("do-not-disturb");
 
     // Change Status back to Online and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("online");
-    await settingsProfile.onlineStatusSectionSelectorCurrentlyOnline.waitFor({
-      state: "attached",
-    });
+    await settingsProfile.validateOnlineStatus("online");
   });
 
   test("I21 - Clicking Reveal Phrase should display the users Recovery Phrases", async ({

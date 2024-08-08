@@ -82,7 +82,6 @@ export class SettingsCustomizations extends SettingsBase {
       "setting-section-text",
     );
     this.customCSSSectionTextArea = page.getByTestId("text-area-custom-css");
-
     this.emojiFontSection = page.getByTestId("section-emoji-font");
     this.emojiFontSectionLabel = this.emojiFontSection.getByTestId(
       "setting-section-label",
@@ -203,11 +202,41 @@ export class SettingsCustomizations extends SettingsBase {
       .click();
   }
 
+  async selectDefaultProfileStyle(style: string) {
+    await this.page
+      .locator('[data-cy^="selector-current-identicon-"]')
+      .locator("select")
+      .selectOption({ label: style });
+  }
+
+  async selectEmojiFont(font: string) {
+    await this.page
+      .locator('[data-cy^="selector-current-emoji-font-"]')
+      .locator("select")
+      .selectOption({ label: font });
+  }
+
   async selectFont(font: string) {
     await this.page
       .getByTestId("selector-current-font-poppins")
       .locator("select")
       .selectOption({ label: font });
+  }
+
+  async validateDefaultProfileStyles(expectedStyles: string[]) {
+    let displayedStyles: string[] = [];
+    const options: string[] =
+      await this.identiconSectionSelectorOption.allTextContents();
+    displayedStyles = options.map((option) => option.trim());
+    expect(displayedStyles).toEqual(expectedStyles);
+  }
+
+  async validateEmojiFontNames(expectedFonts: string[]) {
+    let displayedFonts: string[] = [];
+    const options: string[] =
+      await this.emojiFontSectionSelectorOption.allTextContents();
+    displayedFonts = options.map((option) => option.trim());
+    expect(displayedFonts).toEqual(expectedFonts);
   }
 
   async validateFontNames(expectedFonts: string[]) {
