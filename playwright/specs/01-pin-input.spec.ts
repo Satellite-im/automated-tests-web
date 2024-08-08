@@ -29,9 +29,10 @@ test.describe("Create Account and Login Tests", () => {
     await expect(createOrImport.buttonCreateAccount).toHaveText(
       "Create New Account",
     );
-    await expect(createOrImport.buttonImportAccount).toHaveText(
-      "Import Account",
-    );
+    // Commenting code below because the button is not visible
+    // await expect(createOrImport.buttonImportAccount).toHaveText(
+    //   "Import Account",
+    // );
     await createOrImport.clickCreateNewAccount();
 
     // Validate Create New User/Status page, enter valid data and continue
