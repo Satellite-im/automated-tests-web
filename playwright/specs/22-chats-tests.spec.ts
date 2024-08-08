@@ -115,8 +115,7 @@ test.describe("Chats Tests - Two instances", () => {
     },
   );
 
-  // Skipping test that is broken after merging the typing indicator PR
-  test.skip("B1 - Send text message to remote user - Message is displayed on local and remote users", async ({
+  test("B1 - Send text message to remote user - Message is displayed on local and remote users", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     friendsScreenFirst,

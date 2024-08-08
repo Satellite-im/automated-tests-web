@@ -279,4 +279,96 @@ test.describe("Settings Customization Tests", () => {
       "rgb(255, 0, 141)",
     );
   });
+
+  test("K15 - Emoji Font dropdown should show expected emoji font names", async ({
+    settingsCustomizations,
+  }) => {
+    const expectedEmojiFonts = [
+      "NotoEmoji",
+      "OpenMoji",
+      "Blobmoji",
+      "Twemoji",
+      "Fluent",
+    ];
+
+    await expect(settingsCustomizations.emojiFontSectionLabel).toHaveText(
+      "Emoji",
+    );
+    await expect(settingsCustomizations.emojiFontSectionText).toHaveText(
+      "Change the emoji font used in the app.",
+    );
+
+    const numberOfSelectorOptions =
+      await settingsCustomizations.emojiFontSectionSelectorOption.count();
+    expect(numberOfSelectorOptions).toEqual(expectedEmojiFonts.length);
+    await settingsCustomizations.validateEmojiFontNames(expectedEmojiFonts);
+  });
+
+  test("K16 - Selected Emoji Font should be applied everywhere throughout the app", async ({
+    settingsCustomizations,
+  }) => {
+    const selectedEmojiFont = "OpenMoji";
+    await settingsCustomizations.selectEmojiFont(selectedEmojiFont);
+    await expect(settingsCustomizations.emojiFontSectionRandomEmoji).toHaveCSS(
+      "font-family",
+      selectedEmojiFont,
+    );
+  });
+
+  // Not implemented in the app yet
+  test.skip("K17 - Clicking Open Folder from Emoji Font section should open the Emoji Fonts folder", async ({}) => {});
+
+  test("K18 - Default Profile Picture Style dropdown should show expected default profile picture styles", async ({
+    settingsCustomizations,
+  }) => {
+    const expectedDefaultProfileStyles = [
+      "avataaars",
+      "avataaarsNeutral",
+      "bottts",
+      "botttsNeutral",
+      "icons",
+      "identicon",
+      "lorelei",
+      "notionists",
+      "openPeeps",
+      "pixelArt",
+      "pixelArtNeutral",
+      "shapes",
+    ];
+
+    await expect(settingsCustomizations.identiconSectionLabel).toHaveText(
+      "Default Profile Picture Style",
+    );
+    await expect(settingsCustomizations.identiconSectionText).toHaveText(
+      "Change the style of the randomly generated profile pictures used when users haven't uploaded a profile picture yet.",
+    );
+
+    const numberOfSelectorOptions =
+      await settingsCustomizations.identiconSectionSelectorOption.count();
+    expect(numberOfSelectorOptions).toEqual(
+      expectedDefaultProfileStyles.length,
+    );
+    await settingsCustomizations.validateDefaultProfileStyles(
+      expectedDefaultProfileStyles,
+    );
+  });
+
+  test("K19 - Default Profile Picture Style selected should be applied correctly in the app", async ({
+    settingsCustomizations,
+    page,
+  }) => {
+    // Change current default profile style to lorelei
+    const selectedDefaultStyle = "lorelei";
+    await settingsCustomizations.selectDefaultProfileStyle(
+      selectedDefaultStyle,
+    );
+
+    // Validate current identicon style is lorelei
+    await page
+      .locator("[data-cy='selector-current-identicon-lorelei']")
+      .waitFor({ state: "attached" });
+  });
+
+  // Not implemented in the app yet
+  test.skip("K20 - Clicking Open Folder from Default Profile Picture Style section should open the correct folder", async ({}) => {});
 });
