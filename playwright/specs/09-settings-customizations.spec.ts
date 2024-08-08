@@ -279,4 +279,38 @@ test.describe("Settings Customization Tests", () => {
       "rgb(255, 0, 141)",
     );
   });
+
+  /// K15
+  test("K15 - Emoji Font dropdown should show expected emoji font names", async ({
+    settingsCustomizations,
+  }) => {
+    const expectedEmojiFonts = [];
+
+    await expect(settingsCustomizations.fontSectionLabel).toHaveText("Font");
+    await expect(settingsCustomizations.fontSectionText).toHaveText(
+      "Change the font used in the app.",
+    );
+
+    const numberOfSelectorOptions =
+      await settingsCustomizations.fontSectionSelectorOption.count();
+    expect(numberOfSelectorOptions).toEqual(expectedFonts.length);
+    await settingsCustomizations.validateFontNames(expectedFonts);
+  });
+
+  test("K16 - Selected Emoji Font should be applied everywhere throughout the app", async ({
+    settingsCustomizations,
+    page,
+  }) => {
+    const selectedFont = "JosefinSans";
+    await settingsCustomizations.selectFont(selectedFont);
+    await expect(settingsCustomizations.fontSectionText).toHaveCSS(
+      "font-family",
+      selectedFont,
+    );
+    await settingsCustomizations.goToChat();
+    const welcomeText = await page.getByText("Let's get something started!");
+    await expect(welcomeText).toHaveCSS("font-family", selectedFont);
+  });
+
+  test.skip("K17 - Clicking Open Folder from Emoji Font section should open the Emoji Fonts folder", async ({}) => {});
 });

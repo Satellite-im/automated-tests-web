@@ -71,9 +71,12 @@ test.describe("Settings Profile Tests", () => {
     );
   });
 
-  test.skip("I5 - Profile picture shows default profile picture until custom profile picture is set", async ({
+  test("I5 - Profile picture shows default profile picture until custom profile picture is set", async ({
     settingsProfile,
   }) => {
+    // Identicon picture is setup by default
+    await expect(settingsProfile.identiconSettingsProfile).toBeVisible();
+
     // Upload Profile Picture
     await settingsProfile.uploadProfilePicture("playwright/assets/logo.jpg");
 
