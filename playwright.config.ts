@@ -46,8 +46,8 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "Automated Tests on Chrome Desktop",
-      use: { ...devices["Desktop Chrome"] },
+      name: "Automated Tests on Firefox Desktop",
+      use: { ...devices["Desktop Firefox"] },
     },
 
     /* Test against mobile viewports. */
