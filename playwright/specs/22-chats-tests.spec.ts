@@ -48,8 +48,10 @@ test.describe("Chats Tests - Two instances", () => {
       // Click on I Saved It
       await saveRecoverySeedFirst.clickOnSavedIt();
 
-      // Go to Friends
-      await chatsMainPageFirst.goToFriends();
+      // B1 - User should land on this page after logging in - Validated during account creation tests
+      // B2 - Clicking "Add Friends" should navigate you to Friends page
+      await page1.waitForURL("/chat");
+      await chatsMainPageFirst.buttonAddFriends.click();
 
       // Now with the second user, click on Create New Account
       await createOrImportSecond.clickCreateNewAccount();
@@ -67,8 +69,10 @@ test.describe("Chats Tests - Two instances", () => {
       // Click on I Saved It
       await saveRecoverySeedSecond.clickOnSavedIt();
 
-      // Go to Friends
-      await chatsMainPageSecond.goToFriends();
+      // B1 - User should land on this page after logging in - Validated during account creation tests
+      // B2 - Clicking "Add Friends" should navigate you to Friends page
+      await page2.waitForURL("/chat");
+      await chatsMainPageSecond.buttonAddFriends.click();
 
       // Grant clipboard permissions, Copy DID and save it into a constant
       await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -115,17 +119,45 @@ test.describe("Chats Tests - Two instances", () => {
     },
   );
 
-  test("B1 - Send text message to remote user - Message is displayed on local and remote users", async ({
+  test("B1, B2, B3 - Landing to Chats Page elements and basic send/receive text message flow", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     friendsScreenFirst,
     friendsScreenSecond,
+    page1,
+    page2,
   }) => {
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
 
     // With second user, go to chat conversation with remote user and send a message
     await friendsScreenSecond.chatWithFriend(username);
+
+    // B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat
+    await page2.waitForURL("/chat");
+    await expect(chatsMainPageSecond.chatEncryptedMessage).toBeVisible();
+    await expect(chatsMainPageSecond.chatEncryptedMessageText).toHaveText(
+      "Messages are secured by end-to-end encryption, sent over a peer-to-peer network.",
+    );
+
+    // B4 - Amount of coin should be displayed at top right toolbar
+    await expect(chatsMainPageSecond.coinAmountIndicator).toHaveText("0");
+
+    //B5 - Highlighted border should appear around call button when clicked
+    await chatsMainPageSecond.buttonChatCall.focus();
+    await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
+
+    // Validate CSS from call button backs to normal
+    await page2.locator("body").click();
+    await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+      "border-bottom-color",
+      "rgb(28, 29, 43)",
+    );
+
+    // Send a message from the first user
     await chatsMainPageSecond.sendMessage("Hello from the second user");
 
     // Validate message is displayed on local user
@@ -135,6 +167,7 @@ test.describe("Chats Tests - Two instances", () => {
     );
 
     // Validate message is displayed on remote user
+    await page1.waitForURL("/chat");
     await chatsMainPageFirst.messageBubbleRemote.waitFor({ state: "visible" });
     await expect(chatsMainPageFirst.messageBubbleContent).toHaveText(
       "Hello from the second user",
@@ -142,30 +175,6 @@ test.describe("Chats Tests - Two instances", () => {
   });
 
   /*
-  test.skip("B1 - User should land on this page after logging in", async ({
-    page,
-  }) => {
-    // Test code for B1
-  });
-
-  test.skip('B2 - Clicking "Add Friends" should navigate you to Friends page', async ({
-    page,
-  }) => {
-    // Test code for B2
-  });
-
-  test.skip("B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat", async ({
-    page,
-  }) => {
-    // Test code for B3
-  });
-
-  test.skip("B4 - Amount of coin should be displayed at top right toolbar", async ({
-    page,
-  }) => {
-    // Test code for B4
-  });
-
   test.skip("B5 - Highlighted border should appear around call button when clicked", async ({
     page,
   }) => {
