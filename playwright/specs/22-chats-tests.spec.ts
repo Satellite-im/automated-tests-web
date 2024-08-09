@@ -119,7 +119,7 @@ test.describe("Chats Tests - Two instances", () => {
     },
   );
 
-  test("B1, B2, B3 - Landing to Chats Page elements and basic send/receive text message flow", async ({
+  test("B1, B2, B3, B4, B5, B6, B16, B17 - Landing to Chats Page elements and basic send/receive text message flow", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     friendsScreenFirst,
@@ -143,7 +143,7 @@ test.describe("Chats Tests - Two instances", () => {
     // B4 - Amount of coin should be displayed at top right toolbar
     await expect(chatsMainPageSecond.coinAmountIndicator).toHaveText("0");
 
-    //B5 - Highlighted border should appear around call button when clicked
+    // B5 - Highlighted border should appear around call button when clicked
     await chatsMainPageSecond.buttonChatCall.focus();
     await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
       "border-bottom-color",
@@ -153,6 +153,20 @@ test.describe("Chats Tests - Two instances", () => {
     // Validate CSS from call button backs to normal
     await page2.locator("body").click();
     await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+      "border-bottom-color",
+      "rgb(28, 29, 43)",
+    );
+
+    // B6 - Highlighted border should appear around video button when clicked
+    await chatsMainPageSecond.buttonChatVideo.focus();
+    await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
+
+    // Validate CSS from video button backs to normal
+    await page2.locator("body").click();
+    await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
       "border-bottom-color",
       "rgb(28, 29, 43)",
     );
@@ -172,181 +186,71 @@ test.describe("Chats Tests - Two instances", () => {
     await expect(chatsMainPageFirst.messageBubbleContent).toHaveText(
       "Hello from the second user",
     );
+
+    // To be implemented later
+    // B16 - Timestamp appears after most recent message sent
+    // B17 - Users profile picture appears next to messages sent
+  });
+
+  test.skip("B7 - Favorites tests", async ({ page }) => {
+    // Test to be added
+    // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
+  });
+
+  test.skip("B7, B8, B9, B10, B11, B12, B13, B14 - Quick Profile tests", async ({
+    page,
+  }) => {
+    // Test to be added
+    // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
+    // B8 - Clicking Profile button in 1on1 chat should display the friends profile
+    // B9 - Friends profile should display friends profile picture
+    // B10 - Friends profile should display friends status (whether you are friends or not)
+    // B11 - Friends profile should display friends Username
+    // B12 - Friends profile should display friends profile Status
+    // B13 - User should be able to write a note on friends profile
+    // B14 - Highlighted border should appear when user clicks into Notes textbox
+  });
+
+  test.skip("B15. B26, B27, B28, B29, B30, B31, B32, B33, B34 - Group Chats Tests", async ({
+    page,
+  }) => {
+    // Group chats not implemented yet
+    // B15 - Clicking Groups button should display group members of the chat
+    // B26 - Clicking the X next to a friend in the GroupMembers Modal should remove friend from groupchat", async ({
+    // B27 - Clicking the Settings button should open the Group Chat Settings", async ({
+    // B28 - Highlighted border should appear after clicking into the GroupName input box in GroupChat Settings", async ({
+    // B29 - User can change name of the group", async ({ page }) => {
+    // B30 - Highlighted border should appear after clicking into the GroupDescription input box in GroupChat Settings", async ({
+    // B31 - User should be able to edit the description of the group", async ({
+    // B32 - User can toggle on/off Add Members", async ({ page }) => {
+    // B33 - User can toggle on/off ChangePhoto", async ({ page }) => {
+    // B34 - User can toggle on/off Change Details", async ({
+  });
+
+  test.skip("B18, B19, B23, B24, B25 - Chats Context Menu tests", async ({
+    page,
+  }) => {
+    // Test to be implemented
+    // B18 - Context menu appears when user right clicks a message
+    // B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete
+    // B23 - Clicking Copy should copy text to users clipboard
+    // B24 - Clicking Edit should open up the edit message modal
+    // B25 - Clicking Delete should delete message from chat
+  });
+
+  test.skip("B20 - Pin Messages Tests", async ({ page }) => {
+    // B20 - Clicking Pin Message should pin message in chat
+  });
+
+  test.skip("B21 - Replies Tests", async ({ page }) => {
+    // B21 - Clicking Reply should open reply modal
+  });
+
+  test.skip("B22 - Reaction Tests", async ({ page }) => {
+    // B22 - Clicking React should open up emoji menu
   });
 
   /*
-  test.skip("B5 - Highlighted border should appear around call button when clicked", async ({
-    page,
-  }) => {
-    // Test code for B5
-  });
-
-  test.skip("B6 - Highlighted border should appear around Video button when clicked", async ({
-    page,
-  }) => {
-    // Test code for B6
-  });
-
-  test.skip("B7 - Favorite button should should be highlighted after clicked and grey when unclicked", async ({
-    page,
-  }) => {
-    // Test code for B7
-  });
-
-  test.skip("B8 - Clicking Profile button in 1on1 chat should display the friends profile", async ({
-    page,
-  }) => {
-    // Test code for B8
-  });
-
-  test.skip("B9 - Friends profile should display friends profile picture", async ({
-    page,
-  }) => {
-    // Test code for B9
-  });
-
-  test.skip("B10 - Friends profile should display friends status (whether you are friends or not)", async ({
-    page,
-  }) => {
-    // Test code for B10
-  });
-
-  test.skip("B11 - Friends profile should display friends Username", async ({
-    page,
-  }) => {
-    // Test code for B11
-  });
-
-  test.skip("B12 - Friends profile should display friends profile Status", async ({
-    page,
-  }) => {
-    // Test code for B12
-  });
-
-  test.skip("B13 - User should be able to write a note on friends profile", async ({
-    page,
-  }) => {
-    // Test code for B13
-  });
-
-  test.skip("B14 - Highlighted border should appear when user clicks into Notes textbox", async ({
-    page,
-  }) => {
-    // Test code for B14
-  });
-
-  test.skip("B15 - Clicking Groups button should display group members of the chat", async ({
-    page,
-  }) => {
-    // Test code for B15
-  });
-
-  test.skip("B16 - Timestamp appears after most recent message sent", async ({
-    page,
-  }) => {
-    // Test code for B16
-  });
-
-  test.skip("B17 - Users profile picture appears next to messages sent", async ({
-    page,
-  }) => {
-    // Test code for B17
-  });
-
-  test.skip("B18 - Context menu appears when user right clicks a message", async ({
-    page,
-  }) => {
-    // Test code for B18
-  });
-
-  test.skip("B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete", async ({
-    page,
-  }) => {
-    // Test code for B19
-  });
-
-  test.skip("B20 - Clicking Pin Message should pin message in chat", async ({
-    page,
-  }) => {
-    // Test code for B20
-  });
-
-  test.skip("B21 - Clicking Reply should open reply modal", async ({
-    page,
-  }) => {
-    // Test code for B21
-  });
-
-  test.skip("B22 - Clicking React should open up emoji menu", async ({
-    page,
-  }) => {
-    // Test code for B22
-  });
-
-  test.skip("B23 - Clicking Copy should copy text to users clipboard", async ({
-    page,
-  }) => {
-    // Test code for B23
-  });
-
-  test.skip("B24 - Clicking Edit should open up the edit message modal", async ({
-    page,
-  }) => {
-    // Test code for B24
-  });
-
-  test.skip("B25 - Clicking Delete should delete message from chat", async ({
-    page,
-  }) => {
-    // Test code for B25
-  });
-
-  test.skip("B26 - Clicking the X next to a friend in the GroupMembers Modal should remove friend from groupchat", async ({
-    page,
-  }) => {
-    // Test code for B26
-  });
-
-  test.skip("B27 - Clicking the Settings button should open the Group Chat Settings", async ({
-    page,
-  }) => {
-    // Test code for B27
-  });
-
-  test.skip("B28 - Highlighted border should appear after clicking into the GroupName input box in GroupChat Settings", async ({
-    page,
-  }) => {
-    // Test code for B28
-  });
-
-  test.skip("B29 - User can change name of the group", async ({ page }) => {
-    // Test code for B29
-  });
-
-  test.skip("B30 - Highlighted border should appear after clicking into the GroupDescription input box in GroupChat Settings", async ({
-    page,
-  }) => {
-    // Test code for B30
-  });
-
-  test.skip("B31 - User should be able to edit the description of the group", async ({
-    page,
-  }) => {
-    // Test code for B31
-  });
-
-  test.skip("B32 - User can toggle on/off Add Members", async ({ page }) => {
-    // Test code for B32
-  });
-
-  test.skip("B33 - User can toggle on/off ChangePhoto", async ({ page }) => {
-    // Test code for B33
-  });
-
-  test.skip("B34 - User can toggle on/off Change Details", async ({ page }) => {
-    // Test code for B34
-  });
-
   test.skip("B35 - Highlighted border should appear around textbox in chat when user clicks into it", async ({
     page,
   }) => {
