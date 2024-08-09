@@ -31,6 +31,7 @@ export class ChatsMainPage extends MainPage {
   readonly chatTopbarProfileStatusIndicator: Locator;
   readonly chatTopbarStatus: Locator;
   readonly chatTopbarUsername: Locator;
+  readonly coinAmountIndicator: Locator;
   readonly contextMenuChatMessage: Locator;
   readonly contextMenuOptionCopyMessage: Locator;
   readonly contextMenuOptionFavorite: Locator;
@@ -114,7 +115,7 @@ export class ChatsMainPage extends MainPage {
     );
     this.buttonCreateGroupChat = page.getByTestId("button-create-group-chat");
     this.buttonMarketplace = page.getByTestId("button-marketplace");
-    this.chatEncryptedMessage = page.getByTestId("chat-encrypted-message");
+    this.chatEncryptedMessage = page.getByTestId("chat-encrypted-notice");
     this.chatEncryptedMessageText = page.getByTestId("chat-encrypted-text");
     this.chatPreview = page.getByTestId("chat-preview");
     this.chatPreviewLastMessage = page.getByTestId("chat-preview-last-message");
@@ -133,6 +134,11 @@ export class ChatsMainPage extends MainPage {
       this.chatTopbarProfilePicture.getByTestId("status-indicator");
     this.chatTopbarStatus = page.getByTestId("chat-topbar-status");
     this.chatTopbarUsername = page.getByTestId("chat-topbar-username");
+    this.coinAmountIndicator = page
+      .getByTestId("topbar")
+      .locator("button")
+      .first()
+      .locator("p");
     this.contextMenuChatMessage = page.getByTestId("context-menu-chat-message");
     this.contextMenuOptionCopyMessage = page.getByTestId(
       "context-menu-option-Copy",
