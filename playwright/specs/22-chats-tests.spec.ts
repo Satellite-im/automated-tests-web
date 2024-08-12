@@ -173,6 +173,14 @@ test.describe("Chats Tests - Two instances", () => {
       "rgb(28, 29, 43)",
     );
 
+    // B35 - Highlighted border should appear around textbox in chat when user clicks into it
+    await chatsMainPageSecond.chatbarInput.focus();
+    await expect(chatsMainPageSecond.chatbarInputContainer).toHaveCSS(
+      "box-shadow",
+      "rgb(77, 77, 255) 0px 0px 0px 1px",
+    );
+
+    // B36 - User should already be clicked into textbox when they enter a chat
     // Send a message from the first user
     await chatsMainPageSecond.sendMessage("Hello from the second user");
 
@@ -197,7 +205,6 @@ test.describe("Chats Tests - Two instances", () => {
     await expect(timestampMessageSent).toHaveText("just now");
 
     // B17 - Users profile picture appears next to messages sent
-
     // Validate profile pictures for local and remote users are displayed on conversation next to chat bubbles
     const profilePictureLocalUser =
       await chatsMainPageSecond.getLastLocalProfilePicture();
@@ -207,10 +214,19 @@ test.describe("Chats Tests - Two instances", () => {
       await chatsMainPageFirst.getLastRemoteProfilePicture();
     await expect(profilePictureRemoteUser).toBeVisible();
 
-    // B35 - Highlighted border should appear around textbox in chat when user clicks into it
-    // B36 - User should already be clicked into textbox when they enter a chat
     // B37 - User should not be able to send a blank message (Send button should be greyed out until any text is added into the textbox
+    await chatsMainPageFirst.sendMessage("");
+    const numberOfMessagesSent =
+      await chatsMainPageFirst.messabeBubbleLocal.count();
+    expect(numberOfMessagesSent).toEqual(0);
+
     // B55 - Messages should be limited to 255 chars - Failing now
+    await chatsMainPageFirst.chatbarInput.fill(
+      "012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890",
+    );
+    await page1
+      .getByText("Maximum length is 255 characters.")
+      .waitFor({ state: "visible" });
   });
 
   test.skip("B7 - Favorites tests", async ({ page }) => {
@@ -305,7 +321,7 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  test("B55 - Chats Tests - Multiple messages testing", async ({
+  test("B56 - Chats Tests - Multiple messages testing", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     friendsScreenFirst,

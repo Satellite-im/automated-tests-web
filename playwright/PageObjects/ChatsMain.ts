@@ -27,6 +27,7 @@ export class ChatsMainPage extends MainPage {
   readonly chatPreviewTimestamp: Locator;
   readonly chatbar: Locator;
   readonly chatbarInput: Locator;
+  readonly chatbarInputContainer: Locator;
   readonly chatTopbarProfilePicture: Locator;
   readonly chatTopbarProfileStatusIndicator: Locator;
   readonly chatTopbarStatus: Locator;
@@ -127,6 +128,9 @@ export class ChatsMainPage extends MainPage {
       .locator('[data-cy="chatbar-input"]')
       .locator("xpath=..")
       .getByRole("textbox");
+    this.chatbarInputContainer = page
+      .locator('[data-cy="chatbar-input"]')
+      .locator("xpath=..");
     this.chatTopbarProfilePicture = page.getByTestId(
       "chat-topbar-profile-picture",
     );
