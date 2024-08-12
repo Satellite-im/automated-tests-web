@@ -48,14 +48,10 @@ export class ChatsMainPage extends MainPage {
   readonly createGroupLabelGroupMembers: Locator;
   readonly createGroupLabelGroupName: Locator;
   readonly createGroupLabelSelectMembers: Locator;
-  readonly inputAddAttachment: Locator;
   readonly emojiButton: Locator;
   readonly emojiGroup: Locator;
   readonly emojiPickerButton: Locator;
-  readonly favoriteCircle: Locator;
-  readonly favoriteProfilePicture: Locator;
-  readonly favoriteProfileStatusIndicator: Locator;
-  readonly favoritesLabel: Locator;
+  readonly inputAddAttachment: Locator;
   readonly labelPinnedMessages: Locator;
   readonly messageBubbleContent: Locator;
   readonly messabeBubbleLocal: Locator;
@@ -181,11 +177,6 @@ export class ChatsMainPage extends MainPage {
     this.emojiButton = page.locator('[data-cy^="button-emoji-"]');
     this.emojiGroup = page.getByTestId("emoji-group");
     this.emojiPickerButton = page.getByTestId("button-emoji-picker");
-    this.favoriteCircle = page.getByTestId("favorite-circle");
-    this.favoriteProfilePicture = page.getByTestId("favorite-profile-picture");
-    this.favoriteProfileStatusIndicator =
-      this.favoriteProfilePicture.getByTestId("status-indicator");
-    this.favoritesLabel = page.getByTestId("label-favorites");
     this.inputAddAttachment = page
       .locator('[data-cy="button-add-attachment"]')
       .locator("xpath=..")

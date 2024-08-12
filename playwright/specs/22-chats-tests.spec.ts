@@ -126,8 +126,6 @@ test.describe("Chats Tests - Two instances", () => {
     friendsScreenSecond,
     page1,
     page2,
-    settingsProfileFirst,
-    settingsProfileSecond,
   }) => {
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
@@ -229,9 +227,43 @@ test.describe("Chats Tests - Two instances", () => {
       .waitFor({ state: "visible" });
   });
 
-  test.skip("B7 - Favorites tests", async ({ page }) => {
-    // Test to be added
+  test("B7, B57, B58 - Favorites tests", async ({
+    chatsMainPageFirst,
+    filesPageFirst,
+    friendsScreenFirst,
+    friendsScreenSecond,
+    page1,
+    page2,
+  }) => {
     // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
+    // With first user, go to chat conversation with remote user
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
+    await page1.waitForURL("/chat");
+
+    // With second user, go to chat conversation with remote user
+    await friendsScreenSecond.chatWithFriend(username);
+    await page2.waitForURL("/chat");
+
+    // First user adds remote user as Favorite
+    await chatsMainPageFirst.buttonChatFavorite.click();
+
+    // Favorite Circle should be displayed on left
+    await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
+    await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
+    await expect(
+      chatsMainPageFirst.favoriteProfileStatusIndicator,
+    ).toBeVisible();
+
+    // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
+    await chatsMainPageFirst.goToFiles();
+    await page1.waitForURL("/files");
+    await filesPageFirst.favoriteProfilePicture.click();
+    await page1.waitForURL("/chat");
+    await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(usernameTwo);
+
+    // B58 - User can remove Favorites and these will not be displayed on Slimbar
+    await chatsMainPageFirst.buttonChatFavorite.click();
+    await chatsMainPageFirst.favoriteCircle.waitFor({ state: "detached" });
   });
 
   test.skip("B8 to B14 - Quick Profile tests", async ({ page }) => {

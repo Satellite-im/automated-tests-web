@@ -40,6 +40,8 @@ type MyFixtures = {
   createOrImportSecond: CreateOrImportPage;
   createOrImportThird: CreateOrImportPage;
   filesPage: FilesPage;
+  filesPageFirst: FilesPage;
+  filesPageSecond: FilesPage;
   friendsScreen: FriendsScreen;
   friendsScreenFirst: FriendsScreen;
   friendsScreenSecond: FriendsScreen;
@@ -148,6 +150,14 @@ export const test = base.extend<MyFixtures>({
 
   filesPage: async ({ page }, use) => {
     await use(new FilesPage(page));
+  },
+
+  filesPageFirst: async ({ page1 }, use) => {
+    await use(new FilesPage(page1));
+  },
+
+  filesPageSecond: async ({ page2 }, use) => {
+    await use(new FilesPage(page2));
   },
 
   friendsScreen: async ({ page }, use) => {
