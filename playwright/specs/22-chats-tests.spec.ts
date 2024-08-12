@@ -235,7 +235,6 @@ test.describe("Chats Tests - Two instances", () => {
     page1,
     page2,
   }) => {
-    // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
     await page1.waitForURL("/chat");
@@ -244,8 +243,19 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenSecond.chatWithFriend(username);
     await page2.waitForURL("/chat");
 
+    // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
+    // First when button is not clicked
+    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
+      "background-color",
+      "rgb(33, 38, 58)",
+    );
+
     // First user adds remote user as Favorite
     await chatsMainPageFirst.buttonChatFavorite.click();
+    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
+      "background-color",
+      "color(srgb 0.371765 0.371765 1)",
+    );
 
     // Favorite Circle should be displayed on left
     await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
