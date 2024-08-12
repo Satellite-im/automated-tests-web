@@ -119,7 +119,7 @@ test.describe("Chats Tests - Two instances", () => {
     },
   );
 
-  test("B1, B2, B3, B4, B5, B6, B16, B17 - Landing to Chats Page elements and basic send/receive text message flow", async ({
+  test("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     friendsScreenFirst,
@@ -190,6 +190,10 @@ test.describe("Chats Tests - Two instances", () => {
     // To be implemented later
     // B16 - Timestamp appears after most recent message sent
     // B17 - Users profile picture appears next to messages sent
+    // B35 - Highlighted border should appear around textbox in chat when user clicks into it
+    // B36 - User should already be clicked into textbox when they enter a chat
+    // B37 - User should not be able to send a blank message (Send button should be greyed out until any text is added into the textbox
+    // B55 - Messages should be limited to 2048 chars
   });
 
   test.skip("B7 - Favorites tests", async ({ page }) => {
@@ -197,11 +201,8 @@ test.describe("Chats Tests - Two instances", () => {
     // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
   });
 
-  test.skip("B7, B8, B9, B10, B11, B12, B13, B14 - Quick Profile tests", async ({
-    page,
-  }) => {
+  test.skip("B8 to B14 - Quick Profile tests", async ({ page }) => {
     // Test to be added
-    // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
     // B8 - Clicking Profile button in 1on1 chat should display the friends profile
     // B9 - Friends profile should display friends profile picture
     // B10 - Friends profile should display friends status (whether you are friends or not)
@@ -211,9 +212,7 @@ test.describe("Chats Tests - Two instances", () => {
     // B14 - Highlighted border should appear when user clicks into Notes textbox
   });
 
-  test.skip("B15. B26, B27, B28, B29, B30, B31, B32, B33, B34 - Group Chats Tests", async ({
-    page,
-  }) => {
+  test.skip("B15 and B26 to B34 - Group Chats Tests", async ({ page }) => {
     // Group chats not implemented yet
     // B15 - Clicking Groups button should display group members of the chat
     // B26 - Clicking the X next to a friend in the GroupMembers Modal should remove friend from groupchat", async ({
@@ -227,7 +226,7 @@ test.describe("Chats Tests - Two instances", () => {
     // B34 - User can toggle on/off Change Details", async ({
   });
 
-  test.skip("B18, B19, B23, B24, B25 - Chats Context Menu tests", async ({
+  test.skip("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
     page,
   }) => {
     // Test to be implemented
@@ -246,123 +245,41 @@ test.describe("Chats Tests - Two instances", () => {
     // B21 - Clicking Reply should open reply modal
   });
 
-  test.skip("B22 - Reaction Tests", async ({ page }) => {
+  test.skip("B22 and B50 - Reaction Tests", async ({ page }) => {
     // B22 - Clicking React should open up emoji menu
+    // B50 - Number of reactions should be displayed underneath message
   });
 
-  /*
-  test.skip("B35 - Highlighted border should appear around textbox in chat when user clicks into it", async ({
-    page,
-  }) => {
-    // Test code for B35
+  test.skip("B38 to B47 - Send coin tests", async ({ page }) => {
+    // B38 - Clicking Send Coin should open the modal
+    // B39 - Amount should be displayed at the top of Send Coin modal and user should be able to click into it and change amount
+    // B40 - Only numbers should be able to be inputted in Send Coin modal
+    // B41 - Highlighted border should appear when user clicks into Notes textbox in the Send Coin modal
+    // B42 - Recipients should appear in recipients box as they are added in Send Coin Modal
+    // B43 - Clicking the X should clear user from recipients box in Send Coin Modal
+    // B44 - Highlighted border should appear around selected user
+    // B45 - Scrollbar should appear if user has enough friends for it in Send Coin Modal
+    // B46 - User should have to hold confirm for 3 seconds to send payment in Send Coin Modal
+    // B47 - Clicking Cancel should close Send Coin modal
   });
 
-  test.skip("B36 - User should already be clicked into textbox when they enter a chat", async ({
-    page,
-  }) => {
-    // Test code for B36
+  test.skip("B48 - Typing indicator tests", async ({ page }) => {
+    // B48 - The chat typing indicator should be displayed when user is typing
   });
 
-  test.skip("B37 - User should not be able to send a blank message (Send button should be greyed out until any text is added into the textbox)", async ({
-    page,
-  }) => {
-    // Test code for B37
+  test.skip("B49 - Scroll to bottom button tests", async ({ page }) => {
+    // B49 - Scroll to bottom button should appear after scrolling up 2 messages
   });
 
-  test.skip("B38 - Clicking Send Coin should open the modal", async ({
-    page,
-  }) => {
-    // Test code for B38
-  });
-
-  test.skip("B39 - Amount should be displayed at the top of Send Coin modal and user should be able to click into it and change amount", async ({
-    page,
-  }) => {
-    // Test code for B39
-  });
-
-  test.skip("B40 - Only numbers should be able to be inputted in Send Coin modal", async ({
-    page,
-  }) => {
-    // Test code for B40
-  });
-
-  test.skip("B41 - Highlighted border should appear when user clicks into Notes textbox in the Send Coin modal", async ({
-    page,
-  }) => {
-    // Test code for B41
-  });
-
-  test.skip("B42 - Recipients should appear in recipients box as they are added in Send Coin Modal", async ({
-    page,
-  }) => {
-    // Test code for B42
-  });
-
-  test.skip("B43 - Clicking the X should clear user from recipients box in Send Coin Modal", async ({
-    page,
-  }) => {
-    // Test code for B43
-  });
-
-  test.skip("B44 - Highlighted border should appear around selected user", async ({
-    page,
-  }) => {
-    // Test code for B44
-  });
-
-  test.skip("B45 - Scrollbar should appear if user has enough friends for it in Send Coin Modal", async ({
-    page,
-  }) => {
-    // Test code for B45
-  });
-
-  test.skip("B46 - User should have to hold confirm for 3 seconds to send payment in Send Coin Modal", async ({
-    page,
-  }) => {
-    // Test code for B46
-  });
-
-  test.skip("B47 - Clicking Cancel should close Send Coin modal", async ({
-    page,
-  }) => {
-    // Test code for B47
-  });
-
-  test.skip("B48 - The chat typing indicator should be displayed when user is typing", async ({
-    page,
-  }) => {
-    // Test code for B48
-  });
-
-  test.skip("B49 - Scroll to bottom button should appear after scrolling up 2 messages", async ({
-    page,
-  }) => {
-    // Test code for B49
-  });
-
-  test.skip("B50 - Number of reactions should be displayed underneath message", async ({
-    page,
-  }) => {
-    // Test code for B50
-  });
-
-  test.skip("B51 - Markdown should show when typing in chatbar", async ({
-    page,
-  }) => {
+  test.skip("B51 - Markdown messages tests", async ({ page }) => {
     // Test code for B51
   });
 
-  test.skip("B52 - User should be able to click on image in chat to see image preview", async ({
+  test.skip("B52 and B53 - Sending and receiving files tests", async ({
     page,
   }) => {
-    // Test code for B52
-  });
-
-  test.skip("B53 - User can download media from chat by clicking download", async ({
-    page,
-  }) => {
-    // Test code for B53
+    // B52 - User should be able to click on image in chat to see image preview
+    // B53 - User can download media from chat by clicking download
   });
 
   test.skip("B54 - User should be able to view a video through the embedded video player", async ({
@@ -371,10 +288,32 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  test.skip("B55 - Messages should be limited to 2048 chars", async ({
-    page,
+  test("B55 - Chats Tests - Multiple messages testing", async ({
+    chatsMainPageFirst,
+    chatsMainPageSecond,
+    friendsScreenFirst,
+    friendsScreenSecond,
+    page1,
+    page2,
   }) => {
-    // Test code for B55
+    // With first user, go to chat conversation with remote user
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
+
+    // With second user, go to chat conversation with remote user and send a message
+    await friendsScreenSecond.chatWithFriend(username);
+
+    // Validate second user is in chats page and send 20 messages
+    await page2.waitForURL("/chat");
+    await page1.waitForURL("/chat");
+    for (let i = 0; i < 20; i++) {
+      const randomSentence = faker.lorem.sentence(3);
+      await chatsMainPageSecond.sendMessage(randomSentence);
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        randomSentence,
+      );
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        randomSentence,
+      );
+    }
   });
-  */
 });
