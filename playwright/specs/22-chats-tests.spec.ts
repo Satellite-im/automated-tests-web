@@ -126,6 +126,8 @@ test.describe("Chats Tests - Two instances", () => {
     friendsScreenSecond,
     page1,
     page2,
+    settingsProfileFirst,
+    settingsProfileSecond,
   }) => {
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
@@ -175,25 +177,40 @@ test.describe("Chats Tests - Two instances", () => {
     await chatsMainPageSecond.sendMessage("Hello from the second user");
 
     // Validate message is displayed on local user
-    await chatsMainPageSecond.messabeBubbleLocal.waitFor({ state: "visible" });
-    await expect(chatsMainPageSecond.messageBubbleContent).toHaveText(
+    await chatsMainPageSecond.validateMessageIsSent(
       "Hello from the second user",
     );
 
     // Validate message is displayed on remote user
     await page1.waitForURL("/chat");
-    await chatsMainPageFirst.messageBubbleRemote.waitFor({ state: "visible" });
-    await expect(chatsMainPageFirst.messageBubbleContent).toHaveText(
+    await chatsMainPageFirst.validateMessageIsReceived(
       "Hello from the second user",
     );
 
-    // To be implemented later
     // B16 - Timestamp appears after most recent message sent
+    const timestampMessageReceived =
+      await chatsMainPageFirst.getLastTimestampRemote();
+    const timestampMessageSent =
+      await chatsMainPageSecond.getLastTimestampLocal();
+
+    await expect(timestampMessageReceived).toHaveText("just now");
+    await expect(timestampMessageSent).toHaveText("just now");
+
     // B17 - Users profile picture appears next to messages sent
+
+    // Validate profile pictures for local and remote users are displayed on conversation next to chat bubbles
+    const profilePictureLocalUser =
+      await chatsMainPageSecond.getLastLocalProfilePicture();
+    await expect(profilePictureLocalUser).toBeVisible();
+
+    const profilePictureRemoteUser =
+      await chatsMainPageFirst.getLastRemoteProfilePicture();
+    await expect(profilePictureRemoteUser).toBeVisible();
+
     // B35 - Highlighted border should appear around textbox in chat when user clicks into it
     // B36 - User should already be clicked into textbox when they enter a chat
     // B37 - User should not be able to send a blank message (Send button should be greyed out until any text is added into the textbox
-    // B55 - Messages should be limited to 2048 chars
+    // B55 - Messages should be limited to 255 chars - Failing now
   });
 
   test.skip("B7 - Favorites tests", async ({ page }) => {

@@ -242,6 +242,66 @@ export class ChatsMainPage extends MainPage {
     this.topbar = page.getByTestId("topbar");
   }
 
+  async getLastLocalProfilePicture() {
+    const lastProfilePicture = this.messageGroupLocal
+      .last()
+      .getByTestId("message-group-local-profile-picture")
+      .locator("img");
+    return lastProfilePicture;
+  }
+
+  async getLastLocalProfilePictureSource() {
+    const source = await (
+      await this.getLastLocalProfilePicture()
+    ).getAttribute("src");
+    return source;
+  }
+
+  async getLastRemoteProfilePicture() {
+    const lastProfilePicture = this.messageGroupRemote
+      .last()
+      .getByTestId("message-group-remote-profile-picture")
+      .locator("img");
+    return lastProfilePicture;
+  }
+
+  async getLastRemoteProfilePictureSource() {
+    const source = await (
+      await this.getLastRemoteProfilePicture()
+    ).getAttribute("src");
+    return source;
+  }
+
+  async getLastMessageLocal() {
+    const lastMessage = this.messageGroupLocal
+      .last()
+      .getByTestId("message-bubble-content")
+      .last();
+    return lastMessage;
+  }
+
+  async getLastMessageRemote() {
+    const lastMessage = this.messageGroupRemote
+      .last()
+      .getByTestId("message-bubble-content")
+      .last();
+    return lastMessage;
+  }
+
+  async getLastTimestampLocal() {
+    const lastTimestamp = this.messageGroupLocal
+      .last()
+      .getByTestId("message-group-timestamp");
+    return lastTimestamp;
+  }
+
+  async getLastTimestampRemote() {
+    const lastTimestamp = this.messageGroupRemote
+      .last()
+      .getByTestId("message-group-timestamp");
+    return lastTimestamp;
+  }
+
   async exitCreateGroup() {
     await this.topbar.click();
   }
@@ -255,5 +315,15 @@ export class ChatsMainPage extends MainPage {
   async validateChatsMainPageIsShown() {
     await expect(this.addSomeone).toBeVisible();
     await expect(this.page.url()).toContain("/chat");
+  }
+
+  async validateMessageIsReceived(message: string) {
+    await this.messageBubbleRemote.waitFor({ state: "visible" });
+    await expect(this.messageBubbleContent).toHaveText(message);
+  }
+
+  async validateMessageIsSent(message: string) {
+    await this.messabeBubbleLocal.waitFor({ state: "visible" });
+    await expect(this.messageBubbleContent).toHaveText(message);
   }
 }

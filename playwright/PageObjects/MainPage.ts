@@ -127,6 +127,10 @@ export default class MainPage {
     await this.buttonWallet.click();
   }
 
+  async normalizeSvg(svgString: string) {
+    return svgString.replace(/(width|height)="\d+"/g, "");
+  }
+
   async visitOtherSite(url: string) {
     await this.page.goto(url);
   }

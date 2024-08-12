@@ -69,6 +69,8 @@ type MyFixtures = {
   settingsNetwork: SettingsNetwork;
   settingsNotifications: SettingsNotifications;
   settingsProfile: SettingsProfile;
+  settingsProfileFirst: SettingsProfile;
+  settingsProfileSecond: SettingsProfile;
   settingsRealms: SettingsRealms;
 };
 
@@ -268,6 +270,14 @@ export const test = base.extend<MyFixtures>({
 
   settingsProfile: async ({ page }, use) => {
     await use(new SettingsProfile(page));
+  },
+
+  settingsProfileFirst: async ({ page1 }, use) => {
+    await use(new SettingsProfile(page1));
+  },
+
+  settingsProfileSecond: async ({ page2 }, use) => {
+    await use(new SettingsProfile(page2));
   },
 });
 
