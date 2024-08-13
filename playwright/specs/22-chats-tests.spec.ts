@@ -254,7 +254,7 @@ test.describe("Chats Tests - Two instances", () => {
       "color(srgb 0.371765 0.371765 1)",
     );
 
-    // Favorite Circle should be displayed on left
+    // C12 - Favorites should appear on left side of Sidebar
     await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
     await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
     await expect(
@@ -262,6 +262,7 @@ test.describe("Chats Tests - Two instances", () => {
     ).toBeVisible();
 
     // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
+    // C14 - Clicking a favorite should take you to that chat
     await chatsMainPageFirst.goToFiles();
     await page1.waitForURL("/files");
     await filesPageFirst.favoriteProfilePicture.click();
@@ -271,6 +272,11 @@ test.describe("Chats Tests - Two instances", () => {
     // B58 - User can remove Favorites and these will not be displayed on Slimbar
     await chatsMainPageFirst.buttonChatFavorite.click();
     await chatsMainPageFirst.favoriteCircle.waitFor({ state: "detached" });
+  });
+
+  test.skip("Chat Sidebar tests", async ({ page }) => {
+    // C11 - ProfilePicFrame should display for any friends that have one
+    // C19 - After selecting Hide chat chat should no longer be displayed in sidebar
   });
 
   test.skip("B8 to B14 - Quick Profile tests", async ({ page }) => {
@@ -287,15 +293,16 @@ test.describe("Chats Tests - Two instances", () => {
   test.skip("B15 and B26 to B34 - Group Chats Tests", async ({ page }) => {
     // Group chats not implemented yet
     // B15 - Clicking Groups button should display group members of the chat
-    // B26 - Clicking the X next to a friend in the GroupMembers Modal should remove friend from groupchat", async ({
-    // B27 - Clicking the Settings button should open the Group Chat Settings", async ({
-    // B28 - Highlighted border should appear after clicking into the GroupName input box in GroupChat Settings", async ({
-    // B29 - User can change name of the group", async ({ page }) => {
-    // B30 - Highlighted border should appear after clicking into the GroupDescription input box in GroupChat Settings", async ({
-    // B31 - User should be able to edit the description of the group", async ({
-    // B32 - User can toggle on/off Add Members", async ({ page }) => {
-    // B33 - User can toggle on/off ChangePhoto", async ({ page }) => {
-    // B34 - User can toggle on/off Change Details", async ({
+    // B26 - Clicking the X next to a friend in the GroupMembers Modal should remove friend from groupchat
+    // B27 - Clicking the Settings button should open the Group Chat Settings
+    // B28 - Highlighted border should appear after clicking into the GroupName input box in GroupChat Settings
+    // B29 - User can change name of the group
+    // B30 - Highlighted border should appear after clicking into the GroupDescription input box in GroupChat Settings
+    // B31 - User should be able to edit the description of the group
+    // B32 - User can toggle on/off Add Members
+    // B33 - User can toggle on/off ChangePhoto
+    // B34 - User can toggle on/off Change Details
+    // C13 - Number of members in group should appear on that chat in both Sidebar and Favorites
   });
 
   test.skip("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
@@ -337,6 +344,10 @@ test.describe("Chats Tests - Two instances", () => {
 
   test.skip("B48 - Typing indicator tests", async ({ page }) => {
     // B48 - The chat typing indicator should be displayed when user is typing
+    // C15 - Right clicking a chat in sidebar should open context menu
+    // C16 - Context menu should display: Favorite, Hide, Mark as read
+    // C17 - Timestamp of most recent message sent or received in chat should be displayed in the sidebar
+    // C18 - Typing indicator should be displayed around users profile picture when they are typing (this applies to favorites as well)
   });
 
   test.skip("B49 - Scroll to bottom button tests", async ({ page }) => {
