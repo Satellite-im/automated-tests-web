@@ -96,16 +96,16 @@ jobs:
 
       - name: Deploy report to Github Pages
         if: success()
-        uses: Wandalen/wretry.action@master
+        uses: nick-fields/retry@v3
         with:
-          action: peaceiris/actions-gh-pages@v4
-          with: |
-            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-            external_repository: Satellite-im/test-reports
-            publish_branch: gh-pages
-            publish_dir: allure-history
-          attempt_limit: 3
-          attempt_delay: 2000
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            npx peaceiris/actions-gh-pages@v4 \
+              --deploy_key="${{ secrets.ACTIONS_DEPLOY_KEY }}" \
+              --external_repository="Satellite-im/test-reports" \
+              --publish_branch="gh-pages" \
+              --publish_dir="allure-history"
 
       - name: Comment PR with Allure test results
         if: always() && github.event_name == 'pull_request'
