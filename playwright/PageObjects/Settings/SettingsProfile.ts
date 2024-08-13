@@ -273,6 +273,16 @@ export class SettingsProfile extends SettingsBase {
     await this.inputSettingsProfileShortIDGroup.click();
   }
 
+  async getProfileIdenticonSource() {
+    const source = await this.identiconSettingsProfile.getAttribute("src");
+    return source;
+  }
+
+  async getProfileImageSource() {
+    const source = await this.profileImage.getAttribute("src");
+    return source;
+  }
+
   async getSelectorOptions(locator: string) {
     let options = [];
     // Locate all elements with the data-cy attribute within the given locator

@@ -171,34 +171,106 @@ test.describe("Chats Tests - Two instances", () => {
       "rgb(28, 29, 43)",
     );
 
+    // B35 - Highlighted border should appear around textbox in chat when user clicks into it
+    await chatsMainPageSecond.chatbarInput.focus();
+    await expect(chatsMainPageSecond.chatbarInputContainer).toHaveCSS(
+      "box-shadow",
+      "rgb(77, 77, 255) 0px 0px 0px 1px",
+    );
+
+    // B36 - User should already be clicked into textbox when they enter a chat
     // Send a message from the first user
     await chatsMainPageSecond.sendMessage("Hello from the second user");
 
     // Validate message is displayed on local user
-    await chatsMainPageSecond.messabeBubbleLocal.waitFor({ state: "visible" });
-    await expect(chatsMainPageSecond.messageBubbleContent).toHaveText(
+    await chatsMainPageSecond.validateMessageIsSent(
       "Hello from the second user",
     );
 
     // Validate message is displayed on remote user
     await page1.waitForURL("/chat");
-    await chatsMainPageFirst.messageBubbleRemote.waitFor({ state: "visible" });
-    await expect(chatsMainPageFirst.messageBubbleContent).toHaveText(
+    await chatsMainPageFirst.validateMessageIsReceived(
       "Hello from the second user",
     );
 
-    // To be implemented later
     // B16 - Timestamp appears after most recent message sent
+    const timestampMessageReceived =
+      await chatsMainPageFirst.getLastTimestampRemote();
+    const timestampMessageSent =
+      await chatsMainPageSecond.getLastTimestampLocal();
+
+    await expect(timestampMessageReceived).toHaveText("just now");
+    await expect(timestampMessageSent).toHaveText("just now");
+
     // B17 - Users profile picture appears next to messages sent
-    // B35 - Highlighted border should appear around textbox in chat when user clicks into it
-    // B36 - User should already be clicked into textbox when they enter a chat
+    // Validate profile pictures for local and remote users are displayed on conversation next to chat bubbles
+    const profilePictureLocalUser =
+      await chatsMainPageSecond.getLastLocalProfilePicture();
+    await expect(profilePictureLocalUser).toBeVisible();
+
+    const profilePictureRemoteUser =
+      await chatsMainPageFirst.getLastRemoteProfilePicture();
+    await expect(profilePictureRemoteUser).toBeVisible();
+
     // B37 - User should not be able to send a blank message (Send button should be greyed out until any text is added into the textbox
-    // B55 - Messages should be limited to 2048 chars
+    await chatsMainPageFirst.sendMessage("");
+    const numberOfMessagesSent =
+      await chatsMainPageFirst.messabeBubbleLocal.count();
+    expect(numberOfMessagesSent).toEqual(0);
+
+    // B55 - Messages should be limited to 255 chars - Failing now
+    await chatsMainPageFirst.chatbarInput.fill(
+      "012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890",
+    );
+    await page1
+      .getByText("Maximum length is 255 characters.")
+      .waitFor({ state: "visible" });
   });
 
-  test.skip("B7 - Favorites tests", async ({ page }) => {
-    // Test to be added
+  test("B7, B57, B58 - Favorites tests", async ({
+    chatsMainPageFirst,
+    filesPageFirst,
+    friendsScreenFirst,
+    friendsScreenSecond,
+    page1,
+  }) => {
+    // With first user, go to chat conversation with remote user
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
+
+    // With second user, go to chat conversation with remote user
+    await friendsScreenSecond.chatWithFriend(username);
+
     // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
+    // First when button is not clicked
+    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
+      "background-color",
+      "rgb(33, 38, 58)",
+    );
+
+    // First user adds remote user as Favorite
+    await chatsMainPageFirst.buttonChatFavorite.click();
+    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
+      "background-color",
+      "color(srgb 0.371765 0.371765 1)",
+    );
+
+    // Favorite Circle should be displayed on left
+    await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
+    await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
+    await expect(
+      chatsMainPageFirst.favoriteProfileStatusIndicator,
+    ).toBeVisible();
+
+    // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
+    await chatsMainPageFirst.goToFiles();
+    await page1.waitForURL("/files");
+    await filesPageFirst.favoriteProfilePicture.click();
+    await page1.waitForURL("/chat");
+    await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(usernameTwo);
+
+    // B58 - User can remove Favorites and these will not be displayed on Slimbar
+    await chatsMainPageFirst.buttonChatFavorite.click();
+    await chatsMainPageFirst.favoriteCircle.waitFor({ state: "detached" });
   });
 
   test.skip("B8 to B14 - Quick Profile tests", async ({ page }) => {
@@ -288,7 +360,7 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  test("B55 - Chats Tests - Multiple messages testing", async ({
+  test("B56 - Chats Tests - Multiple messages testing", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     friendsScreenFirst,

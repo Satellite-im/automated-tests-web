@@ -27,6 +27,7 @@ export class ChatsMainPage extends MainPage {
   readonly chatPreviewTimestamp: Locator;
   readonly chatbar: Locator;
   readonly chatbarInput: Locator;
+  readonly chatbarInputContainer: Locator;
   readonly chatTopbarProfilePicture: Locator;
   readonly chatTopbarProfileStatusIndicator: Locator;
   readonly chatTopbarStatus: Locator;
@@ -47,14 +48,10 @@ export class ChatsMainPage extends MainPage {
   readonly createGroupLabelGroupMembers: Locator;
   readonly createGroupLabelGroupName: Locator;
   readonly createGroupLabelSelectMembers: Locator;
-  readonly inputAddAttachment: Locator;
   readonly emojiButton: Locator;
   readonly emojiGroup: Locator;
   readonly emojiPickerButton: Locator;
-  readonly favoriteCircle: Locator;
-  readonly favoriteProfilePicture: Locator;
-  readonly favoriteProfileStatusIndicator: Locator;
-  readonly favoritesLabel: Locator;
+  readonly inputAddAttachment: Locator;
   readonly labelPinnedMessages: Locator;
   readonly messageBubbleContent: Locator;
   readonly messabeBubbleLocal: Locator;
@@ -127,6 +124,9 @@ export class ChatsMainPage extends MainPage {
       .locator('[data-cy="chatbar-input"]')
       .locator("xpath=..")
       .getByRole("textbox");
+    this.chatbarInputContainer = page
+      .locator('[data-cy="chatbar-input"]')
+      .locator("xpath=..");
     this.chatTopbarProfilePicture = page.getByTestId(
       "chat-topbar-profile-picture",
     );
@@ -177,11 +177,6 @@ export class ChatsMainPage extends MainPage {
     this.emojiButton = page.locator('[data-cy^="button-emoji-"]');
     this.emojiGroup = page.getByTestId("emoji-group");
     this.emojiPickerButton = page.getByTestId("button-emoji-picker");
-    this.favoriteCircle = page.getByTestId("favorite-circle");
-    this.favoriteProfilePicture = page.getByTestId("favorite-profile-picture");
-    this.favoriteProfileStatusIndicator =
-      this.favoriteProfilePicture.getByTestId("status-indicator");
-    this.favoritesLabel = page.getByTestId("label-favorites");
     this.inputAddAttachment = page
       .locator('[data-cy="button-add-attachment"]')
       .locator("xpath=..")
@@ -242,6 +237,66 @@ export class ChatsMainPage extends MainPage {
     this.topbar = page.getByTestId("topbar");
   }
 
+  async getLastLocalProfilePicture() {
+    const lastProfilePicture = this.messageGroupLocal
+      .last()
+      .getByTestId("message-group-local-profile-picture")
+      .locator("img");
+    return lastProfilePicture;
+  }
+
+  async getLastLocalProfilePictureSource() {
+    const source = await (
+      await this.getLastLocalProfilePicture()
+    ).getAttribute("src");
+    return source;
+  }
+
+  async getLastRemoteProfilePicture() {
+    const lastProfilePicture = this.messageGroupRemote
+      .last()
+      .getByTestId("message-group-remote-profile-picture")
+      .locator("img");
+    return lastProfilePicture;
+  }
+
+  async getLastRemoteProfilePictureSource() {
+    const source = await (
+      await this.getLastRemoteProfilePicture()
+    ).getAttribute("src");
+    return source;
+  }
+
+  async getLastMessageLocal() {
+    const lastMessage = this.messageGroupLocal
+      .last()
+      .getByTestId("message-bubble-content")
+      .last();
+    return lastMessage;
+  }
+
+  async getLastMessageRemote() {
+    const lastMessage = this.messageGroupRemote
+      .last()
+      .getByTestId("message-bubble-content")
+      .last();
+    return lastMessage;
+  }
+
+  async getLastTimestampLocal() {
+    const lastTimestamp = this.messageGroupLocal
+      .last()
+      .getByTestId("message-group-timestamp");
+    return lastTimestamp;
+  }
+
+  async getLastTimestampRemote() {
+    const lastTimestamp = this.messageGroupRemote
+      .last()
+      .getByTestId("message-group-timestamp");
+    return lastTimestamp;
+  }
+
   async exitCreateGroup() {
     await this.topbar.click();
   }
@@ -255,5 +310,15 @@ export class ChatsMainPage extends MainPage {
   async validateChatsMainPageIsShown() {
     await expect(this.addSomeone).toBeVisible();
     await expect(this.page.url()).toContain("/chat");
+  }
+
+  async validateMessageIsReceived(message: string) {
+    await this.messageBubbleRemote.waitFor({ state: "visible" });
+    await expect(this.messageBubbleContent).toHaveText(message);
+  }
+
+  async validateMessageIsSent(message: string) {
+    await this.messabeBubbleLocal.waitFor({ state: "visible" });
+    await expect(this.messageBubbleContent).toHaveText(message);
   }
 }

@@ -16,6 +16,10 @@ export default class MainPage {
   readonly buttonSidebarChats: Locator;
   readonly buttonSidebarFiles: Locator;
   readonly buttonWallet: Locator;
+  readonly favoriteCircle: Locator;
+  readonly favoriteProfilePicture: Locator;
+  readonly favoriteProfileStatusIndicator: Locator;
+  readonly favoritesLabel: Locator;
   readonly inputSidebarSearch: Locator;
   readonly navigationBar: Locator;
   readonly sidebar: Locator;
@@ -37,6 +41,11 @@ export default class MainPage {
     this.buttonSidebarChats = page.getByTestId("button-sidebar-chats");
     this.buttonSidebarFiles = page.getByTestId("button-sidebar-files");
     this.buttonWallet = page.getByTestId("button-Wallet");
+    this.favoriteCircle = page.getByTestId("favorite-circle");
+    this.favoriteProfilePicture = page.getByTestId("favorite-profile-picture");
+    this.favoriteProfileStatusIndicator =
+      this.favoriteProfilePicture.getByTestId("status-indicator");
+    this.favoritesLabel = page.getByTestId("label-favorites");
     this.inputSidebarSearch = page.getByTestId("input-sidebar-search");
     this.navigationBar = page.getByTestId(".navigation");
     this.sidebar = page.getByTestId("sidebar");
@@ -125,6 +134,10 @@ export default class MainPage {
 
   async goToWallet() {
     await this.buttonWallet.click();
+  }
+
+  async normalizeSvg(svgString: string) {
+    return svgString.replace(/(width|height)="\d+"/g, "");
   }
 
   async visitOtherSite(url: string) {
