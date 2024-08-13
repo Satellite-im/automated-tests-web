@@ -68,8 +68,6 @@ jobs:
     if: always()
     needs: test
     runs-on: ubuntu-latest
-    env:
-      HOME: "${{ github.workspace }}/../"
     steps:
       - name: Download Allure results artifact
         uses: actions/download-artifact@v4
@@ -98,12 +96,16 @@ jobs:
 
       - name: Deploy report to Github Pages
         if: success()
-        uses: peaceiris/actions-gh-pages@v4
+        uses: Wandalen/wretry.action@master
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: Satellite-im/test-reports
-          publish_branch: gh-pages
-          publish_dir: allure-history
+          action: peaceiris/actions-gh-pages@v4
+          with: |
+            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+            external_repository: Satellite-im/test-reports
+            publish_branch: gh-pages
+            publish_dir: allure-history
+          attempt_limit: 3
+          attempt_delay: 2000
 
       - name: Comment PR with Allure test results
         if: always() && github.event_name == 'pull_request'
