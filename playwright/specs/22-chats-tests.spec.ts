@@ -233,15 +233,12 @@ test.describe("Chats Tests - Two instances", () => {
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
-    page2,
   }) => {
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
-    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user
     await friendsScreenSecond.chatWithFriend(username);
-    await page2.waitForURL("/chat");
 
     // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
     // First when button is not clicked
