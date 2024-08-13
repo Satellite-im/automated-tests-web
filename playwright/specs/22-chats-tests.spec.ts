@@ -92,7 +92,9 @@ test.describe("Chats Tests - Two instances", () => {
 
       // Now, add the first user as a friend
       await friendsScreenSecond.addFriend(didKeyFirstUser);
-      await friendsScreenSecond.validateToastRequestSent();
+      await friendsScreenSecond.toastNotification.waitFor({
+        state: "attached",
+      });
       await friendsScreenFirst.waitForToastNotificationToDisappear();
       await friendsScreenSecond.waitForToastNotificationToDisappear();
 
