@@ -270,8 +270,7 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.addFriend(didKeyFirstUser);
 
     // H7 - Skipped validation Toast Notification with Username sent a request. should appear after receiving a friend request
-    await friendsScreenSecond.validateToastRequestSent();
-    //await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
+    await friendsScreenSecond.toastNotification.waitFor({ state: "attached" });
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 

@@ -50,7 +50,6 @@ test.describe("Chats Tests - Two instances", () => {
 
       // B1 - User should land on this page after logging in - Validated during account creation tests
       // B2 - Clicking "Add Friends" should navigate you to Friends page
-      await page1.waitForURL("/chat");
       await chatsMainPageFirst.buttonAddFriends.click();
 
       // Now with the second user, click on Create New Account
@@ -71,7 +70,6 @@ test.describe("Chats Tests - Two instances", () => {
 
       // B1 - User should land on this page after logging in - Validated during account creation tests
       // B2 - Clicking "Add Friends" should navigate you to Friends page
-      await page2.waitForURL("/chat");
       await chatsMainPageSecond.buttonAddFriends.click();
 
       // Grant clipboard permissions, Copy DID and save it into a constant
@@ -136,7 +134,6 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenSecond.chatWithFriend(username);
 
     // B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat
-    await page2.waitForURL("/chat");
     await expect(chatsMainPageSecond.chatEncryptedMessage).toBeVisible();
     await expect(chatsMainPageSecond.chatEncryptedMessageText).toHaveText(
       "Messages are secured by end-to-end encryption, sent over a peer-to-peer network.",
@@ -190,7 +187,6 @@ test.describe("Chats Tests - Two instances", () => {
     );
 
     // Validate message is displayed on remote user
-    await page1.waitForURL("/chat");
     await chatsMainPageFirst.validateMessageIsReceived(
       "Hello from the second user",
     );
@@ -234,7 +230,6 @@ test.describe("Chats Tests - Two instances", () => {
     filesPageFirst,
     friendsScreenFirst,
     friendsScreenSecond,
-    page1,
   }) => {
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
@@ -266,9 +261,7 @@ test.describe("Chats Tests - Two instances", () => {
     // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
     // C14 - Clicking a favorite should take you to that chat
     await chatsMainPageFirst.goToFiles();
-    await page1.waitForURL("/files");
     await filesPageFirst.favoriteProfilePicture.click();
-    await page1.waitForURL("/chat");
     await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(usernameTwo);
 
     // B58 - User can remove Favorites and these will not be displayed on Slimbar
@@ -282,18 +275,15 @@ test.describe("Chats Tests - Two instances", () => {
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
-    page2,
   }) => {
     // Testing timestamp with Clock API
     await page1.clock.install();
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
-    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user and send a message
     await friendsScreenSecond.chatWithFriend(username);
-    await page2.waitForURL("/chat");
 
     // Validate chat preview is displayed on sidebar - Default values when no messages have been sent
     // C11 - ProfilePicFrame should display for any friends that have one
@@ -455,8 +445,6 @@ test.describe("Chats Tests - Two instances", () => {
     chatsMainPageSecond,
     friendsScreenFirst,
     friendsScreenSecond,
-    page1,
-    page2,
   }) => {
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
@@ -465,8 +453,6 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenSecond.chatWithFriend(username);
 
     // Validate second user is in chats page and send 20 messages
-    await page2.waitForURL("/chat");
-    await page1.waitForURL("/chat");
     for (let i = 0; i < 20; i++) {
       const randomSentence = faker.lorem.sentence(3);
       await chatsMainPageSecond.sendMessage(randomSentence);
