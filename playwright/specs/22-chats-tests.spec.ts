@@ -257,9 +257,9 @@ test.describe("Chats Tests - Two instances", () => {
     // C12 - Favorites should appear on left side of Sidebar
     await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
     await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
-    await expect(
-      chatsMainPageFirst.favoriteProfileStatusIndicator,
-    ).toBeVisible();
+    await expect(chatsMainPageFirst.favoriteProfileStatusIndicator).toHaveClass(
+      /.*\bonline\b.*/,
+    );
 
     // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
     // C14 - Clicking a favorite should take you to that chat
@@ -271,11 +271,91 @@ test.describe("Chats Tests - Two instances", () => {
 
     // B58 - User can remove Favorites and these will not be displayed on Slimbar
     await chatsMainPageFirst.buttonChatFavorite.click();
-    await chatsMainPageFirst.favoriteCircle.waitFor({ state: "detached" });
+    await chatsMainPageFirst.validateNoFavoritesAreVisible();
   });
 
-  test.skip("Chat Sidebar tests", async ({ page }) => {
+  test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
+    chatsMainPageFirst,
+    chatsMainPageSecond,
+    friendsScreenFirst,
+    friendsScreenSecond,
+    page1,
+    page2,
+  }) => {
+    // Testing timestamp with Clock API
+    await page1.clock.install();
+
+    // With first user, go to chat conversation with remote user
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
+    await page1.waitForURL("/chat");
+
+    // With second user, go to chat conversation with remote user and send a message
+    await friendsScreenSecond.chatWithFriend(username);
+    await page2.waitForURL("/chat");
+
+    // Validate chat preview is displayed on sidebar - Default values when no messages have been sent
     // C11 - ProfilePicFrame should display for any friends that have one
+    const chatPreviewImageURL =
+      await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
+    const topbarImageURL =
+      await chatsMainPageFirst.chatTopbarProfilePictureImage.getAttribute(
+        "src",
+      );
+    await expect(chatsMainPageFirst.chatPreview).toBeVisible();
+    await expect(chatsMainPageFirst.chatPreviewPicture).toBeVisible();
+    await expect(chatsMainPageFirst.chatPreviewName).toHaveText(usernameTwo);
+    await expect(chatsMainPageFirst.chatPreviewStatusIndicator).toHaveClass(
+      /.*\bonline\b.*/,
+    );
+    await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
+      "No messages sent yet.",
+    );
+    expect(chatPreviewImageURL).toEqual(topbarImageURL);
+
+    // Send a message from user two to first user
+    await chatsMainPageSecond.sendMessage("Hello from the second user");
+    await chatsMainPageSecond.validateMessageIsSent(
+      "Hello from the second user",
+    );
+
+    // Validate message is displayed on remote user
+    await chatsMainPageFirst.validateMessageIsReceived(
+      "Hello from the second user",
+    );
+
+    // Validate Chat Sidebar is updated with most recent message on both sides local and remote
+    await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
+      "Hello from the second user",
+    );
+    await expect(chatsMainPageSecond.chatPreviewLastMessage).toHaveText(
+      "Hello from the second user",
+    );
+
+    // Fast forward clock for 30 minutes and validate message was sent 30 minutes ago
+    await page1.clock.fastForward("30:00");
+    await page1.reload();
+    const remoteTimestampAfterThirtyMins =
+      await chatsMainPageFirst.getLastTimestampRemote();
+    expect(remoteTimestampAfterThirtyMins).toHaveText("30 minutes ago");
+
+    // C15 - Right clicking a chat in sidebar should open context menu
+    await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
+
+    // C12 - Favorites should appear on left side of Sidebar when selecting from Context Menu - Favorite
+    await chatsMainPageFirst.contextMenuOptionFavorite.click();
+    await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
+    await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
+    await expect(chatsMainPageFirst.favoriteProfileStatusIndicator).toHaveClass(
+      /.*\bonline\b.*/,
+    );
+
+    // Unfavorite user from Context Menu and validate remote user is removed from favorties
+    await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
+    await chatsMainPageFirst.contextMenuOptionFavorite.click();
+    await chatsMainPageFirst.validateNoFavoritesAreVisible();
+
+    // C16 - Context menu should display: Favorite, Hide, Mark as read
+    // C17 - Timestamp of most recent message sent or received in chat should be displayed in the sidebar - Not working correctly
     // C19 - After selecting Hide chat chat should no longer be displayed in sidebar
   });
 
@@ -344,9 +424,6 @@ test.describe("Chats Tests - Two instances", () => {
 
   test.skip("B48 - Typing indicator tests", async ({ page }) => {
     // B48 - The chat typing indicator should be displayed when user is typing
-    // C15 - Right clicking a chat in sidebar should open context menu
-    // C16 - Context menu should display: Favorite, Hide, Mark as read
-    // C17 - Timestamp of most recent message sent or received in chat should be displayed in the sidebar
     // C18 - Typing indicator should be displayed around users profile picture when they are typing (this applies to favorites as well)
   });
 
@@ -398,5 +475,10 @@ test.describe("Chats Tests - Two instances", () => {
         randomSentence,
       );
     }
+  });
+
+  test.afterAll(async ({ page1, page2 }) => {
+    await page1.close();
+    await page2.close();
   });
 });

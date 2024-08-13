@@ -16,6 +16,13 @@ export default class MainPage {
   readonly buttonSidebarChats: Locator;
   readonly buttonSidebarFiles: Locator;
   readonly buttonWallet: Locator;
+  readonly chatPreview: Locator;
+  readonly chatPreviewLastMessage: Locator;
+  readonly chatPreviewName: Locator;
+  readonly chatPreviewPicture: Locator;
+  readonly chatPreviewPictureImage: Locator;
+  readonly chatPreviewStatusIndicator: Locator;
+  readonly chatPreviewTimestamp: Locator;
   readonly favoriteCircle: Locator;
   readonly favoriteProfilePicture: Locator;
   readonly favoriteProfileStatusIndicator: Locator;
@@ -41,6 +48,14 @@ export default class MainPage {
     this.buttonSidebarChats = page.getByTestId("button-sidebar-chats");
     this.buttonSidebarFiles = page.getByTestId("button-sidebar-files");
     this.buttonWallet = page.getByTestId("button-Wallet");
+    this.chatPreview = page.getByTestId("chat-preview");
+    this.chatPreviewLastMessage = page.getByTestId("chat-preview-last-message");
+    this.chatPreviewName = page.getByTestId("chat-preview-name");
+    this.chatPreviewPicture = page.getByTestId("chat-preview-picture");
+    this.chatPreviewPictureImage = this.chatPreviewPicture.locator("img");
+    this.chatPreviewStatusIndicator =
+      this.chatPreview.getByTestId("status-indicator");
+    this.chatPreviewTimestamp = page.getByTestId("chat-preview-timestamp");
     this.favoriteCircle = page.getByTestId("favorite-circle");
     this.favoriteProfilePicture = page.getByTestId("favorite-profile-picture");
     this.favoriteProfileStatusIndicator =
@@ -140,6 +155,13 @@ export default class MainPage {
     return svgString.replace(/(width|height)="\d+"/g, "");
   }
 
+  async openContextMenuOnChatPreview(chatName: string) {
+    await this.page
+      .getByTestId("chat-preview-name")
+      .filter({ hasText: chatName })
+      .click({ button: "right" });
+  }
+
   async visitOtherSite(url: string) {
     await this.page.goto(url);
   }
@@ -157,6 +179,10 @@ export default class MainPage {
     return await this.page.evaluate(async () => {
       return await navigator.clipboard.readText();
     });
+  }
+
+  async validateNoFavoritesAreVisible() {
+    await this.favoriteCircle.waitFor({ state: "detached" });
   }
 
   async validatePseudoElementContent(
