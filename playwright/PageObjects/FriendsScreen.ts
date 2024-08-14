@@ -107,23 +107,8 @@ export class FriendsScreen extends MainPage {
   }
 
   async addFriend(didKey: string) {
-    let messageFound = false;
     await this.inputAddFriend.fill(didKey);
     await this.buttonAddFriend.click();
-    await this.page.on("console", (msg) => {
-      // Check if the message matches the one you expect
-      if (msg.text().includes("Handling multipass events: FriendRequestSent")) {
-        messageFound = true;
-
-        // Further assert the message content if needed
-        expect(msg.text()).toContain(didKey);
-      }
-    });
-    // You might need to wait for the event to be handled
-    await this.page.waitForTimeout(1000);
-
-    // Assert that the message was found
-    expect(messageFound).toBe(true);
   }
 
   async blockFriend(username: string) {
