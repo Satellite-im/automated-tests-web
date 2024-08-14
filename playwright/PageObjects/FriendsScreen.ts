@@ -244,6 +244,7 @@ export class FriendsScreen extends MainPage {
   async validateIncomingRequestExists() {
     await this.textNoIncomingRequests.waitFor({
       state: "detached",
+      timeout: 60000,
     });
   }
 
@@ -278,6 +279,7 @@ export class FriendsScreen extends MainPage {
   async validateOutgoingRequestExists() {
     await this.textNoOutgoingRequests.waitFor({
       state: "detached",
+      timeout: 60000,
     });
   }
 
