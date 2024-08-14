@@ -333,7 +333,7 @@ test.describe("Friends tests", () => {
     await friendsScreenFirst.validateNoIncomingRequestsExist();
   });
 
-  test.afterAll(async ({ page1, page2 }) => {
+  test.afterEach(async ({ page1, page2 }) => {
     await page1.close();
     await page2.close();
   });
