@@ -20,15 +20,11 @@ export class ChatsMainPage extends MainPage {
   readonly buttonMarketplace: Locator;
   readonly chatEncryptedMessage: Locator;
   readonly chatEncryptedMessageText: Locator;
-  readonly chatPreview: Locator;
-  readonly chatPreviewLastMessage: Locator;
-  readonly chatPreviewName: Locator;
-  readonly chatPreviewPicture: Locator;
-  readonly chatPreviewTimestamp: Locator;
   readonly chatbar: Locator;
   readonly chatbarInput: Locator;
   readonly chatbarInputContainer: Locator;
   readonly chatTopbarProfilePicture: Locator;
+  readonly chatTopbarProfilePictureImage: Locator;
   readonly chatTopbarProfileStatusIndicator: Locator;
   readonly chatTopbarStatus: Locator;
   readonly chatTopbarUsername: Locator;
@@ -114,11 +110,6 @@ export class ChatsMainPage extends MainPage {
     this.buttonMarketplace = page.getByTestId("button-marketplace");
     this.chatEncryptedMessage = page.getByTestId("chat-encrypted-notice");
     this.chatEncryptedMessageText = page.getByTestId("chat-encrypted-text");
-    this.chatPreview = page.getByTestId("chat-preview");
-    this.chatPreviewLastMessage = page.getByTestId("chat-preview-last-message");
-    this.chatPreviewName = page.getByTestId("chat-preview-name");
-    this.chatPreviewPicture = page.getByTestId("chat-preview-picture");
-    this.chatPreviewTimestamp = page.getByTestId("chat-preview-timestamp");
     this.chatbar = page.getByTestId("chatbar");
     this.chatbarInput = page
       .locator('[data-cy="chatbar-input"]')
@@ -130,6 +121,8 @@ export class ChatsMainPage extends MainPage {
     this.chatTopbarProfilePicture = page.getByTestId(
       "chat-topbar-profile-picture",
     );
+    this.chatTopbarProfilePictureImage =
+      this.chatTopbarProfilePicture.locator("img");
     this.chatTopbarProfileStatusIndicator =
       this.chatTopbarProfilePicture.getByTestId("status-indicator");
     this.chatTopbarStatus = page.getByTestId("chat-topbar-status");
