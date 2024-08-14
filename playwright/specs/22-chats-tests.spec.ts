@@ -403,7 +403,7 @@ test.describe("Chats Tests - Two instances", () => {
       /.*\bonline\b.*/,
     );
 
-    // Unfavorite user from Context Menu and validate remote user is removed from favorties
+    // Unfavorite user from Context Menu and validate remote user is removed from favorites
     await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
     await chatsMainPageFirst.contextMenuOptionFavorite.click();
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
