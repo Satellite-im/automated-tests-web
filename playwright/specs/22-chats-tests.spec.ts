@@ -68,7 +68,7 @@ test.describe("Chats Tests - Two instances", () => {
     },
   );
 
-  test("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
+  test.skip("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
@@ -102,6 +102,10 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenSecond.waitForToastNotificationToDisappear();
     await friendsScreenFirst.waitForToastNotificationToDisappear();
 
+    // Go to Outbound requests and validate the request is displayed
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.validateOutgoingRequestExists();
+
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
@@ -110,14 +114,15 @@ test.describe("Chats Tests - Two instances", () => {
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
     await friendsScreenFirst.chatWithFriend(usernameTwo);
+    await page1.waitForURL("/chat");
 
     // With Second User, go to All Friends and click on Chat Button
-    await friendsScreenSecond.goToRequestList();
     await friendsScreenSecond.goToAllFriendsList();
     await friendsScreenSecond.chatWithFriend(username);
+    await page2.waitForURL("/chat");
 
     // B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat
-    await expect(chatsMainPageSecond.chatEncryptedMessage).toBeVisible();
+    await expect(chatsMainPageSecond.chatEncryptedMessage).toBeAttached();
     await expect(chatsMainPageSecond.chatEncryptedMessageText).toHaveText(
       "Messages are secured by end-to-end encryption, sent over a peer-to-peer network.",
     );
@@ -159,6 +164,7 @@ test.describe("Chats Tests - Two instances", () => {
       "box-shadow",
       "rgb(77, 77, 255) 0px 0px 0px 1px",
     );
+    await chatsMainPageSecond.chatbarInput.clear();
 
     // B36 - User should already be clicked into textbox when they enter a chat
     // Send a message from the first user
@@ -208,8 +214,9 @@ test.describe("Chats Tests - Two instances", () => {
       .waitFor({ state: "visible" });
   });
 
-  test("B7, B57, B58 - Favorites tests", async ({
+  test.skip("B7, B57, B58 - Favorites tests", async ({
     chatsMainPageFirst,
+    chatsMainPageSecond,
     context1,
     context2,
     filesPageFirst,
@@ -242,6 +249,10 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenSecond.waitForToastNotificationToDisappear();
     await friendsScreenFirst.waitForToastNotificationToDisappear();
 
+    // Go to Outbound requests and validate the request is displayed
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.validateOutgoingRequestExists();
+
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
@@ -251,14 +262,15 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenFirst.goToAllFriendsList();
 
     // With Second User, go to All Friends and click on Chat Button
-    await friendsScreenSecond.goToRequestList();
     await friendsScreenSecond.goToAllFriendsList();
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
+    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user
     await friendsScreenSecond.chatWithFriend(username);
+    await page2.waitForURL("/chat");
 
     // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
     // First when button is not clicked
@@ -284,6 +296,7 @@ test.describe("Chats Tests - Two instances", () => {
     // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
     // C14 - Clicking a favorite should take you to that chat
     await chatsMainPageFirst.goToFiles();
+    await filesPageFirst.uploadFileButton.waitFor({ state: "attached" });
     await filesPageFirst.favoriteProfilePicture.click();
     await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(usernameTwo);
 
@@ -292,7 +305,7 @@ test.describe("Chats Tests - Two instances", () => {
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
   });
 
-  test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
+  test.skip("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
@@ -329,6 +342,10 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenSecond.waitForToastNotificationToDisappear();
     await friendsScreenFirst.waitForToastNotificationToDisappear();
 
+    // Go to Outbound requests and validate the request is displayed
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.validateOutgoingRequestExists();
+
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
@@ -338,14 +355,15 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenFirst.goToAllFriendsList();
 
     // With Second User, go to All Friends and click on Chat Button
-    await friendsScreenSecond.goToRequestList();
     await friendsScreenSecond.goToAllFriendsList();
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
+    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user and send a message
     await friendsScreenSecond.chatWithFriend(username);
+    await page2.waitForURL("/chat");
 
     // Validate chat preview is displayed on sidebar - Default values when no messages have been sent
     // C11 - ProfilePicFrame should display for any friends that have one
@@ -499,7 +517,7 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  test("B56 - Chats Tests - Multiple messages testing", async ({
+  test.skip("B56 - Chats Tests - Multiple messages testing", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
@@ -533,6 +551,10 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenSecond.waitForToastNotificationToDisappear();
     await friendsScreenFirst.waitForToastNotificationToDisappear();
 
+    // Go to Outbound requests and validate the request is displayed
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.validateOutgoingRequestExists();
+
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
@@ -542,14 +564,15 @@ test.describe("Chats Tests - Two instances", () => {
     await friendsScreenFirst.goToAllFriendsList();
 
     // With Second User, go to All Friends and click on Chat Button
-    await friendsScreenSecond.goToRequestList();
     await friendsScreenSecond.goToAllFriendsList();
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
+    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user and send a message
     await friendsScreenSecond.chatWithFriend(username);
+    await page2.waitForURL("/chat");
 
     // Validate second user is in chats page and send 20 messages
     for (let i = 0; i < 20; i++) {

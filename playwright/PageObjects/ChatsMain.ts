@@ -112,8 +112,8 @@ export class ChatsMainPage extends MainPage {
     this.chatEncryptedMessageText = page.getByTestId("chat-encrypted-text");
     this.chatbar = page.getByTestId("chatbar");
     this.chatbarInput = page
-      .locator('[data-cy="chatbar-input"]')
-      .locator("xpath=..")
+      .locator(".cm-editor")
+      .locator(".cm-scroller")
       .getByRole("textbox");
     this.chatbarInputContainer = page
       .locator('[data-cy="chatbar-input"]')
