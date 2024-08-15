@@ -12,6 +12,7 @@ export class FilesPage extends MainPage {
   readonly contextOptionDelete: Locator;
   readonly contextOptionDownload: Locator;
   readonly contextOptionRename: Locator;
+  readonly filePreviewImage: Locator;
   readonly freeSpaceLabel: Locator;
   readonly freeSpaceValue: Locator;
   readonly inputFileFolderName: Locator;
@@ -41,6 +42,7 @@ export class FilesPage extends MainPage {
       "context-menu-option-Download",
     );
     this.contextOptionRename = page.getByTestId("context-menu-option-Rename");
+    this.filePreviewImage = page.getByTestId("file-preview-image");
     this.freeSpaceLabel = page.getByTestId("label-files-free-space");
     this.freeSpaceValue = page.getByTestId("text-files-free-space");
     this.inputFileFolderName = page.getByTestId("input-file-folder-name");
@@ -76,7 +78,8 @@ export class FilesPage extends MainPage {
 
   async navigateToFolder(folderName: string) {
     const folder = await this.getFolderByName(folderName);
-    await folder.click();
+    await folder.dblclick();
+    await folder.waitFor({ state: "detached" });
   }
 
   async renameFile(fileName: string, newName: string) {
@@ -171,6 +174,21 @@ export class FilesPage extends MainPage {
     expect(fileSizeElement).toHaveText(expectedSize);
     const svgIcon = file.locator(".svg-icon");
     await expect(svgIcon).toBeVisible();
+  }
+
+  async validateUploadedImageInfo(
+    name: string,
+    extension: string,
+    expectedSize: string,
+  ) {
+    const file = await this.getFileByName(name);
+    expect(file).toBeTruthy();
+    const fileName = file.getByTestId("file-folder-name");
+    expect(fileName).toHaveText(`${name}.${extension}`);
+    const fileSizeElement = file.getByTestId("file-folder-size");
+    expect(fileSizeElement).toHaveText(expectedSize);
+    const imagePreview = file.getByTestId("file-preview-image");
+    await expect(imagePreview).toBeVisible();
   }
 
   async uploadFile(filePath: string) {
