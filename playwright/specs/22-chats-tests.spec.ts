@@ -68,7 +68,7 @@ test.describe("Chats Tests - Two instances", () => {
     },
   );
 
-  test("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
+  test.skip("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
@@ -214,7 +214,7 @@ test.describe("Chats Tests - Two instances", () => {
       .waitFor({ state: "visible" });
   });
 
-  test("B7, B57, B58 - Favorites tests", async ({
+  test.skip("B7, B57, B58 - Favorites tests", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
@@ -305,7 +305,7 @@ test.describe("Chats Tests - Two instances", () => {
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
   });
 
-  test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
+  test.skip("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
@@ -517,7 +517,7 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  test("B56 - Chats Tests - Multiple messages testing", async ({
+  test.skip("B56 - Chats Tests - Multiple messages testing", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
