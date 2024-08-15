@@ -123,7 +123,8 @@ export class FriendsScreen extends MainPage {
 
   async chatWithFriend(username: string) {
     const friendUser = await this.getFriendFromList(username);
-    await friendUser.getByTestId("button-friend-chat").click();
+    const chatButton = friendUser.getByTestId("button-friend-chat");
+    await chatButton.click();
   }
 
   async clearAddFriendInput() {
