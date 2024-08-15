@@ -549,7 +549,7 @@ test.describe("Two instances tests", () => {
     await chatsMainPageFirst.buttonChatFavorite.click();
     await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
       "background-color",
-      "rgb(77, 77, 255)",
+      "color(srgb 0.371765 0.371765 1)",
     );
 
     // C12 - Favorites should appear on left side of Sidebar
