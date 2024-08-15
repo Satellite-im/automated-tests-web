@@ -101,8 +101,8 @@ export class FriendsScreen extends MainPage {
     );
   }
 
-  async acceptFriendRequest(username: string, didkey: string) {
-    const friendUser = await this.getFriendWithNameOrKey(username, didkey);
+  async acceptFriendRequest(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-accept").click();
   }
 

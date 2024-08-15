@@ -74,7 +74,6 @@ test.describe("Two instances tests", () => {
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
-    page2,
   }) => {
     // H15 - User should be removed from friends list after clicking unfriend
     // Grant clipboard permissions, Copy DID and save it into a constant
@@ -88,10 +87,6 @@ test.describe("Two instances tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -101,7 +96,7 @@ test.describe("Two instances tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends
     await friendsScreenFirst.goToAllFriendsList();
@@ -136,7 +131,6 @@ test.describe("Two instances tests", () => {
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
-    page2,
   }) => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -149,10 +143,6 @@ test.describe("Two instances tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -162,7 +152,7 @@ test.describe("Two instances tests", () => {
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
     await friendsScreenFirst.goToAllFriendsList();
     await friendsScreenFirst.validateFriendListIsDisplayed("C");
 
@@ -197,15 +187,16 @@ test.describe("Two instances tests", () => {
     await friendsScreenFirst.closeToastNotification();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.denyFriendRequest(usernameTwo);
   });
 
   test("H6, H19 - User can send a friend request and remote user can accept it", async ({
+    chatsMainPageSecond,
     friendsScreenFirst,
     friendsScreenSecond,
     context1,
     context2,
     page1,
-    page2,
   }) => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -218,10 +209,6 @@ test.describe("Two instances tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -234,7 +221,7 @@ test.describe("Two instances tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -244,6 +231,10 @@ test.describe("Two instances tests", () => {
     await friendsScreenSecond.goToRequestList();
     await friendsScreenSecond.goToAllFriendsList();
     await friendsScreenSecond.chatWithFriend(username);
+
+    // Remove user as friend
+    await chatsMainPageSecond.goToFriends();
+    await friendsScreenSecond.removeFriend(username);
   });
 
   test("H7, H20 - User can send a friend request and remote user can deny it", async ({
@@ -351,10 +342,6 @@ test.describe("Two instances tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -370,7 +357,7 @@ test.describe("Two instances tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -467,6 +454,10 @@ test.describe("Two instances tests", () => {
     await page1
       .getByText("Maximum length is 255 characters.")
       .waitFor({ state: "visible" });
+
+    // Delete friend
+    await chatsMainPageFirst.goToFriends();
+    await friendsScreenFirst.removeFriend(usernameTwo);
   });
 
   test("B7, B57, B58 - Favorites tests", async ({
@@ -490,10 +481,6 @@ test.describe("Two instances tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -509,7 +496,7 @@ test.describe("Two instances tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -560,6 +547,10 @@ test.describe("Two instances tests", () => {
     // B58 - User can remove Favorites and these will not be displayed on Slimbar
     await chatsMainPageFirst.buttonChatFavorite.click();
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
+
+    // Delete friend
+    await chatsMainPageFirst.goToFriends();
+    await friendsScreenFirst.removeFriend(usernameTwo);
   });
 
   test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
@@ -586,10 +577,6 @@ test.describe("Two instances tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -605,7 +592,7 @@ test.describe("Two instances tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -682,6 +669,10 @@ test.describe("Two instances tests", () => {
     // await page1.getByText("30 minutes ago").waitFor({ state: "visible" });
 
     // C19 - After selecting Hide chat chat should no longer be displayed in sidebar
+
+    // Delete friend
+    await chatsMainPageFirst.goToFriends();
+    await friendsScreenFirst.removeFriend(usernameTwo);
   });
 
   test.skip("B8 to B14 - Quick Profile tests", async ({ page }) => {
@@ -794,10 +785,6 @@ test.describe("Two instances tests", () => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -813,7 +800,7 @@ test.describe("Two instances tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -840,6 +827,10 @@ test.describe("Two instances tests", () => {
         randomSentence,
       );
     }
+
+    // Delete friend
+    await chatsMainPageFirst.goToFriends();
+    await friendsScreenFirst.removeFriend(usernameTwo);
   });
 
   test.afterEach(async ({ context1, context2 }) => {
