@@ -39,26 +39,40 @@ test.describe("Files Page Tests", () => {
     },
   );
 
-  /*
-  test.skip("F1 - Highlighted border should appear when user clicks Sync", async ({
-    page,
-  }) => {
-    // Test code for F1
-  });
-
-  test.skip("F2 - Highlighted border should appear when user clicks Create Node", async ({
-    page,
-  }) => {
-    // Test code for F2
-  });
-
-  */
   test("F3, F4 - Amount of Free and Total should appear in Toolbar", async ({
     filesPage,
   }) => {
     // Validate Free and Total space data
     await filesPage.validateFreeSpaceInfo("2.15 GB");
     await filesPage.validateTotalSpaceInfo("2.15 GB");
+
+    // F1 - Highlighted border should appear when user clicks Sync
+    await filesPage.buttonFilesSync.focus();
+    await expect(filesPage.buttonFilesSync).toHaveCSS(
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
+
+    // F2 - Highlighted border should appear when user clicks Create Node
+    await filesPage.buttonFilesCreateNode.focus();
+    await expect(filesPage.buttonFilesCreateNode).toHaveCSS(
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
+
+    // Highlighted border should appear when user clicks Gift Space
+    await filesPage.buttonFilesGiftSpace.focus();
+    await expect(filesPage.buttonFilesGiftSpace).toHaveCSS(
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
+
+    // Highlighted border should appear when user clicks Rent Space
+    await filesPage.buttonFilesRentSpace.focus();
+    await expect(filesPage.buttonFilesRentSpace).toHaveCSS(
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
   });
 
   test("F5 - Highlighted border should appaer when you click Create New Folder", async ({
@@ -83,7 +97,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.uploadFile("playwright/assets/banner.jpg");
 
     // File uploaded should be displayed
-    await filesPage.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
   });
 
   test("F7 - User can create new folders on root", async ({ filesPage }) => {
@@ -143,11 +157,10 @@ test.describe("Files Page Tests", () => {
 
     // User can upload an image file in subfolder
     await filesPage.uploadFile("playwright/assets/banner.jpg");
-    await filesPage.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
   });
 
-  // Skipping broken test due to open bug on logging back into the application
-  test.skip("F13 - Files and folders are still visible after logging out and login again", async ({
+  test("F13 - Files and folders are still visible after logging out and login again", async ({
     chatsMainPage,
     filesPage,
     loginPinPage,
@@ -156,7 +169,7 @@ test.describe("Files Page Tests", () => {
   }) => {
     // User can upload an image file in root
     await filesPage.uploadFile("playwright/assets/banner.jpg");
-    await filesPage.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
 
     // Create a folder in root and enter on it
     await filesPage.createNewFolder("NewFolder");
@@ -164,7 +177,7 @@ test.describe("Files Page Tests", () => {
 
     // User can upload an image file in folder
     await filesPage.uploadFile("playwright/assets/banner.jpg");
-    await filesPage.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
 
     // Go back to root
     await filesPage.goBackButton.click();
@@ -177,17 +190,16 @@ test.describe("Files Page Tests", () => {
     await page.waitForURL("/auth");
 
     // Log in again entering the same pin
-    await loginPinPage.waitUntilPageIsLoaded();
     await loginPinPage.enterDefaultPin();
-    await loginPinPage.pinButtonConfirm.click();
-    await chatsMainPage.validateChatsMainPageIsShown();
+    await page.waitForURL("/pre");
+    await page.waitForURL("/chat");
     await chatsMainPage.goToFiles();
 
     // Validate files are still visible
-    await filesPage.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
     await filesPage.validateNewFolderCreated("NewFolder", false, "61.4 kB");
     await filesPage.navigateToFolder("NewFolder");
-    await filesPage.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
   });
 
   test("F14 - If user upload the same file again, file is uploaded but with different filename", async ({
@@ -195,12 +207,12 @@ test.describe("Files Page Tests", () => {
   }) => {
     // Upload a file
     await filesPage.uploadFile("playwright/assets/banner.jpg");
-    await filesPage.validateUploadedFileInfo("banner", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
 
     // Attempt to upload the same file again
     await filesPage.uploadFile("playwright/assets/banner.jpg");
 
     // File banner.jpg is uploaded again but with name "banner (1).jpg"
-    await filesPage.validateUploadedFileInfo("banner (1)", "jpg", "61.4 kB");
+    await filesPage.validateUploadedImageInfo("banner (1)", "jpg", "61.4 kB");
   });
 });
