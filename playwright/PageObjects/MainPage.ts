@@ -1,12 +1,6 @@
-import {
-  BrowserContext,
-  expect,
-  type Locator,
-  type Page,
-} from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 export default class MainPage {
-  readonly page: Page;
   readonly buttonChat: Locator;
   readonly buttonFiles: Locator;
   readonly buttonFriends: Locator;
@@ -37,41 +31,48 @@ export default class MainPage {
   readonly toastNotificationButton: Locator;
   readonly toastNotificationText: Locator;
 
-  constructor(page: Page) {
-    this.page = page;
-    this.buttonChat = page.getByTestId("button-Chat");
-    this.buttonFiles = page.getByTestId("button-Files");
-    this.buttonFriends = page.getByTestId("button-Friends");
-    this.buttonHideSidebar = page.getByTestId("button-hide-sidebar");
-    this.buttonSettings = page.getByTestId("button-Settings");
-    this.buttonShowSidebar = page.getByTestId("button-show-sidebar").first();
-    this.buttonSidebarChats = page.getByTestId("button-sidebar-chats");
-    this.buttonSidebarFiles = page.getByTestId("button-sidebar-files");
-    this.buttonWallet = page.getByTestId("button-Wallet");
-    this.chatPreview = page.getByTestId("chat-preview");
-    this.chatPreviewLastMessage = page.getByTestId("chat-preview-last-message");
-    this.chatPreviewName = page.getByTestId("chat-preview-name");
-    this.chatPreviewPicture = page.getByTestId("chat-preview-picture");
+  constructor(public readonly page: Page) {
+    this.buttonChat = this.page.getByTestId("button-Chat");
+    this.buttonFiles = this.page.getByTestId("button-Files");
+    this.buttonFriends = this.page.getByTestId("button-Friends");
+    this.buttonHideSidebar = this.page.getByTestId("button-hide-sidebar");
+    this.buttonSettings = this.page.getByTestId("button-Settings");
+    this.buttonShowSidebar = this.page
+      .getByTestId("button-show-sidebar")
+      .first();
+    this.buttonSidebarChats = this.page.getByTestId("button-sidebar-chats");
+    this.buttonSidebarFiles = this.page.getByTestId("button-sidebar-files");
+    this.buttonWallet = this.page.getByTestId("button-Wallet");
+    this.chatPreview = this.page.getByTestId("chat-preview");
+    this.chatPreviewLastMessage = this.page.getByTestId(
+      "chat-preview-last-message",
+    );
+    this.chatPreviewName = this.page.getByTestId("chat-preview-name");
+    this.chatPreviewPicture = this.page.getByTestId("chat-preview-picture");
     this.chatPreviewPictureImage = this.chatPreviewPicture.locator("img");
     this.chatPreviewStatusIndicator =
       this.chatPreview.getByTestId("status-indicator");
-    this.chatPreviewTimestamp = page.getByTestId("chat-preview-timestamp");
-    this.favoriteCircle = page.getByTestId("favorite-circle");
-    this.favoriteProfilePicture = page.getByTestId("favorite-profile-picture");
+    this.chatPreviewTimestamp = this.page.getByTestId("chat-preview-timestamp");
+    this.favoriteCircle = this.page.getByTestId("favorite-circle");
+    this.favoriteProfilePicture = this.page.getByTestId(
+      "favorite-profile-picture",
+    );
     this.favoriteProfileStatusIndicator =
       this.favoriteProfilePicture.getByTestId("status-indicator");
-    this.favoritesLabel = page.getByTestId("label-favorites");
-    this.inputSidebarSearch = page.getByTestId("input-sidebar-search");
-    this.navigationBar = page.getByTestId(".navigation");
-    this.sidebar = page.getByTestId("sidebar");
+    this.favoritesLabel = this.page.getByTestId("label-favorites");
+    this.inputSidebarSearch = this.page.getByTestId("input-sidebar-search");
+    this.navigationBar = this.page.getByTestId(".navigation");
+    this.sidebar = this.page.getByTestId("sidebar");
     this.sidebarChatPreview = this.sidebar.locator(".chat-preview");
-    this.slimbar = page.getByTestId("slimbar");
+    this.slimbar = this.page.getByTestId("slimbar");
     this.slimbarFavorite = this.slimbar.locator(".fave");
-    this.toastNotification = page.getByTestId("toast-notification");
-    this.toastNotificationButton = page.getByTestId(
+    this.toastNotification = this.page.getByTestId("toast-notification");
+    this.toastNotificationButton = this.page.getByTestId(
       "toast-notification-button",
     );
-    this.toastNotificationText = page.getByTestId("toast-notification-text");
+    this.toastNotificationText = this.page.getByTestId(
+      "toast-notification-text",
+    );
   }
 
   async assertInputTextSelected(selector: string) {

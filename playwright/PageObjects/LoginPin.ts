@@ -2,7 +2,6 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class LoginPinPage extends MainPage {
-  readonly page: Page;
   readonly buttonChangeUser: Locator;
   readonly buttonClearInput: Locator;
   readonly buttonCreateNewProfile: Locator;
@@ -35,40 +34,45 @@ export class LoginPinPage extends MainPage {
   readonly stayUnlockedLabel: Locator;
   readonly stayUnlockedSwitch: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.buttonChangeUser = page.getByTestId("button-change-user");
-    this.buttonClearInput = page.getByTestId("button-clear-input");
-    this.buttonCreateNewProfile = page.getByTestId("button-create-new-profile");
-    this.buttonPinSettings = page.getByTestId("button-settings");
-    this.labelChooseEnterPin = page.getByTestId("label-choose-enter-pin");
-    this.pinButton0 = page.getByTestId("button-pin-0");
-    this.pinButton1 = page.getByTestId("button-pin-1");
-    this.pinButton2 = page.getByTestId("button-pin-2");
-    this.pinButton3 = page.getByTestId("button-pin-3");
-    this.pinButton4 = page.getByTestId("button-pin-4");
-    this.pinButton5 = page.getByTestId("button-pin-5");
-    this.pinButton6 = page.getByTestId("button-pin-6");
-    this.pinButton7 = page.getByTestId("button-pin-7");
-    this.pinButton8 = page.getByTestId("button-pin-8");
-    this.pinButton9 = page.getByTestId("button-pin-9");
-    this.pinButtonConfirm = page.getByTestId("button-confirm-pin");
-    this.pinDisplay = page.getByTestId("pin-display");
-    this.pinDot = page.getByTestId("pin-dot");
-    this.pinDotFilled = page.getByTestId("pin-dot-filled");
-    this.pinKeypad = page.getByTestId("pin-keypad");
-    this.scrambleKeypadCheckbox = page.locator(".slider").first();
-    this.scrambleKeypadLabel = page.getByTestId("label-scramble-keypad");
-    this.scrambleKeypadSwitch = page.getByTestId("switch-scramble-keypad");
-    this.selectProfileLabel = page.getByTestId("label-select-profile");
-    this.selectProfileUser = page.getByTestId("select-profile-user");
-    this.selectProfileUserImage = page.getByTestId("select-profile-user-image");
-    this.selectProfileUserName = page.getByTestId("select-profile-user-name");
-    this.selectProfileModal = page.getByTestId("modal-select-profile");
-    this.stayUnlockedCheckbox = page.locator(".slider").last();
-    this.stayUnlockedLabel = page.getByTestId("label-stay-unlocked");
-    this.stayUnlockedSwitch = page.getByTestId("switch-stay-unlocked");
+    this.buttonChangeUser = this.page.getByTestId("button-change-user");
+    this.buttonClearInput = this.page.getByTestId("button-clear-input");
+    this.buttonCreateNewProfile = this.page.getByTestId(
+      "button-create-new-profile",
+    );
+    this.buttonPinSettings = this.page.getByTestId("button-settings");
+    this.labelChooseEnterPin = this.page.getByTestId("label-choose-enter-pin");
+    this.pinButton0 = this.page.getByTestId("button-pin-0");
+    this.pinButton1 = this.page.getByTestId("button-pin-1");
+    this.pinButton2 = this.page.getByTestId("button-pin-2");
+    this.pinButton3 = this.page.getByTestId("button-pin-3");
+    this.pinButton4 = this.page.getByTestId("button-pin-4");
+    this.pinButton5 = this.page.getByTestId("button-pin-5");
+    this.pinButton6 = this.page.getByTestId("button-pin-6");
+    this.pinButton7 = this.page.getByTestId("button-pin-7");
+    this.pinButton8 = this.page.getByTestId("button-pin-8");
+    this.pinButton9 = this.page.getByTestId("button-pin-9");
+    this.pinButtonConfirm = this.page.getByTestId("button-confirm-pin");
+    this.pinDisplay = this.page.getByTestId("pin-display");
+    this.pinDot = this.page.getByTestId("pin-dot");
+    this.pinDotFilled = this.page.getByTestId("pin-dot-filled");
+    this.pinKeypad = this.page.getByTestId("pin-keypad");
+    this.scrambleKeypadCheckbox = this.page.locator(".slider").first();
+    this.scrambleKeypadLabel = this.page.getByTestId("label-scramble-keypad");
+    this.scrambleKeypadSwitch = this.page.getByTestId("switch-scramble-keypad");
+    this.selectProfileLabel = this.page.getByTestId("label-select-profile");
+    this.selectProfileUser = this.page.getByTestId("select-profile-user");
+    this.selectProfileUserImage = this.page.getByTestId(
+      "select-profile-user-image",
+    );
+    this.selectProfileUserName = this.page.getByTestId(
+      "select-profile-user-name",
+    );
+    this.selectProfileModal = this.page.getByTestId("modal-select-profile");
+    this.stayUnlockedCheckbox = this.page.locator(".slider").last();
+    this.stayUnlockedLabel = this.page.getByTestId("label-stay-unlocked");
+    this.stayUnlockedSwitch = this.page.getByTestId("switch-stay-unlocked");
   }
 
   async clickConfirmButton() {

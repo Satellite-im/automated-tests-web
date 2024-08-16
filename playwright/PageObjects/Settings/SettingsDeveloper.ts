@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page, expect } from "@playwright/test";
 
 export class SettingsDeveloper extends SettingsBase {
-  readonly page: Page;
   readonly batteryIndicator: Locator;
   readonly batteryIndicatorIcon: Locator;
   readonly batteryIndicatorNotSupportedError: Locator;
@@ -41,76 +40,78 @@ export class SettingsDeveloper extends SettingsBase {
   readonly testVoiceSectionText: Locator;
   readonly widgetBar: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.batteryIndicator = page.getByTestId("battery-indicator");
-    this.batteryIndicatorIcon = page.getByTestId("battery-indicator-icon");
-    this.batteryIndicatorNotSupportedError = page.getByTestId(
+    this.batteryIndicator = this.page.getByTestId("battery-indicator");
+    this.batteryIndicatorIcon = this.page.getByTestId("battery-indicator-icon");
+    this.batteryIndicatorNotSupportedError = this.page.getByTestId(
       "battery-indicator-not-supported-error",
     );
-    this.clearStateSection = page.getByTestId("section-clear-state");
-    this.clearStateSectionButton = page.getByTestId("button-clear-state");
+    this.clearStateSection = this.page.getByTestId("section-clear-state");
+    this.clearStateSectionButton = this.page.getByTestId("button-clear-state");
     this.clearStateSectionLabel = this.clearStateSection.getByTestId(
       "setting-section-label",
     );
     this.clearStateSectionText = this.clearStateSection.getByTestId(
       "setting-section-text",
     );
-    this.cpuIndicator = page.getByTestId("cpu-indicator");
-    this.cpuIndicatorValue = page.getByTestId("cpu-indicator-value");
-    this.devModeSection = page.getByTestId("section-devmode");
-    this.devModeSectionButton = page.getByTestId("button-exit-devmode");
+    this.cpuIndicator = this.page.getByTestId("cpu-indicator");
+    this.cpuIndicatorValue = this.page.getByTestId("cpu-indicator-value");
+    this.devModeSection = this.page.getByTestId("section-devmode");
+    this.devModeSectionButton = this.page.getByTestId("button-exit-devmode");
     this.devModeSectionLabel = this.devModeSection.getByTestId(
       "setting-section-label",
     );
     this.devModeSectionText = this.devModeSection.getByTestId(
       "setting-section-text",
     );
-    this.labelWidgetBarBattery = page.getByTestId("label-widget-bar-battery");
-    this.labelWidgetBarCpu = page.getByTestId("label-widget-bar-cpu");
-    this.labelWidgetBarRam = page.getByTestId("label-widget-bar-ram");
-    this.loadMockSection = page.getByTestId("section-load-mock");
-    this.loadMockSectionButton = page.getByTestId("button-load-mock");
+    this.labelWidgetBarBattery = this.page.getByTestId(
+      "label-widget-bar-battery",
+    );
+    this.labelWidgetBarCpu = this.page.getByTestId("label-widget-bar-cpu");
+    this.labelWidgetBarRam = this.page.getByTestId("label-widget-bar-ram");
+    this.loadMockSection = this.page.getByTestId("section-load-mock");
+    this.loadMockSectionButton = this.page.getByTestId("button-load-mock");
     this.loadMockSectionLabel = this.loadMockSection.getByTestId(
       "setting-section-label",
     );
     this.loadMockSectionText = this.loadMockSection.getByTestId(
       "setting-section-text",
     );
-    this.loggerLevelSection = page.getByTestId("section-logger-level");
+    this.loggerLevelSection = this.page.getByTestId("section-logger-level");
     this.loggerLevelSectionLabel = this.loggerLevelSection.getByTestId(
       "setting-section-label",
     );
     this.loggerLevelSectionText = this.loggerLevelSection.getByTestId(
       "setting-section-text",
     );
-    this.loggerLevelSectionSelector = page.locator(
+    this.loggerLevelSectionSelector = this.page.locator(
       '[data-cy^="selector-current-logger-level-"]',
     );
     this.loggerLevelSectionSelectorOption =
       this.loggerLevelSectionSelector.getByTestId("select-option");
-    this.memoryIndicator = page.getByTestId("memory-indicator");
-    this.memoryIndicatorBar = page.getByTestId("memory-indicator-bar");
-    this.memoryIndicatorNotSupportedError = page.getByTestId(
+    this.memoryIndicator = this.page.getByTestId("memory-indicator");
+    this.memoryIndicatorBar = this.page.getByTestId("memory-indicator-bar");
+    this.memoryIndicatorNotSupportedError = this.page.getByTestId(
       "memory-indicator-not-supported-error",
     );
-    this.mockIncomingCallSection = page.getByTestId("section-test-call");
-    this.mockIncomingCallSectionButton = page.getByTestId("button-test-call");
+    this.mockIncomingCallSection = this.page.getByTestId("section-test-call");
+    this.mockIncomingCallSectionButton =
+      this.page.getByTestId("button-test-call");
     this.mockIncomingCallSectionLabel =
       this.mockIncomingCallSection.getByTestId("setting-section-label");
     this.mockIncomingCallSectionText = this.mockIncomingCallSection.getByTestId(
       "setting-section-text",
     );
-    this.testVoiceSection = page.getByTestId("section-test-voice");
-    this.testVoiceSectionButton = page.getByTestId("button-test-voice");
+    this.testVoiceSection = this.page.getByTestId("section-test-voice");
+    this.testVoiceSectionButton = this.page.getByTestId("button-test-voice");
     this.testVoiceSectionLabel = this.testVoiceSection.getByTestId(
       "setting-section-label",
     );
     this.testVoiceSectionText = this.testVoiceSection.getByTestId(
       "setting-section-text",
     );
-    this.widgetBar = page.getByTestId("widget-bar");
+    this.widgetBar = this.page.getByTestId("widget-bar");
   }
 
   async selectLoggerLevel(currentLevel: string, newLevel: string) {

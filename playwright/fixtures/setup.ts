@@ -121,18 +121,21 @@ export const test = base.extend<MyFixtures>({
     const browser1 = await chromium.launch({ channel: "chrome" });
     const context1 = await browser1.newContext();
     await use(context1);
+    await context1.close();
   },
 
   context2: async ({}, use) => {
     const browser2 = await webkit.launch();
     const context2 = await browser2.newContext();
     await use(context2);
+    await context2.close();
   },
 
   context3: async ({}, use) => {
     const browser3 = await chromium.launch();
     const context3 = await browser3.newContext();
     await use(context3);
+    await context3.close();
   },
 
   createOrImport: async ({ page }, use) => {
@@ -198,16 +201,19 @@ export const test = base.extend<MyFixtures>({
   page1: async ({ context1 }, use) => {
     const page1 = await context1.newPage();
     await use(page1);
+    await page1.close();
   },
 
   page2: async ({ context2 }, use) => {
     const page2 = await context2.newPage();
     await use(page2);
+    await page2.close();
   },
 
   page3: async ({ context3 }, use) => {
     const page3 = await context3.newPage();
     await use(page3);
+    await page3.close();
   },
 
   saveRecoverySeed: async ({ page }, use) => {

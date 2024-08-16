@@ -2,7 +2,6 @@ import { expect, type Locator, type Page } from "@playwright/test";
 import { SettingsBase } from "./SettingsBase";
 
 export class SettingsProfile extends SettingsBase {
-  readonly page: Page;
   readonly accountIntegrations: Locator;
   readonly accountIntegrationsAddButton: Locator;
   readonly accountIntegrationsAddNewLabel: Locator;
@@ -79,17 +78,18 @@ export class SettingsProfile extends SettingsBase {
   readonly storeRecoverySeedText: Locator;
   readonly warningMessage: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.accountIntegrations = page.getByTestId("section-account-integrations");
+    this.accountIntegrations = this.page.getByTestId(
+      "section-account-integrations",
+    );
     this.accountIntegrationsAddButton = this.accountIntegrations.getByTestId(
       "button-integrations-add",
     );
-    this.accountIntegrationsAddNewLabel = page.getByTestId(
+    this.accountIntegrationsAddNewLabel = this.page.getByTestId(
       "label-account-integrations-new",
     );
-    this.accountIntegrationsItem = page.getByTestId(
+    this.accountIntegrationsItem = this.page.getByTestId(
       "account-integrations-item",
     );
     this.accountIntegrationsItemAddressInput =
@@ -116,7 +116,7 @@ export class SettingsProfile extends SettingsBase {
       this.accountIntegrationsItem.getByTestId(
         "label-account-integrations-item",
       );
-    this.accountIntegrationsLabel = page.getByTestId(
+    this.accountIntegrationsLabel = this.page.getByTestId(
       "label-settings-profile-integrations",
     );
     this.accountIntegrationsItemLogo = this.accountIntegrationsItem.getByTestId(
@@ -126,75 +126,77 @@ export class SettingsProfile extends SettingsBase {
       this.accountIntegrationsItem.getByTestId(
         "input-platform-account-integration-item",
       );
-    this.accountIntegrationsNewAddButton = page.getByTestId(
+    this.accountIntegrationsNewAddButton = this.page.getByTestId(
       "button-account-integrations-new-add",
     );
-    this.accountIntegrationsNewCancelButton = page.getByTestId(
+    this.accountIntegrationsNewCancelButton = this.page.getByTestId(
       "button-account-integrations-new-cancel",
     );
-    this.accountIntegrationsNewAddressInput = page.getByTestId(
+    this.accountIntegrationsNewAddressInput = this.page.getByTestId(
       "input-account-integrations-new-address",
     );
-    this.accountIntegrationsNewAddressLabel = page.getByTestId(
+    this.accountIntegrationsNewAddressLabel = this.page.getByTestId(
       "label-account-integration-new-address",
     );
-    this.accountIntegrationsNewGenericInput = page.getByTestId(
+    this.accountIntegrationsNewGenericInput = this.page.getByTestId(
       "input-account-integrations-new-generic",
     );
-    this.accountIntegrationsNewLogo = page.getByTestId(
+    this.accountIntegrationsNewLogo = this.page.getByTestId(
       "logo-account-integrations-new",
     );
-    this.accountIntegrationsNewPlatformLabel = page.getByTestId(
+    this.accountIntegrationsNewPlatformLabel = this.page.getByTestId(
       "label-account-integrations-new-platform",
     );
-    this.accountIntegrationsNewPlatformSelector = page.getByTestId(
+    this.accountIntegrationsNewPlatformSelector = this.page.getByTestId(
       "selector-account-integrations-new-platform",
     );
     this.accountIntegrationsNewPlatformSelectorOption =
       this.accountIntegrationsNewPlatformSelector.getByTestId("select-option");
-    this.accountIntegrationsText = page.getByTestId(
+    this.accountIntegrationsText = this.page.getByTestId(
       "text-settings-profile-integrations",
     );
-    this.contextMenuBannerPicture = page.getByTestId(
+    this.contextMenuBannerPicture = this.page.getByTestId(
       "context-menu-banner-picture",
     );
-    this.contextMenuCopyID = page.getByTestId("context-menu-copy-id");
-    this.contextMenuProfilePicture = page.getByTestId(
+    this.contextMenuCopyID = this.page.getByTestId("context-menu-copy-id");
+    this.contextMenuProfilePicture = this.page.getByTestId(
       "context-menu-profile-picture",
     );
-    this.contextMenuUserID = page.locator("#context-menu");
-    this.contextMenuOptionCopyDID = page.getByTestId(
+    this.contextMenuUserID = this.page.locator("#context-menu");
+    this.contextMenuOptionCopyDID = this.page.getByTestId(
       "context-menu-option-Copy DID",
     );
-    this.contextMenuOptionCopyID = page.getByTestId(
+    this.contextMenuOptionCopyID = this.page.getByTestId(
       "context-menu-option-Copy ID",
     );
-    this.contextMenuOptionDeleteBannerPicture = page.getByTestId(
+    this.contextMenuOptionDeleteBannerPicture = this.page.getByTestId(
       "context-menu-option-Delete Banner Picture",
     );
-    this.contextMenuOptionDeleteProfilePicture = page.getByTestId(
+    this.contextMenuOptionDeleteProfilePicture = this.page.getByTestId(
       "context-menu-option-Delete Profile Picture",
     );
-    this.identiconSettingsProfile = page.locator(".identicon").locator("img");
-    this.inputSettingsProfileShortID = page.getByTestId(
+    this.identiconSettingsProfile = this.page
+      .locator(".identicon")
+      .locator("img");
+    this.inputSettingsProfileShortID = this.page.getByTestId(
       "input-settings-profile-short-id",
     );
-    this.inputSettingsProfileShortIDGroup = page.locator(
+    this.inputSettingsProfileShortIDGroup = this.page.locator(
       '[data-tooltip="Copy"]',
     );
-    this.inputSettingsProfileStatus = page.getByTestId(
+    this.inputSettingsProfileStatus = this.page.getByTestId(
       "input-settings-profile-status-message",
     );
-    this.inputSettingsProfileUsername = page.getByTestId(
+    this.inputSettingsProfileUsername = this.page.getByTestId(
       "input-settings-profile-username",
     );
-    this.labelSettingsProfileStatusMessage = page.getByTestId(
+    this.labelSettingsProfileStatusMessage = this.page.getByTestId(
       "label-settings-profile-status-message",
     );
-    this.labelSettingsProfileUsername = page.getByTestId(
+    this.labelSettingsProfileUsername = this.page.getByTestId(
       "label-settings-profile-username",
     );
-    this.logOutSection = page.getByTestId("section-log-out");
+    this.logOutSection = this.page.getByTestId("section-log-out");
     this.logOutSectionButton = this.logOutSection.getByTestId("button-log-out");
     this.logOutSectionLabel = this.logOutSection.getByTestId(
       "setting-section-label",
@@ -202,7 +204,7 @@ export class SettingsProfile extends SettingsBase {
     this.logOutSectionText = this.logOutSection.getByTestId(
       "setting-section-text",
     );
-    this.onlineStatusSection = page.getByTestId("section-online-status");
+    this.onlineStatusSection = this.page.getByTestId("section-online-status");
     this.onlineStatusSectionLabel = this.onlineStatusSection.getByTestId(
       "setting-section-label",
     );
@@ -221,18 +223,20 @@ export class SettingsProfile extends SettingsBase {
     this.onlineStatusSectionText = this.onlineStatusSection.getByTestId(
       "setting-section-text",
     );
-    this.profileBanner = page.getByTestId("profile-banner");
-    this.profileBannerContainer = page.locator(".profile-header");
+    this.profileBanner = this.page.getByTestId("profile-banner");
+    this.profileBannerContainer = this.page.locator(".profile-header");
     this.profileBannerInput = this.profileBannerContainer.locator("input");
-    this.profileImage = page.getByTestId("profile-image");
-    this.profileImageFrame = page.getByTestId("profile-image-frame");
-    this.profilePicture = page.getByTestId("profile-picture");
-    this.profilePictureContainer = page.locator(".profile-picture-container");
+    this.profileImage = this.page.getByTestId("profile-image");
+    this.profileImageFrame = this.page.getByTestId("profile-image-frame");
+    this.profilePicture = this.page.getByTestId("profile-picture");
+    this.profilePictureContainer = this.page.locator(
+      ".profile-picture-container",
+    );
     this.profilePictureInput = this.profilePictureContainer.locator("input");
     this.profilePictureUploadButton =
       this.profilePictureContainer.getByTestId("button-file-upload");
     this.profilePictureImage = this.profilePicture.locator("img");
-    this.revealPhraseSection = page.getByTestId("section-reveal-phrase");
+    this.revealPhraseSection = this.page.getByTestId("section-reveal-phrase");
     this.revealPhraseSectionHideButton =
       this.revealPhraseSection.getByTestId("button-hide-phrase");
     this.revealPhraseSectionRevealButton = this.revealPhraseSection.getByTestId(
@@ -250,12 +254,12 @@ export class SettingsProfile extends SettingsBase {
       this.revealPhraseSection.getByTestId("word-number");
     this.revealPhraseSectionWordValue =
       this.revealPhraseSection.getByTestId("word-value");
-    this.saveControls = page.getByTestId("save-controls");
+    this.saveControls = this.page.getByTestId("save-controls");
     this.saveControlsButtonCancel =
       this.saveControls.getByTestId("button-cancel");
     this.saveControlsButtonSave = this.saveControls.getByTestId("button-save");
 
-    this.storeRecoverySeedSection = page.getByTestId(
+    this.storeRecoverySeedSection = this.page.getByTestId(
       "section-store-recovery-seed",
     );
     this.storeRecoverySeedCheckbox = this.storeRecoverySeedSection.getByTestId(
@@ -264,7 +268,7 @@ export class SettingsProfile extends SettingsBase {
     this.storeRecoverySeedText = this.storeRecoverySeedSection.getByTestId(
       "text-store-recovery-seed",
     );
-    this.warningMessage = page.locator(".warning");
+    this.warningMessage = this.page.locator(".warning");
   }
 
   // Rewrite everything here in playwright

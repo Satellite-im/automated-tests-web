@@ -108,12 +108,10 @@ test.describe("Chats Tests - Two instances", () => {
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
     await friendsScreenFirst.chatWithFriend(usernameTwo);
-    await page1.waitForURL("/chat");
 
     // With Second User, go to All Friends and click on Chat Button
     await friendsScreenSecond.goToAllFriendsList();
     await friendsScreenSecond.chatWithFriend(username);
-    await page2.waitForURL("/chat");
 
     // B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat
     await expect(chatsMainPageSecond.chatEncryptedMessage).toBeAttached();
@@ -253,11 +251,9 @@ test.describe("Chats Tests - Two instances", () => {
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
-    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user
     await friendsScreenSecond.chatWithFriend(username);
-    await page2.waitForURL("/chat");
 
     // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
     // First when button is not clicked
@@ -340,11 +336,9 @@ test.describe("Chats Tests - Two instances", () => {
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
-    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user and send a message
     await friendsScreenSecond.chatWithFriend(username);
-    await page2.waitForURL("/chat");
 
     // Validate chat preview is displayed on sidebar - Default values when no messages have been sent
     // C11 - ProfilePicFrame should display for any friends that have one
@@ -543,22 +537,18 @@ test.describe("Chats Tests - Two instances", () => {
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
-    await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user and send a message
     await friendsScreenSecond.chatWithFriend(username);
-    await page2.waitForURL("/chat");
 
     // Validate second user is in chats page and send 20 messages
 
     for (let i = 0; i < 20; i++) {
       const randomSentence = faker.lorem.sentence(3);
       await chatsMainPageSecond.sendMessage(randomSentence);
-      await page2.getByText(randomSentence).waitFor({ state: "attached" });
       await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
         randomSentence,
       );
-      await page1.getByText(randomSentence).waitFor({ state: "attached" });
       await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
         randomSentence,
       );

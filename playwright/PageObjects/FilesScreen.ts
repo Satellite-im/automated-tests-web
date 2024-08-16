@@ -2,7 +2,6 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class FilesPage extends MainPage {
-  readonly page: Page;
   readonly buttonFilesSync: Locator;
   readonly buttonFilesGiftSpace: Locator;
   readonly buttonFilesRentSpace: Locator;
@@ -28,35 +27,44 @@ export class FilesPage extends MainPage {
   readonly uploadFileButton: Locator;
   readonly uploadFileInput: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.buttonFilesSync = page.getByTestId("button-files-sync");
-    this.buttonFilesGiftSpace = page.getByTestId("button-files-gift-space");
-    this.buttonFilesRentSpace = page.getByTestId("button-files-rent-space");
-    this.buttonFilesCreateNode = page.getByTestId("button-files-create-node");
-    this.contextMenuFile = page.getByTestId("context-menu-file");
-    this.contextMenuFolder = page.getByTestId("context-menu-folder");
-    this.contextOptionDelete = page.getByTestId("context-menu-option-Delete");
-    this.contextOptionDownload = page.getByTestId(
+    this.buttonFilesSync = this.page.getByTestId("button-files-sync");
+    this.buttonFilesGiftSpace = this.page.getByTestId(
+      "button-files-gift-space",
+    );
+    this.buttonFilesRentSpace = this.page.getByTestId(
+      "button-files-rent-space",
+    );
+    this.buttonFilesCreateNode = this.page.getByTestId(
+      "button-files-create-node",
+    );
+    this.contextMenuFile = this.page.getByTestId("context-menu-file");
+    this.contextMenuFolder = this.page.getByTestId("context-menu-folder");
+    this.contextOptionDelete = this.page.getByTestId(
+      "context-menu-option-Delete",
+    );
+    this.contextOptionDownload = this.page.getByTestId(
       "context-menu-option-Download",
     );
-    this.contextOptionRename = page.getByTestId("context-menu-option-Rename");
-    this.filePreviewImage = page.getByTestId("file-preview-image");
-    this.freeSpaceLabel = page.getByTestId("label-files-free-space");
-    this.freeSpaceValue = page.getByTestId("text-files-free-space");
-    this.inputFileFolderName = page.getByTestId("input-file-folder-name");
-    this.goBackButton = page.getByTestId("button-folder-back");
-    this.newFolderButton = page.getByTestId("button-new-folder");
-    this.progressButton = page.getByTestId("progress-button");
-    this.quickActionsLabel = page.getByTestId("label-quick-actions");
-    this.totalSpaceLabel = page.getByTestId("label-files-total-space");
-    this.totalSpaceValue = page.getByTestId("text-files-total-space");
-    this.treeFolder = page.locator('[data-cy^="tree-folder-"]');
-    this.treeItem = page.locator('[data-cy^="tree-item-"]');
-    this.treeNode = page.locator('[data-cy^="tree-node-"]');
-    this.uploadFileButton = page.getByTestId("button-upload-file");
-    this.uploadFileInput = page.getByTestId("input=upload-files");
+    this.contextOptionRename = this.page.getByTestId(
+      "context-menu-option-Rename",
+    );
+    this.filePreviewImage = this.page.getByTestId("file-preview-image");
+    this.freeSpaceLabel = this.page.getByTestId("label-files-free-space");
+    this.freeSpaceValue = this.page.getByTestId("text-files-free-space");
+    this.inputFileFolderName = this.page.getByTestId("input-file-folder-name");
+    this.goBackButton = this.page.getByTestId("button-folder-back");
+    this.newFolderButton = this.page.getByTestId("button-new-folder");
+    this.progressButton = this.page.getByTestId("progress-button");
+    this.quickActionsLabel = this.page.getByTestId("label-quick-actions");
+    this.totalSpaceLabel = this.page.getByTestId("label-files-total-space");
+    this.totalSpaceValue = this.page.getByTestId("text-files-total-space");
+    this.treeFolder = this.page.locator('[data-cy^="tree-folder-"]');
+    this.treeItem = this.page.locator('[data-cy^="tree-item-"]');
+    this.treeNode = this.page.locator('[data-cy^="tree-node-"]');
+    this.uploadFileButton = this.page.getByTestId("button-upload-file");
+    this.uploadFileInput = this.page.getByTestId("input=upload-files");
   }
 
   async createNewFolder(folderName: string) {

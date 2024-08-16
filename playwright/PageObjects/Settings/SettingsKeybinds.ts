@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class SettingsKeybinds extends SettingsBase {
-  readonly page: Page;
   readonly bannerText: Locator;
   readonly existingKeybind: Locator;
   readonly existingKeybindDescription: Locator;
@@ -25,18 +24,19 @@ export class SettingsKeybinds extends SettingsBase {
   readonly revertKeybindSectionText: Locator;
   readonly revertKeybindSectionAllButton: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.bannerText = page.getByTestId("banner-text");
-    this.existingKeybind = page.getByTestId("keybind");
-    this.existingKeybindDescription = page.getByTestId("text-keybind-action");
-    this.existingKeybindButton = page.getByTestId("key-button");
-    this.existingKeybindButtonText = page.getByTestId("key-button-text");
-    this.existingKeybindRevertButton = page.getByTestId(
+    this.bannerText = this.page.getByTestId("banner-text");
+    this.existingKeybind = this.page.getByTestId("keybind");
+    this.existingKeybindDescription = this.page.getByTestId(
+      "text-keybind-action",
+    );
+    this.existingKeybindButton = this.page.getByTestId("key-button");
+    this.existingKeybindButtonText = this.page.getByTestId("key-button-text");
+    this.existingKeybindRevertButton = this.page.getByTestId(
       "button-keybind-revert-single",
     );
-    this.newKeybindSection = page.getByTestId("section-new-keybind");
+    this.newKeybindSection = this.page.getByTestId("section-new-keybind");
     this.newKeybindActionLabel = this.newKeybindSection.getByTestId(
       "label-keybind-action",
     );
@@ -57,18 +57,18 @@ export class SettingsKeybinds extends SettingsBase {
     this.newKeybindSaveButton = this.newKeybindSection.getByTestId(
       "button-keybind-save",
     );
-    this.recordKeybindLabel = page.getByTestId("label-record-keybind");
-    this.recordKeybindInstructionsText = page.getByTestId(
+    this.recordKeybindLabel = this.page.getByTestId("label-record-keybind");
+    this.recordKeybindInstructionsText = this.page.getByTestId(
       "text-keybind-instructions",
     );
-    this.revertKeybindSection = page.getByTestId("section-revert-keybind");
+    this.revertKeybindSection = this.page.getByTestId("section-revert-keybind");
     this.revertKeybindSectionLabel = this.revertKeybindSection.getByTestId(
       "setting-section-label",
     );
     this.revertKeybindSectionText = this.revertKeybindSection.getByTestId(
       "setting-section-text",
     );
-    this.revertKeybindSectionAllButton = page.getByTestId(
+    this.revertKeybindSectionAllButton = this.page.getByTestId(
       "button-keybind-revert-all",
     );
   }

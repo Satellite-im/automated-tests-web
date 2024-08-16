@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class SettingsCustomizations extends SettingsBase {
-  readonly page: Page;
   readonly appLanguageSection: Locator;
   readonly appLanguageSectionLabel: Locator;
   readonly appLanguageSectionSelector: Locator;
@@ -61,38 +60,41 @@ export class SettingsCustomizations extends SettingsBase {
   readonly widgetPanelSectionSlider: Locator;
   readonly widgetPanelSectionText: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.appLanguageSection = page.getByTestId("section-app-language");
+    this.appLanguageSection = this.page.getByTestId("section-app-language");
     this.appLanguageSectionLabel = this.appLanguageSection.getByTestId(
       "setting-section-label",
     );
-    this.appLanguageSectionSelector = page.getByTestId("selector-app-language");
+    this.appLanguageSectionSelector = this.page.getByTestId(
+      "selector-app-language",
+    );
     this.appLanguageSectionSelectorOption =
       this.appLanguageSectionSelector.getByTestId("select-option");
     this.appLanguageSectionText = this.appLanguageSection.getByTestId(
       "setting-section-text",
     );
-    this.customCSSSection = page.getByTestId("section-custom-css");
+    this.customCSSSection = this.page.getByTestId("section-custom-css");
     this.customCSSSectionLabel = this.customCSSSection.getByTestId(
       "setting-section-label",
     );
     this.customCSSSectionText = this.customCSSSection.getByTestId(
       "setting-section-text",
     );
-    this.customCSSSectionTextArea = page.getByTestId("text-area-custom-css");
-    this.emojiFontSection = page.getByTestId("section-emoji-font");
+    this.customCSSSectionTextArea = this.page.getByTestId(
+      "text-area-custom-css",
+    );
+    this.emojiFontSection = this.page.getByTestId("section-emoji-font");
     this.emojiFontSectionLabel = this.emojiFontSection.getByTestId(
       "setting-section-label",
     );
     this.emojiFontSectionButton = this.emojiFontSection.getByTestId(
       "button-emoji-font-open-folder",
     );
-    this.emojiFontSectionRandomEmoji = page.getByTestId(
+    this.emojiFontSectionRandomEmoji = this.page.getByTestId(
       "emoji-font-random-emoji",
     );
-    this.emojiFontSectionSelector = page.locator(
+    this.emojiFontSectionSelector = this.page.locator(
       '[data-cy^="selector-current-emoji-font-"]',
     );
     this.emojiFontSectionSelectorOption =
@@ -100,18 +102,18 @@ export class SettingsCustomizations extends SettingsBase {
     this.emojiFontSectionText = this.emojiFontSection.getByTestId(
       "setting-section-text",
     );
-    this.fontSection = page.getByTestId("section-font");
-    this.fontSectionButton = page.getByTestId("button-font-open-folder");
+    this.fontSection = this.page.getByTestId("section-font");
+    this.fontSectionButton = this.page.getByTestId("button-font-open-folder");
     this.fontSectionLabel = this.fontSection.getByTestId(
       "setting-section-label",
     );
-    this.fontSectionSelector = page.locator(
+    this.fontSectionSelector = this.page.locator(
       '[data-cy^="selector-current-font-"]',
     );
     this.fontSectionSelectorOption =
       this.fontSectionSelector.getByTestId("select-option");
     this.fontSectionText = this.fontSection.getByTestId("setting-section-text");
-    this.fontScalingSection = page.getByTestId("section-font-scaling");
+    this.fontScalingSection = this.page.getByTestId("section-font-scaling");
     this.fontScalingSectionDecreaseButton = this.fontScalingSection.getByTestId(
       "button-font-scaling-decrease",
     );
@@ -126,17 +128,17 @@ export class SettingsCustomizations extends SettingsBase {
     this.fontScalingSectionText = this.fontScalingSection.getByTestId(
       "setting-section-text",
     );
-    this.identiconSection = page.getByTestId("section-identicon");
+    this.identiconSection = this.page.getByTestId("section-identicon");
     this.identiconSectionButton = this.identiconSection.getByTestId(
       "button-identicon-open-folder",
     );
     this.identiconSectionLabel = this.identiconSection.getByTestId(
       "setting-section-label",
     );
-    this.identiconSectionProfilePicture = page.getByTestId(
+    this.identiconSectionProfilePicture = this.page.getByTestId(
       "identicon-profile-picture",
     );
-    this.identiconSectionSelector = page.locator(
+    this.identiconSectionSelector = this.page.locator(
       '[data-cy^="selector-current-identicon-"]',
     );
     this.identiconSectionSelectorOption =
@@ -144,7 +146,7 @@ export class SettingsCustomizations extends SettingsBase {
     this.identiconSectionText = this.identiconSection.getByTestId(
       "setting-section-text",
     );
-    this.minimalCallingAlertsSection = page.getByTestId(
+    this.minimalCallingAlertsSection = this.page.getByTestId(
       "section-minimal-call-alerts",
     );
     this.minimalCallingAlertsSectionCheckbox =
@@ -157,33 +159,34 @@ export class SettingsCustomizations extends SettingsBase {
       this.minimalCallingAlertsSection.getByTestId("setting-section-text");
     this.minimalCallingAlertsSectionSlider =
       this.minimalCallingAlertsSection.locator(".slider");
-    this.primaryColorSection = page.getByTestId("section-primary-color");
+    this.primaryColorSection = this.page.getByTestId("section-primary-color");
     this.primaryColorSectionColorSwatchButton =
       this.primaryColorSection.getByTestId("color-swatch");
     this.primaryColorSectionLabel = this.primaryColorSection.getByTestId(
       "setting-section-label",
     );
-    this.primaryColorSectionPopUpButton = page.getByTestId(
+    this.primaryColorSectionPopUpButton = this.page.getByTestId(
       "primary-color-popup-button",
     );
     this.primaryColorSectionText = this.primaryColorSection.getByTestId(
       "setting-section-text",
     );
-    this.themeSection = page.getByTestId("section-theme");
-    this.themeSectionOpenFolderButton = page.getByTestId(
+    this.themeSection = this.page.getByTestId("section-theme");
+    this.themeSectionOpenFolderButton = this.page.getByTestId(
       "button-theme-open-folder",
     );
-    this.themeSectionThemeMoonButton = page.getByTestId("theme-moon-button");
+    this.themeSectionThemeMoonButton =
+      this.page.getByTestId("theme-moon-button");
     this.themeSectionLabel = this.themeSection.getByTestId(
       "setting-section-label",
     );
-    this.themeSectionSelector = page.getByTestId("selector-theme");
+    this.themeSectionSelector = this.page.getByTestId("selector-theme");
     this.themeSectionSelectorOption =
       this.themeSectionSelector.getByTestId("select-option");
     this.themeSectionText = this.themeSection.getByTestId(
       "setting-section-text",
     );
-    this.widgetPanelSection = page.getByTestId("section-widget-panel");
+    this.widgetPanelSection = this.page.getByTestId("section-widget-panel");
     this.widgetPanelSectionCheckbox = this.widgetPanelSection.getByTestId(
       "switch-widget-panel",
     );

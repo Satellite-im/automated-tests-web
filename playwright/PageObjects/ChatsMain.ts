@@ -2,7 +2,6 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class ChatsMainPage extends MainPage {
-  readonly page: Page;
   readonly addSomeone: Locator;
   readonly buttonAddAttachment: Locator;
   readonly buttonAddFriends: Locator;
@@ -82,35 +81,40 @@ export class ChatsMainPage extends MainPage {
   readonly statusIndicator: Locator;
   readonly topbar: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.addSomeone = page.locator(".add-someone");
-    this.buttonAddAttachment = page.getByTestId("button-add-attachment");
-    this.buttonAddFriends = page.getByTestId("button-add-friends");
-    this.buttonChatAddAttachment = page.getByTestId(
+    this.addSomeone = this.page.locator(".add-someone");
+    this.buttonAddAttachment = this.page.getByTestId("button-add-attachment");
+    this.buttonAddFriends = this.page.getByTestId("button-add-friends");
+    this.buttonChatAddAttachment = this.page.getByTestId(
       "button-chat-add-attachment",
     );
-    this.buttonChatCall = page.getByTestId("button-chat-call");
-    this.buttonChatFavorite = page.getByTestId("button-chat-favorite");
-    this.buttonChatPin = page.getByTestId("button-chat-pin");
-    this.buttonChatTransact = page.getByTestId("button-chat-transact");
-    this.buttonChatVideo = page.getByTestId("button-chat-video");
-    this.buttonChatbarEmojiPicker = page.getByTestId(
+    this.buttonChatCall = this.page.getByTestId("button-chat-call");
+    this.buttonChatFavorite = this.page.getByTestId("button-chat-favorite");
+    this.buttonChatPin = this.page.getByTestId("button-chat-pin");
+    this.buttonChatTransact = this.page.getByTestId("button-chat-transact");
+    this.buttonChatVideo = this.page.getByTestId("button-chat-video");
+    this.buttonChatbarEmojiPicker = this.page.getByTestId(
       "button-chatbar-emoji-picker",
     );
-    this.buttonChatbarGifPicker = page.getByTestId("button-chatbar-gif-picker");
-    this.buttonChatbarSendMessage = page.getByTestId(
+    this.buttonChatbarGifPicker = this.page.getByTestId(
+      "button-chatbar-gif-picker",
+    );
+    this.buttonChatbarSendMessage = this.page.getByTestId(
       "button-chatbar-send-message",
     );
-    this.buttonChatbarStickerPicker = page.getByTestId(
+    this.buttonChatbarStickerPicker = this.page.getByTestId(
       "button-chatbar-sticker-picker",
     );
-    this.buttonCreateGroupChat = page.getByTestId("button-create-group-chat");
-    this.buttonMarketplace = page.getByTestId("button-marketplace");
-    this.chatEncryptedMessage = page.getByTestId("chat-encrypted-notice");
-    this.chatEncryptedMessageText = page.getByTestId("chat-encrypted-text");
-    this.chatbar = page.getByTestId("chatbar");
+    this.buttonCreateGroupChat = this.page.getByTestId(
+      "button-create-group-chat",
+    );
+    this.buttonMarketplace = this.page.getByTestId("button-marketplace");
+    this.chatEncryptedMessage = this.page.getByTestId("chat-encrypted-notice");
+    this.chatEncryptedMessageText = this.page.getByTestId(
+      "chat-encrypted-text",
+    );
+    this.chatbar = this.page.getByTestId("chatbar");
     this.chatbarInput = page
       .locator(".cm-editor")
       .locator(".cm-scroller")
@@ -118,116 +122,126 @@ export class ChatsMainPage extends MainPage {
     this.chatbarInputContainer = page
       .locator('[data-cy="chatbar-input"]')
       .locator("xpath=..");
-    this.chatTopbarProfilePicture = page.getByTestId(
+    this.chatTopbarProfilePicture = this.page.getByTestId(
       "chat-topbar-profile-picture",
     );
     this.chatTopbarProfilePictureImage =
       this.chatTopbarProfilePicture.locator("img");
     this.chatTopbarProfileStatusIndicator =
       this.chatTopbarProfilePicture.getByTestId("status-indicator");
-    this.chatTopbarStatus = page.getByTestId("chat-topbar-status");
-    this.chatTopbarUsername = page.getByTestId("chat-topbar-username");
+    this.chatTopbarStatus = this.page.getByTestId("chat-topbar-status");
+    this.chatTopbarUsername = this.page.getByTestId("chat-topbar-username");
     this.coinAmountIndicator = page
       .getByTestId("topbar")
       .locator("button")
       .first()
       .locator("p");
-    this.contextMenuChatMessage = page.getByTestId("context-menu-chat-message");
-    this.contextMenuOptionCopyMessage = page.getByTestId(
+    this.contextMenuChatMessage = this.page.getByTestId(
+      "context-menu-chat-message",
+    );
+    this.contextMenuOptionCopyMessage = this.page.getByTestId(
       "context-menu-option-Copy",
     );
-    this.contextMenuOptionFavorite = page.getByTestId(
+    this.contextMenuOptionFavorite = this.page.getByTestId(
       "context-menu-option-Favorite",
     );
-    this.contextMenuOptionHide = page.getByTestId("context-menu-option-Hide");
-    this.contextMenuOptionMarkRead = page.getByTestId(
+    this.contextMenuOptionHide = this.page.getByTestId(
+      "context-menu-option-Hide",
+    );
+    this.contextMenuOptionMarkRead = this.page.getByTestId(
       "context-menu-option-Mark Read",
     );
-    this.contextMenuOptionPinMessage = page.getByTestId(
+    this.contextMenuOptionPinMessage = this.page.getByTestId(
       "context-menu-option-Pin Message",
     );
-    this.contextMenuOptionReplyMessage = page.getByTestId(
+    this.contextMenuOptionReplyMessage = this.page.getByTestId(
       "context-menu-option-Reply",
     );
-    this.contextMenuSidebarChat = page.getByTestId("context-menu-sidebar-chat");
-    this.contextMenuOptionUnpinMessage = page.getByTestId(
+    this.contextMenuSidebarChat = this.page.getByTestId(
+      "context-menu-sidebar-chat",
+    );
+    this.contextMenuOptionUnpinMessage = this.page.getByTestId(
       "context-menu-option-Unpin Message",
     );
-    this.createGroupButton = page.getByTestId("button-create-group");
-    this.createGroupModal = page.getByTestId("modal-create-group-chat");
-    this.createGroupInputGroupName = page.getByTestId(
+    this.createGroupButton = this.page.getByTestId("button-create-group");
+    this.createGroupModal = this.page.getByTestId("modal-create-group-chat");
+    this.createGroupInputGroupName = this.page.getByTestId(
       "input-create-group-name",
     );
-    this.createGroupLabelGroupMembers = page.getByTestId(
+    this.createGroupLabelGroupMembers = this.page.getByTestId(
       "label-create-group-members",
     );
-    this.createGroupLabelGroupName = page.getByTestId(
+    this.createGroupLabelGroupName = this.page.getByTestId(
       "label-create-group-name",
     );
-    this.createGroupLabelSelectMembers = page.getByTestId(
+    this.createGroupLabelSelectMembers = this.page.getByTestId(
       "label-create-group-select-members",
     );
-    this.emojiButton = page.locator('[data-cy^="button-emoji-"]');
-    this.emojiGroup = page.getByTestId("emoji-group");
-    this.emojiPickerButton = page.getByTestId("button-emoji-picker");
+    this.emojiButton = this.page.locator('[data-cy^="button-emoji-"]');
+    this.emojiGroup = this.page.getByTestId("emoji-group");
+    this.emojiPickerButton = this.page.getByTestId("button-emoji-picker");
     this.inputAddAttachment = page
       .locator('[data-cy="button-add-attachment"]')
       .locator("xpath=..")
       .locator("input");
-    this.labelPinnedMessages = page.getByTestId("label-pinned-messages");
+    this.labelPinnedMessages = this.page.getByTestId("label-pinned-messages");
     this.messageBubbleContent = page
       .getByTestId("message-bubble-content")
       .locator("p")
       .locator("p");
-    this.messabeBubbleLocal = page.getByTestId("message-bubble-local");
-    this.messageBubbleRemote = page.getByTestId("message-bubble-remote");
-    this.messageGroupLocal = page.getByTestId("message-group-local");
-    this.messageGroupLocalProfilePicture = page.getByTestId(
+    this.messabeBubbleLocal = this.page.getByTestId("message-bubble-local");
+    this.messageBubbleRemote = this.page.getByTestId("message-bubble-remote");
+    this.messageGroupLocal = this.page.getByTestId("message-group-local");
+    this.messageGroupLocalProfilePicture = this.page.getByTestId(
       "message-group-local-profile-picture",
     );
     this.messageGroupLocalProfileStatusIndicator =
       this.messageGroupLocalProfilePicture.getByTestId("status-indicator");
-    this.messageGroupRemote = page.getByTestId("message-group-remote");
-    this.messageGroupRemoteProfilePicture = page.getByTestId(
+    this.messageGroupRemote = this.page.getByTestId("message-group-remote");
+    this.messageGroupRemoteProfilePicture = this.page.getByTestId(
       "message-group-remote-profile-picture",
     );
     this.messageGroupRemoteProfileStatusIndicator =
       this.messageGroupRemoteProfilePicture.getByTestId("status-indicator");
-    this.messageGroupTimestamp = page.getByTestId("message-group-timestamp");
-    this.messageGroupUsername = page.getByTestId("message-group-username");
-    this.messagePinIndicator = page.getByTestId("message-pin-indicator");
-    this.pendingFileCancelButton = page.getByTestId(
+    this.messageGroupTimestamp = this.page.getByTestId(
+      "message-group-timestamp",
+    );
+    this.messageGroupUsername = this.page.getByTestId("message-group-username");
+    this.messagePinIndicator = this.page.getByTestId("message-pin-indicator");
+    this.pendingFileCancelButton = this.page.getByTestId(
       "button-pending-file-cancel",
     );
-    this.pendingFileName = page.getByTestId("pending-file-name");
-    this.pendingFileSize = page.getByTestId("pending-file-size");
-    this.pendingFileUploadProgress = page.getByTestId(
+    this.pendingFileName = this.page.getByTestId("pending-file-name");
+    this.pendingFileSize = this.page.getByTestId("pending-file-size");
+    this.pendingFileUploadProgress = this.page.getByTestId(
       "pending-file-upload-progress",
     );
-    this.pendingMessage = page.getByTestId("pending-message");
-    this.pendingMessageText = page.getByTestId("pending-message-text");
-    this.pendingMessageGroup = page.getByTestId("pending-message-group");
-    this.pinnedMessage = page.getByTestId("pinned-message");
-    this.pinnedMessageButtonGoTo = page.getByTestId(
+    this.pendingMessage = this.page.getByTestId("pending-message");
+    this.pendingMessageText = this.page.getByTestId("pending-message-text");
+    this.pendingMessageGroup = this.page.getByTestId("pending-message-group");
+    this.pinnedMessage = this.page.getByTestId("pinned-message");
+    this.pinnedMessageButtonGoTo = this.page.getByTestId(
       "pinned-message-button-go-to",
     );
-    this.pinnedMessageButtonUnpin = page.getByTestId(
+    this.pinnedMessageButtonUnpin = this.page.getByTestId(
       "pinned-message-button-unpin",
     );
-    this.pinnedMessageProfilePicture = page.getByTestId(
+    this.pinnedMessageProfilePicture = this.page.getByTestId(
       "pinned-message-profile-picture",
     );
     this.pinnedMessageProfileStatusIndicator =
       this.pinnedMessageProfilePicture.getByTestId("status-indicator");
-    this.pinnedMessageSender = page.getByTestId("pinned-message-sender");
-    this.pinnedMessageText = page.getByTestId("pinned-message-text");
-    this.pinnedMessageTimestamp = page.getByTestId("pinned-message-timestamp");
-    this.pinnedMessagesContainer = page.getByTestId(
+    this.pinnedMessageSender = this.page.getByTestId("pinned-message-sender");
+    this.pinnedMessageText = this.page.getByTestId("pinned-message-text");
+    this.pinnedMessageTimestamp = this.page.getByTestId(
+      "pinned-message-timestamp",
+    );
+    this.pinnedMessagesContainer = this.page.getByTestId(
       "pinned-messages-container",
     );
-    this.pinnedMessagesEmpty = page.getByTestId("pinned-messages-empty");
-    this.sectionAddSomeone = page.getByTestId("section-add-someone");
-    this.topbar = page.getByTestId("topbar");
+    this.pinnedMessagesEmpty = this.page.getByTestId("pinned-messages-empty");
+    this.sectionAddSomeone = this.page.getByTestId("section-add-someone");
+    this.topbar = this.page.getByTestId("topbar");
   }
 
   async getLastLocalProfilePicture() {

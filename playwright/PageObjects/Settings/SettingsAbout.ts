@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
 export class SettingsAbout extends SettingsBase {
-  readonly page: Page;
   readonly aboutSection: Locator;
   readonly aboutSectionLabel: Locator;
   readonly aboutSectionText: Locator;
@@ -27,36 +26,35 @@ export class SettingsAbout extends SettingsBase {
   readonly websiteSectionLabel: Locator;
   readonly websiteSectionText: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.aboutSection = page.getByTestId("section-about-header");
+    this.aboutSection = this.page.getByTestId("section-about-header");
     this.aboutSectionLabel = this.aboutSection.getByTestId(
       "setting-section-label",
     );
     this.aboutSectionText = this.aboutSection.getByTestId(
       "setting-section-text",
     );
-    this.devModeSection = page.getByTestId("section-about-dev-mode");
-    this.devModeSectionButton = page.getByTestId("button-about-dev-mode");
+    this.devModeSection = this.page.getByTestId("section-about-dev-mode");
+    this.devModeSectionButton = this.page.getByTestId("button-about-dev-mode");
     this.devModeSectionLabel = this.devModeSection.getByTestId(
       "setting-section-label",
     );
     this.devModeSectionText = this.devModeSection.getByTestId(
       "setting-section-text",
     );
-    this.madeInSection = page.getByTestId("section-about-made-in");
-    this.madeInSectionFlags = page.getByTestId("about-made-in-flags");
+    this.madeInSection = this.page.getByTestId("section-about-made-in");
+    this.madeInSectionFlags = this.page.getByTestId("about-made-in-flags");
     this.madeInSectionLabel = this.madeInSection.getByTestId(
       "setting-section-label",
     );
     this.madeInSectionText = this.madeInSection.getByTestId(
       "setting-section-text",
     );
-    this.openSourceCodeSection = page.getByTestId(
+    this.openSourceCodeSection = this.page.getByTestId(
       "section-about-open-source-code",
     );
-    this.openSourceCodeSectionButton = page.getByTestId(
+    this.openSourceCodeSectionButton = this.page.getByTestId(
       "button-open-source-code",
     );
     this.openSourceCodeSectionLabel = this.openSourceCodeSection.getByTestId(
@@ -65,16 +63,16 @@ export class SettingsAbout extends SettingsBase {
     this.openSourceCodeSectionText = this.openSourceCodeSection.getByTestId(
       "setting-section-text",
     );
-    this.versionSection = page.getByTestId("section-about-version");
-    this.versionSectionButton = page.getByTestId("button-about-version");
+    this.versionSection = this.page.getByTestId("section-about-version");
+    this.versionSectionButton = this.page.getByTestId("button-about-version");
     this.versionSectionLabel = this.versionSection.getByTestId(
       "setting-section-label",
     );
     this.versionSectionText = this.versionSection.getByTestId(
       "setting-section-text",
     );
-    this.websiteSection = page.getByTestId("section-about-website");
-    this.websiteSectionButton = page.getByTestId("button-open-website");
+    this.websiteSection = this.page.getByTestId("section-about-website");
+    this.websiteSectionButton = this.page.getByTestId("button-open-website");
     this.websiteSectionLabel = this.websiteSection.getByTestId(
       "setting-section-label",
     );

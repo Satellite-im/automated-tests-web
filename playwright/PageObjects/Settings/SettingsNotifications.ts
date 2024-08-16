@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
 export class SettingsNotifications extends SettingsBase {
-  readonly page: Page;
   readonly enabledSection: Locator;
   readonly enabledSectionCheckbox: Locator;
   readonly enabledSectionLabel: Locator;
@@ -24,11 +23,12 @@ export class SettingsNotifications extends SettingsBase {
   readonly settingsSectionText: Locator;
   readonly settingsSectionSlider: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.enabledSection = page.getByTestId("section-notifications-enabled");
-    this.enabledSectionCheckbox = page.getByTestId(
+    this.enabledSection = this.page.getByTestId(
+      "section-notifications-enabled",
+    );
+    this.enabledSectionCheckbox = this.page.getByTestId(
       "switch-notifications-enabled",
     );
     this.enabledSectionLabel = this.enabledSection.getByTestId(
@@ -40,8 +40,10 @@ export class SettingsNotifications extends SettingsBase {
     this.enabledSectionSlider = this.page.locator(
       '[data-cy="section-notifications-enabled"] > .body > .content > .switch > .slider',
     );
-    this.friendsSection = page.getByTestId("section-notifications-friends");
-    this.friendsSectionCheckbox = page.getByTestId(
+    this.friendsSection = this.page.getByTestId(
+      "section-notifications-friends",
+    );
+    this.friendsSectionCheckbox = this.page.getByTestId(
       "switch-notifications-friends",
     );
     this.friendsSectionLabel = this.friendsSection.getByTestId(
@@ -53,8 +55,10 @@ export class SettingsNotifications extends SettingsBase {
     this.friendsSectionSlider = this.page.locator(
       '[data-cy="section-notifications-friends"] > .body > .content > .switch > .slider',
     );
-    this.messagesSection = page.getByTestId("section-notifications-messages");
-    this.messagesSectionCheckbox = page.getByTestId(
+    this.messagesSection = this.page.getByTestId(
+      "section-notifications-messages",
+    );
+    this.messagesSectionCheckbox = this.page.getByTestId(
       "switch-notifications-messages",
     );
     this.messagesSectionLabel = this.messagesSection.getByTestId(
@@ -66,8 +70,10 @@ export class SettingsNotifications extends SettingsBase {
     this.messagesSectionSlider = this.page.locator(
       '[data-cy="section-notifications-messages"] > .body > .content > .switch > .slider',
     );
-    this.settingsSection = page.getByTestId("section-notifications-settings");
-    this.settingsSectionCheckbox = page.getByTestId(
+    this.settingsSection = this.page.getByTestId(
+      "section-notifications-settings",
+    );
+    this.settingsSectionCheckbox = this.page.getByTestId(
       "switch-notifications-settings",
     );
     this.settingsSectionLabel = this.settingsSection.getByTestId(
