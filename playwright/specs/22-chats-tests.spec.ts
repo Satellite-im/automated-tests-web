@@ -68,11 +68,10 @@ test.describe("Chats Tests - Two instances", () => {
     },
   );
 
-  test.skip("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
+  test("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
-    context2,
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
@@ -86,13 +85,8 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Copy DID and save it into a constant
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -109,7 +103,7 @@ test.describe("Chats Tests - Two instances", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -214,11 +208,9 @@ test.describe("Chats Tests - Two instances", () => {
       .waitFor({ state: "visible" });
   });
 
-  test.skip("B7, B57, B58 - Favorites tests", async ({
+  test("B7, B57, B58 - Favorites tests", async ({
     chatsMainPageFirst,
-    chatsMainPageSecond,
     context1,
-    context2,
     filesPageFirst,
     friendsScreenFirst,
     friendsScreenSecond,
@@ -233,13 +225,8 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Copy DID and save it into a constant
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -256,7 +243,7 @@ test.describe("Chats Tests - Two instances", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -305,11 +292,10 @@ test.describe("Chats Tests - Two instances", () => {
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
   });
 
-  test.skip("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
+  test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
-    context2,
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
@@ -326,13 +312,8 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Copy DID and save it into a constant
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -349,7 +330,7 @@ test.describe("Chats Tests - Two instances", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -517,11 +498,10 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  test.skip("B56 - Chats Tests - Multiple messages testing", async ({
+  test("B56 - Chats Tests - Multiple messages testing", async ({
     chatsMainPageFirst,
     chatsMainPageSecond,
     context1,
-    context2,
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
@@ -535,13 +515,8 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Copy DID and save it into a constant
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -558,7 +533,7 @@ test.describe("Chats Tests - Two instances", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -575,12 +550,15 @@ test.describe("Chats Tests - Two instances", () => {
     await page2.waitForURL("/chat");
 
     // Validate second user is in chats page and send 20 messages
+
     for (let i = 0; i < 20; i++) {
       const randomSentence = faker.lorem.sentence(3);
       await chatsMainPageSecond.sendMessage(randomSentence);
+      await page2.getByText(randomSentence).waitFor({ state: "attached" });
       await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
         randomSentence,
       );
+      await page1.getByText(randomSentence).waitFor({ state: "attached" });
       await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
         randomSentence,
       );

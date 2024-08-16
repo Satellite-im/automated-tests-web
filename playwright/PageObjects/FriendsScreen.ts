@@ -101,8 +101,8 @@ export class FriendsScreen extends MainPage {
     );
   }
 
-  async acceptFriendRequest(username: string, didkey: string) {
-    const friendUser = await this.getFriendWithNameOrKey(username, didkey);
+  async acceptFriendRequest(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-accept").click();
   }
 
@@ -244,7 +244,6 @@ export class FriendsScreen extends MainPage {
   async validateIncomingRequestExists() {
     await this.textNoIncomingRequests.waitFor({
       state: "detached",
-      timeout: 60000,
     });
   }
 
@@ -279,7 +278,6 @@ export class FriendsScreen extends MainPage {
   async validateOutgoingRequestExists() {
     await this.textNoOutgoingRequests.waitFor({
       state: "detached",
-      timeout: 60000,
     });
   }
 
@@ -298,10 +296,9 @@ export class FriendsScreen extends MainPage {
   }
 
   async validateToastRequestSent() {
-    await this.toastNotificationText.waitFor({ state: "visible" });
-    await expect(this.toastNotificationText).toHaveText(
-      "Your request is making it's way!",
-    );
+    await this.page
+      .getByText("Your request is making it's way!")
+      .waitFor({ state: "visible" });
   }
 
   async validateURL() {

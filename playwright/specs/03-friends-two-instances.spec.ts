@@ -68,11 +68,9 @@ test.describe("Friends tests", () => {
 
   test("H15 - User should be removed from friends list after clicking unfriend", async ({
     context1,
-    context2,
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
-    page2,
   }) => {
     // H15 - User should be removed from friends list after clicking unfriend
     // Grant clipboard permissions, Copy DID and save it into a constant
@@ -83,13 +81,8 @@ test.describe("Friends tests", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Copy DID and save it into a constant
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -100,7 +93,7 @@ test.describe("Friends tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends
     await friendsScreenFirst.goToAllFriendsList();
@@ -131,11 +124,9 @@ test.describe("Friends tests", () => {
 
   test("H16, H17, H18, H26 - User can be block/unblocked", async ({
     context1,
-    context2,
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
-    page2,
   }) => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -145,13 +136,8 @@ test.describe("Friends tests", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Copy DID and save it into a constant
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -162,7 +148,7 @@ test.describe("Friends tests", () => {
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
     await friendsScreenFirst.goToAllFriendsList();
     await friendsScreenFirst.validateFriendListIsDisplayed("C");
 
@@ -204,9 +190,7 @@ test.describe("Friends tests", () => {
     friendsScreenFirst,
     friendsScreenSecond,
     context1,
-    context2,
     page1,
-    page2,
   }) => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -216,13 +200,8 @@ test.describe("Friends tests", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+    // Copy DID and save it into a constant
     await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -235,7 +214,7 @@ test.describe("Friends tests", () => {
     // With First User, go to requests list and accept friend request
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo, didKeySecondUser);
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
 
     // With First User, go to All Friends and click on Chat Button
     await friendsScreenFirst.goToAllFriendsList();
@@ -251,7 +230,6 @@ test.describe("Friends tests", () => {
     friendsScreenFirst,
     friendsScreenSecond,
     context1,
-    context2,
     page1,
   }) => {
     // Grant clipboard permissions, Copy DID and save it into a constant
@@ -263,7 +241,6 @@ test.describe("Friends tests", () => {
     const didKeyFirstUser = await handle.jsonValue();
 
     // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
 
     // Now, add the first user as a friend
@@ -295,7 +272,6 @@ test.describe("Friends tests", () => {
 
   test("H21 - User can send a friend request and cancel request before other user replies to it", async ({
     context1,
-    context2,
     friendsScreenFirst,
     friendsScreenSecond,
     page1,
@@ -310,7 +286,6 @@ test.describe("Friends tests", () => {
     const didKeyFirstUser = await handle.jsonValue();
 
     // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenSecond.copyDIDFromContextMenu();
 
     // Now, add the first user as a friend
