@@ -53,9 +53,24 @@ jobs:
       - name: Run server for Uplink Web
         run: npm run dev &
 
-      - name: Run Playwright tests with Allure reporter
+      - name: Run Playwright tests
         working-directory: automated-tests
-        run: npx playwright test
+        run: PLAYWRIGHT_JSON_OUTPUT_NAME=report.json npx playwright test
+
+      - uses: daun/playwright-report-summary@v3
+        if: always()
+        with:
+          github-token: ${{ secrets.github_token }}
+          report-file: ./automated-tests/playwright-report/report.json
+          job-summary: false
+          comment-title: "Automated Test Results"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: automated-tests/playwright-report/
+          retention-days: 5
 
       - name: Upload Allure results as artifact
         if: always()
@@ -63,6 +78,16 @@ jobs:
         with:
           name: allure-results
           path: automated-tests/allure-results
+          retention-days: 5
+
+      - name: Add label if any of build jobs failed
+        if: failure()
+        uses: buildsville/add-remove-label@v2.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            Failed Automated Test
+          type: add
 
   generate-report:
     if: always()
@@ -111,3 +136,40 @@ jobs:
             Playwright test execution is complete! You can find the test results report [here](https://satellite-im.github.io/test-reports/${{ github.run_number }})
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add label if any of build jobs failed
+        if: failure()
+        uses: buildsville/add-remove-label@v2.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            Failed Automated Test
+          type: add
+
+  remove-label:
+    needs: [test, generate-report]
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+      issues: read
+
+    steps:
+      - name: Checkout directory 🔖
+        uses: actions/checkout@v4
+
+      - name: Delete artifacts required on failed execution
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: |
+            playwright-report
+            allure-results
+
+      - name: Remove label if all test jobs succeeded
+        uses: buildsville/add-remove-label@v2.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            Failed Automated Test
+          type: remove
