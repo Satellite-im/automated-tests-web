@@ -78,7 +78,8 @@ export class FilesPage extends MainPage {
 
   async navigateToFolder(folderName: string) {
     const folder = await this.getFolderByName(folderName);
-    await folder.dblclick();
+    const folderIcon = folder.locator(".svg-icon");
+    await folderIcon.dblclick();
     await folder.waitFor({ state: "detached" });
   }
 
@@ -105,34 +106,22 @@ export class FilesPage extends MainPage {
     emptyName: boolean = false,
     folderSize: string = "0 B",
   ) {
-    await this.page
-      .locator(`[data-cy="folder-${name}"]`)
-      .waitFor({ state: "attached" });
+    const folderLocator = this.page.locator(`[data-cy="folder-${name}"]`);
+    await folderLocator.waitFor({ state: "attached" });
+    const folderName = folderLocator.getByTestId("file-folder-name");
     if (emptyName === true) {
-      await expect(
-        this.page
-          .locator(`[data-cy="folder-${name}"]`)
-          .getByTestId("file-folder-name"),
-      ).toHaveText("");
+      await expect(folderName).toHaveText("");
     } else {
-      await expect(
-        this.page
-          .locator(`[data-cy="folder-${name}"]`)
-          .getByTestId("file-folder-name"),
-      ).toHaveText(name);
+      await expect(folderName).toHaveText(name);
     }
-    await expect(
-      this.page
-        .locator(`[data-cy="folder-${name}"]`)
-        .getByTestId("file-folder-size"),
-    ).toHaveText(folderSize);
-    await expect(
-      this.page.locator(`[data-cy="folder-${name}"]`).locator(".svg-icon"),
-    ).toBeVisible();
+    const folderSizeLocator = folderLocator.getByTestId("file-folder-size");
+    await expect(folderSizeLocator).toHaveText(folderSize);
+    const folderIcon = folderLocator.locator(".svg-icon");
+    await expect(folderIcon).toBeVisible();
   }
 
   async validateFilesURL() {
-    expect(this.page.url()).toContain("/files");
+    await this.page.waitForURL("/files");
   }
 
   async validateFreeSpaceInfo(value: string) {

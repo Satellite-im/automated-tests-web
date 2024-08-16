@@ -833,8 +833,8 @@ test.describe("Two instances tests", () => {
     await friendsScreenFirst.removeFriend(usernameTwo);
   });
 
-  test.afterEach(async ({ context1, context2 }) => {
-    await context1.close();
-    await context2.close();
+  test.afterEach(async ({ page1, page2 }) => {
+    await page1.close();
+    await page2.close();
   });
 });
