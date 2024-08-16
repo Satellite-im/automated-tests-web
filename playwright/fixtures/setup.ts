@@ -2,7 +2,7 @@ import {
   test as base,
   BrowserContext,
   chromium,
-  firefox,
+  webkit,
   Page,
 } from "@playwright/test";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
@@ -118,13 +118,13 @@ export const test = base.extend<MyFixtures>({
   },
 
   context1: async ({}, use) => {
-    const browser1 = await chromium.launch();
+    const browser1 = await chromium.launch({ channel: "chrome" });
     const context1 = await browser1.newContext();
     await use(context1);
   },
 
   context2: async ({}, use) => {
-    const browser2 = await firefox.launch();
+    const browser2 = await webkit.launch();
     const context2 = await browser2.newContext();
     await use(context2);
   },
