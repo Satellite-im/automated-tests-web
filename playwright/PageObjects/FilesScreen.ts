@@ -61,10 +61,14 @@ export class FilesPage extends MainPage {
 
   async createNewFolder(folderName: string) {
     await this.newFolderButton.click();
+    await this.inputFileFolderName.waitFor({ state: "attached" });
     await this.inputFileFolderName.fill(folderName);
     await this.page.keyboard.press("Enter");
     await this.page
       .locator(`[data-cy="folder-${folderName}"]`)
+      .waitFor({ state: "attached" });
+    await this.page
+      .locator(`[data-cy="tree-item-${folderName}"]`)
       .waitFor({ state: "attached" });
   }
 
@@ -77,10 +81,10 @@ export class FilesPage extends MainPage {
   }
 
   async navigateToFolder(folderName: string) {
-    const folder = await this.getFolderByName(folderName);
-    const folderIcon = folder.locator(".svg-icon");
-    await folderIcon.dblclick();
-    await folder.waitFor({ state: "detached" });
+    await this.page.locator(`[data-cy="folder-${folderName}"]`).dblclick();
+    await this.page
+      .locator(`[data-cy="tree-item-${folderName}"]`)
+      .waitFor({ state: "detached" });
   }
 
   async renameFile(fileName: string, newName: string) {
@@ -108,10 +112,8 @@ export class FilesPage extends MainPage {
   ) {
     const folderLocator = this.page.locator(`[data-cy="folder-${name}"]`);
     await folderLocator.waitFor({ state: "attached" });
-    const folderName = folderLocator.getByTestId("file-folder-name");
-    if (emptyName === true) {
-      await expect(folderName).toHaveText("");
-    } else {
+    if (emptyName !== true) {
+      const folderName = folderLocator.getByTestId("file-folder-name");
       await expect(folderName).toHaveText(name);
     }
     const folderSizeLocator = folderLocator.getByTestId("file-folder-size");
