@@ -154,10 +154,14 @@ test.describe("Files Page Tests", () => {
     // Create a subfolder
     await filesPage.createNewFolder("Subfolder");
     await filesPage.validateNewFolderCreated("Subfolder");
+    await filesPage.navigateToFolder("Subfolder");
 
     // User can upload an image file in subfolder
     await filesPage.uploadFile("playwright/assets/banner.jpg");
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
+
+    // Go back to root
+    await filesPage.goBackButton.click();
   });
 
   test("F13 - Files and folders are still visible after logging out and login again", async ({
@@ -200,6 +204,9 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateNewFolderCreated("NewFolder", false, "61.4 kB");
     await filesPage.navigateToFolder("NewFolder");
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
+
+    // Go back to root
+    await filesPage.goBackButton.click();
   });
 
   test("F14 - If user upload the same file again, file is uploaded but with different filename", async ({
@@ -214,5 +221,9 @@ test.describe("Files Page Tests", () => {
 
     // File banner.jpg is uploaded again but with name "banner (1).jpg"
     await filesPage.validateUploadedImageInfo("banner (1)", "jpg", "61.4 kB");
+  });
+
+  test.afterEach(async ({ page }) => {
+    await page.close();
   });
 });

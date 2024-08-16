@@ -197,6 +197,7 @@ test.describe("Two instances tests", () => {
     context1,
     context2,
     page1,
+    page2,
   }) => {
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -234,6 +235,7 @@ test.describe("Two instances tests", () => {
 
     // Remove user as friend
     await chatsMainPageSecond.goToFriends();
+    await page2.waitForURL("/friends");
     await friendsScreenSecond.removeFriend(username);
   });
 
@@ -813,7 +815,7 @@ test.describe("Two instances tests", () => {
     await page1.waitForURL("/chat");
 
     // With second user, go to chat conversation with remote user and send a message
-    await friendsScreenSecond.chatWithFriend(username);
+    await friendsScreenSecond.chatPreview.click();
     await page2.waitForURL("/chat");
 
     // Validate second user is in chats page and send 20 messages
@@ -833,8 +835,23 @@ test.describe("Two instances tests", () => {
     await friendsScreenFirst.removeFriend(usernameTwo);
   });
 
-  test.afterEach(async ({ page1, page2 }) => {
-    await page1.close();
-    await page2.close();
+  test.afterEach(async ({ context1, context2 }) => {
+    // Clear cookies
+    await context1.clearCookies();
+    await context2.clearCookies();
+
+    // Clear local storage and session storage
+    for (const page of context1.pages()) {
+      await page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+    }
+    for (const page of context2.pages()) {
+      await page.evaluate(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+      });
+    }
   });
 });

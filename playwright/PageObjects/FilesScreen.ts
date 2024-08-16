@@ -72,16 +72,31 @@ export class FilesPage extends MainPage {
       .waitFor({ state: "attached" });
   }
 
+  async deleteFile(fileName: string) {
+    const file = await this.getFileByName(fileName);
+    await file.click({ button: "right" });
+    await this.contextOptionDelete.click();
+  }
+
+  async deleteFolder(folderName: string) {
+    const folder = await this.getFolderByName(folderName);
+    await folder.click({ button: "right" });
+    await this.contextMenuFolder.click();
+    await this.contextOptionDelete.click();
+  }
+
   async getFileByName(fileName: string) {
     return this.page.locator(`[data-cy="file-${fileName}"]`);
   }
 
-  async getFolderByName(folderName) {
+  async getFolderByName(folderName: string) {
     return this.page.locator(`[data-cy="folder-${folderName}"]`);
   }
 
   async navigateToFolder(folderName: string) {
-    await this.page.locator(`[data-cy="folder-${folderName}"]`).dblclick();
+    const folder = await this.page.locator(`[data-cy="folder-${folderName}"]`);
+    await folder.click();
+    await folder.click();
     await this.page
       .locator(`[data-cy="tree-item-${folderName}"]`)
       .waitFor({ state: "detached" });
