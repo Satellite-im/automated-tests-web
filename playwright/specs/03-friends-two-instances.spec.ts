@@ -1,78 +1,20 @@
+import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { test, expect } from "../fixtures/setup";
-import { faker } from "@faker-js/faker";
 
 test.describe("Friends tests", () => {
-  const username: string = "ChatUserA";
-  const usernameTwo: string = "ChatUserB";
-  const status: string = faker.lorem.sentence(3);
-  const statusTwo: string = faker.lorem.sentence(3);
-
-  test.beforeEach(
-    async ({
-      authNewAccountFirst,
-      authNewAccountSecond,
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      createOrImportFirst,
-      createOrImportSecond,
-      loginPinPageFirst,
-      loginPinPageSecond,
-      saveRecoverySeedFirst,
-      saveRecoverySeedSecond,
-    }) => {
-      // Start browser one
-      await createOrImportFirst.navigateTo();
-
-      // Start browser two
-      await createOrImportSecond.navigateTo();
-
-      // Click on Create New Account
-      await createOrImportFirst.clickCreateNewAccount();
-
-      // Enter username and Status and click on create account
-      await authNewAccountFirst.validateLoadingHeader();
-      await authNewAccountFirst.typeOnUsername(username);
-      await authNewAccountFirst.typeOnStatus(status);
-      await authNewAccountFirst.clickOnCreateAccount();
-
-      // Enter Pin
-      await loginPinPageFirst.waitUntilPageIsLoaded();
-      await loginPinPageFirst.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeedFirst.clickOnSavedIt();
-
-      // Go to Friends
-      await chatsMainPageFirst.goToFriends();
-
-      // Now with the second user, click on Create New Account
-      await createOrImportSecond.clickCreateNewAccount();
-
-      // Enter username, status and click on create account
-      await authNewAccountSecond.validateLoadingHeader();
-      await authNewAccountSecond.typeOnUsername(usernameTwo);
-      await authNewAccountSecond.typeOnStatus(statusTwo);
-      await authNewAccountSecond.clickOnCreateAccount();
-
-      // Enter a valid pin
-      await loginPinPageSecond.waitUntilPageIsLoaded();
-      await loginPinPageSecond.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeedSecond.clickOnSavedIt();
-
-      // Go to Friends
-      await chatsMainPageSecond.goToFriends();
-    },
-  );
-
-  // Skipping for CI failure
-  test.skip("H15 - User should be removed from friends list after clicking unfriend", async ({
-    context1,
-    friendsScreenFirst,
-    friendsScreenSecond,
-    page1,
+  test("H15 - User should be removed from friends list after clicking unfriend", async ({
+    firstUserContext,
+    secondUserContext,
   }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const username = firstUserContext.username;
+    const usernameTwo = secondUserContext.username;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+
     // H15 - User should be removed from friends list after clicking unfriend
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -123,13 +65,19 @@ test.describe("Friends tests", () => {
     expect(currentFriendsFirstUser).toEqual([]);
   });
 
-  // Skipping for CI failure
-  test.skip("H16, H17, H18, H26 - User can be block/unblocked", async ({
-    context1,
-    friendsScreenFirst,
-    friendsScreenSecond,
-    page1,
+  test("H16, H17, H18, H26 - User can be block/unblocked", async ({
+    firstUserContext,
+    secondUserContext,
   }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const username = firstUserContext.username;
+    const usernameTwo = secondUserContext.username;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenFirst.copyDIDFromContextMenu();
@@ -188,13 +136,19 @@ test.describe("Friends tests", () => {
     await friendsScreenFirst.validateIncomingRequestExists();
   });
 
-  // Skipping for CI failure
-  test.skip("H6, H19 - User can send a friend request and remote user can accept it", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    page1,
+  test("H6, H19 - User can send a friend request and remote user can accept it", async ({
+    firstUserContext,
+    secondUserContext,
   }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const username = firstUserContext.username;
+    const usernameTwo = secondUserContext.username;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenFirst.copyDIDFromContextMenu();
@@ -229,13 +183,18 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.chatWithFriend(username);
   });
 
-  // Skipping for CI failure
-  test.skip("H7, H20 - User can send a friend request and remote user can deny it", async ({
-    friendsScreenFirst,
-    friendsScreenSecond,
-    context1,
-    page1,
+  test("H7, H20 - User can send a friend request and remote user can deny it", async ({
+    firstUserContext,
+    secondUserContext,
   }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const usernameTwo = secondUserContext.username;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenFirst.copyDIDFromContextMenu();
@@ -274,13 +233,19 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.validateNoOutgoingRequestsExist();
   });
 
-  // Skipping for CI failure
+  // Failing test on CI
   test.skip("H21 - User can send a friend request and cancel request before other user replies to it", async ({
-    context1,
-    friendsScreenFirst,
-    friendsScreenSecond,
-    page1,
+    firstUserContext,
+    secondUserContext,
   }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const username = firstUserContext.username;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+
     // H21 - User can send a friend request and cancel request before other user replies to it
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -311,10 +276,5 @@ test.describe("Friends tests", () => {
 
     // With First User, validate incoming request no longer exists
     await friendsScreenFirst.validateNoIncomingRequestsExist();
-  });
-
-  test.afterEach(async ({ page1, page2 }) => {
-    await page1.close();
-    await page2.close();
   });
 });
