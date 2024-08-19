@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
 export class SettingsNetwork extends SettingsBase {
-  readonly page: Page;
   readonly buttonCdnSave: Locator;
   readonly inputCdnAddress: Locator;
   readonly inputCdnName: Locator;
@@ -23,31 +22,30 @@ export class SettingsNetwork extends SettingsBase {
   readonly relaySaveButton: Locator;
   readonly underConstruction: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.buttonCdnSave = page.getByTestId("button-cdn-save");
-    this.inputCdnAddress = page.getByTestId("input-cdn-address");
-    this.inputCdnName = page.getByTestId("input-cdn-name");
-    this.inputRelayAddress = page.getByTestId("input-relay-address");
-    this.inputRelayName = page.getByTestId("input-relay-name");
-    this.labelCdn = page.getByTestId("label-cdn");
-    this.labelRelayAddress = page.getByTestId("label-relay-address");
-    this.labelRelayName = page.getByTestId("label-relay-name");
-    this.modalAddRelay = page.getByTestId("modal-relay-add");
+    this.buttonCdnSave = this.page.getByTestId("button-cdn-save");
+    this.inputCdnAddress = this.page.getByTestId("input-cdn-address");
+    this.inputCdnName = this.page.getByTestId("input-cdn-name");
+    this.inputRelayAddress = this.page.getByTestId("input-relay-address");
+    this.inputRelayName = this.page.getByTestId("input-relay-name");
+    this.labelCdn = this.page.getByTestId("label-cdn");
+    this.labelRelayAddress = this.page.getByTestId("label-relay-address");
+    this.labelRelayName = this.page.getByTestId("label-relay-name");
+    this.modalAddRelay = this.page.getByTestId("modal-relay-add");
     this.modalAddRelayCancelButton = this.modalAddRelay.locator(
       "[data-cy='button-relay-modal-cancel']",
     );
     this.modalAddRelaySaveButton = this.modalAddRelay.locator(
       "[data-cy='button-relay-modal-save']",
     );
-    this.relayAddButton = page.getByTestId("button-relay-add");
-    this.relayConfigLabel = page.getByTestId("label-relay");
-    this.relayListDeleteButton = page.getByTestId("button-relay-delete");
-    this.relayListEditButton = page.getByTestId("button-relay-edit");
-    this.relayListToggleButton = page.getByTestId("button-relay-toggle");
-    this.relayRevertButton = page.getByTestId("button-relay-revert");
-    this.relaySaveButton = page.getByTestId("button-relay-save");
-    this.underConstruction = page.getByTestId("under-construction");
+    this.relayAddButton = this.page.getByTestId("button-relay-add");
+    this.relayConfigLabel = this.page.getByTestId("label-relay");
+    this.relayListDeleteButton = this.page.getByTestId("button-relay-delete");
+    this.relayListEditButton = this.page.getByTestId("button-relay-edit");
+    this.relayListToggleButton = this.page.getByTestId("button-relay-toggle");
+    this.relayRevertButton = this.page.getByTestId("button-relay-revert");
+    this.relaySaveButton = this.page.getByTestId("button-relay-save");
+    this.underConstruction = this.page.getByTestId("under-construction");
   }
 }

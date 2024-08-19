@@ -2,7 +2,6 @@ import MainPage from "./MainPage";
 import { type Locator, type Page, expect } from "@playwright/test";
 
 export class FriendsScreen extends MainPage {
-  readonly page: Page;
   readonly buttonAddFriend: Locator;
   readonly buttonCopyID: Locator;
   readonly buttonFriendCancel: Locator;
@@ -42,67 +41,78 @@ export class FriendsScreen extends MainPage {
   readonly textNoOutgoingRequests: Locator;
   readonly textSearchFriendNoResults: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.buttonAddFriend = page.getByTestId("button-add-friend");
-    this.buttonCopyID = page.getByTestId("button-copy-id");
-    this.buttonFriendCancel = page.getByTestId("button-friend-cancel");
-    this.buttonFriendChat = page.getByTestId("button-friend-chat");
-    this.buttonFriendRemove = page.getByTestId("button-friend-remove");
-    this.buttonFriendBlock = page.getByTestId("button-friend-block");
-    this.buttonFriendsActive = page.getByTestId("button-friends-active");
-    this.buttonFriendsAll = page.getByTestId("button-friends-all");
-    this.buttonFriendsBlocked = page.getByTestId("button-friends-blocked");
-    this.contextMenuCopyID = page.getByTestId("context-menu-copy-id");
+    this.buttonAddFriend = this.page.getByTestId("button-add-friend");
+    this.buttonCopyID = this.page.getByTestId("button-copy-id");
+    this.buttonFriendCancel = this.page.getByTestId("button-friend-cancel");
+    this.buttonFriendChat = this.page.getByTestId("button-friend-chat");
+    this.buttonFriendRemove = this.page.getByTestId("button-friend-remove");
+    this.buttonFriendBlock = this.page.getByTestId("button-friend-block");
+    this.buttonFriendsActive = this.page.getByTestId("button-friends-active");
+    this.buttonFriendsAll = this.page.getByTestId("button-friends-all");
+    this.buttonFriendsBlocked = this.page.getByTestId("button-friends-blocked");
+    this.contextMenuCopyID = this.page.getByTestId("context-menu-copy-id");
     this.contextOptionCopyDid = this.contextMenuCopyID.getByTestId(
       "context-menu-option-Copy DID",
     );
     this.contextOptionCopyID = this.contextMenuCopyID.getByTestId(
       "context-menu-option-Copy ID",
     );
-    this.friendName = page.getByTestId("friend-name");
-    this.friendProfilePicture = page.getByTestId("friend-profile-picture");
-    this.friendProfilePictureImage = page.getByTestId("profile-image");
-    this.friendUser = page.locator('[data-cy^="friend-did:key:"]');
-    this.friendsSectionAll = page.getByTestId("friends-section-all");
-    this.friendsSectionBlocked = page.getByTestId("friends-section-blocked");
-    this.friendsSectionRequests = page.getByTestId("friends-section-requests");
-    this.inputAddFriend = page.getByTestId("input-add-friend");
-    this.inputContainerAddFriend = page
+    this.friendName = this.page.getByTestId("friend-name");
+    this.friendProfilePicture = this.page.getByTestId("friend-profile-picture");
+    this.friendProfilePictureImage = this.page.getByTestId("profile-image");
+    this.friendUser = this.page.locator('[data-cy^="friend-did:key:"]');
+    this.friendsSectionAll = this.page.getByTestId("friends-section-all");
+    this.friendsSectionBlocked = this.page.getByTestId(
+      "friends-section-blocked",
+    );
+    this.friendsSectionRequests = this.page.getByTestId(
+      "friends-section-requests",
+    );
+    this.inputAddFriend = this.page.getByTestId("input-add-friend");
+    this.inputContainerAddFriend = this.page
       .getByTestId("input-add-friend")
       .locator("xpath=..");
-    this.inputContainerSearchFriends = page
+    this.inputContainerSearchFriends = this.page
       .getByTestId("input-search-friends")
       .locator("xpath=..");
-    this.inputSearchFriends = page.getByTestId("input-search-friends");
-    this.labelAddSomeone = page.getByTestId("label-add-someone");
-    this.labelBlockedUsers = page.getByTestId("label-blocked-users");
-    this.labelFriendList = page.locator('[data-cy^="label-friend-list-"]');
-    this.labelIncomingRequests = page.getByTestId("label-incoming-requests");
-    this.labelOutgoingRequests = page.getByTestId("label-outgoing-requests");
-    this.labelSearchFriends = page.getByTestId("label-search-friends");
-    this.labelSearchResults = page.getByTestId("label-search-results");
-    this.modalRequestDispatched = page.getByTestId("modal-request-sent");
-    this.modalRequestDispatchedButton = page.getByTestId(
+    this.inputSearchFriends = this.page.getByTestId("input-search-friends");
+    this.labelAddSomeone = this.page.getByTestId("label-add-someone");
+    this.labelBlockedUsers = this.page.getByTestId("label-blocked-users");
+    this.labelFriendList = this.page.locator('[data-cy^="label-friend-list-"]');
+    this.labelIncomingRequests = this.page.getByTestId(
+      "label-incoming-requests",
+    );
+    this.labelOutgoingRequests = this.page.getByTestId(
+      "label-outgoing-requests",
+    );
+    this.labelSearchFriends = this.page.getByTestId("label-search-friends");
+    this.labelSearchResults = this.page.getByTestId("label-search-results");
+    this.modalRequestDispatched = this.page.getByTestId("modal-request-sent");
+    this.modalRequestDispatchedButton = this.page.getByTestId(
       "label-modal-request-sent",
     );
-    this.modalRequestDispatchedHeader = page.getByTestId(
+    this.modalRequestDispatchedHeader = this.page.getByTestId(
       "label-modal-request-sent",
     );
-    this.modalRequestDispatchedDescription = page.getByTestId(
+    this.modalRequestDispatchedDescription = this.page.getByTestId(
       "text-modal-request-sent",
     );
-    this.textNoBlockedUsers = page.getByTestId("text-no-blocked-users");
-    this.textNoIncomingRequests = page.getByTestId("text-no-incoming-requests");
-    this.textNoOutgoingRequests = page.getByTestId("text-no-outbound-requests");
-    this.textSearchFriendNoResults = page.getByTestId(
+    this.textNoBlockedUsers = this.page.getByTestId("text-no-blocked-users");
+    this.textNoIncomingRequests = this.page.getByTestId(
+      "text-no-incoming-requests",
+    );
+    this.textNoOutgoingRequests = this.page.getByTestId(
+      "text-no-outbound-requests",
+    );
+    this.textSearchFriendNoResults = this.page.getByTestId(
       "text-search-friend-no-results",
     );
   }
 
-  async acceptFriendRequest(username: string, didkey: string) {
-    const friendUser = await this.getFriendWithNameOrKey(username, didkey);
+  async acceptFriendRequest(username: string) {
+    const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-accept").click();
   }
 
@@ -244,7 +254,6 @@ export class FriendsScreen extends MainPage {
   async validateIncomingRequestExists() {
     await this.textNoIncomingRequests.waitFor({
       state: "detached",
-      timeout: 60000,
     });
   }
 
@@ -279,7 +288,6 @@ export class FriendsScreen extends MainPage {
   async validateOutgoingRequestExists() {
     await this.textNoOutgoingRequests.waitFor({
       state: "detached",
-      timeout: 60000,
     });
   }
 
@@ -298,10 +306,9 @@ export class FriendsScreen extends MainPage {
   }
 
   async validateToastRequestSent() {
-    await this.toastNotificationText.waitFor({ state: "visible" });
-    await expect(this.toastNotificationText).toHaveText(
-      "Your request is making it's way!",
-    );
+    await this.page
+      .getByText("Your request is making it's way!")
+      .waitFor({ state: "visible" });
   }
 
   async validateURL() {

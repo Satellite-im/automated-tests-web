@@ -1,4 +1,11 @@
-import { test as base, BrowserContext, chromium, Page } from "@playwright/test";
+import {
+  test as base,
+  BrowserContext,
+  chromium,
+  Page,
+  Browser,
+} from "@playwright/test";
+import { faker } from "@faker-js/faker";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "../PageObjects/ChatsMain";
 import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
@@ -25,38 +32,36 @@ import { SettingsRealms } from "playwright/PageObjects/Settings/SettingsRealms";
 // Declare the types of your fixtures.
 type MyFixtures = {
   authNewAccount: AuthNewAccount;
-  authNewAccountFirst: AuthNewAccount;
-  authNewAccountSecond: AuthNewAccount;
-  authNewAccountThird: AuthNewAccount;
-  context1: BrowserContext;
-  context2: BrowserContext;
-  context3: BrowserContext;
+  firstUserContext: {
+    browser: Browser;
+    context: BrowserContext;
+    page: Page;
+    authNewAccount: AuthNewAccount;
+    createOrImport: CreateOrImportPage;
+    loginPinPage: LoginPinPage;
+    saveRecoverySeed: SaveRecoverySeedPage;
+    chatsMainPage: ChatsMainPage;
+    username: string;
+    status: string;
+  };
+  secondUserContext: {
+    browser: Browser;
+    context: BrowserContext;
+    page: Page;
+    authNewAccount: AuthNewAccount;
+    createOrImport: CreateOrImportPage;
+    loginPinPage: LoginPinPage;
+    saveRecoverySeed: SaveRecoverySeedPage;
+    chatsMainPage: ChatsMainPage;
+    username: string;
+    status: string;
+  };
   chatsMainPage: ChatsMainPage;
-  chatsMainPageFirst: ChatsMainPage;
-  chatsMainPageSecond: ChatsMainPage;
-  chatsMainPageThird: ChatsMainPage;
   createOrImport: CreateOrImportPage;
-  createOrImportFirst: CreateOrImportPage;
-  createOrImportSecond: CreateOrImportPage;
-  createOrImportThird: CreateOrImportPage;
   filesPage: FilesPage;
-  filesPageFirst: FilesPage;
-  filesPageSecond: FilesPage;
   friendsScreen: FriendsScreen;
-  friendsScreenFirst: FriendsScreen;
-  friendsScreenSecond: FriendsScreen;
-  friendsScreenThird: FriendsScreen;
   loginPinPage: LoginPinPage;
-  loginPinPageFirst: LoginPinPage;
-  loginPinPageSecond: LoginPinPage;
-  loginPinPageThird: LoginPinPage;
-  page1: Page;
-  page2: Page;
-  page3: Page;
   saveRecoverySeed: SaveRecoverySeedPage;
-  saveRecoverySeedFirst: SaveRecoverySeedPage;
-  saveRecoverySeedSecond: SaveRecoverySeedPage;
-  saveRecoverySeedThird: SaveRecoverySeedPage;
   settingsAbout: SettingsAbout;
   settingsAccessibility: SettingsAccessibility;
   settingsAudio: SettingsAudio;
@@ -71,8 +76,6 @@ type MyFixtures = {
   settingsNetwork: SettingsNetwork;
   settingsNotifications: SettingsNotifications;
   settingsProfile: SettingsProfile;
-  settingsProfileFirst: SettingsProfile;
-  settingsProfileSecond: SettingsProfile;
   settingsRealms: SettingsRealms;
 };
 
@@ -83,141 +86,147 @@ export const test = base.extend<MyFixtures>({
     await use(new AuthNewAccount(page));
   },
 
-  authNewAccountFirst: async ({ page1 }, use) => {
-    await use(new AuthNewAccount(page1));
-  },
-
-  authNewAccountSecond: async ({ page2 }, use) => {
-    await use(new AuthNewAccount(page2));
-  },
-
-  authNewAccountThird: async ({ page3 }, use) => {
-    await use(new AuthNewAccount(page3));
-  },
-
   chatsMainPage: async ({ page }, use) => {
     await use(new ChatsMainPage(page));
   },
 
-  chatsMainPageFirst: async ({ page1 }, use) => {
-    await use(new ChatsMainPage(page1));
+  firstUserContext: async ({}, use) => {
+    // Declare all constants required for the precondition steps
+    const browser = await chromium.launch();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+    const username: string = "ChatUserA";
+    const status: string = faker.lorem.sentence(3);
+
+    // Start browser one
+    await createOrImport.navigateTo();
+    // Start browser two
+    await createOrImport.navigateTo();
+
+    // Click on Create New Account
+    await createOrImport.clickCreateNewAccount();
+
+    // Enter username and Status and click on create account
+    await authNewAccount.validateLoadingHeader();
+    await authNewAccount.typeOnUsername(username);
+    await authNewAccount.typeOnStatus(status);
+    await authNewAccount.clickOnCreateAccount();
+
+    // Enter Pin
+    await loginPinPage.waitUntilPageIsLoaded();
+    await loginPinPage.enterDefaultPin();
+
+    // Click on I Saved It
+    await saveRecoverySeed.clickOnSavedIt();
+
+    // Go to Friends
+    await chatsMainPage.goToFriends();
+
+    // Pass the context, browser, and page to the test
+    await use({
+      browser,
+      context,
+      page,
+      authNewAccount,
+      createOrImport,
+      loginPinPage,
+      saveRecoverySeed,
+      chatsMainPage,
+      username,
+      status,
+    });
+
+    // Close the context and browser after the test is done
+    await context.close();
+    await browser.close();
   },
 
-  chatsMainPageSecond: async ({ page2 }, use) => {
-    await use(new ChatsMainPage(page2));
-  },
+  secondUserContext: async ({}, use) => {
+    // Declare all constants required for the precondition steps
+    const browser = await chromium.launch();
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+    const username: string = "ChatUserB";
+    const status: string = faker.lorem.sentence(3);
 
-  chatsMainPageThird: async ({ page3 }, use) => {
-    await use(new ChatsMainPage(page3));
-  },
+    // Start browser one
+    await createOrImport.navigateTo();
+    // Start browser two
+    await createOrImport.navigateTo();
 
-  context1: async ({}, use) => {
-    const browser1 = await chromium.launch();
-    const context1 = await browser1.newContext();
-    await use(context1);
-  },
+    // Click on Create New Account
+    await createOrImport.clickCreateNewAccount();
 
-  context2: async ({}, use) => {
-    const browser2 = await chromium.launch();
-    const context2 = await browser2.newContext();
-    await use(context2);
-  },
+    // Enter username and Status and click on create account
+    await authNewAccount.validateLoadingHeader();
+    await authNewAccount.typeOnUsername(username);
+    await authNewAccount.typeOnStatus(status);
+    await authNewAccount.clickOnCreateAccount();
 
-  context3: async ({}, use) => {
-    const browser3 = await chromium.launch();
-    const context3 = await browser3.newContext();
-    await use(context3);
+    // Enter Pin
+    await loginPinPage.waitUntilPageIsLoaded();
+    await loginPinPage.enterDefaultPin();
+
+    // Click on I Saved It
+    await saveRecoverySeed.clickOnSavedIt();
+
+    // Go to Friends
+    await chatsMainPage.goToFriends();
+
+    // Pass the context, browser, and page to the test
+    await use({
+      browser,
+      context,
+      page,
+      authNewAccount,
+      createOrImport,
+      loginPinPage,
+      saveRecoverySeed,
+      chatsMainPage,
+      username,
+      status,
+    });
+
+    // Close the context and browser after the test is done
+    await context.close();
+    await browser.close();
   },
 
   createOrImport: async ({ page }, use) => {
     await use(new CreateOrImportPage(page));
   },
 
-  createOrImportFirst: async ({ page1 }, use) => {
-    await use(new CreateOrImportPage(page1));
-  },
-
-  createOrImportSecond: async ({ page2 }, use) => {
-    await use(new CreateOrImportPage(page2));
-  },
-
-  createOrImportThird: async ({ page3 }, use) => {
-    await use(new CreateOrImportPage(page3));
-  },
-
   filesPage: async ({ page }, use) => {
     await use(new FilesPage(page));
-  },
-
-  filesPageFirst: async ({ page1 }, use) => {
-    await use(new FilesPage(page1));
-  },
-
-  filesPageSecond: async ({ page2 }, use) => {
-    await use(new FilesPage(page2));
   },
 
   friendsScreen: async ({ page }, use) => {
     await use(new FriendsScreen(page));
   },
 
-  friendsScreenFirst: async ({ page1 }, use) => {
-    await use(new FriendsScreen(page1));
-  },
-
-  friendsScreenSecond: async ({ page2 }, use) => {
-    await use(new FriendsScreen(page2));
-  },
-
-  friendsScreenThird: async ({ page3 }, use) => {
-    await use(new FriendsScreen(page3));
-  },
-
   loginPinPage: async ({ page }, use) => {
     await use(new LoginPinPage(page));
   },
 
-  loginPinPageFirst: async ({ page1 }, use) => {
-    await use(new LoginPinPage(page1));
-  },
-
-  loginPinPageSecond: async ({ page2 }, use) => {
-    await use(new LoginPinPage(page2));
-  },
-
-  loginPinPageThird: async ({ page3 }, use) => {
-    await use(new LoginPinPage(page3));
-  },
-
-  page1: async ({ context1 }, use) => {
-    const page1 = await context1.newPage();
-    await use(page1);
-  },
-
-  page2: async ({ context2 }, use) => {
-    const page2 = await context2.newPage();
-    await use(page2);
-  },
-
-  page3: async ({ context3 }, use) => {
-    const page3 = await context3.newPage();
-    await use(page3);
+  page: async ({ context }, use) => {
+    // Declare all constants required for the precondition steps
+    const page = await context.newPage();
+    await use(page);
+    await page.close();
   },
 
   saveRecoverySeed: async ({ page }, use) => {
     await use(new SaveRecoverySeedPage(page));
-  },
-
-  saveRecoverySeedFirst: async ({ page1 }, use) => {
-    await use(new SaveRecoverySeedPage(page1));
-  },
-
-  saveRecoverySeedSecond: async ({ page2 }, use) => {
-    await use(new SaveRecoverySeedPage(page2));
-  },
-
-  saveRecoverySeedThird: async ({ page3 }, use) => {
-    await use(new SaveRecoverySeedPage(page3));
   },
 
   settingsAbout: async ({ page }, use) => {
@@ -274,14 +283,6 @@ export const test = base.extend<MyFixtures>({
 
   settingsProfile: async ({ page }, use) => {
     await use(new SettingsProfile(page));
-  },
-
-  settingsProfileFirst: async ({ page1 }, use) => {
-    await use(new SettingsProfile(page1));
-  },
-
-  settingsProfileSecond: async ({ page2 }, use) => {
-    await use(new SettingsProfile(page2));
   },
 });
 

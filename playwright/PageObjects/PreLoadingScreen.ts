@@ -2,15 +2,13 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class PreLoadingScreen extends MainPage {
-  readonly page: Page;
   readonly loadingHeader: Locator;
   readonly loadingMessage: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.loadingHeader = page.locator(".small");
-    this.loadingMessage = page.locator(".text.medium");
+    this.loadingHeader = this.page.locator(".small");
+    this.loadingMessage = this.page.locator(".text.medium");
   }
 
   async validatePreLoadingPage() {

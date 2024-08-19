@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class SettingsAudio extends SettingsBase {
-  readonly page: Page;
   readonly callTimerSection: Locator;
   readonly callTimerSectionCheckbox: Locator;
   readonly callTimerSectionSlider: Locator;
@@ -49,12 +48,11 @@ export class SettingsAudio extends SettingsBase {
   readonly videoDeviceSectionSelectorOption: Locator;
   readonly videoDeviceSectionText: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.callTimerSection = page.getByTestId("section-call-timer");
-    this.callTimerSectionCheckbox = page.getByTestId("switch-call-timer");
-    this.callTimerSectionSlider = page.locator(
+    this.callTimerSection = this.page.getByTestId("section-call-timer");
+    this.callTimerSectionCheckbox = this.page.getByTestId("switch-call-timer");
+    this.callTimerSectionSlider = this.page.locator(
       '[data-cy="section-call-timer"] > .body > .content > .switch > .slider',
     );
     this.callTimerSectionLabel = this.callTimerSection.getByTestId(
@@ -63,11 +61,11 @@ export class SettingsAudio extends SettingsBase {
     this.callTimerSectionText = this.callTimerSection.getByTestId(
       "setting-section-text",
     );
-    this.controlSoundsSection = page.getByTestId("section-control-sounds");
-    this.controlSoundsSectionCheckbox = page.getByTestId(
+    this.controlSoundsSection = this.page.getByTestId("section-control-sounds");
+    this.controlSoundsSectionCheckbox = this.page.getByTestId(
       "switch-control-sounds",
     );
-    this.controlSoundsSectionSlider = page.locator(
+    this.controlSoundsSectionSlider = this.page.locator(
       '[data-cy="section-control-sounds"] > .body > .content > .switch > .slider',
     );
     this.controlSoundsSectionLabel = this.controlSoundsSection.getByTestId(
@@ -76,13 +74,13 @@ export class SettingsAudio extends SettingsBase {
     this.controlSoundsSectionText = this.controlSoundsSection.getByTestId(
       "setting-section-text",
     );
-    this.echoCancellationSection = page.getByTestId(
+    this.echoCancellationSection = this.page.getByTestId(
       "section-echo-cancellation",
     );
-    this.echoCancellationSectionCheckbox = page.getByTestId(
+    this.echoCancellationSectionCheckbox = this.page.getByTestId(
       "switch-echo-cancellation",
     );
-    this.echoCancellationSectionSlider = page.locator(
+    this.echoCancellationSectionSlider = this.page.locator(
       '[data-cy="section-echo-cancellation"] > .body > .content > .switch > .slider',
     );
     this.echoCancellationSectionLabel =
@@ -90,11 +88,11 @@ export class SettingsAudio extends SettingsBase {
     this.echoCancellationSectionText = this.echoCancellationSection.getByTestId(
       "setting-section-text",
     );
-    this.inputDeviceSection = page.getByTestId("section-input-device");
+    this.inputDeviceSection = this.page.getByTestId("section-input-device");
     this.inputDeviceSectionLabel = this.inputDeviceSection.getByTestId(
       "setting-section-label",
     );
-    this.inputDeviceSectionMeter = page.locator(".meter-mask").first();
+    this.inputDeviceSectionMeter = this.page.locator(".meter-mask").first();
     this.inputDeviceSectionSelector = this.inputDeviceSection.getByTestId(
       "selector-input-device",
     );
@@ -103,11 +101,13 @@ export class SettingsAudio extends SettingsBase {
     this.inputDeviceSectionText = this.inputDeviceSection.getByTestId(
       "setting-section-text",
     );
-    this.interfaceSoundsSection = page.getByTestId("section-interface-sounds");
-    this.interfaceSoundsSectionCheckbox = page.getByTestId(
+    this.interfaceSoundsSection = this.page.getByTestId(
+      "section-interface-sounds",
+    );
+    this.interfaceSoundsSectionCheckbox = this.page.getByTestId(
       "switch-interface-sounds",
     );
-    this.interfaceSoundsSectionSlider = page.locator(
+    this.interfaceSoundsSectionSlider = this.page.locator(
       '[data-cy="section-interface-sounds"] > .body > .content > .switch > .slider',
     );
     this.interfaceSoundsSectionLabel = this.interfaceSoundsSection.getByTestId(
@@ -116,11 +116,11 @@ export class SettingsAudio extends SettingsBase {
     this.interfaceSoundsSectionText = this.interfaceSoundsSection.getByTestId(
       "setting-section-text",
     );
-    this.messageSoundsSection = page.getByTestId("section-message-sounds");
-    this.messageSoundsSectionCheckbox = page.getByTestId(
+    this.messageSoundsSection = this.page.getByTestId("section-message-sounds");
+    this.messageSoundsSectionCheckbox = this.page.getByTestId(
       "switch-message-sounds",
     );
-    this.messageSoundsSectionSlider = page.locator(
+    this.messageSoundsSectionSlider = this.page.locator(
       '[data-cy="section-message-sounds"] > .body > .content > .switch > .slider',
     );
     this.messageSoundsSectionLabel = this.messageSoundsSection.getByTestId(
@@ -129,14 +129,14 @@ export class SettingsAudio extends SettingsBase {
     this.messageSoundsSectionText = this.messageSoundsSection.getByTestId(
       "setting-section-text",
     );
-    this.outputDeviceSection = page.getByTestId("section-output-device");
+    this.outputDeviceSection = this.page.getByTestId("section-output-device");
     this.outputDeviceSectionTestButton = this.outputDeviceSection.getByTestId(
       "button-test-output-device",
     );
     this.outputDeviceSectionLabel = this.outputDeviceSection.getByTestId(
       "setting-section-label",
     );
-    this.outputDeviceSectionMeter = page.locator(".meter-mask").last();
+    this.outputDeviceSectionMeter = this.page.locator(".meter-mask").last();
     this.outputDeviceSectionSelector = this.outputDeviceSection.getByTestId(
       "selector-output-device",
     );
@@ -145,9 +145,9 @@ export class SettingsAudio extends SettingsBase {
     this.outputDeviceSectionText = this.outputDeviceSection.getByTestId(
       "setting-section-text",
     );
-    this.testVideoButton = page.getByTestId("button-test-video");
-    this.testVideoPreview = page.getByTestId("test-video-preview");
-    this.videoDeviceSection = page.getByTestId("section-video-device");
+    this.testVideoButton = this.page.getByTestId("button-test-video");
+    this.testVideoPreview = this.page.getByTestId("test-video-preview");
+    this.videoDeviceSection = this.page.getByTestId("section-video-device");
     this.videoDeviceSectionLabel = this.videoDeviceSection.getByTestId(
       "setting-section-label",
     );

@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
 export class SettingsMessages extends SettingsBase {
-  readonly page: Page;
   readonly compactMessagingSection: Locator;
   readonly compactMessagingSectionCheckbox: Locator;
   readonly compactMessagingSectionLabel: Locator;
@@ -29,13 +28,12 @@ export class SettingsMessages extends SettingsBase {
   readonly spamBotDetectionSectionText: Locator;
   readonly spamBotDetectionSectionSlider: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.compactMessagingSection = page.getByTestId(
+    this.compactMessagingSection = this.page.getByTestId(
       "section-compact-messaging",
     );
-    this.compactMessagingSectionCheckbox = page.getByTestId(
+    this.compactMessagingSectionCheckbox = this.page.getByTestId(
       "switch-compact-messaging",
     );
     this.compactMessagingSectionLabel =
@@ -45,8 +43,10 @@ export class SettingsMessages extends SettingsBase {
     );
     this.compactMessagingSectionSlider =
       this.compactMessagingSection.locator(".slider");
-    this.convertToEmojiSection = page.getByTestId("section-convert-to-emoji");
-    this.convertToEmojiSectionCheckbox = page.getByTestId(
+    this.convertToEmojiSection = this.page.getByTestId(
+      "section-convert-to-emoji",
+    );
+    this.convertToEmojiSectionCheckbox = this.page.getByTestId(
       "checkbox-convert-to-emoji",
     );
     this.convertToEmojiSectionLabel = this.convertToEmojiSection.getByTestId(
@@ -55,11 +55,13 @@ export class SettingsMessages extends SettingsBase {
     this.convertToEmojiSectionText = this.convertToEmojiSection.getByTestId(
       "setting-section-text",
     );
-    this.convertToEmojiSectionSlider = page.locator(
+    this.convertToEmojiSectionSlider = this.page.locator(
       '[data-cy="section-convert-to-emoji"] > .body > .content > .switch > .slider',
     );
-    this.markdownSupportSection = page.getByTestId("section-markdown-support");
-    this.markdownSupportSectionCheckbox = page.getByTestId(
+    this.markdownSupportSection = this.page.getByTestId(
+      "section-markdown-support",
+    );
+    this.markdownSupportSectionCheckbox = this.page.getByTestId(
       "checkbox-markdown-support",
     );
     this.markdownSupportSectionLabel = this.markdownSupportSection.getByTestId(
@@ -68,11 +70,11 @@ export class SettingsMessages extends SettingsBase {
     this.markdownSupportSectionText = this.markdownSupportSection.getByTestId(
       "setting-section-text",
     );
-    this.markdownSupportSectionSlider = page.locator(
+    this.markdownSupportSectionSlider = this.page.locator(
       '[data-cy="section-markdown-support"] > .body > .content > .switch > .slider',
     );
-    this.quickChatSection = page.getByTestId("section-quick-chat");
-    this.quickChatSectionCheckbox = page.getByTestId("switch-quick-chat");
+    this.quickChatSection = this.page.getByTestId("section-quick-chat");
+    this.quickChatSectionCheckbox = this.page.getByTestId("switch-quick-chat");
     this.quickChatSectionLabel = this.quickChatSection.getByTestId(
       "setting-section-label",
     );
@@ -80,10 +82,10 @@ export class SettingsMessages extends SettingsBase {
       "setting-section-text",
     );
     this.quickChatSectionSlider = this.quickChatSection.locator(".slider");
-    this.spamBotDetectionSection = page
+    this.spamBotDetectionSection = this.page
       .getByTestId("section-spam-bot-detection")
       .first();
-    this.spamBotDetectionSectionCheckbox = page.getByTestId(
+    this.spamBotDetectionSectionCheckbox = this.page.getByTestId(
       "checkbox-spam-bot-detection",
     );
     this.spamBotDetectionSectionLabel =

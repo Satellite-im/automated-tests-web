@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
 export class SettingsGamepad extends SettingsBase {
-  readonly page: Page;
   readonly labelGamepadControllerInfo: Locator;
   readonly labelGamepadDeadzone: Locator;
   readonly labelGamepadLeftControlItem: Locator;
@@ -22,46 +21,49 @@ export class SettingsGamepad extends SettingsBase {
   readonly switchGamepadEnabled: Locator;
   readonly textGamepadTestItOut: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.labelGamepadControllerInfo = page.getByTestId(
+    this.labelGamepadControllerInfo = this.page.getByTestId(
       "label-gamepad-controller-info",
     );
-    this.labelGamepadDeadzone = page.getByTestId("label-gamepad-deadzone");
-    this.labelGamepadLeftControlItem = page.getByTestId(
+    this.labelGamepadDeadzone = this.page.getByTestId("label-gamepad-deadzone");
+    this.labelGamepadLeftControlItem = this.page.getByTestId(
       "label-gamepad-left-control-item",
     );
-    this.labelGamepadPointer = page.getByTestId("label-gamepad-pointer");
-    this.labelGamepadRightControlItem = page.getByTestId(
+    this.labelGamepadPointer = this.page.getByTestId("label-gamepad-pointer");
+    this.labelGamepadRightControlItem = this.page.getByTestId(
       "label-gamepad-right-control-item",
     );
-    this.gamepadMappings = page.getByTestId("gamepad-mappings");
-    this.gamepadMappingsLeftControls = page.getByTestId(
+    this.gamepadMappings = this.page.getByTestId("gamepad-mappings");
+    this.gamepadMappingsLeftControls = this.page.getByTestId(
       "gamepad-mappings-left-controls",
     );
-    this.gamepadMappingsRightControls = page.getByTestId(
+    this.gamepadMappingsRightControls = this.page.getByTestId(
       "gamepad-mappings-right-controls",
     );
-    this.gamepadLeftControlItemSelector = page.getByTestId(
+    this.gamepadLeftControlItemSelector = this.page.getByTestId(
       "selector-gamepad-left-control-item",
     );
     this.gamepadLeftControlItemSelectorOption =
       this.gamepadLeftControlItemSelector.getByTestId("selector-option");
-    this.gamepadRightControlItemSelector = page.getByTestId(
+    this.gamepadRightControlItemSelector = this.page.getByTestId(
       "selector-gamepad-right-control-item",
     );
     this.gamepadRightControlItemSelectorOption =
       this.gamepadRightControlItemSelector.getByTestId("selector-option");
-    this.rangeSelectorDeadzone = page.getByTestId("range-selector").first();
+    this.rangeSelectorDeadzone = this.page
+      .getByTestId("range-selector")
+      .first();
     this.rangeSelectorInputDeadzone = this.rangeSelectorDeadzone.getByTestId(
       "range-selector-input",
     );
-    this.rangeSelectorPointer = page.getByTestId("range-selector").last();
+    this.rangeSelectorPointer = this.page.getByTestId("range-selector").last();
     this.rangeSelectorInputPointer = this.rangeSelectorPointer.getByTestId(
       "range-selector-input",
     );
-    this.switchGamepadEnabled = page.getByTestId("switch-gamepad-enabled");
-    this.textGamepadTestItOut = page.getByTestId("text-gamepad-test-it-out");
+    this.switchGamepadEnabled = this.page.getByTestId("switch-gamepad-enabled");
+    this.textGamepadTestItOut = this.page.getByTestId(
+      "text-gamepad-test-it-out",
+    );
   }
 }

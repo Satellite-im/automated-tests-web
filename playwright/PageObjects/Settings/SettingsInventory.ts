@@ -2,7 +2,6 @@ import { SettingsBase } from "./SettingsBase";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class SettingsInventory extends SettingsBase {
-  readonly page: Page;
   readonly buttonUnequipInventory: Locator;
   readonly inventoryFrame: Locator;
   readonly inventoryFrameImage: Locator;
@@ -21,11 +20,12 @@ export class SettingsInventory extends SettingsBase {
   readonly inventoryItemName: Locator;
   readonly inventoryItemType: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.buttonUnequipInventory = page.getByTestId("button-unequip-inventory");
-    this.inventoryFrame = page.getByTestId("inventory-frame");
+    this.buttonUnequipInventory = this.page.getByTestId(
+      "button-unequip-inventory",
+    );
+    this.inventoryFrame = this.page.getByTestId("inventory-frame");
     this.inventoryFrameImage = this.inventoryFrame.locator("img");
     this.inventoryFrameButton = this.inventoryFrame.getByTestId(
       "inventory-item-button",
@@ -40,13 +40,13 @@ export class SettingsInventory extends SettingsBase {
     this.inventoryFrameType = this.inventoryFrame.getByTestId(
       "inventory-item-type",
     );
-    this.labelInventoryEquippedItems = page.getByTestId(
+    this.labelInventoryEquippedItems = this.page.getByTestId(
       "label-inventory-equipped-items",
     );
-    this.labelInventoryFrame = page.getByTestId("label-inventory-frame");
-    this.labelInventoryFrames = page.getByTestId("label-inventory-frames");
-    this.labelProfileOverlays = page.getByTestId("label-profile-overlays");
-    this.profilePictureFrame = page.getByTestId(
+    this.labelInventoryFrame = this.page.getByTestId("label-inventory-frame");
+    this.labelInventoryFrames = this.page.getByTestId("label-inventory-frames");
+    this.labelProfileOverlays = this.page.getByTestId("label-profile-overlays");
+    this.profilePictureFrame = this.page.getByTestId(
       "inventory-profile-picture-frame",
     );
     this.profilePictureFrameName = this.profilePictureFrame.getByTestId(
@@ -57,8 +57,8 @@ export class SettingsInventory extends SettingsBase {
     );
     this.profilePictureFrameUnequipButton =
       this.profilePictureFrame.getByTestId("button-unequip-inventory");
-    this.inventoryItemName = page.getByTestId("inventory-item-name");
-    this.inventoryItemType = page.getByTestId("inventory-item-type");
+    this.inventoryItemName = this.page.getByTestId("inventory-item-name");
+    this.inventoryItemType = this.page.getByTestId("inventory-item-type");
   }
 
   async clickOnFrameButton(name: string) {

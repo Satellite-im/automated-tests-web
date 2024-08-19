@@ -2,7 +2,6 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class AuthNewAccount extends MainPage {
-  readonly page: Page;
   readonly buttonNewAccountCreate: Locator;
   readonly buttonNewAccountFileUpload: Locator;
   readonly buttonNewAccountGoBack: Locator;
@@ -17,31 +16,36 @@ export class AuthNewAccount extends MainPage {
   readonly textNewAccountSecondary: Locator;
   readonly titleNewAccount: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-
-    this.buttonNewAccountCreate = page.getByTestId("button-new-account-create");
-    this.buttonNewAccountFileUpload = page.getByTestId("button-file-upload");
-    this.buttonNewAccountGoBack = page.getByTestId(
+    this.buttonNewAccountCreate = this.page.getByTestId(
+      "button-new-account-create",
+    );
+    this.buttonNewAccountFileUpload =
+      this.page.getByTestId("button-file-upload");
+    this.buttonNewAccountGoBack = this.page.getByTestId(
       "button-new-account-go-back",
     );
-    this.identiconNewAccount = page.locator(".identicon").locator("img");
-    this.inputNewAccountFileUpload = page.locator("input[type=file]");
-    this.inputNewAccountStatus = page.getByTestId("input-new-account-status");
-    this.inputNewAccountUsername = page.getByTestId(
+    this.identiconNewAccount = this.page.locator(".identicon").locator("img");
+    this.inputNewAccountFileUpload = this.page.locator("input[type=file]");
+    this.inputNewAccountStatus = this.page.getByTestId(
+      "input-new-account-status",
+    );
+    this.inputNewAccountUsername = this.page.getByTestId(
       "input-new-account-username",
     );
-    this.labelNewAccountUsername = page.getByTestId(
+    this.labelNewAccountUsername = this.page.getByTestId(
       "label-new-account-username",
     );
-    this.labelNewAccountStatus = page.getByTestId("label-new-account-status");
-    this.profileImageNewAccount = page.getByTestId("profile-image");
-    this.profilePictureNewAccount = page.getByTestId(
+    this.labelNewAccountStatus = this.page.getByTestId(
+      "label-new-account-status",
+    );
+    this.profileImageNewAccount = this.page.getByTestId("profile-image");
+    this.profilePictureNewAccount = this.page.getByTestId(
       "profile-picture-new-account",
     );
-    this.titleNewAccount = page.getByTestId("title-new-account");
-    this.textNewAccountSecondary = page.getByTestId(
+    this.titleNewAccount = this.page.getByTestId("title-new-account");
+    this.textNewAccountSecondary = this.page.getByTestId(
       "text-new-account-secondary",
     );
   }

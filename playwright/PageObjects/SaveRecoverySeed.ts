@@ -2,21 +2,19 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class SaveRecoverySeedPage extends MainPage {
-  readonly page: Page;
   readonly buttonDownloadPhrase: Locator;
   readonly buttonSavedPhrase: Locator;
   readonly textRecoveryPageWarning: Locator;
   readonly titleRecoveryPage: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.buttonDownloadPhrase = page.getByTestId("button-download-phrase");
-    this.buttonSavedPhrase = page.getByTestId("button-save-phrase");
-    this.textRecoveryPageWarning = page.getByTestId(
+    this.buttonDownloadPhrase = this.page.getByTestId("button-download-phrase");
+    this.buttonSavedPhrase = this.page.getByTestId("button-save-phrase");
+    this.textRecoveryPageWarning = this.page.getByTestId(
       "text-recovery-page-warning",
     );
-    this.titleRecoveryPage = page.getByTestId("title-recovery-page");
+    this.titleRecoveryPage = this.page.getByTestId("title-recovery-page");
   }
 
   async clickOnSavedIt() {

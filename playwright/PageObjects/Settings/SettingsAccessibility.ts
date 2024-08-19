@@ -2,18 +2,16 @@ import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
 export class SettingsAccessibility extends SettingsBase {
-  readonly page: Page;
   readonly openDyslexicSection: Locator;
   readonly openDyslexicSectionCheckbox: Locator;
   readonly openDyslexicSectionLabel: Locator;
   readonly openDyslexicSectionText: Locator;
   readonly openDyslexicSectionSlider: Locator;
 
-  constructor(page: Page) {
+  constructor(public readonly page: Page) {
     super(page);
-    this.page = page;
-    this.openDyslexicSection = page.getByTestId("section-accessibility");
-    this.openDyslexicSectionCheckbox = page.getByTestId(
+    this.openDyslexicSection = this.page.getByTestId("section-accessibility");
+    this.openDyslexicSectionCheckbox = this.page.getByTestId(
       "switch-accessibility-open-dyslexic",
     );
     this.openDyslexicSectionLabel = this.openDyslexicSection.getByTestId(
