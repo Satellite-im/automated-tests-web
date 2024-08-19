@@ -82,7 +82,7 @@ export class SettingsMessages extends SettingsBase {
       "setting-section-text",
     );
     this.quickChatSectionSlider = this.quickChatSection.locator(".slider");
-    this.spamBotDetectionSection = page
+    this.spamBotDetectionSection = this.page
       .getByTestId("section-spam-bot-detection")
       .first();
     this.spamBotDetectionSectionCheckbox = this.page.getByTestId(

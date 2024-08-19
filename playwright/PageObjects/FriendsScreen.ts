@@ -71,10 +71,10 @@ export class FriendsScreen extends MainPage {
       "friends-section-requests",
     );
     this.inputAddFriend = this.page.getByTestId("input-add-friend");
-    this.inputContainerAddFriend = page
+    this.inputContainerAddFriend = this.page
       .getByTestId("input-add-friend")
       .locator("xpath=..");
-    this.inputContainerSearchFriends = page
+    this.inputContainerSearchFriends = this.page
       .getByTestId("input-search-friends")
       .locator("xpath=..");
     this.inputSearchFriends = this.page.getByTestId("input-search-friends");

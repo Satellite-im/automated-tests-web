@@ -4,6 +4,7 @@ import {
   chromium,
   webkit,
   Page,
+  firefox,
 } from "@playwright/test";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
 import { ChatsMainPage } from "../PageObjects/ChatsMain";
@@ -125,7 +126,7 @@ export const test = base.extend<MyFixtures>({
   },
 
   context2: async ({}, use) => {
-    const browser2 = await webkit.launch();
+    const browser2 = await firefox.launch();
     const context2 = await browser2.newContext();
     await use(context2);
     await context2.close();

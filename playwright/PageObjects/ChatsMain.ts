@@ -115,11 +115,11 @@ export class ChatsMainPage extends MainPage {
       "chat-encrypted-text",
     );
     this.chatbar = this.page.getByTestId("chatbar");
-    this.chatbarInput = page
+    this.chatbarInput = this.page
       .locator(".cm-editor")
       .locator(".cm-scroller")
       .getByRole("textbox");
-    this.chatbarInputContainer = page
+    this.chatbarInputContainer = this.page
       .locator('[data-cy="chatbar-input"]')
       .locator("xpath=..");
     this.chatTopbarProfilePicture = this.page.getByTestId(
@@ -131,7 +131,7 @@ export class ChatsMainPage extends MainPage {
       this.chatTopbarProfilePicture.getByTestId("status-indicator");
     this.chatTopbarStatus = this.page.getByTestId("chat-topbar-status");
     this.chatTopbarUsername = this.page.getByTestId("chat-topbar-username");
-    this.coinAmountIndicator = page
+    this.coinAmountIndicator = this.page
       .getByTestId("topbar")
       .locator("button")
       .first()
@@ -180,12 +180,12 @@ export class ChatsMainPage extends MainPage {
     this.emojiButton = this.page.locator('[data-cy^="button-emoji-"]');
     this.emojiGroup = this.page.getByTestId("emoji-group");
     this.emojiPickerButton = this.page.getByTestId("button-emoji-picker");
-    this.inputAddAttachment = page
+    this.inputAddAttachment = this.page
       .locator('[data-cy="button-add-attachment"]')
       .locator("xpath=..")
       .locator("input");
     this.labelPinnedMessages = this.page.getByTestId("label-pinned-messages");
-    this.messageBubbleContent = page
+    this.messageBubbleContent = this.page
       .getByTestId("message-bubble-content")
       .locator("p")
       .locator("p");
