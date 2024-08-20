@@ -1,9 +1,4 @@
-import {
-  chromium,
-  type Browser,
-  type BrowserContext,
-  type Page,
-} from "@playwright/test";
+import { chromium, firefox } from "@playwright/test";
 import { CreateOrImportPage } from "playwright/PageObjects/CreateOrImport";
 import { AuthNewAccount } from "playwright/PageObjects/AuthNewAccount";
 import { LoginPinPage } from "playwright/PageObjects/LoginPin";
@@ -54,7 +49,7 @@ export async function setupFirstUser() {
 
 export async function setupSecondUser() {
   // Declare all constants required for the precondition steps
-  const browser2 = await chromium.launch();
+  const browser2 = await firefox.launch();
   const context2 = await browser2.newContext();
   const page2 = await context2.newPage();
   const createOrImportSecond = new CreateOrImportPage(page2);
@@ -91,14 +86,4 @@ export async function setupSecondUser() {
 
   // Return the necessary objects for further interaction in the test
   return { browser2, context2, page2, chatsMainPageSecond, usernameTwo };
-}
-
-export async function teardownUser(
-  browser: Browser,
-  context: BrowserContext,
-  page: Page,
-) {
-  await browser.close();
-  await context.close();
-  await page.close();
 }

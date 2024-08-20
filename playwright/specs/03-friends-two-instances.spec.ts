@@ -2,7 +2,6 @@ import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { test, expect } from "../fixtures/setup";
 import { setupFirstUser } from "playwright/fixtures/multipleInstances";
 import { setupSecondUser } from "playwright/fixtures/multipleInstances";
-import { teardownUser } from "playwright/fixtures/multipleInstances";
 
 test.describe("Friends tests", () => {
   test("H15 - User should be removed from friends list after clicking unfriend", async () => {
@@ -62,8 +61,20 @@ test.describe("Friends tests", () => {
     expect(currentFriendsFirstUser).toEqual([]);
 
     // Close browsers
-    await teardownUser(browser1, context1, page1);
-    await teardownUser(browser2, context2, page2);
+    await page1.close();
+    await context1.close();
+    await browser1.close();
+    await page2.close();
+    await context2.close();
+    await browser2.close();
+
+    // Close browsers
+    await page1.close();
+    await context1.close();
+    await browser1.close();
+    await page2.close();
+    await context2.close();
+    await browser2.close();
   });
 
   test("H16, H17, H18, H26 - User can be block/unblocked", async () => {
@@ -131,8 +142,12 @@ test.describe("Friends tests", () => {
     await friendsScreenFirst.validateIncomingRequestExists();
 
     // Close browsers
-    await teardownUser(browser1, context1, page1);
-    await teardownUser(browser2, context2, page2);
+    await page1.close();
+    await context1.close();
+    await browser1.close();
+    await page2.close();
+    await context2.close();
+    await browser2.close();
   });
 
   test("H6, H19 - User can send a friend request and remote user can accept it", async () => {
@@ -176,8 +191,12 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.chatWithFriend(username);
 
     // Close browsers
-    await teardownUser(browser1, context1, page1);
-    await teardownUser(browser2, context2, page2);
+    await page1.close();
+    await context1.close();
+    await browser1.close();
+    await page2.close();
+    await context2.close();
+    await browser2.close();
   });
 
   test("H7, H20 - User can send a friend request and remote user can deny it", async () => {
@@ -225,8 +244,12 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.validateNoOutgoingRequestsExist();
 
     // Close browsers
-    await teardownUser(browser1, context1, page1);
-    await teardownUser(browser2, context2, page2);
+    await page1.close();
+    await context1.close();
+    await browser1.close();
+    await page2.close();
+    await context2.close();
+    await browser2.close();
   });
 
   test("H21 - User can send a friend request and cancel request before other user replies to it", async () => {
@@ -268,7 +291,11 @@ test.describe("Friends tests", () => {
     await friendsScreenFirst.validateNoIncomingRequestsExist();
 
     // Close browsers
-    await teardownUser(browser1, context1, page1);
-    await teardownUser(browser2, context2, page2);
+    await page1.close();
+    await context1.close();
+    await browser1.close();
+    await page2.close();
+    await context2.close();
+    await browser2.close();
   });
 });
