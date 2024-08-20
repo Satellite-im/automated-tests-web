@@ -1,17 +1,14 @@
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { test, expect } from "../fixtures/setup";
+import { setupFirstUser } from "playwright/fixtures/multipleInstances";
+import { setupSecondUser } from "playwright/fixtures/multipleInstances";
+import { teardownUser } from "playwright/fixtures/multipleInstances";
 
 test.describe("Friends tests", () => {
-  test("H15 - User should be removed from friends list after clicking unfriend", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
+  test("H15 - User should be removed from friends list after clicking unfriend", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, username } = await setupFirstUser();
+    const { browser2, context2, page2, usernameTwo } = await setupSecondUser();
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -63,18 +60,16 @@ test.describe("Friends tests", () => {
     const currentFriendsFirstUser =
       await friendsScreenFirst.getListOfCurrentFriends();
     expect(currentFriendsFirstUser).toEqual([]);
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 
-  test("H16, H17, H18, H26 - User can be block/unblocked", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
+  test("H16, H17, H18, H26 - User can be block/unblocked", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, username } = await setupFirstUser();
+    const { browser2, context2, page2, usernameTwo } = await setupSecondUser();
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -134,18 +129,16 @@ test.describe("Friends tests", () => {
     await friendsScreenFirst.closeToastNotification();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 
-  test("H6, H19 - User can send a friend request and remote user can accept it", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
+  test("H6, H19 - User can send a friend request and remote user can accept it", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, username } = await setupFirstUser();
+    const { browser2, context2, page2, usernameTwo } = await setupSecondUser();
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -181,17 +174,16 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.goToRequestList();
     await friendsScreenSecond.goToAllFriendsList();
     await friendsScreenSecond.chatWithFriend(username);
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 
-  test("H7, H20 - User can send a friend request and remote user can deny it", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const usernameTwo = secondUserContext.username;
+  test("H7, H20 - User can send a friend request and remote user can deny it", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1 } = await setupFirstUser();
+    const { browser2, context2, page2, usernameTwo } = await setupSecondUser();
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -231,18 +223,16 @@ test.describe("Friends tests", () => {
 
     // Validate outgoing list now shows empty on user who sent the friend request
     await friendsScreenSecond.validateNoOutgoingRequestsExist();
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 
-  // Failing test on CI
-  test.skip("H21 - User can send a friend request and cancel request before other user replies to it", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
+  test("H21 - User can send a friend request and cancel request before other user replies to it", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, username } = await setupFirstUser();
+    const { browser2, context2, page2 } = await setupSecondUser();
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -276,5 +266,9 @@ test.describe("Friends tests", () => {
 
     // With First User, validate incoming request no longer exists
     await friendsScreenFirst.validateNoIncomingRequestsExist();
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 });

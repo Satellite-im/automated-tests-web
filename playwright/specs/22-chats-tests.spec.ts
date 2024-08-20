@@ -2,22 +2,18 @@ import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { test, expect } from "../fixtures/setup";
 import { faker } from "@faker-js/faker";
 import { FilesPage } from "playwright/PageObjects/FilesScreen";
+import { setupFirstUser } from "playwright/fixtures/multipleInstances";
+import { setupSecondUser } from "playwright/fixtures/multipleInstances";
+import { teardownUser } from "playwright/fixtures/multipleInstances";
 
 test.describe("Chats Tests - Two instances", () => {
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
-    const chatsMainPageFirst = firstUserContext.chatsMainPage;
-    const chatsMainPageSecond = secondUserContext.chatsMainPage;
+  test("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, chatsMainPageFirst, username } =
+      await setupFirstUser();
+    const { browser2, context2, page2, chatsMainPageSecond, usernameTwo } =
+      await setupSecondUser();
+
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -149,21 +145,18 @@ test.describe("Chats Tests - Two instances", () => {
     await page1
       .getByText("Maximum length is 255 characters.")
       .waitFor({ state: "visible" });
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("B7, B57, B58 - Favorites tests", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
-    const chatsMainPageFirst = firstUserContext.chatsMainPage;
+  test("B7, B57, B58 - Favorites tests", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, chatsMainPageFirst, username } =
+      await setupFirstUser();
+    const { browser2, context2, page2, usernameTwo } = await setupSecondUser();
+
     const filesPageFirst = new FilesPage(page1);
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
@@ -240,22 +233,19 @@ test.describe("Chats Tests - Two instances", () => {
     // B58 - User can remove Favorites and these will not be displayed on Slimbar
     await chatsMainPageFirst.buttonChatFavorite.click();
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
-    const chatsMainPageFirst = firstUserContext.chatsMainPage;
-    const chatsMainPageSecond = secondUserContext.chatsMainPage;
+  test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, chatsMainPageFirst, username } =
+      await setupFirstUser();
+    const { browser2, context2, page2, chatsMainPageSecond, usernameTwo } =
+      await setupSecondUser();
+
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -358,6 +348,10 @@ test.describe("Chats Tests - Two instances", () => {
     // await page1.getByText("30 minutes ago").waitFor({ state: "visible" });
 
     // C19 - After selecting Hide chat chat should no longer be displayed in sidebar
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 
   test.skip("B8 to B14 - Quick Profile tests", async ({ page }) => {
@@ -449,20 +443,13 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("B56 - Chats Tests - Multiple messages testing", async ({
-    firstUserContext,
-    secondUserContext,
-  }) => {
-    // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
-    const chatsMainPageFirst = firstUserContext.chatsMainPage;
-    const chatsMainPageSecond = secondUserContext.chatsMainPage;
+  test("B56 - Chats Tests - Multiple messages testing", async () => {
+    // Declare constants required from helper functions
+    const { browser1, context1, page1, chatsMainPageFirst, username } =
+      await setupFirstUser();
+    const { browser2, context2, page2, chatsMainPageSecond, usernameTwo } =
+      await setupSecondUser();
+
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
 
@@ -513,5 +500,9 @@ test.describe("Chats Tests - Two instances", () => {
         randomSentence,
       );
     }
+
+    // Close browsers
+    await teardownUser(browser1, context1, page1);
+    await teardownUser(browser2, context2, page2);
   });
 });
