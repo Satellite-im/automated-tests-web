@@ -2,6 +2,7 @@ import {
   test as base,
   BrowserContext,
   chromium,
+  firefox,
   Page,
   Browser,
 } from "@playwright/test";
@@ -148,7 +149,7 @@ export const test = base.extend<MyFixtures>({
 
   secondUserContext: async ({}, use) => {
     // Declare all constants required for the precondition steps
-    const browser = await chromium.launch();
+    const browser = await firefox.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
     const createOrImport = new CreateOrImportPage(page);
