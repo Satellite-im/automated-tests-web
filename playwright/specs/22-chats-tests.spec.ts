@@ -4,14 +4,12 @@ import { faker } from "@faker-js/faker";
 import { FilesPage } from "playwright/PageObjects/FilesScreen";
 
 test.describe("Chats Tests - Two instances", () => {
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
+  test("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
     firstUserContext,
     secondUserContext,
   }) => {
     // Declare constants required from the fixtures
     const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
     const username = firstUserContext.username;
@@ -29,37 +27,36 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
-
-    // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
-
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
 
     // Toast Notification with Your request is making it's way! should appear after sending a friend request
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-    // Workaround for friends requests - Both users should send themselves friend request
-    await friendsScreenFirst.addFriend(didKeySecondUser);
-    await friendsScreenFirst.validateToastRequestSent();
-
-    // With First User, go to All Friends and click on Chat Button
+    // With First User, go to requests list and accept friend request
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
     await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.validateFriendListIsDisplayed("C");
+
+    // With Second User, go to All Friends
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.validateFriendListIsDisplayed("C");
+
+    // With First User, click on Chat Button
     await friendsScreenFirst.chatWithFriend(usernameTwo);
 
-    // With Second User, go to All Friends and click on Chat Button
-    await friendsScreenSecond.goToAllFriendsList();
+    // With Second User, click on Chat Button
     await friendsScreenSecond.chatWithFriend(username);
 
     // B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat
-    await expect(chatsMainPageSecond.chatEncryptedMessage).toBeAttached();
+    await chatsMainPageSecond.chatEncryptedMessage.waitFor({
+      state: "visible",
+    });
     await expect(chatsMainPageSecond.chatEncryptedMessageText).toHaveText(
       "Messages are secured by end-to-end encryption, sent over a peer-to-peer network.",
     );
@@ -151,14 +148,12 @@ test.describe("Chats Tests - Two instances", () => {
       .waitFor({ state: "visible" });
   });
 
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("B7, B57, B58 - Favorites tests", async ({
+  test("B7, B57, B58 - Favorites tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
     // Declare constants required from the fixtures
     const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
     const username = firstUserContext.username;
@@ -176,41 +171,37 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
-
-    // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
-
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
 
     // Toast Notification with Your request is making it's way! should appear after sending a friend request
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-    // Workaround for friends requests - Both users should send themselves friend request
-    await friendsScreenFirst.addFriend(didKeySecondUser);
-    await friendsScreenFirst.validateToastRequestSent();
-
-    // With First User, go to All Friends and click on Chat Button
+    // With First User, go to requests list and accept friend request
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
     await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.validateFriendListIsDisplayed("C");
 
-    // With Second User, go to All Friends and click on Chat Button
+    // With Second User, go to All Friends
+    await friendsScreenSecond.goToRequestList();
     await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.validateFriendListIsDisplayed("C");
 
-    // With first user, go to chat conversation with remote user
+    // With First User, click on Chat Button
     await friendsScreenFirst.chatWithFriend(usernameTwo);
 
-    // With second user, go to chat conversation with remote user
+    // With Second User, click on Chat Button
     await friendsScreenSecond.chatWithFriend(username);
 
     // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
     // First when button is not clicked
+    await chatsMainPageFirst.chatEncryptedMessage.waitFor({
+      state: "visible",
+    });
     await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
       "background-color",
       "rgb(33, 38, 58)",
@@ -242,14 +233,12 @@ test.describe("Chats Tests - Two instances", () => {
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
   });
 
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
+  test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
     // Declare constants required from the fixtures
     const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
     const username = firstUserContext.username;
@@ -270,26 +259,25 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
-
-    // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
-
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
 
     // Toast Notification with Your request is making it's way! should appear after sending a friend request
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-    // Workaround for friends requests - Both users should send themselves friend request
-    await friendsScreenFirst.addFriend(didKeySecondUser);
-    await friendsScreenFirst.validateToastRequestSent();
+    // With First User, go to requests list and accept friend request
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.validateFriendListIsDisplayed("C");
+
+    // With Second User, go to All Friends
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.validateFriendListIsDisplayed("C");
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
@@ -299,6 +287,9 @@ test.describe("Chats Tests - Two instances", () => {
 
     // Validate chat preview is displayed on sidebar - Default values when no messages have been sent
     // C11 - ProfilePicFrame should display for any friends that have one
+    await chatsMainPageFirst.chatEncryptedMessage.waitFor({
+      state: "visible",
+    });
     const chatPreviewImageURL =
       await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
     const topbarImageURL =
@@ -449,14 +440,12 @@ test.describe("Chats Tests - Two instances", () => {
     // Test code for B54
   });
 
-  // Tests need adjustments to pass flakiness detected on CI
-  test.skip("B56 - Chats Tests - Multiple messages testing", async ({
+  test("B56 - Chats Tests - Multiple messages testing", async ({
     firstUserContext,
     secondUserContext,
   }) => {
     // Declare constants required from the fixtures
     const context1 = firstUserContext.context;
-    const context2 = secondUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
     const username = firstUserContext.username;
@@ -474,26 +463,25 @@ test.describe("Chats Tests - Two instances", () => {
     );
     const didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenSecond.copyDIDFromContextMenu();
-    const handleTwo = await page2.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeySecondUser = await handleTwo.jsonValue();
-
-    // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
-
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
 
     // Toast Notification with Your request is making it's way! should appear after sending a friend request
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-    // Workaround for friends requests - Both users should send themselves friend request
-    await friendsScreenFirst.addFriend(didKeySecondUser);
-    await friendsScreenFirst.validateToastRequestSent();
+    // With First User, go to requests list and accept friend request
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.validateFriendListIsDisplayed("C");
+
+    // With Second User, go to All Friends
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.validateFriendListIsDisplayed("C");
 
     // With first user, go to chat conversation with remote user
     await friendsScreenFirst.chatWithFriend(usernameTwo);
@@ -501,8 +489,15 @@ test.describe("Chats Tests - Two instances", () => {
     // With second user, go to chat conversation with remote user and send a message
     await friendsScreenSecond.chatWithFriend(username);
 
-    // Validate second user is in chats page and send 20 messages
+    // Validate chat pages are loaded on both sides
+    await chatsMainPageFirst.chatEncryptedMessage.waitFor({
+      state: "visible",
+    });
+    await chatsMainPageSecond.chatEncryptedMessage.waitFor({
+      state: "visible",
+    });
 
+    // Validate second user is in chats page and send 20 messages
     for (let i = 0; i < 20; i++) {
       const randomSentence = faker.lorem.sentence(3);
       await chatsMainPageSecond.sendMessage(randomSentence);
