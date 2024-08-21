@@ -23,8 +23,8 @@ test.describe("Chats Tests - Two instances", () => {
       "Messages are secured by end-to-end encryption, sent over a peer-to-peer network.",
     );
 
-    // B4 - Amount of coin should be displayed at top right toolbar
-    await expect(chatsMainPageSecond.coinAmountIndicator).toHaveText("0");
+    // B4 - Amount of coin should be displayed at top right toolbar - Button is hidden now
+    // await expect(chatsMainPageSecond.coinAmountIndicator).toHaveText("0");
 
     // B5 - Highlighted border should appear around call button when clicked
     await chatsMainPageSecond.buttonChatCall.focus();
