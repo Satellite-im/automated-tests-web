@@ -1,5 +1,9 @@
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { test, expect } from "../fixtures/setup";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+
+const username = "ChatUserA";
+const usernameTwo = "ChatUserB";
 
 test.describe("Friends tests", () => {
   test("H15 - User should be removed from friends list after clicking unfriend", async ({
@@ -10,10 +14,14 @@ test.describe("Friends tests", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // With both users go to Friends Screen
+    await chatsMainPageFirst.goToFriends();
+    await chatsMainPageSecond.goToFriends();
 
     // H15 - User should be removed from friends list after clicking unfriend
     // Grant clipboard permissions, Copy DID and save it into a constant
@@ -73,10 +81,14 @@ test.describe("Friends tests", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // With both users go to Friends Screen
+    await chatsMainPageFirst.goToFriends();
+    await chatsMainPageSecond.goToFriends();
 
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -144,10 +156,14 @@ test.describe("Friends tests", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
-    const usernameTwo = secondUserContext.username;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // With both users go to Friends Screen
+    await chatsMainPageFirst.goToFriends();
+    await chatsMainPageSecond.goToFriends();
 
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -191,9 +207,14 @@ test.describe("Friends tests", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const usernameTwo = secondUserContext.username;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // With both users go to Friends Screen
+    await chatsMainPageFirst.goToFriends();
+    await chatsMainPageSecond.goToFriends();
 
     // Grant clipboard permissions, Copy DID and save it into a constant
     await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -211,7 +232,6 @@ test.describe("Friends tests", () => {
 
     // H7 - Skipped validation Toast Notification with Username sent a request. should appear after receiving a friend request
     await friendsScreenSecond.validateToastRequestSent();
-    //await friendsScreenFirst.validateToastRequestReceived("ChatUserB");
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
@@ -233,8 +253,7 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.validateNoOutgoingRequestsExist();
   });
 
-  // Failing test on CI
-  test.skip("H21 - User can send a friend request and cancel request before other user replies to it", async ({
+  test("H21 - User can send a friend request and cancel request before other user replies to it", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -242,9 +261,14 @@ test.describe("Friends tests", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const username = firstUserContext.username;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // With both users go to Friends Screen
+    await chatsMainPageFirst.goToFriends();
+    await chatsMainPageSecond.goToFriends();
 
     // H21 - User can send a friend request and cancel request before other user replies to it
     // Grant clipboard permissions, Copy DID and save it into a constant
@@ -262,19 +286,21 @@ test.describe("Friends tests", () => {
     await friendsScreenSecond.addFriend(didKeyFirstUser);
     await friendsScreenSecond.validateToastRequestSent();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.goToRequestList();
-    await friendsScreenSecond.validateOutgoingRequestExists();
 
-    // With First User, go to requests list and validate friend request was received
+    // With First User, go to requests list and accept friend request
     await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
 
     // With Second User, cancel the outgoing request
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.validateOutgoingRequestExists();
     await friendsScreenSecond.cancelFriendRequest(username);
     await friendsScreenSecond.validateNoOutgoingRequestsExist();
 
     // With First User, validate incoming request no longer exists
+    await friendsScreenFirst.goToBlockedList();
+    await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateNoIncomingRequestsExist();
   });
 });
