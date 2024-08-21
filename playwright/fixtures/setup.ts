@@ -192,7 +192,7 @@ export const test = base.extend<MyFixtures>({
     const saveRecoverySeedFirst = new SaveRecoverySeedPage(pageOne);
     const saveRecoverySeedSecond = new SaveRecoverySeedPage(pageTwo);
     const username: string = "ChatUserA";
-    const usernameTwo: string = "ChatUserA";
+    const usernameTwo: string = "ChatUserB";
     const status: string = faker.lorem.sentence(3);
 
     // Grant clipboard permissions to context one

@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import { FilesPage } from "playwright/PageObjects/FilesScreen";
 import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 
-const usernameTwo = "ChatUserA";
+const usernameTwo = "ChatUserB";
 
 test.describe("Chats Tests - Two instances", () => {
   test("B1 to B6, B16 and B17, B35 to B37 - Landing to Chats Page elements and basic send/receive text message flow", async ({
