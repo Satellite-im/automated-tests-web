@@ -163,15 +163,15 @@ export class FriendsScreen extends MainPage {
   }
 
   async goToAllFriendsList() {
-    await this.buttonFriendsAll.click();
+    await this.clickWithToastHandling(this.buttonFriendsAll);
   }
 
   async goToBlockedList() {
-    await this.buttonFriendsBlocked.click();
+    await this.clickWithToastHandling(this.buttonFriendsBlocked);
   }
 
   async goToRequestList() {
-    await this.buttonFriendsActive.click();
+    await this.clickWithToastHandling(this.buttonFriendsActive);
   }
 
   async removeFriend(username: string) {

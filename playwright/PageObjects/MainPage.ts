@@ -224,4 +224,15 @@ export default class MainPage {
   async waitForToastNotificationToDisappear() {
     await this.toastNotification.waitFor({ state: "detached" });
   }
+
+  async clickWithToastHandling(locator: Locator) {
+    // Check if toast notification is attached to the DOM
+    if (await this.toastNotification.isVisible()) {
+      // Click on the toast notification button
+      await this.toastNotificationButton.click();
+    }
+
+    // Click on the provided locator
+    await locator.click();
+  }
 }
