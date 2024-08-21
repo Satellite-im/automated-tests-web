@@ -2,7 +2,6 @@ import {
   test as base,
   chromium,
   firefox,
-  webkit,
   type BrowserContext,
   type Page,
 } from "@playwright/test";
@@ -174,7 +173,7 @@ export const test = base.extend<MyFixtures>({
   chatUserContexts: async ({}, use) => {
     // Declare all constants required for the precondition steps
     const browserOne = await chromium.launch();
-    const browserTwo = await chromium.launch();
+    const browserTwo = await firefox.launch();
     const contextOne = await browserOne.newContext();
     const contextTwo = await browserTwo.newContext();
     const pageOne = await contextOne.newPage();
@@ -245,10 +244,11 @@ export const test = base.extend<MyFixtures>({
 
     // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
     await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and accept friend request
+    await friendsScreenFirst.goToChat();
+    await chatsMainPageFirst.addSomeone.waitFor({ state: "visible" });
+    await friendsScreenFirst.goToFriends();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
     await friendsScreenFirst.acceptFriendRequest(usernameTwo);

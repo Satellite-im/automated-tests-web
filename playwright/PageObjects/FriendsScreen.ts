@@ -246,15 +246,15 @@ export class FriendsScreen extends MainPage {
   }
 
   async validateBlockedUserExists() {
-    await this.textNoBlockedUsers.waitFor({
-      state: "detached",
-    });
+    await this.page
+      .getByTestId("button-friend-unblock")
+      .waitFor({ state: "visible" });
   }
 
   async validateIncomingRequestExists() {
-    await this.textNoIncomingRequests.waitFor({
-      state: "detached",
-    });
+    await this.page
+      .getByTestId("button-friend-accept")
+      .waitFor({ state: "visible" });
   }
 
   async validateNoBlockedUsersExist() {
@@ -286,9 +286,9 @@ export class FriendsScreen extends MainPage {
   }
 
   async validateOutgoingRequestExists() {
-    await this.textNoOutgoingRequests.waitFor({
-      state: "detached",
-    });
+    await this.page
+      .getByTestId("button-friend-cancel")
+      .waitFor({ state: "visible" });
   }
 
   async validateToastCannotAddYourself() {
