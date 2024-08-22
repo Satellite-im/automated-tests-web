@@ -1,43 +1,13 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
 
 test.describe("Chats Sidebar Tests", () => {
-  const username = "test123";
-  const status = "fixed status";
-
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-    },
-  );
-
   test("C1 - Clicking Create Chat should open modal with option for Group Name and Group Members", async ({
-    chatsMainPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+
     await chatsMainPage.buttonCreateGroupChat.click();
 
     await expect(chatsMainPage.createGroupLabelGroupName).toBeVisible();
@@ -55,8 +25,11 @@ test.describe("Chats Sidebar Tests", () => {
   });
 
   test("C2 - Hovering over Create Chat should show tooltips", async ({
-    chatsMainPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+
     await chatsMainPage.buttonCreateGroupChat.hover();
     await chatsMainPage.validateTooltipAttribute(
       '[data-cy="button-create-group-chat"]',
@@ -65,8 +38,11 @@ test.describe("Chats Sidebar Tests", () => {
   });
 
   test("C3 - Hovering over Nav buttons should show tooltips", async ({
-    chatsMainPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+
     // Hover on each button and validate the tooltip
     await chatsMainPage.buttonWallet.hover();
     await chatsMainPage.validateTooltipAttribute(
@@ -100,8 +76,11 @@ test.describe("Chats Sidebar Tests", () => {
   });
 
   test("C4 - Clicking hamburger button should collapse sidebar", async ({
-    chatsMainPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+
     await chatsMainPage.buttonHideSidebar.click();
 
     await chatsMainPage.buttonHideSidebar.waitFor({ state: "detached" });
@@ -117,9 +96,11 @@ test.describe("Chats Sidebar Tests", () => {
   });
 
   test("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", async ({
-    chatsMainPage,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+
     // Navigate to Wallet Page
     await chatsMainPage.buttonWallet.click();
     await page.waitForURL("/wallet");
@@ -142,8 +123,11 @@ test.describe("Chats Sidebar Tests", () => {
   });
 
   test("C10 - Textbox should have highlighted border when clicking into Chat Search", async ({
-    chatsMainPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+
     await chatsMainPage.inputSidebarSearch.focus();
 
     const inputContainer = chatsMainPage.inputSidebarSearch.locator("xpath=..");

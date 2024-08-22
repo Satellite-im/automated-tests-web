@@ -1,50 +1,26 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessages";
 
 test.describe("Settings Messages Tests", () => {
-  const username = "test123";
-  const status = "fixed status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonMessages.click();
-      await page.waitForURL("/settings/messages");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonMessages.click();
+    await page.waitForURL("/settings/messages");
+  });
 
   test("L1 - User should be able to toggle on and off emoji conversion", async ({
-    settingsMessages,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsMessages = new SettingsMessages(page);
+
     // Label and texts for settings section are correct
     await expect(settingsMessages.convertToEmojiSectionLabel).toHaveText(
       "Convert to Emoji",
@@ -68,8 +44,11 @@ test.describe("Settings Messages Tests", () => {
   });
 
   test("L2 - User should be able to toggle on and off Markdown support", async ({
-    settingsMessages,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsMessages = new SettingsMessages(page);
+
     // Label and texts for settings section are correct
     await expect(settingsMessages.markdownSupportSectionLabel).toHaveText(
       "Markdown Support",
@@ -93,8 +72,11 @@ test.describe("Settings Messages Tests", () => {
   });
 
   test("L3 - User should be able to toggle on and off emoji Spam/Bot detection & rejection", async ({
-    settingsMessages,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsMessages = new SettingsMessages(page);
+
     // Label and texts for settings section are correct
     await expect(settingsMessages.spamBotDetectionSectionLabel).toHaveText(
       "Spam/Bot Detection & Rejection",

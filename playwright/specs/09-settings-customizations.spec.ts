@@ -1,50 +1,26 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { SettingsCustomizations } from "playwright/PageObjects/Settings/SettingsCustomizations";
 
 test.describe("Settings Customization Tests", () => {
-  const username = "test123";
-  const status = "fixed status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonCustomization.click();
-      await page.waitForURL("/settings/preferences");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonCustomization.click();
+    await page.waitForURL("/settings/preferences");
+  });
 
   test("K1 - Language dropdown should display English", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     await expect(settingsCustomizations.appLanguageSectionLabel).toHaveText(
       "App Language",
     );
@@ -58,8 +34,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K2 - Font dropdown should show expected font names", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     const expectedFonts = [
       "Poppins",
       "SpaceMono",
@@ -91,9 +70,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K3 - Selected Fonts should be applied everywhere throughout the app", async ({
-    settingsCustomizations,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     const selectedFont = "JosefinSans";
     await settingsCustomizations.selectFont(selectedFont);
     await expect(settingsCustomizations.fontSectionText).toHaveCSS(
@@ -108,8 +89,11 @@ test.describe("Settings Customization Tests", () => {
   test.skip("K4 - Clicking OpenFolder should open the Fonts folder", async ({}) => {});
 
   test("K5 - Font size should have a minimum of .82", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     await expect(settingsCustomizations.fontScalingSectionLabel).toHaveText(
       "Font Scaling",
     );
@@ -133,8 +117,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K6, K7 - Font size should have a maximum of 1.50 and can be applied correctly everywhere through the app", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     await expect(settingsCustomizations.fontScalingSectionInput).toHaveValue(
       "1.00",
     );
@@ -153,8 +140,11 @@ test.describe("Settings Customization Tests", () => {
   test.skip("K8 - Clicking the moon button should change theme of the app from Dark to Light", async () => {});
 
   test("K9 - Themes dropdown should display Default", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     const expectedThemes = ["Default"];
 
     await expect(settingsCustomizations.themeSectionLabel).toHaveText("Theme");
@@ -171,8 +161,11 @@ test.describe("Settings Customization Tests", () => {
   test.skip("K10 - Themes folder button should open the themes folder", async () => {});
 
   test("K11 - Primary Colors should display expected values", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     const expectedPrimaryColors = [
       "Neo Orbit",
       "Creamy Peach",
@@ -201,8 +194,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K12 - Clicking Pick should open up the finetune color selector", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
       "color(srgb 0.371765 0.371765 1)",
@@ -229,9 +225,12 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K13 - Selected primary color should be applied throughout the entire app", async ({
-    chatsMainPage,
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
       "color(srgb 0.371765 0.371765 1)",
@@ -249,8 +248,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K14 - User should be able to add additional custom CSS to the application", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
       "rgba(0, 0, 0, 0)",
@@ -281,8 +283,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K15 - Emoji Font dropdown should show expected emoji font names", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     const expectedEmojiFonts = [
       "NotoEmoji",
       "OpenMoji",
@@ -305,8 +310,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K16 - Selected Emoji Font should be applied everywhere throughout the app", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     const selectedEmojiFont = "OpenMoji";
     await settingsCustomizations.selectEmojiFont(selectedEmojiFont);
     await expect(settingsCustomizations.emojiFontSectionRandomEmoji).toHaveCSS(
@@ -319,8 +327,11 @@ test.describe("Settings Customization Tests", () => {
   test.skip("K17 - Clicking Open Folder from Emoji Font section should open the Emoji Fonts folder", async ({}) => {});
 
   test("K18 - Default Profile Picture Style dropdown should show expected default profile picture styles", async ({
-    settingsCustomizations,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     const expectedDefaultProfileStyles = [
       "avataaars",
       "avataaarsNeutral",
@@ -354,9 +365,11 @@ test.describe("Settings Customization Tests", () => {
   });
 
   test("K19 - Default Profile Picture Style selected should be applied correctly in the app", async ({
-    settingsCustomizations,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
     // Change current default profile style to lorelei
     const selectedDefaultStyle = "lorelei";
     await settingsCustomizations.selectDefaultProfileStyle(

@@ -1,50 +1,26 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { SettingsNotifications } from "playwright/PageObjects/Settings/SettingsNotifications";
 
 test.describe("Settings Notifications Tests", () => {
-  const username = "test123";
-  const status = "fixed status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonNotifications.click();
-      await page.waitForURL("/settings/notifications");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonNotifications.click();
+    await page.waitForURL("/settings/notifications");
+  });
 
   test("Q1 - User should be able to toggle on/off Notifications", async ({
-    settingsNotifications,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsNotifications = new SettingsNotifications(page);
+
     // Label and texts for settings section are correct
     await expect(settingsNotifications.enabledSectionLabel).toHaveText(
       "Enabled",
@@ -68,8 +44,11 @@ test.describe("Settings Notifications Tests", () => {
   });
 
   test("Q2 - User should be able to toggle on/off Friend Request Notifications", async ({
-    settingsNotifications,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsNotifications = new SettingsNotifications(page);
+
     // Label and texts for settings section are correct
     await expect(settingsNotifications.friendsSectionLabel).toHaveText(
       "Friends",
@@ -93,8 +72,11 @@ test.describe("Settings Notifications Tests", () => {
   });
 
   test("Q3 - User should be able to toggle on/off Message Notifications", async ({
-    settingsNotifications,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsNotifications = new SettingsNotifications(page);
+
     // Label and texts for settings section are correct
     await expect(settingsNotifications.messagesSectionLabel).toHaveText(
       "Messages",
@@ -118,8 +100,11 @@ test.describe("Settings Notifications Tests", () => {
   });
 
   test("Q4 - User should be able to toggle on/off Settings Notifications", async ({
-    settingsNotifications,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsNotifications = new SettingsNotifications(page);
+
     // Label and texts for settings section are correct
     await expect(settingsNotifications.settingsSectionLabel).toHaveText(
       "Settings",

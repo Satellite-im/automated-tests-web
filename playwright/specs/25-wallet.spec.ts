@@ -1,43 +1,13 @@
-import { test, expect } from "../fixtures/setup";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { test } from "../fixtures/setup";
 
 test.describe("Wallet Tests", () => {
-  const username = "test123";
-  const status = "test status";
-
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      // Go to Wallet
-      await chatsMainPage.goToWallet();
-      await page.waitForURL("/wallet");
-    },
-  );
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToWallet();
+    await page.waitForURL("/wallet");
+  });
 
   /*
   test.skip("E1 - Sidebar should display New Payment modal", async ({
