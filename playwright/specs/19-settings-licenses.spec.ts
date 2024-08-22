@@ -1,51 +1,26 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { SettingsLicenses } from "playwright/PageObjects/Settings/SettingsLicenses";
 
 test.describe("Settings Licenses Tests", () => {
-  const username = "test123";
-  const status = "test status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonLicenses.click();
-      await page.waitForURL("/settings/licenses");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonLicenses.click();
+    await page.waitForURL("/settings/licenses");
+  });
 
   test("S1 - Clicking View License should take user to our licenses page", async ({
-    settingsLicenses,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsLicenses = new SettingsLicenses(page);
+
     // Declare the page object implementations and constants
     const LICENSE_URL =
       "https://github.com/Satellite-im/UplinkWeb/blob/dev/LICENSE-MIT";

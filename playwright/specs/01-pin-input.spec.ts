@@ -1,5 +1,11 @@
+import { CreateOrImportPage } from "playwright/PageObjects/CreateOrImport";
 import { test, expect } from "../fixtures/setup";
 import { faker } from "@faker-js/faker";
+import { AuthNewAccount } from "playwright/PageObjects/AuthNewAccount";
+import { LoginPinPage } from "playwright/PageObjects/LoginPin";
+import { SaveRecoverySeedPage } from "playwright/PageObjects/SaveRecoverySeed";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 
 test.describe("Create Account and Login Tests", () => {
   const username =
@@ -7,17 +13,15 @@ test.describe("Create Account and Login Tests", () => {
   const status = faker.lorem.sentence(3);
   const pinNumber = "123456";
 
-  test.beforeEach(async ({ createOrImport }) => {
-    await createOrImport.navigateTo();
-  });
-
   test("A1, A9, A11 - Enter valid PIN redirects to Main Page", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
-    page,
-    saveRecoverySeed,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+
     // Validate Create or Import Page and then click on Create New Account
     await createOrImport.labelCreateTitle.waitFor({ state: "attached" });
     await expect(createOrImport.labelCreateTitle).toHaveText(
@@ -73,10 +77,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A2 - Pin should have at least 4 digits", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -93,10 +100,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A3 - Pin cannot have more than 8 digits", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -114,10 +124,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A4 - Clicking red reset button should erase any inputs made", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -136,10 +149,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A5 - Settings dropdown should show option to Scramble numberpad and option to stay unlocked", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -161,10 +177,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A6, A7 - Scramble Keypad will change the order of pin input buttons", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -198,13 +217,15 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A8 - If Stay Unlocked is toggled on, user should bypass PIN page when logging in", async ({
-    authNewAccount,
-    createOrImport,
-    chatsMainPage,
-    loginPinPage,
-    page,
-    saveRecoverySeed,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -236,10 +257,13 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A10 - User can see menu to switch to a different profile", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -263,13 +287,15 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test.skip("A12 - If incorrect pin is entered, error message should be displayed", async ({
-    authNewAccount,
-    chatsMainPage,
-    createOrImport,
-    loginPinPage,
-    page,
-    saveRecoverySeed,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -301,13 +327,15 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page", async ({
-    authNewAccount,
-    createOrImport,
-    page,
-    loginPinPage,
-    saveRecoverySeed,
-    chatsMainPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -331,13 +359,15 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A14 - If Stay Unlocked is toggled on, user should be redirected to enter PIN after logging off", async ({
-    authNewAccount,
-    createOrImport,
-    page,
-    loginPinPage,
-    saveRecoverySeed,
-    chatsMainPage,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -364,14 +394,16 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A15 - User can setup a custom profile picture when creating a new account", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
-    saveRecoverySeed,
-    chatsMainPage,
-    settingsProfile,
-    page,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+    const settingsProfile = new SettingsProfile(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 
@@ -406,14 +438,16 @@ test.describe("Create Account and Login Tests", () => {
   });
 
   test("A16 - Default identicon profile image is assigned to new user if user does not setup a custom profile picture", async ({
-    authNewAccount,
-    createOrImport,
-    loginPinPage,
-    saveRecoverySeed,
-    chatsMainPage,
-    settingsProfile,
-    page,
+    enterPinUserContext,
   }) => {
+    const page = enterPinUserContext.page;
+    const createOrImport = new CreateOrImportPage(page);
+    const authNewAccount = new AuthNewAccount(page);
+    const loginPinPage = new LoginPinPage(page);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+    const settingsProfile = new SettingsProfile(page);
+
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
 

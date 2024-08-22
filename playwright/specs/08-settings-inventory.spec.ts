@@ -1,50 +1,26 @@
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 import { test, expect } from "../fixtures/setup";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { SettingsInventory } from "playwright/PageObjects/Settings/SettingsInventory";
 
 test.describe("Settings Inventory Tests", () => {
-  const username = "test123";
-  const status = "fixed status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonInventory.click();
-      await page.waitForURL("/settings/inventory");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonInventory.click();
+    await page.waitForURL("/settings/inventory");
+  });
 
   test("J1 - Page should display items purchased from Marketplace", async ({
-    settingsInventory,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsInventory = new SettingsInventory(page);
+
     const expectedFrames = [
       { name: "Moon", type: "Profile Picture Frame" },
       { name: "Skull Dance", type: "Profile Picture Frame" },
@@ -70,9 +46,12 @@ test.describe("Settings Inventory Tests", () => {
   });
 
   test("J2 - After user selects Profile Picture Frame it should be properly displayed everywhere in the app where the user's profile picture appears", async ({
-    settingsInventory,
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsInventory = new SettingsInventory(page);
+    const settingsProfile = new SettingsProfile(page);
+
     // Equip Quaint inventory frame
     await settingsInventory.equipFrame("Quaint");
 
@@ -97,8 +76,11 @@ test.describe("Settings Inventory Tests", () => {
   });
 
   test("J3, J4, J5, J6 - Equipping and unequipping inventory item", async ({
-    settingsInventory,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsInventory = new SettingsInventory(page);
+
     // Equip Quaint inventory frame
     await settingsInventory.equipFrame("Quaint");
 

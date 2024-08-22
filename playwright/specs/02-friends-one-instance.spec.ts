@@ -1,45 +1,22 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
-import { faker } from "@faker-js/faker";
+import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 
 test.describe("Friends tests", () => {
-  const username: string = "ChatUserA";
-  const status: string = faker.lorem.sentence(3);
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
 
-  test.beforeEach(
-    async ({
-      authNewAccount,
-      chatsMainPage,
-      createOrImport,
-      loginPinPage,
-      saveRecoverySeed,
-    }) => {
-      // Start browser one
-      await createOrImport.navigateTo();
-
-      // Click on Create New Account
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter username and Status and click on create account
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.clickOnCreateAccount();
-
-      // Enter Pin
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.clickOnSavedIt();
-
-      // Go to Friends
-      await chatsMainPage.goToFriends();
-    },
-  );
+    // Go to Friends
+    await chatsMainPage.goToFriends();
+  });
 
   test("H1, H2, H3, H4, H5, H8 - Navigate through friends pages and validate UI elements", async ({
-    friendsScreen,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const friendsScreen = new FriendsScreen(page);
+
     // H2 - Clicking Active should take you to Active page within Friends
     await friendsScreen.goToRequestList();
     await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
@@ -129,9 +106,12 @@ test.describe("Friends tests", () => {
   });
 
   test("H10, H27, H28, H29 - Copy Button Tests", async ({
-    friendsScreen,
-    context,
+    singleUserContext,
   }) => {
+    const context = singleUserContext.context;
+    const page = singleUserContext.page;
+    const friendsScreen = new FriendsScreen(page);
+
     // H10 - Clicking the Copy button should copy your personal did:key
     // Grant clipboard permissions
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -188,10 +168,12 @@ test.describe("Friends tests", () => {
   });
 
   test("H22, H23, H24, H25 - Invalid attempts for sending friend request", async ({
-    friendsScreen,
-    context,
-    page,
+    singleUserContext,
   }) => {
+    const context = singleUserContext.context;
+    const page = singleUserContext.page;
+    const friendsScreen = new FriendsScreen(page);
+
     // H22 - User cannot add himself as a friend
     // Grant clipboard permissions
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);

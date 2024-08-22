@@ -1,53 +1,28 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { SettingsAccessibility } from "playwright/PageObjects/Settings/SettingsAccessibility";
 
 test.describe("Settings Accessibility Tests", () => {
-  const username = "test123";
-  const status = "test status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonAccessibility.click();
-      await page.waitForURL("/settings/accessibility");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonAccessibility.click();
+    await page.waitForURL("/settings/accessibility");
+  });
 
   test("P1, P2 - User should be able to toggle on/off Dyslexic mode and changes are applied everywhere", async ({
-    chatsMainPage,
-    settingsAccessibility,
-    settingsProfile,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAccessibility = new SettingsAccessibility(page);
+    const settingsProfile = new SettingsProfile(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     // Label and texts for settings section are correct
     await expect(settingsAccessibility.openDyslexicSectionLabel).toHaveText(
       "Open Dyslexic",

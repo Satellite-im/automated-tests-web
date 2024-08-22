@@ -1,47 +1,23 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { FilesPage } from "playwright/PageObjects/FilesScreen";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { LoginPinPage } from "playwright/PageObjects/LoginPin";
 
 test.describe("Files Page Tests", () => {
-  const username = "test123";
-  const status = "test status";
-
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      // Go to Files
-      await chatsMainPage.goToFiles();
-      await page.waitForURL("/files");
-    },
-  );
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToFiles();
+    await page.waitForURL("/files");
+  });
 
   test("F3, F4 - Amount of Free and Total should appear in Toolbar", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // Validate Free and Total space data
     await filesPage.validateFreeSpaceInfo("2.15 GB");
     await filesPage.validateTotalSpaceInfo("2.15 GB");
@@ -76,8 +52,11 @@ test.describe("Files Page Tests", () => {
   });
 
   test("F5 - Highlighted border should appaer when you click Create New Folder", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // Validate border color when user clicks on New Folder button
     await expect(filesPage.newFolderButton).toHaveCSS(
       "border-color",
@@ -91,8 +70,11 @@ test.describe("Files Page Tests", () => {
   });
 
   test("F6, F11 -Clicking Upload should then open up the OS files browser and user can upload files in root folder", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // User can upload an image file
     await filesPage.uploadFile("playwright/assets/banner.jpg");
 
@@ -100,23 +82,34 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
   });
 
-  test("F7 - User can create new folders on root", async ({ filesPage }) => {
+  test("F7 - User can create new folders on root", async ({
+    singleUserContext,
+  }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // User can create folders on root
     await filesPage.createNewFolder("NewFolder");
     await filesPage.validateNewFolderCreated("NewFolder");
   });
 
   test("F8 - If user tries to create a folder with empty name or press Esc while name input is displayed, folder is not created", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // Empty folders are named as undefined
     await filesPage.createNewFolder("");
     await filesPage.validateNewFolderCreated("", true);
   });
 
   test("F9 - User cannot create directories with existing name - Toast notification is shown", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // Create a folder
     await filesPage.createNewFolder("NewFolder");
     await filesPage.validateNewFolderCreated("NewFolder");
@@ -130,8 +123,11 @@ test.describe("Files Page Tests", () => {
 
   // Skipping since it needs research on how to fix this test in CI
   test.skip("F10 - User can create subfolders and navigate to parent folder with go back button", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // Create a folder
     await filesPage.createNewFolder("NewFolder");
     await filesPage.navigateToFolder("NewFolder");
@@ -147,8 +143,11 @@ test.describe("Files Page Tests", () => {
 
   // Skipping since it needs research on how to fix this test in CI
   test.skip("F12 - User can upload files in subfolder folder", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // Create a folder in root and enter on it
     await filesPage.createNewFolder("NewFolder");
     await filesPage.navigateToFolder("NewFolder");
@@ -164,12 +163,14 @@ test.describe("Files Page Tests", () => {
 
   // Skipping since it needs research on how to fix this test in CI
   test.skip("F13 - Files and folders are still visible after logging out and login again", async ({
-    chatsMainPage,
-    filesPage,
-    loginPinPage,
-    settingsProfile,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+    const settingsProfile = new SettingsProfile(page);
+    const loginPinPage = new LoginPinPage(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     // User can upload an image file in root
     await filesPage.uploadFile("playwright/assets/banner.jpg");
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
@@ -206,8 +207,11 @@ test.describe("Files Page Tests", () => {
   });
 
   test("F14 - If user upload the same file again, file is uploaded but with different filename", async ({
-    filesPage,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const filesPage = new FilesPage(page);
+
     // Upload a file
     await filesPage.uploadFile("playwright/assets/banner.jpg");
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");

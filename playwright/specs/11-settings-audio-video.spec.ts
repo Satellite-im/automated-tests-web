@@ -1,50 +1,25 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { SettingsAudio } from "playwright/PageObjects/Settings/SettingsAudio";
 
 test.describe("Settings Audio and Video Tests", () => {
-  const username = "test123";
-  const status = "fixed status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonAudioAndVideo.click();
-      await page.waitForURL("/settings/audio_video");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonAudioAndVideo.click();
+    await page.waitForURL("/settings/audio_video");
+  });
 
   test("M1 and M2 - Input dropdown and input volume indicator should display", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     const expectedInputDevices = ["Default"];
 
     await expect(settingsAudio.inputDeviceSectionLabel).toHaveText(
@@ -58,8 +33,10 @@ test.describe("Settings Audio and Video Tests", () => {
   });
 
   test("M3 and M4 - Output device dropdown and output volume indicator should display", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     const expectedOutputDevices = ["Default"];
     await expect(settingsAudio.outputDeviceSectionLabel).toHaveText(
       "Output Device",
@@ -72,8 +49,10 @@ test.describe("Settings Audio and Video Tests", () => {
   });
 
   test("M5 - User should be able to toggle on and off Echo Cancellation", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     // Label and texts for settings section are correct
     await expect(settingsAudio.echoCancellationSectionLabel).toHaveText(
       "Echo Cancellation",
@@ -97,8 +76,10 @@ test.describe("Settings Audio and Video Tests", () => {
   });
 
   test("M6 - User should be able to toggle on and off Interface Sounds", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     // Label and texts for settings section are correct
     await expect(settingsAudio.interfaceSoundsSectionLabel).toHaveText(
       "Interface Sounds",
@@ -124,8 +105,10 @@ test.describe("Settings Audio and Video Tests", () => {
   });
 
   test("M7 - User should be able to toggle on and off Control Sounds", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     // Label and texts for settings section are correct
     await expect(settingsAudio.controlSoundsSectionLabel).toHaveText(
       "Control Sounds",
@@ -147,8 +130,10 @@ test.describe("Settings Audio and Video Tests", () => {
   });
 
   test("M8 - User should be able to toggle on and off Message Sounds", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     // Label and texts for settings section are correct
     await expect(settingsAudio.messageSoundsSectionLabel).toHaveText(
       "Message Sounds",
@@ -170,8 +155,10 @@ test.describe("Settings Audio and Video Tests", () => {
   });
 
   test("M9 - User should be able to toggle on and off Call Timer", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     // Label and texts for settings section are correct
     await expect(settingsAudio.callTimerSectionLabel).toHaveText("Call Timer");
     await expect(settingsAudio.callTimerSectionText).toHaveText(
@@ -191,8 +178,10 @@ test.describe("Settings Audio and Video Tests", () => {
   });
 
   test("M10 - User should be able to test video device", async ({
-    settingsAudio,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsAudio = new SettingsAudio(page);
     await expect(settingsAudio.videoDeviceSectionLabel).toHaveText(
       "Video Device",
     );

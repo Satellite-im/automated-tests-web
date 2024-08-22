@@ -1,46 +1,24 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 
 test.describe("Settings Profile Tests", () => {
   const username = "test123";
   const status = "fixed status";
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-    },
-  );
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
+  });
 
   test("I1 - Banner Picture - Tooltip displayed", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Shows tooltip when hovering
     await settingsProfile.profileBanner.hover();
     await settingsProfile.validatePseudoElementContent(
@@ -50,15 +28,21 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I2, I3 - Banner Picture - User can upload banner", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // User can upload a banner picture
     await settingsProfile.uploadProfileBanner("playwright/assets/banner.jpg");
   });
 
   test("I4 - Clicking upload picture on Profile picture should open File Browser", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Profile Picture Upload Button tooltip shows "Change profile photo"
     // Validate user can upload profile pictures
     await settingsProfile.uploadProfilePicture("playwright/assets/logo.jpg");
@@ -72,8 +56,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I5 - Profile picture shows default profile picture until custom profile picture is set", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Identicon picture is setup by default
     await expect(settingsProfile.identiconSettingsProfile).toBeVisible();
 
@@ -88,8 +75,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I6 - Username should be displayed in the Username textbox", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Username displayed will be equal to the username assigned randomly when creating account
     await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
       username,
@@ -97,10 +87,12 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I7 - Clicking shortID should copy DID into clipboard", async ({
-    settingsProfile,
-    page,
-    context,
+    singleUserContext,
   }) => {
+    const context = singleUserContext.context;
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Validate hovering on Copy ID button shows "Copy"
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await settingsProfile.validateTooltipAttribute(
@@ -127,10 +119,12 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I8 - Short ID Context menu should allow to copy DID or Short ID intoto clipboard", async ({
-    settingsProfile,
-    page,
-    context,
+    singleUserContext,
   }) => {
+    const context = singleUserContext.context;
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Copy ID by just right clicking on the Short ID button and selecting Copy ID
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
     await settingsProfile.openUserIDContextMenu();
@@ -177,7 +171,11 @@ test.describe("Settings Profile Tests", () => {
         description: "https://github.com/Satellite-im/UplinkWeb/issues/339",
       },
     },
-    async ({ chatsMainPage, settingsProfile, page }) => {
+    async ({ singleUserContext }) => {
+      const page = singleUserContext.page;
+      const settingsProfile = new SettingsProfile(page);
+      const chatsMainPage = new ChatsMainPage(page);
+
       // User types into username and change value
       const newUsername = "newUsername";
       await settingsProfile.inputSettingsProfileUsername.click();
@@ -221,8 +219,11 @@ test.describe("Settings Profile Tests", () => {
   );
 
   test("I11 - All text in Username should be selected after clicking into the text field a single time", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // User clicks on username textbox and all text is selected
     await settingsProfile.assertInputTextSelected(
       "[data-cy='input-settings-profile-username']",
@@ -230,8 +231,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I12 - Highlighted border should appear when clicked into the username textbox", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Click on Username textbox and validate border is highlighted
     await settingsProfile.inputSettingsProfileUsername.focus();
 
@@ -244,8 +248,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I13 - Error message should appear if user tries to input chars that are not allowed or exceeds chars amount", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // User leaves empty username - Warning message is displayed
     await settingsProfile.inputSettingsProfileUsername.click();
     await settingsProfile.inputSettingsProfileUsername.clear();
@@ -276,8 +283,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I14 - Highlighted border should appear when user is clicked into Status textbox", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Click on Status textbox and validate border is highlighted
     await settingsProfile.inputSettingsProfileStatus.focus();
 
@@ -290,10 +300,12 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I15, I16 - User should be able to change Status Message and see toast notification for update", async ({
-    chatsMainPage,
-    settingsProfile,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+    const chatsMainPage = new ChatsMainPage(page);
+
     // User types into username and change value
     const newStatus = "this is my new status";
     await settingsProfile.inputSettingsProfileStatus.click();
@@ -336,8 +348,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I17 - All text in StatusMessage should be selected after clicking into the text field a single time", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // User clicks on status textbox and all text is selected
     await settingsProfile.assertInputTextSelected(
       "[data-cy='input-settings-profile-status-message']",
@@ -345,8 +360,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I18 - Error message should appear if user inputs chars that are not allowed or exceeds limit", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // User types more characters than expected into status - Warning message is displayed
     await settingsProfile.inputSettingsProfileStatus.click();
     await settingsProfile.inputSettingsProfileStatus.clear();
@@ -360,8 +378,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I19 - Status dropdown should show Online, Offline, Idle, Do not Disturb", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Validate Settings Section contents
     await expect(settingsProfile.onlineStatusSectionLabel).toHaveText("Status");
     await expect(settingsProfile.onlineStatusSectionText).toHaveText(
@@ -380,8 +401,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I20 - Status should show correctly depending on which status user has set", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Change Status to Offline and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("offline");
     await settingsProfile.validateOnlineStatus("offline");
@@ -400,8 +424,11 @@ test.describe("Settings Profile Tests", () => {
   });
 
   test("I21 - Clicking Reveal Phrase should display the users Recovery Phrases", async ({
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Validate Settings Section contents
     await expect(settingsProfile.revealPhraseSectionLabel).toHaveText(
       "Reveal recovery phrase",
@@ -430,7 +457,10 @@ test.describe("Settings Profile Tests", () => {
         description: "https://github.com/Satellite-im/UplinkWeb/issues/378",
       },
     },
-    async ({ settingsProfile }) => {
+    async ({ singleUserContext }) => {
+      const page = singleUserContext.page;
+      const settingsProfile = new SettingsProfile(page);
+
       await settingsProfile.revealPhraseSectionButtonCopyPhrase.click();
     },
   );
@@ -446,9 +476,11 @@ test.describe("Settings Profile Tests", () => {
    */
 
   test("I24 - Clicking LogOut should log user out of the account", async ({
-    settingsProfile,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
     // Validate Settings Section contents
     await expect(settingsProfile.logOutSectionLabel).toHaveText("Log Out");
     await expect(settingsProfile.logOutSectionText).toHaveText(

@@ -1,50 +1,27 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { SettingsKeybinds } from "playwright/PageObjects/Settings/SettingsKeybinds";
+import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 
 test.describe("Settings Keybinds Tests", () => {
-  const username = "test123";
-  const status = "fixed status";
+  test.beforeEach(async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.goToSettings();
+    await page.waitForURL("/settings/profile");
 
-  test.beforeEach(
-    async ({
-      createOrImport,
-      authNewAccount,
-      loginPinPage,
-      saveRecoverySeed,
-      chatsMainPage,
-      settingsProfile,
-      page,
-    }) => {
-      // Select Create Account
-      await createOrImport.navigateTo();
-      await createOrImport.clickCreateNewAccount();
-
-      // Enter Username and Status
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-
-      // Enter PIN
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-
-      // Click on I Saved It
-      await saveRecoverySeed.buttonSavedPhrase.waitFor({ state: "attached" });
-      await saveRecoverySeed.clickOnSavedIt();
-      await chatsMainPage.addSomeone.waitFor({ state: "visible" });
-      await page.waitForURL("/chat");
-
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      await settingsProfile.buttonKeybinds.click();
-      await page.waitForURL("/settings/keybinds");
-    },
-  );
+    const settingsProfile = new SettingsProfile(page);
+    await settingsProfile.buttonKeybinds.click();
+    await page.waitForURL("/settings/keybinds");
+  });
 
   test("O1, 06 - Message at top of page and custom keybinds listed correctly", async ({
-    settingsKeybinds,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+
     // Validate banner text
     await expect(settingsKeybinds.bannerText).toHaveText(
       "Global keybinds are disabled while on this page.",
@@ -101,11 +78,13 @@ test.describe("Settings Keybinds Tests", () => {
   });
 
   test("O2, 04 - Clicking a key should activate the Recorded Keys - User can save keybind", async ({
-    page,
-    friendsScreen,
-    settingsKeybinds,
-    settingsProfile,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+    const friendsScreen = new FriendsScreen(page);
+    const settingsProfile = new SettingsProfile(page);
+
     // Validate keybind instructions
     await expect(settingsKeybinds.recordKeybindLabel).toHaveText(
       "Record Keybind",
@@ -146,8 +125,11 @@ test.describe("Settings Keybinds Tests", () => {
   });
 
   test("O3 - Action dropdown should display correct keybind actions", async ({
-    settingsKeybinds,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+
     const expectedKeybinds = [
       "Increase font size within Uplink.",
       "Decrease font size within Uplink.",
@@ -169,9 +151,11 @@ test.describe("Settings Keybinds Tests", () => {
   });
 
   test("O5 - Clicking Cancel should cancel any custom keybinding the user was trying to add", async ({
-    settingsKeybinds,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+
     // Setup a keybind and cancel the changes
     await expect(settingsKeybinds.recordKeybindLabel).toHaveText(
       "Record Keybind",
@@ -199,8 +183,11 @@ test.describe("Settings Keybinds Tests", () => {
   });
 
   test("O7 - Highlighted border should display when user clicks cancel", async ({
-    settingsKeybinds,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+
     // Color before clicking button
     await expect(settingsKeybinds.newKeybindCancelButton).toHaveCSS(
       "border-bottom-color",
@@ -218,9 +205,11 @@ test.describe("Settings Keybinds Tests", () => {
   });
 
   test("O8 - Clicking Revert Keybindings should revert any custom keybindings the user has saved", async ({
-    settingsKeybinds,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+
     // Setup a keybind and revert the changes
     const pushToTalkKeybind =
       await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
@@ -243,8 +232,11 @@ test.describe("Settings Keybinds Tests", () => {
   });
 
   test("O9 - Highlighted border should be displayed when clicking Revert Keybindings", async ({
-    settingsKeybinds,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+
     // Color before clicking on button
     await expect(settingsKeybinds.revertKeybindSectionAllButton).toHaveCSS(
       "border-bottom-color",
@@ -262,9 +254,11 @@ test.describe("Settings Keybinds Tests", () => {
   });
 
   test("O10 - Clicking the backwards arrow should revert specific custom keybinding", async ({
-    settingsKeybinds,
-    page,
+    singleUserContext,
   }) => {
+    const page = singleUserContext.page;
+    const settingsKeybinds = new SettingsKeybinds(page);
+
     // Setup a keybind and revert the changes
     const pushToTalkKeybind =
       await settingsKeybinds.getKeybindButtonKeys("Push to talk.");
