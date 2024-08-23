@@ -47,7 +47,7 @@ export class CallSettings extends MainPage {
       "setting-section-label",
     );
     this.audioBitrateSelector = this.audioBitrate.getByTestId(
-      "selector-video-device",
+      "selector-audio-bitrate",
     );
     this.audioBitrateSelectorOption =
       this.audioBitrateSelector.getByTestId("select-option");
@@ -59,21 +59,13 @@ export class CallSettings extends MainPage {
       "setting-section-label",
     );
     this.audioChannelsSelector = this.audioChannels.getByTestId(
-      "selector-video-device",
+      "selector-audio-channels",
     );
     this.audioChannelsSelectorOption =
       this.audioChannelsSelector.getByTestId("select-option");
     this.audioChannelsText = this.audioChannels.getByTestId(
       "setting-section-text",
     );
-    this.sampleSizeLabel = this.sampleSize.getByTestId("setting-section-label");
-    this.sampleSizeSelector = this.sampleSize.getByTestId(
-      "selector-video-device",
-    );
-    this.sampleSizeSelectorOption =
-      this.sampleSizeSelector.getByTestId("select-option");
-    this.sampleSizeText = this.sampleSize.getByTestId("setting-section-text");
-
     this.echoCancellation = this.page.getByTestId("section-echo-cancellation");
     this.echoCancellationCheckbox = this.echoCancellation.getByTestId(
       "switch-echo-cancellation",
@@ -87,9 +79,9 @@ export class CallSettings extends MainPage {
     this.echoCancellationText = this.echoCancellation.getByTestId(
       "setting-section-text",
     );
-    this.gainControl = this.page.getByTestId("section-gain-control");
+    this.gainControl = this.page.getByTestId("section-auto-gain-control");
     this.gainControlCheckbox = this.gainControl.getByTestId(
-      "switch-echo-cancellation",
+      "switch-auto-gain-control",
     );
     this.gainControlSlider = this.gainControl.locator(
       '[data-cy="section-echo-cancellation"] > .body > .content > .switch > .slider',
@@ -99,9 +91,9 @@ export class CallSettings extends MainPage {
     );
     this.gainControlText = this.gainControl.getByTestId("setting-section-text");
 
-    this.noiseSupression = this.page.getByTestId("section-noise-supression");
+    this.noiseSupression = this.page.getByTestId("section-noise-suppression");
     this.noiseSupressionCheckbox = this.noiseSupression.getByTestId(
-      "switch-echo-cancellation",
+      "switch-noise-suppression",
     );
     this.noiseSupressionSlider = this.noiseSupression.locator(
       '[data-cy="section-echo-cancellation"] > .body > .content > .switch > .slider',
@@ -115,7 +107,7 @@ export class CallSettings extends MainPage {
     this.sampleSize = this.page.getByTestId("section-sample-size");
     this.sampleSizeLabel = this.sampleSize.getByTestId("setting-section-label");
     this.sampleSizeSelector = this.sampleSize.getByTestId(
-      "selector-video-device",
+      "selector-sample-size",
     );
     this.sampleSizeSelectorOption =
       this.sampleSizeSelector.getByTestId("select-option");

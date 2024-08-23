@@ -15,9 +15,13 @@ export class CallScreen extends MainPage {
   readonly callVideoButton: Locator;
   readonly callVolumeMixerButton: Locator;
   readonly localUserVideo: Locator;
+  readonly participantDeafenButton: Locator;
+  readonly participantMuteButton: Locator;
   readonly participantProfilePicture: Locator;
   readonly participantProfilePictureIdenticon: Locator;
   readonly participantProfilePictureImage: Locator;
+  readonly participantUser: Locator;
+  readonly participantVideo: Locator;
   readonly participantWithoutVideo: Locator;
   readonly participants: Locator;
   readonly remoteUserVideo: Locator;
@@ -46,6 +50,12 @@ export class CallScreen extends MainPage {
       "button-call-volume-mixer",
     );
     this.localUserVideo = this.callScreen.getByTestId("local-user-video");
+    this.participantDeafenButton = this.callScreen.getByTestId(
+      "button-participant-deafen",
+    );
+    this.participantMuteButton = this.callScreen.getByTestId(
+      "button-participant-mute",
+    );
     this.participantProfilePicture = this.page.getByTestId(
       "participant-profile-picture",
     );
@@ -53,6 +63,8 @@ export class CallScreen extends MainPage {
       this.participantProfilePicture.locator(".identicon");
     this.participantProfilePictureImage =
       this.participantProfilePicture.locator("img");
+    this.participantUser = this.page.getByTestId("participant-user");
+    this.participantVideo = this.page.getByTestId("participant-video");
     this.participantWithoutVideo = this.page.getByTestId(
       "participant-without-video",
     );
