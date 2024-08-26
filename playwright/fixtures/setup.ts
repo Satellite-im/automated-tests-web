@@ -12,7 +12,6 @@ import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
 import { FriendsScreen } from "../PageObjects/FriendsScreen";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-const fs = require("fs");
 
 // Declare the types of your fixtures.
 type MyFixtures = {
@@ -24,13 +23,11 @@ type MyFixtures = {
     context: BrowserContext;
     page: Page;
   };
-  firstUserContext: {
-    context: BrowserContext;
-    page: Page;
-  };
-  secondUserContext: {
-    context: BrowserContext;
-    page: Page;
+  friendUserContexts: {
+    contextFirst: BrowserContext;
+    pageFirst: Page;
+    contextSecond: BrowserContext;
+    pageSecond: Page;
   };
   chatUserContexts: {
     contextOne: BrowserContext;
@@ -110,90 +107,72 @@ export const test = base.extend<MyFixtures>({
     await context.close();
   },
 
-  firstUserContext: async ({}, use) => {
+  friendUserContexts: async ({}, use) => {
     // Declare all constants required for the precondition steps
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const username: string = "ChatUserA";
+    const browserFirst = await chromium.launch();
+    const browserSecond = await firefox.launch();
+    const contextFirst = await browserFirst.newContext();
+    const contextSecond = await browserSecond.newContext();
+    const pageFirst = await contextFirst.newPage();
+    const pageSecond = await contextSecond.newPage();
+    const createOrImportOne = new CreateOrImportPage(pageFirst);
+    const createOrImportTwo = new CreateOrImportPage(pageSecond);
+    const authNewAccountOne = new AuthNewAccount(pageFirst);
+    const authNewAccountTwo = new AuthNewAccount(pageSecond);
+    const loginPinPageOne = new LoginPinPage(pageFirst);
+    const loginPinPageTwo = new LoginPinPage(pageSecond);
+    const saveRecoverySeedOne = new SaveRecoverySeedPage(pageFirst);
+    const saveRecoverySeedTwo = new SaveRecoverySeedPage(pageSecond);
+    const username = "ChatUserA";
+    const usernameTwo: string = "ChatUserB";
     const status: string = faker.lorem.sentence(3);
 
-    // Start browser one
-    await createOrImport.navigateTo();
+    // Start browser
+    await createOrImportOne.navigateTo();
+    await createOrImportTwo.navigateTo();
 
     // Click on Create New Account
-    await createOrImport.clickCreateNewAccount();
+    await createOrImportOne.clickCreateNewAccount();
+    await createOrImportTwo.clickCreateNewAccount();
 
     // Enter username and Status and click on create account
-    await authNewAccount.validateLoadingHeader();
-    await authNewAccount.typeOnUsername(username);
-    await authNewAccount.typeOnStatus(status);
-    await authNewAccount.clickOnCreateAccount();
+    await authNewAccountOne.validateLoadingHeader();
+    await authNewAccountOne.typeOnUsername(username);
+    await authNewAccountOne.typeOnStatus(status);
+    await authNewAccountOne.clickOnCreateAccount();
+    await authNewAccountTwo.validateLoadingHeader();
+    await authNewAccountTwo.typeOnUsername(usernameTwo);
+    await authNewAccountTwo.typeOnStatus(status);
+    await authNewAccountTwo.clickOnCreateAccount();
 
     // Enter Pin
-    await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterDefaultPin();
+    await loginPinPageOne.waitUntilPageIsLoaded();
+    await loginPinPageOne.enterDefaultPin();
+    await loginPinPageTwo.waitUntilPageIsLoaded();
+    await loginPinPageTwo.enterDefaultPin();
 
     // Click on I Saved It
-    await saveRecoverySeed.clickOnSavedIt();
+    await saveRecoverySeedOne.clickOnSavedIt();
+    await saveRecoverySeedTwo.clickOnSavedIt();
+
+    await pageFirst.waitForURL("/chat");
+    await pageSecond.waitForURL("/chat");
 
     // Pass the context, browser, and page to the test
     await use({
-      context,
-      page,
+      contextFirst,
+      pageFirst,
+      contextSecond,
+      pageSecond,
     });
 
     // Close the context and browser after the test is done
-    await context.clearCookies();
-    await context.clearPermissions();
-    await context.close();
-  },
-
-  secondUserContext: async ({}, use) => {
-    // Declare all constants required for the precondition steps
-    const browser = await chromium.launch();
-    const context = await browser.newContext();
-    const page = await context.newPage();
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const username: string = "ChatUserB";
-    const status: string = faker.lorem.sentence(3);
-
-    // Start browser one
-    await createOrImport.navigateTo();
-
-    // Click on Create New Account
-    await createOrImport.clickCreateNewAccount();
-
-    // Enter username and Status and click on create account
-    await authNewAccount.validateLoadingHeader();
-    await authNewAccount.typeOnUsername(username);
-    await authNewAccount.typeOnStatus(status);
-    await authNewAccount.clickOnCreateAccount();
-
-    // Enter Pin
-    await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.enterDefaultPin();
-
-    // Click on I Saved It
-    await saveRecoverySeed.clickOnSavedIt();
-
-    // Pass the context, browser, and page to the test
-    await use({
-      context,
-      page,
-    });
-
-    // Close the context and browser after the test is done
-    await context.clearCookies();
-    await context.clearPermissions();
-    await context.close();
+    await contextFirst.clearCookies();
+    await contextFirst.clearPermissions();
+    await contextFirst.close();
+    await contextSecond.clearCookies();
+    await contextSecond.clearPermissions();
+    await contextSecond.close();
   },
 
   chatUserContexts: async ({}, use) => {
@@ -303,15 +282,6 @@ export const test = base.extend<MyFixtures>({
     await contextTwo.clearCookies();
     await contextTwo.clearPermissions();
     await contextTwo.close();
-  },
-
-  page: async ({ context }, use) => {
-    // Declare all constants required for the precondition steps
-    const page = await context.newPage();
-    await use(page);
-    await context.clearCookies();
-    await context.clearPermissions();
-    await context.close();
   },
 });
 

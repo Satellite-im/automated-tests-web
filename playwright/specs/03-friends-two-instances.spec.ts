@@ -7,13 +7,12 @@ const usernameTwo = "ChatUserB";
 
 test.describe("Friends tests", () => {
   test("H15 - User should be removed from friends list after clicking unfriend", async ({
-    firstUserContext,
-    secondUserContext,
+    friendUserContexts,
   }) => {
     // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
+    const context1 = friendUserContexts.contextFirst;
+    const page1 = friendUserContexts.pageFirst;
+    const page2 = friendUserContexts.pageFirst;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
@@ -74,13 +73,12 @@ test.describe("Friends tests", () => {
   });
 
   test("H16, H17, H18, H26 - User can be block/unblocked", async ({
-    firstUserContext,
-    secondUserContext,
+    friendUserContexts,
   }) => {
     // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
+    const context1 = friendUserContexts.contextFirst;
+    const page1 = friendUserContexts.pageFirst;
+    const page2 = friendUserContexts.pageSecond;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
@@ -149,13 +147,12 @@ test.describe("Friends tests", () => {
   });
 
   test("H6, H19 - User can send a friend request and remote user can accept it", async ({
-    firstUserContext,
-    secondUserContext,
+    friendUserContexts,
   }) => {
     // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
+    const context1 = friendUserContexts.contextFirst;
+    const page1 = friendUserContexts.pageFirst;
+    const page2 = friendUserContexts.pageSecond;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
@@ -200,13 +197,12 @@ test.describe("Friends tests", () => {
   });
 
   test("H7, H20 - User can send a friend request and remote user can deny it", async ({
-    firstUserContext,
-    secondUserContext,
+    friendUserContexts,
   }) => {
     // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
+    const context1 = friendUserContexts.contextFirst;
+    const page1 = friendUserContexts.pageFirst;
+    const page2 = friendUserContexts.pageSecond;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
@@ -254,13 +250,12 @@ test.describe("Friends tests", () => {
   });
 
   test("H21 - User can send a friend request and cancel request before other user replies to it", async ({
-    firstUserContext,
-    secondUserContext,
+    friendUserContexts,
   }) => {
     // Declare constants required from the fixtures
-    const context1 = firstUserContext.context;
-    const page1 = firstUserContext.page;
-    const page2 = secondUserContext.page;
+    const context1 = friendUserContexts.contextFirst;
+    const page1 = friendUserContexts.pageFirst;
+    const page2 = friendUserContexts.pageSecond;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
