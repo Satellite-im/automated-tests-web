@@ -12,7 +12,7 @@ test.describe("Friends tests", () => {
     // Declare constants required from the fixtures
     const context1 = friendUserContexts.contextFirst;
     const page1 = friendUserContexts.pageFirst;
-    const page2 = friendUserContexts.pageFirst;
+    const page2 = friendUserContexts.pageSecond;
     const friendsScreenFirst = new FriendsScreen(page1);
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
@@ -23,16 +23,9 @@ test.describe("Friends tests", () => {
     await chatsMainPageSecond.goToFriends();
 
     // H15 - User should be removed from friends list after clicking unfriend
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
     // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    const didKeyFirstUser =
+      await friendsScreenFirst.getDIDKeyFromIndexedDB(context1);
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -88,16 +81,9 @@ test.describe("Friends tests", () => {
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
     // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    const didKeyFirstUser =
+      await friendsScreenFirst.getDIDKeyFromIndexedDB(context1);
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -162,16 +148,9 @@ test.describe("Friends tests", () => {
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
     // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    const didKeyFirstUser =
+      await friendsScreenFirst.getDIDKeyFromIndexedDB(context1);
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -212,16 +191,9 @@ test.describe("Friends tests", () => {
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    // Copy DID and save it into a constant
+    const didKeyFirstUser =
+      await friendsScreenFirst.getDIDKeyFromIndexedDB(context1);
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
@@ -266,16 +238,9 @@ test.describe("Friends tests", () => {
     await chatsMainPageSecond.goToFriends();
 
     // H21 - User can send a friend request and cancel request before other user replies to it
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    // Copy DID and save it into a constant
+    const didKeyFirstUser =
+      await friendsScreenFirst.getDIDKeyFromIndexedDB(context1);
 
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);

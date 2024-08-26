@@ -1,5 +1,10 @@
 import MainPage from "./MainPage";
-import { type Locator, type Page, expect } from "@playwright/test";
+import {
+  BrowserContext,
+  type Locator,
+  type Page,
+  expect,
+} from "@playwright/test";
 
 export class FriendsScreen extends MainPage {
   readonly buttonAddFriend: Locator;
@@ -118,6 +123,7 @@ export class FriendsScreen extends MainPage {
 
   async addFriend(didKey: string) {
     await this.inputAddFriend.fill(didKey);
+    await expect(this.inputAddFriend).toHaveValue(didKey);
     await this.buttonAddFriend.click();
   }
 
@@ -152,6 +158,10 @@ export class FriendsScreen extends MainPage {
     await this.contextOptionCopyID.click();
   }
 
+  async getValueFromAddFriendInput() {
+    return this.inputAddFriend.inputValue();
+  }
+
   async pasteClipboardOnAddInput() {
     await this.inputAddFriend.click();
     await this.page.keyboard.press("ControlOrMeta+v");
@@ -160,6 +170,15 @@ export class FriendsScreen extends MainPage {
   async denyFriendRequest(username: string) {
     const friendUser = await this.getFriendFromList(username);
     await friendUser.getByTestId("button-friend-deny").click();
+  }
+
+  async getDIDKeyFromIndexedDB(context: BrowserContext) {
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await this.copyDIDFromContextMenu();
+    await this.pasteClipboardOnAddInput();
+    const didKey = await this.inputAddFriend.inputValue();
+    await this.clearAddFriendInput();
+    return didKey;
   }
 
   async goToAllFriendsList() {

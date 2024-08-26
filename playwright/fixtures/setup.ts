@@ -1,4 +1,5 @@
 import {
+  expect,
   test as base,
   chromium,
   firefox,
@@ -199,9 +200,6 @@ export const test = base.extend<MyFixtures>({
     const usernameTwo: string = "ChatUserB";
     const status: string = faker.lorem.sentence(3);
 
-    // Grant clipboard permissions to context one
-    await contextOne.grantPermissions(["clipboard-read", "clipboard-write"]);
-
     // Start browsers
     await createOrImportFirst.navigateTo();
     await createOrImportSecond.navigateTo();
@@ -235,17 +233,14 @@ export const test = base.extend<MyFixtures>({
     await chatsMainPageSecond.goToFriends();
 
     // Copy DID and save it into a constant
+    await contextOne.grantPermissions(["clipboard-read", "clipboard-write"]);
     await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await pageOne.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
-
-    // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    await friendsScreenFirst.pasteClipboardOnAddInput();
+    const didKey = await friendsScreenFirst.inputAddFriend.inputValue();
+    await friendsScreenFirst.clearAddFriendInput();
 
     // Now, add the first user as a friend
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
+    await friendsScreenSecond.addFriend(didKey);
 
     // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
     await friendsScreenSecond.validateToastRequestSent();
