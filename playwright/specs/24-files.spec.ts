@@ -100,8 +100,10 @@ test.describe("Files Page Tests", () => {
     const filesPage = new FilesPage(page);
 
     // Empty folders are named as undefined
-    await filesPage.createNewFolder("");
-    await filesPage.validateNewFolderCreated("", true);
+    await filesPage.newFolderButton.click();
+    await filesPage.inputFileFolderName.fill("");
+    await page.keyboard.press("Enter");
+    await page.locator(`[data-cy="folder-"]`).waitFor({ state: "detached" });
   });
 
   test("F9 - User cannot create directories with existing name - Toast notification is shown", async ({
