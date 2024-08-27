@@ -119,7 +119,7 @@ export const test = base.extend<MyFixtures>({
     const loginPinPage = new LoginPinPage(page);
     const saveRecoverySeed = new SaveRecoverySeedPage(page);
     const username: string = "ChatUserA";
-    const status: string = faker.lorem.sentence(3);
+    const status: string = "status from first user";
 
     // Start browser one
     await createOrImport.navigateTo();
@@ -162,7 +162,7 @@ export const test = base.extend<MyFixtures>({
     const loginPinPage = new LoginPinPage(page);
     const saveRecoverySeed = new SaveRecoverySeedPage(page);
     const username: string = "ChatUserB";
-    const status: string = faker.lorem.sentence(3);
+    const status: string = "status from second user";
 
     // Start browser one
     await createOrImport.navigateTo();

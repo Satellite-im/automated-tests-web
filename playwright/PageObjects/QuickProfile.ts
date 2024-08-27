@@ -1,16 +1,18 @@
 import MainPage from "./MainPage";
-import { type Locator, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 export class QuickProfile extends MainPage {
   readonly quickProfile: Locator;
   readonly quickProfileBanner: Locator;
   readonly quickProfileNoteLabel: Locator;
   readonly quickProfileNoteInput: Locator;
+  readonly quickProfileNoteInputContainer: Locator;
   readonly quickProfilePicture: Locator;
   readonly quickProfilePictureImage: Locator;
   readonly quickProfileStatusLabel: Locator;
   readonly quickProfileStatusText: Locator;
   readonly quickProfileUserButton: Locator;
+  readonly quickProfileUserButtonText: Locator;
   readonly quickProfileUsernameLabel: Locator;
   readonly quickProfileUsernameText: Locator;
 
@@ -26,6 +28,9 @@ export class QuickProfile extends MainPage {
     this.quickProfileNoteInput = this.quickProfile.getByTestId(
       "input-quick-profile-note",
     );
+    this.quickProfileNoteInputContainer = this.page
+      .getByTestId("input-quick-profile-note")
+      .locator("xpath=..");
     this.quickProfilePicture = this.quickProfile.getByTestId(
       "quick-profile-picture",
     );
@@ -39,6 +44,7 @@ export class QuickProfile extends MainPage {
     this.quickProfileUserButton = this.quickProfile.getByTestId(
       "button-quick-profile-user",
     );
+    this.quickProfileUserButtonText = this.quickProfileUserButton.locator("p");
     this.quickProfileUsernameLabel = this.quickProfile.getByTestId(
       "label-quick-profile-username",
     );
@@ -49,5 +55,11 @@ export class QuickProfile extends MainPage {
 
   async exitQuickProfile(): Promise<void> {
     await this.page.mouse.click(0, 0);
+  }
+
+  async validateQuickProfileSnapshot() {
+    await expect(this.page).toHaveScreenshot({
+      maxDiffPixels: 400,
+    });
   }
 }
