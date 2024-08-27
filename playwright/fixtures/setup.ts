@@ -12,7 +12,6 @@ import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
 import { FriendsScreen } from "../PageObjects/FriendsScreen";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";
-const fs = require("fs");
 
 // Declare the types of your fixtures.
 type MyFixtures = {

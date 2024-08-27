@@ -1,13 +1,14 @@
+import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { FilesPage } from "playwright/PageObjects/FilesScreen";
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
+import { QuickProfile } from "playwright/PageObjects/QuickProfile";
 import { test, expect } from "../fixtures/setup";
-import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { faker } from "@faker-js/faker";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
 
-test.describe("Friends tests", () => {
+test.describe("Two instances tests - Friends and Chats", () => {
   test("H15 - User should be removed from friends list after clicking unfriend", async ({
     firstUserContext,
     secondUserContext,
@@ -723,5 +724,120 @@ test.describe("Friends tests", () => {
         randomSentence,
       );
     }
+  });
+
+  test("B8 to B14 - Quick Profile tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    /// Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const quickProfileLocal = new QuickProfile(page1);
+    const quickProfileRemote = new QuickProfile(page1);
+
+    // With both users go to Friends Screen
+    await chatsMainPageFirst.goToFriends();
+    await chatsMainPageSecond.goToFriends();
+
+    // Grant clipboard permissions, Copy DID and save it into a constant
+    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+    await friendsScreenFirst.copyDIDFromContextMenu();
+    const handle = await page1.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    const didKeyFirstUser = await handle.jsonValue();
+
+    // Copy DID and save it into a constant
+    await friendsScreenSecond.copyDIDFromContextMenu();
+
+    // Now, add the first user as a friend
+    await friendsScreenSecond.addFriend(didKeyFirstUser);
+
+    // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
+    await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenSecond.waitForToastNotificationToDisappear();
+
+    // With First User, go to requests list and accept friend request
+    await friendsScreenFirst.goToRequestList();
+    await friendsScreenFirst.validateIncomingRequestExists();
+    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
+
+    // With First User, go to All Friends and click on Chat Button
+    await friendsScreenFirst.goToAllFriendsList();
+    await friendsScreenFirst.chatWithFriend(usernameTwo);
+
+    // With Second User, go to All Friends and click on Chat Button
+    await friendsScreenSecond.goToRequestList();
+    await friendsScreenSecond.goToAllFriendsList();
+    await friendsScreenSecond.chatWithFriend(username);
+
+    // Send message from first user to second user
+    const randomSentence = faker.lorem.sentence(3);
+    await chatsMainPageFirst.sendMessage(randomSentence);
+    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+      randomSentence,
+    );
+    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+      randomSentence,
+    );
+
+    // Send message from second user to first user
+    const randomSentenceTwo = faker.lorem.sentence(3);
+    await chatsMainPageSecond.sendMessage(randomSentenceTwo);
+    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+      randomSentenceTwo,
+    );
+    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+      randomSentence,
+    );
+
+    // Open Quick Profile from the last message sent
+    await chatsMainPageFirst.openLocalQuickProfile();
+    await expect(quickProfileLocal.quickProfile).toBeVisible();
+    await expect(quickProfileLocal.quickProfileUsernameText).toHaveText(
+      username,
+    );
+    await quickProfileLocal.quickProfileNoteInput.fill("Local User Note");
+    await quickProfileLocal.exitQuickProfile();
+
+    // Open Quick Profile from the last message received
+    await chatsMainPageFirst.openRemoteQuickProfile();
+    await expect(quickProfileRemote.quickProfile).toBeVisible();
+    await expect(quickProfileRemote.quickProfileUsernameText).toHaveText(
+      usernameTwo,
+    );
+    await quickProfileRemote.quickProfileNoteInput.fill("Remote User Note");
+    await quickProfileRemote.exitQuickProfile();
+
+    // Validate note is kept on local quick profile after opening again Quick Profile
+    await chatsMainPageFirst.openLocalQuickProfile();
+    await expect(quickProfileLocal.quickProfile).toBeVisible();
+    await expect(quickProfileLocal.quickProfileNoteInput).toHaveValue(
+      "Local User Note",
+    );
+    await quickProfileLocal.exitQuickProfile();
+
+    // Validate note is kept on remote quick profile after opening again Quick Profile
+    await chatsMainPageFirst.openRemoteQuickProfile();
+    await expect(quickProfileRemote.quickProfile).toBeVisible();
+    await expect(quickProfileRemote.quickProfileNoteInput).toHaveValue(
+      "Remote User Note",
+    );
+    await quickProfileRemote.exitQuickProfile();
+
+    // B9 - Friends profile should display friends profile picture
+    // B10 - Friends profile should display friends status (whether you are friends or not)
+    // B11 - Friends profile should display friends Username
+    // B12 - Friends profile should display friends profile Status
+    // B13 - User should be able to write a note on friends profile
+
+    // B14 - Highlighted border should appear when user clicks into Notes textbox
   });
 });

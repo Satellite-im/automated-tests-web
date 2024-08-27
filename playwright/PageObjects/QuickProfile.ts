@@ -46,4 +46,8 @@ export class QuickProfile extends MainPage {
       "text-quick-profile-username",
     );
   }
+
+  async exitQuickProfile(): Promise<void> {
+    await this.page.mouse.click(0, 0);
+  }
 }

@@ -244,6 +244,10 @@ export class ChatsMainPage extends MainPage {
     this.topbar = this.page.getByTestId("topbar");
   }
 
+  async exitCreateGroup() {
+    await this.topbar.click();
+  }
+
   async getLastLocalProfilePicture() {
     const lastProfilePicture = this.messageGroupLocal
       .last()
@@ -304,8 +308,14 @@ export class ChatsMainPage extends MainPage {
     return lastTimestamp;
   }
 
-  async exitCreateGroup() {
-    await this.topbar.click();
+  async openLocalQuickProfile() {
+    const profilePicture = await this.getLastLocalProfilePicture();
+    await profilePicture.click();
+  }
+
+  async openRemoteQuickProfile() {
+    const profilePicture = await this.getLastRemoteProfilePicture();
+    await profilePicture.click();
   }
 
   async sendMessage(message: string) {
