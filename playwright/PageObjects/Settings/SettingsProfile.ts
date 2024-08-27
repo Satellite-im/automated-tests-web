@@ -370,6 +370,36 @@ export class SettingsProfile extends SettingsBase {
     await this.waitForToastNotificationToDisappear();
   }
 
+  async updateStatus(newStatus: string) {
+    // User types into username and change value
+    await this.inputSettingsProfileStatus.click();
+    await this.inputSettingsProfileStatus.clear();
+    await this.inputSettingsProfileStatus.fill(newStatus);
+
+    // Save modal is displayed, user selects save and username is changed
+    await this.saveControls.waitFor({ state: "visible" });
+    await this.saveControlsButtonSave.click();
+    await this.page
+      .getByText("Profile Updated!")
+      .waitFor({ state: "attached" });
+    await this.waitForToastNotificationToDisappear();
+  }
+
+  async updateUsername(newUsername: string) {
+    // User types into username and change value
+    await this.inputSettingsProfileUsername.click();
+    await this.inputSettingsProfileUsername.clear();
+    await this.inputSettingsProfileUsername.fill(newUsername);
+
+    // Save modal is displayed, user selects save and username is changed
+    await this.saveControls.waitFor({ state: "visible" });
+    await this.saveControlsButtonSave.click();
+    await this.page
+      .getByText("Profile Updated!")
+      .waitFor({ state: "attached" });
+    await this.waitForToastNotificationToDisappear();
+  }
+
   async validateOnlineStatus(
     option: "online" | "idle" | "do-not-disturb" | "offline",
   ) {
