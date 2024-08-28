@@ -836,6 +836,122 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await quickProfileRemote.validateQuickProfileSnapshot();
     await quickProfileRemote.exitQuickProfile();
   });
+
+  test("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // Send message from first user to second user
+    const firstMessage = "this is a first test message";
+    await chatsMainPageFirst.sendMessage(firstMessage);
+    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+      firstMessage,
+    );
+    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+      firstMessage,
+    );
+
+    // B18 - Context menu appears when user right clicks a message
+    // B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete
+    // Context Menu on Message Sent
+    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+    await chatsMainPageFirst.validateLocalContextMenuOptions();
+    await chatsMainPageFirst.exitContextMenuChat();
+
+    // Context Menu on Message Received
+    await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
+    await chatsMainPageSecond.validateRemoteContextMenuOptions();
+    await chatsMainPageSecond.exitContextMenuChat();
+
+    // B23 - Clicking Copy should copy text to users clipboard
+    await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
+    await chatsMainPageSecond.selectContextMenuOption("Copy");
+    await chatsMainPageSecond.chatbarInput.click();
+    await chatsMainPageSecond.pasteClipboardOnChatbar();
+    await chatsMainPageSecond.buttonChatbarSendMessage.click();
+
+    const lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+
+    const lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    await expect(lastMessageReceived).toHaveText(firstMessage);
+
+    // B24 - Clicking Edit should open up the edit message modal
+
+    // B25 - Clicking Delete should delete message from chat
+  });
+
+  test.skip("B20 - Pin Messages Tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // B20 - Clicking Pin Message should pin message in chat
+  });
+
+  test.skip("B22 and B50 - Reaction Tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // B22 - Clicking React should open up emoji menu
+    // B50 - Number of reactions should be displayed underneath message
+  });
 });
 
 async function setupChats(

@@ -30,6 +30,8 @@ export class ChatsMainPage extends MainPage {
   readonly coinAmountIndicator: Locator;
   readonly contextMenuChatMessage: Locator;
   readonly contextMenuOptionCopyMessage: Locator;
+  readonly contextMenuOptionDeleteMessage: Locator;
+  readonly contextMenuOptionEditMessage: Locator;
   readonly contextMenuOptionFavorite: Locator;
   readonly contextMenuOptionHide: Locator;
   readonly contextMenuOptionMarkRead: Locator;
@@ -138,6 +140,12 @@ export class ChatsMainPage extends MainPage {
       .locator("p");
     this.contextMenuChatMessage = this.page.getByTestId(
       "context-menu-chat-message",
+    );
+    this.contextMenuOptionDeleteMessage = this.page.getByTestId(
+      "context-menu-option-Delete",
+    );
+    this.contextMenuOptionEditMessage = this.page.getByTestId(
+      "context-menu-option-Edit",
     );
     this.contextMenuOptionCopyMessage = this.page.getByTestId(
       "context-menu-option-Copy",
@@ -248,6 +256,10 @@ export class ChatsMainPage extends MainPage {
     await this.topbar.click();
   }
 
+  async exitContextMenuChat() {
+    await this.chatbarInput.click();
+  }
+
   async getLastLocalProfilePicture() {
     const lastProfilePicture = this.messageGroupLocal
       .last()
@@ -308,6 +320,17 @@ export class ChatsMainPage extends MainPage {
     return lastTimestamp;
   }
 
+  async openContextMenuOnLastMessageReceived() {
+    const lastMessage = await this.getLastMessageRemote();
+    await lastMessage.click({ button: "right" });
+    await this.contextMenuChatMessage.waitFor({ state: "visible" });
+  }
+  async openContextMenuOnLastMessageSent() {
+    const lastMessage = await this.getLastMessageLocal();
+    await lastMessage.click({ button: "right" });
+    await this.contextMenuChatMessage.waitFor({ state: "visible" });
+  }
+
   async openLocalQuickProfile() {
     const profilePicture = await this.getLastLocalProfilePicture();
     await profilePicture.click();
@@ -316,6 +339,16 @@ export class ChatsMainPage extends MainPage {
   async openRemoteQuickProfile() {
     const profilePicture = await this.getLastRemoteProfilePicture();
     await profilePicture.click();
+  }
+
+  async pasteClipboardOnChatbar() {
+    await this.chatbarInput.click();
+    await this.page.keyboard.press("ControlOrMeta+v");
+  }
+
+  async selectContextMenuOption(option: string) {
+    const locator = this.page.getByTestId("context-menu-option-" + option);
+    await locator.click();
   }
 
   async sendMessage(message: string) {
@@ -327,6 +360,31 @@ export class ChatsMainPage extends MainPage {
   async validateChatsMainPageIsShown() {
     await expect(this.addSomeone).toBeVisible();
     await expect(this.page.url()).toContain("/chat");
+  }
+
+  async validateLocalContextMenuOptions() {
+    await expect(this.page.getByTestId("button-emoji-👍")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-👎")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-❤️")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-🖖")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-😂")).toBeVisible();
+    await expect(this.emojiPickerButton).toBeVisible();
+    await expect(this.contextMenuOptionPinMessage).toBeVisible();
+    await expect(this.contextMenuOptionReplyMessage).toBeVisible();
+    await expect(this.contextMenuOptionCopyMessage).toBeVisible();
+    await expect(this.contextMenuOptionEditMessage).toBeVisible();
+    await expect(this.contextMenuOptionDeleteMessage).toBeVisible();
+  }
+
+  async validateRemoteContextMenuOptions() {
+    await expect(this.page.getByTestId("button-emoji-👍")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-👎")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-❤️")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-🖖")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-😂")).toBeVisible();
+    await expect(this.emojiPickerButton).toBeVisible();
+    await expect(this.contextMenuOptionPinMessage).toBeVisible();
+    await expect(this.contextMenuOptionReplyMessage).toBeVisible();
   }
 
   async validateMessageIsReceived(message: string) {
