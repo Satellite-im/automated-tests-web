@@ -3,7 +3,7 @@ import { FilesPage } from "playwright/PageObjects/FilesScreen";
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { QuickProfile } from "playwright/PageObjects/QuickProfile";
 import { test, expect } from "../fixtures/setup";
-import type { BrowserContext, Page } from "@playwright/test";
+import type { BrowserContext, Locator, Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 
@@ -849,6 +849,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
     const chatsMainPageSecond = new ChatsMainPage(page2);
+    let lastMessageSent: Locator;
+    let lastMessageReceived: Locator;
 
     // Setup accounts for testing
     await setupChats(
@@ -860,44 +862,55 @@ test.describe("Two instances tests - Friends and Chats", () => {
       page1,
     );
 
-    // Send message from first user to second user
+    // Send message from second user to first user
     const firstMessage = "this is a first test message";
-    await chatsMainPageFirst.sendMessage(firstMessage);
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
+    await chatsMainPageSecond.sendMessage(firstMessage);
+    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+    await expect(lastMessageReceived).toHaveText(firstMessage);
 
     // B18 - Context menu appears when user right clicks a message
     // B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete
     // Context Menu on Message Sent
-    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
-    await chatsMainPageFirst.validateLocalContextMenuOptions();
-    await chatsMainPageFirst.exitContextMenuChat();
-
-    // Context Menu on Message Received
-    await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
-    await chatsMainPageSecond.validateRemoteContextMenuOptions();
+    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+    await chatsMainPageSecond.validateLocalContextMenuOptions();
     await chatsMainPageSecond.exitContextMenuChat();
 
-    // B23 - Clicking Copy should copy text to users clipboard
-    await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
-    await chatsMainPageSecond.selectContextMenuOption("Copy");
-    await chatsMainPageSecond.chatbarInput.click();
-    await chatsMainPageSecond.pasteClipboardOnChatbar();
-    await chatsMainPageSecond.buttonChatbarSendMessage.click();
+    // Context Menu on Message Received
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+    await chatsMainPageFirst.validateRemoteContextMenuOptions();
+    await chatsMainPageFirst.exitContextMenuChat();
 
-    const lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    // B23 - Clicking Copy should copy text to users clipboard
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+    await chatsMainPageFirst.selectContextMenuOption("Copy");
+    await chatsMainPageFirst.chatbarInput.click();
+    await chatsMainPageFirst.pasteClipboardOnChatbar();
+    await chatsMainPageFirst.buttonChatbarSendMessage.click();
+
+    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
     await expect(lastMessageSent).toHaveText(firstMessage);
 
-    const lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
     await expect(lastMessageReceived).toHaveText(firstMessage);
 
     // B24 - Clicking Edit should open up the edit message modal
+    const editedMessage = "Edited message";
+    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+    await chatsMainPageFirst.selectContextMenuOption("Edit");
+    await chatsMainPageFirst.typeOnEditMessageInput(editedMessage);
+
+    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
+    await expect(lastMessageSent).toHaveText(editedMessage);
+
+    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
+    await expect(lastMessageReceived).toHaveText(editedMessage);
 
     // B25 - Clicking Delete should delete message from chat
+    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+    await chatsMainPageFirst.selectContextMenuOption("Delete");
+    await chatsMainPageFirst.messabeBubbleLocal.waitFor({ state: "detached" });
   });
 
   test.skip("B20 - Pin Messages Tests", async ({

@@ -45,6 +45,7 @@ export class ChatsMainPage extends MainPage {
   readonly createGroupLabelGroupMembers: Locator;
   readonly createGroupLabelGroupName: Locator;
   readonly createGroupLabelSelectMembers: Locator;
+  readonly editMessageInput: Locator;
   readonly emojiButton: Locator;
   readonly emojiGroup: Locator;
   readonly emojiPickerButton: Locator;
@@ -185,6 +186,11 @@ export class ChatsMainPage extends MainPage {
     this.createGroupLabelSelectMembers = this.page.getByTestId(
       "label-create-group-select-members",
     );
+    this.editMessageInput = this.page
+      .getByTestId("message-bubble-content")
+      .locator(".cm-editor")
+      .locator(".cm-scroller")
+      .getByRole("textbox");
     this.emojiButton = this.page.locator('[data-cy^="button-emoji-"]');
     this.emojiGroup = this.page.getByTestId("emoji-group");
     this.emojiPickerButton = this.page.getByTestId("button-emoji-picker");
@@ -355,6 +361,12 @@ export class ChatsMainPage extends MainPage {
     await this.chatbarInput.clear();
     await this.chatbarInput.fill(message);
     await this.buttonChatbarSendMessage.click();
+  }
+
+  async typeOnEditMessageInput(newMessage: string) {
+    await this.editMessageInput.clear();
+    await this.editMessageInput.fill(newMessage);
+    await this.editMessageInput.press("Enter");
   }
 
   async validateChatsMainPageIsShown() {
