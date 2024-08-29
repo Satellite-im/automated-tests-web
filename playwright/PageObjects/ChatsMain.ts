@@ -408,6 +408,24 @@ export class ChatsMainPage extends MainPage {
     await this.page.keyboard.press("ControlOrMeta+v");
   }
 
+  async remnoveReactionInLocalMessage(reaction: string) {
+    const reactionToRemove = this.page
+      .getByTestId("message-reactions-local")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await reactionToRemove.click();
+    await reactionToRemove.waitFor({ state: "detached" });
+  }
+
+  async removeReactionInRemoteMessage(reaction: string) {
+    const reactionToRemove = this.page
+      .getByTestId("message-reactions-remote")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await reactionToRemove.click();
+    await reactionToRemove.waitFor({ state: "detached" });
+  }
+
   async selectContextMenuOption(option: string) {
     const locator = this.page.getByTestId("context-menu-option-" + option);
     await locator.click();
@@ -484,5 +502,21 @@ export class ChatsMainPage extends MainPage {
       .last()
       .getByTestId("emoji-reaction-" + reaction);
     await expectedReaction.waitFor({ state: "visible" });
+  }
+
+  async validateReactionDoesNotExistInLocalMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-local")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "detached" });
+  }
+
+  async validateReactionDoesNotExistInRemoteMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-remote")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "detached" });
   }
 }

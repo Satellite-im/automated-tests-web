@@ -956,8 +956,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     let lastMessageReceived: Locator;
     let localMessageReactions: reactionContainer;
     let remoteMessageReactions: reactionContainer;
-    let expectedLocalReactions: reactionContainer;
-    let expectedRemoteReactions: reactionContainer;
+    let expectedReactions: reactionContainer;
 
     // Setup accounts for testing
     await setupChats(
@@ -980,67 +979,97 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(lastMessageSent).toHaveText(firstMessage);
     await expect(lastMessageReceived).toHaveText(firstMessage);
 
-    // React to message sent with 👍
+    // Local user can react to message sent - React to message sent with 👍
+    expectedReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "1" },
+    ];
     await chatsMainPageSecond.openContextMenuOnLastMessageSent();
     await chatsMainPageSecond.selectDefaultReaction("👍");
     await chatsMainPageSecond.validateReactionExistsInLocalMessage("👍");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("👍");
 
-    // React to message sent with ❤️
+    // Local user can react to message sent - React to message sent with ❤️
     await chatsMainPageSecond.openContextMenuOnLastMessageSent();
     await chatsMainPageSecond.selectDefaultReaction("❤️");
     await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
 
-    // Validate that message reactions are displayed in local side
+    // Validate that message reactions from message sent are displayed in local side
     localMessageReactions =
       await chatsMainPageSecond.getLastLocalReactionsContainer();
-    expectedLocalReactions = [
-      { emoji: "👍", count: "1" },
-      { emoji: "❤️", count: "1" },
-    ];
-    expect(localMessageReactions).toEqual(expectedLocalReactions);
+    expect(localMessageReactions).toEqual(expectedReactions);
 
-    // Validate that message reactions from remote user are displayed on remote side
+    // Validate that message reactions from message received are displayed on remote side
     remoteMessageReactions =
       await chatsMainPageFirst.getLastRemoteReactionsContainer();
-    expectedRemoteReactions = [
-      { emoji: "👍", count: "1" },
-      { emoji: "❤️", count: "1" },
-    ];
-    expect(remoteMessageReactions).toEqual(expectedRemoteReactions);
+    expect(remoteMessageReactions).toEqual(expectedReactions);
 
-    // Remote user can react to message received
-    // React to message received with ❤️
+    // Remote user can react to message received - React to message received with ❤️
+    expectedReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "2" },
+      { emoji: "😂", count: "1" },
+    ];
     await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
     await chatsMainPageFirst.selectDefaultReaction("❤️");
     await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
 
-    // React to message received with 😂
-    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+    // Remote user can react to message received - React to message received with 😂
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
     await chatsMainPageFirst.selectDefaultReaction("😂");
     await chatsMainPageFirst.validateReactionExistsInRemoteMessage("😂");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("😂");
 
     // Validate that message reactions from remote user are updated on remote side
     remoteMessageReactions =
       await chatsMainPageFirst.getLastRemoteReactionsContainer();
-    expectedRemoteReactions = [
-      { emoji: "👍", count: "1" },
-      { emoji: "❤️", count: "2" },
-      { emoji: "😂", count: "1" },
-    ];
-    expect(remoteMessageReactions).toEqual(expectedRemoteReactions);
+
+    expect(remoteMessageReactions).toEqual(expectedReactions);
 
     // Validate that message reactions are updated in local side
     localMessageReactions =
       await chatsMainPageSecond.getLastLocalReactionsContainer();
-    expectedLocalReactions = [
+    expect(localMessageReactions).toEqual(expectedReactions);
+
+    // Remote user can remove reaction from message received - Remove reaction from message received with ❤️
+    await chatsMainPageFirst.removeReactionInRemoteMessage("😂");
+    await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage("😂");
+    await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage("😂");
+    expectedReactions = [
       { emoji: "👍", count: "1" },
       { emoji: "❤️", count: "2" },
-      { emoji: "😂", count: "1" },
     ];
-    expect(localMessageReactions).toEqual(expectedLocalReactions);
-  });
 
-  // Remote user can remove reaction from message received
+    // Validate that message reactions from remote message are updated on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+
+    expect(remoteMessageReactions).toEqual(expectedReactions);
+
+    // Validate that message reactions from sent message are updated on local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+    expect(localMessageReactions).toEqual(expectedReactions);
+
+    // Local user can remove reaction from message sent - Remove reaction from message received with ❤️
+    await chatsMainPageSecond.remnoveReactionInLocalMessage("👍");
+    await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage("👍");
+    await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage("👍");
+    expectedReactions = [{ emoji: "❤️", count: "2" }];
+
+    // Validate that message reactions from sent message are updated on local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+
+    expect(localMessageReactions).toEqual(expectedReactions);
+
+    // Validate that message reactions from received message are updated on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+    expect(remoteMessageReactions).toEqual(expectedReactions);
+  });
 });
 
 async function setupChats(
