@@ -33,7 +33,7 @@ test.describe("Chats Sidebar Tests", () => {
     await chatsMainPage.buttonCreateGroupChat.hover();
     await chatsMainPage.validateTooltipAttribute(
       '[data-cy="button-create-group-chat"]',
-      "Create Chat",
+      "Create Group Chat",
     );
   });
 
