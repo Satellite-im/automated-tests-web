@@ -3,12 +3,13 @@ import { FilesPage } from "playwright/PageObjects/FilesScreen";
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { QuickProfile } from "playwright/PageObjects/QuickProfile";
 import { test, expect } from "../fixtures/setup";
-import type { BrowserContext, Page } from "@playwright/test";
+import type { BrowserContext, Locator, Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
+type reactionContainer = { emoji: string; count: string }[];
 
 test.describe("Two instances tests - Friends and Chats", () => {
   test("H15 - User should be removed from friends list after clicking unfriend", async ({
@@ -835,6 +836,239 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
     await quickProfileRemote.validateQuickProfileSnapshot();
     await quickProfileRemote.exitQuickProfile();
+  });
+
+  test("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+    let lastMessageSent: Locator;
+    let lastMessageReceived: Locator;
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // Send message from second user to first user
+    const firstMessage = "this is a first test message";
+    await chatsMainPageSecond.sendMessage(firstMessage);
+    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+    await expect(lastMessageReceived).toHaveText(firstMessage);
+
+    // B18 - Context menu appears when user right clicks a message
+    // B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete
+    // Context Menu on Message Sent
+    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+    await chatsMainPageSecond.validateLocalContextMenuOptions();
+    await chatsMainPageSecond.exitContextMenuChat();
+
+    // Context Menu on Message Received
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+    await chatsMainPageFirst.validateRemoteContextMenuOptions();
+    await chatsMainPageFirst.exitContextMenuChat();
+
+    // B23 - Clicking Copy should copy text to users clipboard
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+    await chatsMainPageFirst.selectContextMenuOption("Copy");
+    await chatsMainPageFirst.chatbarInput.click();
+    await chatsMainPageFirst.pasteClipboardOnChatbar();
+    await chatsMainPageFirst.buttonChatbarSendMessage.click();
+
+    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+
+    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
+    await expect(lastMessageReceived).toHaveText(firstMessage);
+
+    // B24 - Clicking Edit should open up the edit message modal
+    const editedMessage = "Edited message";
+    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+    await chatsMainPageFirst.selectContextMenuOption("Edit");
+    await chatsMainPageFirst.typeOnEditMessageInput(editedMessage);
+
+    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
+    await expect(lastMessageSent).toHaveText(editedMessage);
+
+    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
+    await expect(lastMessageReceived).toHaveText(editedMessage);
+
+    // B25 - Clicking Delete should delete message from chat
+    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+    await chatsMainPageFirst.selectContextMenuOption("Delete");
+    await chatsMainPageFirst.messabeBubbleLocal.waitFor({ state: "detached" });
+  });
+
+  test.skip("B20 - Pin Messages Tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // B20 - Clicking Pin Message should pin message in chat
+  });
+
+  test("B22 and B50 - Reaction Tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+    let lastMessageSent: Locator;
+    let lastMessageReceived: Locator;
+    let localMessageReactions: reactionContainer;
+    let remoteMessageReactions: reactionContainer;
+    let expectedReactions: reactionContainer;
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // B22 - Clicking React should open up emoji menu - Not working currently
+    // B50 - Number of reactions should be displayed underneath message
+
+    // Send message from second user to first user
+    const firstMessage = "this is a first test message";
+    await chatsMainPageSecond.sendMessage(firstMessage);
+    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+    await expect(lastMessageReceived).toHaveText(firstMessage);
+
+    // Local user can react to message sent - React to message sent with 👍
+    expectedReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "1" },
+    ];
+    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+    await chatsMainPageSecond.selectDefaultReaction("👍");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("👍");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("👍");
+
+    // Local user can react to message sent - React to message sent with ❤️
+    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+    await chatsMainPageSecond.selectDefaultReaction("❤️");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
+
+    // Validate that message reactions from message sent are displayed in local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+    expect(localMessageReactions).toEqual(expectedReactions);
+
+    // Validate that message reactions from message received are displayed on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+    expect(remoteMessageReactions).toEqual(expectedReactions);
+
+    // Remote user can react to message received - React to message received with ❤️
+    expectedReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "2" },
+      { emoji: "😂", count: "1" },
+    ];
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+    await chatsMainPageFirst.selectDefaultReaction("❤️");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
+
+    // Remote user can react to message received - React to message received with 😂
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+    await chatsMainPageFirst.selectDefaultReaction("😂");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("😂");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("😂");
+
+    // Validate that message reactions from remote user are updated on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+
+    expect(remoteMessageReactions).toEqual(expectedReactions);
+
+    // Validate that message reactions are updated in local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+    expect(localMessageReactions).toEqual(expectedReactions);
+
+    // Remote user can remove reaction from message received - Remove reaction from message received with ❤️
+    await chatsMainPageFirst.removeReactionInRemoteMessage("😂");
+    await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage("😂");
+    await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage("😂");
+    expectedReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "2" },
+    ];
+
+    // Validate that message reactions from remote message are updated on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+
+    expect(remoteMessageReactions).toEqual(expectedReactions);
+
+    // Validate that message reactions from sent message are updated on local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+    expect(localMessageReactions).toEqual(expectedReactions);
+
+    // Local user can remove reaction from message sent - Remove reaction from message received with ❤️
+    await chatsMainPageSecond.remnoveReactionInLocalMessage("👍");
+    await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage("👍");
+    await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage("👍");
+    expectedReactions = [{ emoji: "❤️", count: "2" }];
+
+    // Validate that message reactions from sent message are updated on local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+
+    expect(localMessageReactions).toEqual(expectedReactions);
+
+    // Validate that message reactions from received message are updated on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+    expect(remoteMessageReactions).toEqual(expectedReactions);
   });
 });
 

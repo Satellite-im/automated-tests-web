@@ -30,6 +30,8 @@ export class ChatsMainPage extends MainPage {
   readonly coinAmountIndicator: Locator;
   readonly contextMenuChatMessage: Locator;
   readonly contextMenuOptionCopyMessage: Locator;
+  readonly contextMenuOptionDeleteMessage: Locator;
+  readonly contextMenuOptionEditMessage: Locator;
   readonly contextMenuOptionFavorite: Locator;
   readonly contextMenuOptionHide: Locator;
   readonly contextMenuOptionMarkRead: Locator;
@@ -43,6 +45,7 @@ export class ChatsMainPage extends MainPage {
   readonly createGroupLabelGroupMembers: Locator;
   readonly createGroupLabelGroupName: Locator;
   readonly createGroupLabelSelectMembers: Locator;
+  readonly editMessageInput: Locator;
   readonly emojiButton: Locator;
   readonly emojiGroup: Locator;
   readonly emojiPickerButton: Locator;
@@ -60,6 +63,8 @@ export class ChatsMainPage extends MainPage {
   readonly messageGroupTimestamp: Locator;
   readonly messageGroupUsername: Locator;
   readonly messagePinIndicator: Locator;
+  readonly messageReactionsLocal: Locator;
+  readonly messageReactionsRemote: Locator;
   readonly pendingMessageGroup: Locator;
   readonly pendingFileCancelButton: Locator;
   readonly pendingFileName: Locator;
@@ -139,6 +144,12 @@ export class ChatsMainPage extends MainPage {
     this.contextMenuChatMessage = this.page.getByTestId(
       "context-menu-chat-message",
     );
+    this.contextMenuOptionDeleteMessage = this.page.getByTestId(
+      "context-menu-option-Delete",
+    );
+    this.contextMenuOptionEditMessage = this.page.getByTestId(
+      "context-menu-option-Edit",
+    );
     this.contextMenuOptionCopyMessage = this.page.getByTestId(
       "context-menu-option-Copy",
     );
@@ -177,6 +188,11 @@ export class ChatsMainPage extends MainPage {
     this.createGroupLabelSelectMembers = this.page.getByTestId(
       "label-create-group-select-members",
     );
+    this.editMessageInput = this.page
+      .getByTestId("message-bubble-content")
+      .locator(".cm-editor")
+      .locator(".cm-scroller")
+      .getByRole("textbox");
     this.emojiButton = this.page.locator('[data-cy^="button-emoji-"]');
     this.emojiGroup = this.page.getByTestId("emoji-group");
     this.emojiPickerButton = this.page.getByTestId("button-emoji-picker");
@@ -208,6 +224,12 @@ export class ChatsMainPage extends MainPage {
     );
     this.messageGroupUsername = this.page.getByTestId("message-group-username");
     this.messagePinIndicator = this.page.getByTestId("message-pin-indicator");
+    this.messageReactionsLocal = this.page.getByTestId(
+      "message-reactions-local",
+    );
+    this.messageReactionsRemote = this.page.getByTestId(
+      "message-reactions-remote",
+    );
     this.pendingFileCancelButton = this.page.getByTestId(
       "button-pending-file-cancel",
     );
@@ -248,6 +270,10 @@ export class ChatsMainPage extends MainPage {
     await this.topbar.click();
   }
 
+  async exitContextMenuChat() {
+    await this.chatbarInput.click();
+  }
+
   async getLastLocalProfilePicture() {
     const lastProfilePicture = this.messageGroupLocal
       .last()
@@ -263,6 +289,30 @@ export class ChatsMainPage extends MainPage {
     return source;
   }
 
+  async getLastLocalReactionsContainer() {
+    // Extract emoji reactions into an array of objects
+    const reactions = await this.page
+      .locator('[data-cy="message-reactions-local"]')
+      .last()
+      .evaluate((container) => {
+        const reactionElements = container.querySelectorAll(
+          '[data-cy^="emoji-reaction-"]',
+        );
+
+        return Array.from(reactionElements).map((reaction) => {
+          const emoji = reaction
+            .querySelector('[data-cy="emoji-reaction"]')
+            .textContent.trim();
+          const count = reaction
+            .querySelector('[data-cy="emoji-count"]')
+            .textContent.trim();
+          return { emoji, count };
+        });
+      });
+
+    return reactions;
+  }
+
   async getLastRemoteProfilePicture() {
     const lastProfilePicture = this.messageGroupRemote
       .last()
@@ -276,6 +326,30 @@ export class ChatsMainPage extends MainPage {
       await this.getLastRemoteProfilePicture()
     ).getAttribute("src");
     return source;
+  }
+
+  async getLastRemoteReactionsContainer() {
+    // Extract emoji reactions into an array of objects
+    const reactions = await this.page
+      .locator('[data-cy="message-reactions-remote"]')
+      .last()
+      .evaluate((container) => {
+        const reactionElements = container.querySelectorAll(
+          '[data-cy^="emoji-reaction-"]',
+        );
+
+        return Array.from(reactionElements).map((reaction) => {
+          const emoji = reaction
+            .querySelector('[data-cy="emoji-reaction"]')
+            .textContent.trim();
+          const count = reaction
+            .querySelector('[data-cy="emoji-count"]')
+            .textContent.trim();
+          return { emoji, count };
+        });
+      });
+
+    return reactions;
   }
 
   async getLastMessageLocal() {
@@ -308,6 +382,17 @@ export class ChatsMainPage extends MainPage {
     return lastTimestamp;
   }
 
+  async openContextMenuOnLastMessageReceived() {
+    const lastMessage = await this.getLastMessageRemote();
+    await lastMessage.click({ button: "right" });
+    await this.contextMenuChatMessage.waitFor({ state: "visible" });
+  }
+  async openContextMenuOnLastMessageSent() {
+    const lastMessage = await this.getLastMessageLocal();
+    await lastMessage.click({ button: "right" });
+    await this.contextMenuChatMessage.waitFor({ state: "visible" });
+  }
+
   async openLocalQuickProfile() {
     const profilePicture = await this.getLastLocalProfilePicture();
     await profilePicture.click();
@@ -318,15 +403,79 @@ export class ChatsMainPage extends MainPage {
     await profilePicture.click();
   }
 
+  async pasteClipboardOnChatbar() {
+    await this.chatbarInput.click();
+    await this.page.keyboard.press("ControlOrMeta+v");
+  }
+
+  async remnoveReactionInLocalMessage(reaction: string) {
+    const reactionToRemove = this.page
+      .getByTestId("message-reactions-local")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await reactionToRemove.click();
+    await reactionToRemove.waitFor({ state: "detached" });
+  }
+
+  async removeReactionInRemoteMessage(reaction: string) {
+    const reactionToRemove = this.page
+      .getByTestId("message-reactions-remote")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await reactionToRemove.click();
+    await reactionToRemove.waitFor({ state: "detached" });
+  }
+
+  async selectContextMenuOption(option: string) {
+    const locator = this.page.getByTestId("context-menu-option-" + option);
+    await locator.click();
+  }
+
+  async selectDefaultReaction(reaction: string) {
+    const locator = this.page.getByTestId("button-emoji-" + reaction);
+    await locator.click();
+  }
+
   async sendMessage(message: string) {
     await this.chatbarInput.clear();
     await this.chatbarInput.fill(message);
     await this.buttonChatbarSendMessage.click();
   }
 
+  async typeOnEditMessageInput(newMessage: string) {
+    await this.editMessageInput.clear();
+    await this.editMessageInput.fill(newMessage);
+    await this.editMessageInput.press("Enter");
+  }
+
   async validateChatsMainPageIsShown() {
     await expect(this.addSomeone).toBeVisible();
     await expect(this.page.url()).toContain("/chat");
+  }
+
+  async validateLocalContextMenuOptions() {
+    await expect(this.page.getByTestId("button-emoji-👍")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-👎")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-❤️")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-🖖")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-😂")).toBeVisible();
+    await expect(this.emojiPickerButton).toBeVisible();
+    await expect(this.contextMenuOptionPinMessage).toBeVisible();
+    await expect(this.contextMenuOptionReplyMessage).toBeVisible();
+    await expect(this.contextMenuOptionCopyMessage).toBeVisible();
+    await expect(this.contextMenuOptionEditMessage).toBeVisible();
+    await expect(this.contextMenuOptionDeleteMessage).toBeVisible();
+  }
+
+  async validateRemoteContextMenuOptions() {
+    await expect(this.page.getByTestId("button-emoji-👍")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-👎")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-❤️")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-🖖")).toBeVisible();
+    await expect(this.page.getByTestId("button-emoji-😂")).toBeVisible();
+    await expect(this.emojiPickerButton).toBeVisible();
+    await expect(this.contextMenuOptionPinMessage).toBeVisible();
+    await expect(this.contextMenuOptionReplyMessage).toBeVisible();
   }
 
   async validateMessageIsReceived(message: string) {
@@ -337,5 +486,37 @@ export class ChatsMainPage extends MainPage {
   async validateMessageIsSent(message: string) {
     await this.messabeBubbleLocal.waitFor({ state: "visible" });
     await expect(this.messageBubbleContent).toHaveText(message);
+  }
+
+  async validateReactionExistsInLocalMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-local")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "visible" });
+  }
+
+  async validateReactionExistsInRemoteMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-remote")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "visible" });
+  }
+
+  async validateReactionDoesNotExistInLocalMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-local")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "detached" });
+  }
+
+  async validateReactionDoesNotExistInRemoteMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-remote")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "detached" });
   }
 }

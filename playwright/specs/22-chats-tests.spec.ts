@@ -1,17 +1,6 @@
 import { test } from "../fixtures/setup";
 
 test.describe("Chats Tests - Two instances", () => {
-  test.skip("B8 to B14 - Quick Profile tests", async ({ page }) => {
-    // Test to be added
-    // B8 - Clicking Profile button in 1on1 chat should display the friends profile
-    // B9 - Friends profile should display friends profile picture
-    // B10 - Friends profile should display friends status (whether you are friends or not)
-    // B11 - Friends profile should display friends Username
-    // B12 - Friends profile should display friends profile Status
-    // B13 - User should be able to write a note on friends profile
-    // B14 - Highlighted border should appear when user clicks into Notes textbox
-  });
-
   test.skip("B15 and B26 to B34 - Group Chats Tests", async ({ page }) => {
     // Group chats not implemented yet
     // B15 - Clicking Groups button should display group members of the chat
@@ -27,28 +16,8 @@ test.describe("Chats Tests - Two instances", () => {
     // C13 - Number of members in group should appear on that chat in both Sidebar and Favorites
   });
 
-  test.skip("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
-    page,
-  }) => {
-    // Test to be implemented
-    // B18 - Context menu appears when user right clicks a message
-    // B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete
-    // B23 - Clicking Copy should copy text to users clipboard
-    // B24 - Clicking Edit should open up the edit message modal
-    // B25 - Clicking Delete should delete message from chat
-  });
-
-  test.skip("B20 - Pin Messages Tests", async ({ page }) => {
-    // B20 - Clicking Pin Message should pin message in chat
-  });
-
   test.skip("B21 - Replies Tests", async ({ page }) => {
     // B21 - Clicking Reply should open reply modal
-  });
-
-  test.skip("B22 and B50 - Reaction Tests", async ({ page }) => {
-    // B22 - Clicking React should open up emoji menu
-    // B50 - Number of reactions should be displayed underneath message
   });
 
   test.skip("B38 to B47 - Send coin tests", async ({ page }) => {
