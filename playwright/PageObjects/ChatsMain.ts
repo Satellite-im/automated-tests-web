@@ -63,6 +63,8 @@ export class ChatsMainPage extends MainPage {
   readonly messageGroupTimestamp: Locator;
   readonly messageGroupUsername: Locator;
   readonly messagePinIndicator: Locator;
+  readonly messageReactionsLocal: Locator;
+  readonly messageReactionsRemote: Locator;
   readonly pendingMessageGroup: Locator;
   readonly pendingFileCancelButton: Locator;
   readonly pendingFileName: Locator;
@@ -222,6 +224,12 @@ export class ChatsMainPage extends MainPage {
     );
     this.messageGroupUsername = this.page.getByTestId("message-group-username");
     this.messagePinIndicator = this.page.getByTestId("message-pin-indicator");
+    this.messageReactionsLocal = this.page.getByTestId(
+      "message-reactions-local",
+    );
+    this.messageReactionsRemote = this.page.getByTestId(
+      "message-reactions-remote",
+    );
     this.pendingFileCancelButton = this.page.getByTestId(
       "button-pending-file-cancel",
     );
@@ -281,6 +289,30 @@ export class ChatsMainPage extends MainPage {
     return source;
   }
 
+  async getLastLocalReactionsContainer() {
+    // Extract emoji reactions into an array of objects
+    const reactions = await this.page
+      .locator('[data-cy="message-reactions-local"]')
+      .last()
+      .evaluate((container) => {
+        const reactionElements = container.querySelectorAll(
+          '[data-cy^="emoji-reaction-"]',
+        );
+
+        return Array.from(reactionElements).map((reaction) => {
+          const emoji = reaction
+            .querySelector('[data-cy="emoji-reaction"]')
+            .textContent.trim();
+          const count = reaction
+            .querySelector('[data-cy="emoji-count"]')
+            .textContent.trim();
+          return { emoji, count };
+        });
+      });
+
+    return reactions;
+  }
+
   async getLastRemoteProfilePicture() {
     const lastProfilePicture = this.messageGroupRemote
       .last()
@@ -294,6 +326,30 @@ export class ChatsMainPage extends MainPage {
       await this.getLastRemoteProfilePicture()
     ).getAttribute("src");
     return source;
+  }
+
+  async getLastRemoteReactionsContainer() {
+    // Extract emoji reactions into an array of objects
+    const reactions = await this.page
+      .locator('[data-cy="message-reactions-remote"]')
+      .last()
+      .evaluate((container) => {
+        const reactionElements = container.querySelectorAll(
+          '[data-cy^="emoji-reaction-"]',
+        );
+
+        return Array.from(reactionElements).map((reaction) => {
+          const emoji = reaction
+            .querySelector('[data-cy="emoji-reaction"]')
+            .textContent.trim();
+          const count = reaction
+            .querySelector('[data-cy="emoji-count"]')
+            .textContent.trim();
+          return { emoji, count };
+        });
+      });
+
+    return reactions;
   }
 
   async getLastMessageLocal() {
@@ -357,6 +413,11 @@ export class ChatsMainPage extends MainPage {
     await locator.click();
   }
 
+  async selectDefaultReaction(reaction: string) {
+    const locator = this.page.getByTestId("button-emoji-" + reaction);
+    await locator.click();
+  }
+
   async sendMessage(message: string) {
     await this.chatbarInput.clear();
     await this.chatbarInput.fill(message);
@@ -407,5 +468,21 @@ export class ChatsMainPage extends MainPage {
   async validateMessageIsSent(message: string) {
     await this.messabeBubbleLocal.waitFor({ state: "visible" });
     await expect(this.messageBubbleContent).toHaveText(message);
+  }
+
+  async validateReactionExistsInLocalMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-local")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "visible" });
+  }
+
+  async validateReactionExistsInRemoteMessage(reaction: string) {
+    const expectedReaction = this.page
+      .getByTestId("message-reactions-remote")
+      .last()
+      .getByTestId("emoji-reaction-" + reaction);
+    await expectedReaction.waitFor({ state: "visible" });
   }
 }

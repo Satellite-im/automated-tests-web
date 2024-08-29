@@ -9,6 +9,7 @@ import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
+type reactionContainer = { emoji: string; count: string }[];
 
 test.describe("Two instances tests - Friends and Chats", () => {
   test("H15 - User should be removed from friends list after clicking unfriend", async ({
@@ -939,7 +940,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // B20 - Clicking Pin Message should pin message in chat
   });
 
-  test.skip("B22 and B50 - Reaction Tests", async ({
+  test("B22 and B50 - Reaction Tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -951,6 +952,12 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2);
     const chatsMainPageFirst = new ChatsMainPage(page1);
     const chatsMainPageSecond = new ChatsMainPage(page2);
+    let lastMessageSent: Locator;
+    let lastMessageReceived: Locator;
+    let localMessageReactions: reactionContainer;
+    let remoteMessageReactions: reactionContainer;
+    let expectedLocalReactions: reactionContainer;
+    let expectedRemoteReactions: reactionContainer;
 
     // Setup accounts for testing
     await setupChats(
@@ -962,9 +969,78 @@ test.describe("Two instances tests - Friends and Chats", () => {
       page1,
     );
 
-    // B22 - Clicking React should open up emoji menu
+    // B22 - Clicking React should open up emoji menu - Not working currently
     // B50 - Number of reactions should be displayed underneath message
+
+    // Send message from second user to first user
+    const firstMessage = "this is a first test message";
+    await chatsMainPageSecond.sendMessage(firstMessage);
+    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+    await expect(lastMessageReceived).toHaveText(firstMessage);
+
+    // React to message sent with 👍
+    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+    await chatsMainPageSecond.selectDefaultReaction("👍");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("👍");
+
+    // React to message sent with ❤️
+    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+    await chatsMainPageSecond.selectDefaultReaction("❤️");
+    await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
+
+    // Validate that message reactions are displayed in local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+    expectedLocalReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "1" },
+    ];
+    expect(localMessageReactions).toEqual(expectedLocalReactions);
+
+    // Validate that message reactions from remote user are displayed on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+    expectedRemoteReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "1" },
+    ];
+    expect(remoteMessageReactions).toEqual(expectedRemoteReactions);
+
+    // Remote user can react to message received
+    // React to message received with ❤️
+    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+    await chatsMainPageFirst.selectDefaultReaction("❤️");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
+
+    // React to message received with 😂
+    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+    await chatsMainPageFirst.selectDefaultReaction("😂");
+    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("😂");
+
+    // Validate that message reactions from remote user are updated on remote side
+    remoteMessageReactions =
+      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+    expectedRemoteReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "2" },
+      { emoji: "😂", count: "1" },
+    ];
+    expect(remoteMessageReactions).toEqual(expectedRemoteReactions);
+
+    // Validate that message reactions are updated in local side
+    localMessageReactions =
+      await chatsMainPageSecond.getLastLocalReactionsContainer();
+    expectedLocalReactions = [
+      { emoji: "👍", count: "1" },
+      { emoji: "❤️", count: "2" },
+      { emoji: "😂", count: "1" },
+    ];
+    expect(localMessageReactions).toEqual(expectedLocalReactions);
   });
+
+  // Remote user can remove reaction from message received
 });
 
 async function setupChats(
