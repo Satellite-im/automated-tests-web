@@ -69,6 +69,7 @@ export class FilesPage extends MainPage {
 
   async createNewFolder(folderName: string) {
     await this.newFolderButton.click();
+    await this.inputFileFolderName.waitFor({ state: "visible" });
     await this.inputFileFolderName.fill(folderName);
     await this.page.keyboard.press("Enter");
     await this.page
@@ -86,7 +87,8 @@ export class FilesPage extends MainPage {
 
   async navigateToFolder(folderName: string) {
     const folder = await this.getFolderByName(folderName);
-    await folder.dblclick();
+    const svgIcon = folder.locator(".svg-icon");
+    await svgIcon.dblclick();
     await folder.waitFor({ state: "detached" });
   }
 
