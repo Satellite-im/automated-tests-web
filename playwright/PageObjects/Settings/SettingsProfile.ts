@@ -73,6 +73,10 @@ export class SettingsProfile extends SettingsBase {
   readonly saveControls: Locator;
   readonly saveControlsButtonCancel: Locator;
   readonly saveControlsButtonSave: Locator;
+  readonly seedPhraseModal: Locator;
+  readonly seedPhraseModalText: Locator;
+  readonly seedPhraseModalCancelButton: Locator;
+  readonly seedPhraseModalConfirmButton: Locator;
   readonly storeRecoverySeedSection: Locator;
   readonly storeRecoverySeedCheckbox: Locator;
   readonly storeRecoverySeedText: Locator;
@@ -243,7 +247,7 @@ export class SettingsProfile extends SettingsBase {
       "button-reveal-phrase",
     );
     this.revealPhraseSectionButtonCopyPhrase =
-      this.revealPhraseSection.getByTestId("button-copy-phrase");
+      this.page.getByTestId("button-copy-phrase");
     this.revealPhraseSectionLabel = this.revealPhraseSection.getByTestId(
       "setting-section-label",
     );
@@ -258,7 +262,16 @@ export class SettingsProfile extends SettingsBase {
     this.saveControlsButtonCancel =
       this.saveControls.getByTestId("button-cancel");
     this.saveControlsButtonSave = this.saveControls.getByTestId("button-save");
-
+    this.seedPhraseModal = this.page.locator(".seed-phrase-modal");
+    this.seedPhraseModalText = this.seedPhraseModal.getByTestId(
+      "text-create-description",
+    );
+    this.seedPhraseModalCancelButton = this.seedPhraseModal.getByTestId(
+      "button-seed-remove-cancel",
+    );
+    this.seedPhraseModalConfirmButton = this.seedPhraseModal.getByTestId(
+      "button-seed-remove-confirm",
+    );
     this.storeRecoverySeedSection = this.page.getByTestId(
       "section-store-recovery-seed",
     );
@@ -310,9 +323,6 @@ export class SettingsProfile extends SettingsBase {
   async getRecoveryPhrase() {
     let phrase = [];
 
-    // Click the reveal button
-    await this.page.locator("your-reveal-button-locator").click(); // Replace with the actual locator for reveal button
-
     // Loop through each of the 12 phrases
     for (let i = 1; i <= 12; i++) {
       // Ensure the phrase number element exists
@@ -339,6 +349,12 @@ export class SettingsProfile extends SettingsBase {
   async openUserIDContextMenu() {
     await this.inputSettingsProfileShortIDGroup.click({ button: "right" });
     await this.contextMenuUserID.waitFor({ state: "visible" });
+  }
+
+  async pasteClipboardIntoStatus() {
+    await this.inputSettingsProfileStatus.click();
+    await this.inputSettingsProfileStatus.clear();
+    await this.inputSettingsProfileStatus.press("ControlOrMeta+v");
   }
 
   async selectOnlineStatus(

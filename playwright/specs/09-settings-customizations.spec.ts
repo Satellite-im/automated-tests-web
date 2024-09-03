@@ -86,7 +86,8 @@ test.describe("Settings Customization Tests", () => {
     await expect(welcomeText).toHaveCSS("font-family", selectedFont);
   });
 
-  test.skip("K4 - Clicking OpenFolder should open the Fonts folder", async ({}) => {});
+  // Cannot be automated now since button does not perform any action
+  // test.skip("K4 - Clicking OpenFolder should open the Fonts folder", async ({}) => {});
 
   test("K5 - Font size should have a minimum of .82", async ({
     singleUserContext,
@@ -137,7 +138,8 @@ test.describe("Settings Customization Tests", () => {
     );
   });
 
-  test.skip("K8 - Clicking the moon button should change theme of the app from Dark to Light", async () => {});
+  // Cannot be automated now since button does not perform any action
+  // test.skip("K8 - Clicking the moon button should change theme of the app from Dark to Light", async () => {});
 
   test("K9 - Themes dropdown should display Default", async ({
     singleUserContext,
@@ -158,7 +160,8 @@ test.describe("Settings Customization Tests", () => {
     await settingsCustomizations.validateThemeNames(expectedThemes);
   });
 
-  test.skip("K10 - Themes folder button should open the themes folder", async () => {});
+  // Cannot be automated now since button does not perform any action
+  // test.skip("K10 - Themes folder button should open the themes folder", async () => {});
 
   test("K11 - Primary Colors should display expected values", async ({
     singleUserContext,
@@ -323,8 +326,8 @@ test.describe("Settings Customization Tests", () => {
     );
   });
 
-  // Not implemented in the app yet
-  test.skip("K17 - Clicking Open Folder from Emoji Font section should open the Emoji Fonts folder", async ({}) => {});
+  // Cannot be automated now since button does not perform any action
+  // test.skip("K17 - Clicking Open Folder from Emoji Font section should open the Emoji Fonts folder", async ({}) => {});
 
   test("K18 - Default Profile Picture Style dropdown should show expected default profile picture styles", async ({
     singleUserContext,
@@ -382,6 +385,6 @@ test.describe("Settings Customization Tests", () => {
       .waitFor({ state: "attached" });
   });
 
-  // Not implemented in the app yet
-  test.skip("K20 - Clicking Open Folder from Default Profile Picture Style section should open the correct folder", async ({}) => {});
+  // Cannot be automated now since button does not perform any action
+  // test.skip("K20 - Clicking Open Folder from Default Profile Picture Style section should open the correct folder", async ({}) => {});
 });

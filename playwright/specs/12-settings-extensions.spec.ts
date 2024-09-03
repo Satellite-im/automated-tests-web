@@ -31,15 +31,17 @@ test.describe("Settings Extensions Tests", () => {
     await expect(settingsExtensions.noExtensionsInstalledLabel).toBeVisible();
   });
 
-  test.skip("N2 - Clicking Explore should take user to Explore page", ({
-    page,
-  }) => {
-    // Test code for N2
-  });
+  // Cannot be automated now since button does not perform any action
+  // test.skip("N2 - Clicking Explore should take user to Explore page", ({
+  //   page,
+  // }) => {
+  //   // Test code for N2
+  // });
 
-  test.skip("N3 - Clicking Settings should take user to Settings page", ({
-    page,
-  }) => {
-    // Test code for N3
-  });
+  // Cannot be automated now since button does not perform any action
+  // test.skip("N3 - Clicking Settings should take user to Settings page", ({
+  //   page,
+  // }) => {
+  //   // Test code for N3
+  // });
 });

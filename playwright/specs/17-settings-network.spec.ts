@@ -13,9 +13,10 @@ test.describe("Settings Network Tests", () => {
     await settingsProfile.buttonNetwork.click();
   });
 
-  test.skip("Validate Settings Network page is shown", async ({
-    singleUserContext,
-  }) => {
-    // Test code for R1
-  });
+  // Test not implemented yet
+  // test.skip("Validate Settings Network page is shown", async ({
+  //   singleUserContext,
+  // }) => {
+  //   // Test code for R1
+  // });
 });
