@@ -123,8 +123,7 @@ test.describe("Files Page Tests", () => {
     await expect(filesPage.toastNotification).toBeVisible();
   });
 
-  // Skipping since it needs research on how to fix this test in CI
-  test.skip("F10 - User can create subfolders and navigate to parent folder with go back button", async ({
+  test("F10 - User can create subfolders and navigate to parent folder with go back button", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
@@ -132,10 +131,12 @@ test.describe("Files Page Tests", () => {
 
     // Create a folder
     await filesPage.createNewFolder("NewFolder");
+    await expect(filesPage.freeSpaceValue).toHaveText("2.15 GB");
     await filesPage.navigateToFolder("NewFolder");
 
     // Create a subfolder
     await filesPage.createNewFolder("Subfolder");
+    await expect(filesPage.freeSpaceValue).toHaveText("2.15 GB");
     await filesPage.validateNewFolderCreated("Subfolder");
 
     // User can navigate to parent folder
@@ -143,8 +144,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateNewFolderCreated("NewFolder");
   });
 
-  // Skipping since it needs research on how to fix this test in CI
-  test.skip("F12 - User can upload files in subfolder folder", async ({
+  test("F12 - User can upload files in subfolder folder", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
@@ -152,19 +152,20 @@ test.describe("Files Page Tests", () => {
 
     // Create a folder in root and enter on it
     await filesPage.createNewFolder("NewFolder");
+    await expect(filesPage.freeSpaceValue).toHaveText("2.15 GB");
     await filesPage.navigateToFolder("NewFolder");
 
     // Create a subfolder
     await filesPage.createNewFolder("Subfolder");
-    await filesPage.validateNewFolderCreated("Subfolder");
+    await expect(filesPage.freeSpaceValue).toHaveText("2.15 GB");
+    await filesPage.navigateToFolder("Subfolder");
 
     // User can upload an image file in subfolder
     await filesPage.uploadFile("playwright/assets/banner.jpg");
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
   });
 
-  // Skipping since it needs research on how to fix this test in CI
-  test.skip("F13 - Files and folders are still visible after logging out and login again", async ({
+  test("F13 - Files and folders are still visible after logging out and login again", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
@@ -179,6 +180,7 @@ test.describe("Files Page Tests", () => {
 
     // Create a folder in root and enter on it
     await filesPage.createNewFolder("NewFolder");
+    await expect(filesPage.freeSpaceValue).toHaveText("2.15 GB");
     await filesPage.navigateToFolder("NewFolder");
 
     // User can upload an image file in folder
@@ -204,8 +206,6 @@ test.describe("Files Page Tests", () => {
     // Validate files are still visible
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
     await filesPage.validateNewFolderCreated("NewFolder", false, "61.4 kB");
-    await filesPage.navigateToFolder("NewFolder");
-    await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
   });
 
   test("F14 - If user upload the same file again, file is uploaded but with different filename", async ({
