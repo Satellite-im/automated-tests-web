@@ -96,6 +96,13 @@ export class LoginPinPage extends MainPage {
     await this.pinButtonConfirm.click();
   }
 
+  async enterWrongPin() {
+    await this.pinButton9.click();
+    await this.pinButton8.click();
+    await this.pinButton7.click();
+    await this.pinButton6.click();
+  }
+
   async goToPinSettings() {
     await this.buttonPinSettings.click();
   }
@@ -106,6 +113,10 @@ export class LoginPinPage extends MainPage {
 
   async validateConfirmButtonIsDisabled() {
     await expect(this.pinButtonConfirm).toBeDisabled();
+  }
+  async validateToastPinIsWrong() {
+    await this.toastNotificationText.waitFor({ state: "visible" });
+    await expect(this.toastNotificationText).toHaveText("Pin is wrong!");
   }
 
   async waitUntilPageIsLoaded() {

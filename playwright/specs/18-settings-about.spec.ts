@@ -41,15 +41,15 @@ test.describe("Settings About Tests", () => {
     await expect(settingsAbout.versionSectionText).toHaveText(VERSION);
   });
 
-  // Skipped since button is not performing any action now
-  test.skip("R3 - Clicking Check for Updates should check for newest version of Uplink available", async ({
-    singleUserContext,
-  }) => {
-    const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
+  // Cannot be automated now since button does not perform any action
+  // test.skip("R3 - Clicking Check for Updates should check for newest version of Uplink available", async ({
+  //   singleUserContext,
+  // }) => {
+  //   const page = singleUserContext.page;
+  //   const settingsAbout = new SettingsAbout(page);
 
-    await settingsAbout.versionSectionButton.click();
-  });
+  //   await settingsAbout.versionSectionButton.click();
+  // });
 
   test("R4 - Clicking Open Website should take you to the Uplink website", async ({
     singleUserContext,

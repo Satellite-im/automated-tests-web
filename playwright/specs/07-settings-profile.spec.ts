@@ -110,9 +110,7 @@ test.describe("Settings Profile Tests", () => {
     const clipboardContent = await handle.jsonValue();
 
     // Paste value from Clipboard into Status and assert it is the did key
-    await settingsProfile.inputSettingsProfileStatus.click();
-    await settingsProfile.inputSettingsProfileStatus.clear();
-    await settingsProfile.inputSettingsProfileStatus.press("ControlOrMeta+v");
+    await settingsProfile.pasteClipboardIntoStatus();
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       clipboardContent,
     );
@@ -163,60 +161,53 @@ test.describe("Settings Profile Tests", () => {
     );
   });
 
-  test.fixme(
-    "I9, I10 - User should be able to change username and see toast notification of change",
-    {
-      annotation: {
-        type: "issue",
-        description: "https://github.com/Satellite-im/UplinkWeb/issues/339",
-      },
-    },
-    async ({ singleUserContext }) => {
-      const page = singleUserContext.page;
-      const settingsProfile = new SettingsProfile(page);
-      const chatsMainPage = new ChatsMainPage(page);
+  test("I9, I10 - User should be able to change username and see toast notification of change", async ({
+    singleUserContext,
+  }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+    const chatsMainPage = new ChatsMainPage(page);
 
-      // User types into username and change value
-      const newUsername = "newUsername";
-      await settingsProfile.inputSettingsProfileUsername.click();
-      await settingsProfile.inputSettingsProfileUsername.clear();
-      await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
+    // User types into username and change value
+    const newUsername = "newUsername";
+    await settingsProfile.inputSettingsProfileUsername.click();
+    await settingsProfile.inputSettingsProfileUsername.clear();
+    await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
 
-      // Save modal is displayed, user selects cancel and username is not changed
-      await settingsProfile.saveControls.waitFor({ state: "visible" });
-      await settingsProfile.saveControlsButtonCancel.click();
+    // Save modal is displayed, user selects cancel and username is not changed
+    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControlsButtonCancel.click();
 
-      // Username displayed will be equal to the username assigned randomly when creating account
-      await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
-        username,
-      );
+    // Username displayed will be equal to the username assigned randomly when creating account
+    await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
+      username,
+    );
 
-      // User types into username and change value
-      await settingsProfile.inputSettingsProfileUsername.click();
-      await settingsProfile.inputSettingsProfileUsername.clear();
-      await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
+    // User types into username and change value
+    await settingsProfile.inputSettingsProfileUsername.click();
+    await settingsProfile.inputSettingsProfileUsername.clear();
+    await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
 
-      // Save modal is displayed, user selects save and username is changed
-      await settingsProfile.saveControls.waitFor({ state: "visible" });
-      await settingsProfile.saveControlsButtonSave.click();
-      await settingsProfile.toastNotification.waitFor({ state: "visible" });
-      await expect(settingsProfile.toastNotificationText).toHaveText(
-        "Profile Updated!",
-      );
-      await settingsProfile.toastNotification.waitFor({ state: "detached" });
-      await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
-        newUsername,
-      );
+    // Save modal is displayed, user selects save and username is changed
+    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControlsButtonSave.click();
+    await settingsProfile.toastNotification.waitFor({ state: "visible" });
+    await expect(settingsProfile.toastNotificationText).toHaveText(
+      "Profile Updated!",
+    );
+    await settingsProfile.toastNotification.waitFor({ state: "detached" });
+    await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
+      newUsername,
+    );
 
-      // User goes to another page and returns to settings profile, username is still changed
-      await settingsProfile.goToFriends();
-      await page.waitForURL("/friends");
-      await chatsMainPage.goToSettings();
-      await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
-        newUsername,
-      );
-    },
-  );
+    // User goes to another page and returns to settings profile, username is still changed
+    await settingsProfile.goToFriends();
+    await page.waitForURL("/friends");
+    await chatsMainPage.goToSettings();
+    await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
+      newUsername,
+    );
+  });
 
   test("I11 - All text in Username should be selected after clicking into the text field a single time", async ({
     singleUserContext,
@@ -449,31 +440,60 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.validateRecoveryPhraseIsHidden();
   });
 
-  test.skip(
-    "I22 - Clicking copy should copy the Recovery Phrase to the users clipboard",
-    {
-      annotation: {
-        type: "issue",
-        description: "https://github.com/Satellite-im/UplinkWeb/issues/378",
-      },
-    },
-    async ({ singleUserContext }) => {
-      const page = singleUserContext.page;
-      const settingsProfile = new SettingsProfile(page);
+  test("I22 - Clicking copy should copy the Recovery Phrase to the users clipboard", async ({
+    singleUserContext,
+  }) => {
+    const context = singleUserContext.context;
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
 
-      await settingsProfile.revealPhraseSectionButtonCopyPhrase.click();
-    },
-  );
+    // Grant clipboard permissions to browser
+    await context.grantPermissions(["clipboard-read", "clipboard-write"]);
 
-  // Cannot be automated for now since copy button does not perform any action
-  /*
-  
+    // Show Recovery Phrase and ensure is displayed now
+    await settingsProfile.revealPhraseSectionRevealButton.click();
+    await settingsProfile.validateRecoveryPhraseIsShown();
+    await settingsProfile.revealPhraseSectionButtonCopyPhrase.click();
+    const expectedPhraseArray = await settingsProfile.getRecoveryPhrase();
+    const expectedPhraseString = expectedPhraseArray.join(" ");
 
-  // Cannot be automated for now since checkbox checked or not checked works on the same way for now
-  test.skip("I23 - User should be able to click checkbox to determine whether they want to store Recovery Phrase on account", async ({
-    page,
-  }) => {});
-   */
+    // Copy recovery phrase from clipboard to status and validate it is the expected
+    await settingsProfile.pasteClipboardIntoStatus();
+    await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
+      expectedPhraseString,
+    );
+  });
+
+  test("I23 - User should be able to click checkbox to determine whether they want to store Recovery Phrase on account", async ({
+    singleUserContext,
+  }) => {
+    const page = singleUserContext.page;
+    const settingsProfile = new SettingsProfile(page);
+
+    // Validate Store Recovery Seed checkbox is checked by default
+    await expect(settingsProfile.storeRecoverySeedCheckbox).toHaveClass(
+      /checked/,
+    );
+
+    // Click on Store Recovery Seed checkbox and select cancel - Validate recovery seed is not removoed
+    await settingsProfile.storeRecoverySeedCheckbox.click();
+    await expect(settingsProfile.seedPhraseModal).toBeVisible();
+    await expect(settingsProfile.seedPhraseModalText).toHaveText(
+      "Your recovery phrase will not be stored anymore and will be removed. Make sure to save the phrase! This change is irreversible!",
+    );
+    await settingsProfile.seedPhraseModalCancelButton.click();
+    await expect(settingsProfile.storeRecoverySeedCheckbox).toHaveClass(
+      /checked/,
+    );
+
+    // Click on Store Recovery Seed checkbox and select cancel - Validate recovery seed is not removoed
+    await settingsProfile.storeRecoverySeedCheckbox.click();
+    await expect(settingsProfile.seedPhraseModal).toBeVisible();
+    await settingsProfile.seedPhraseModalConfirmButton.click();
+    await expect(settingsProfile.storeRecoverySeedCheckbox).not.toHaveClass(
+      /checked/,
+    );
+  });
 
   test("I24 - Clicking LogOut should log user out of the account", async ({
     singleUserContext,

@@ -286,7 +286,7 @@ test.describe("Create Account and Login Tests", () => {
     );
   });
 
-  test.skip("A12 - If incorrect pin is entered, error message should be displayed", async ({
+  test("A12 - If incorrect pin is entered, error message should be displayed", async ({
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
@@ -318,12 +318,10 @@ test.describe("Create Account and Login Tests", () => {
     // Once that user is in Chats page, reload the page
     await page.waitForURL("/chat");
     await chatsMainPage.visitOtherSite("/auth");
-    await loginPinPage.enterPin("9876");
-    await page.keyboard.press("Enter");
-    await expect(loginPinPage.toastNotification).toBeVisible();
-    await expect(loginPinPage.toastNotificationText).toHaveText(
-      "Pin is wrong!",
-    );
+    await page.waitForURL("/auth");
+    await loginPinPage.enterWrongPin();
+    await loginPinPage.clickConfirmButton();
+    await loginPinPage.validateToastPinIsWrong();
   });
 
   test("A13 - If Stay Unlocked is toggled off, user be redirected to enter PIN when refreshing page", async ({
