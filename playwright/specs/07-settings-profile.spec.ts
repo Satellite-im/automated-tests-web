@@ -490,9 +490,12 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.storeRecoverySeedCheckbox.click();
     await expect(settingsProfile.seedPhraseModal).toBeVisible();
     await settingsProfile.seedPhraseModalConfirmButton.click();
-    await expect(settingsProfile.storeRecoverySeedCheckbox).not.toHaveClass(
-      /checked/,
-    );
+
+    // Validate recovery seed is hidden
+    await expect(
+      settingsProfile.revealPhraseSectionRevealButton,
+    ).not.toBeVisible();
+    await expect(settingsProfile.storeRecoverySeedCheckbox).not.toBeVisible();
   });
 
   test("I24 - Clicking LogOut should log user out of the account", async ({
