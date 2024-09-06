@@ -75,6 +75,7 @@ export class ChatsMainPage extends MainPage {
   readonly pinnedMessage: Locator;
   readonly pinnedMessageButtonGoTo: Locator;
   readonly pinnedMessageButtonUnpin: Locator;
+  readonly pinnedMessageContent: Locator;
   readonly pinnedMessageProfilePicture: Locator;
   readonly pinnedMessageProfileStatusIndicator: Locator;
   readonly pinnedMessageSender: Locator;
@@ -83,6 +84,7 @@ export class ChatsMainPage extends MainPage {
   readonly pinnedMessagesContainer: Locator;
   readonly pinnedMessagesEmpty: Locator;
   readonly sectionAddSomeone: Locator;
+  readonly scrollToBottomButton: Locator;
   readonly statusIndicator: Locator;
   readonly topbar: Locator;
 
@@ -248,6 +250,9 @@ export class ChatsMainPage extends MainPage {
     this.pinnedMessageButtonUnpin = this.page.getByTestId(
       "pinned-message-button-unpin",
     );
+    this.pinnedMessageContent = this.page
+      .getByTestId("pinned-message-text")
+      .locator("span");
     this.pinnedMessageProfilePicture = this.page.getByTestId(
       "pinned-message-profile-picture",
     );
@@ -262,8 +267,43 @@ export class ChatsMainPage extends MainPage {
       "pinned-messages-container",
     );
     this.pinnedMessagesEmpty = this.page.getByTestId("pinned-messages-empty");
+    this.scrollToBottomButton = this.page
+      .locator(".scroll-to-bottom")
+      .locator("button");
     this.sectionAddSomeone = this.page.getByTestId("section-add-someone");
     this.topbar = this.page.getByTestId("topbar");
+  }
+
+  async clickOnGoToPinnedMessageButton(message: string) {
+    const pinnedMessage = this.page
+      .locator(`[data-cy="pinned-message"]`)
+      .filter({
+        has: this.page.getByText(message),
+      });
+
+    // Find the unpin button inside the parent element
+    const goToButton = pinnedMessage.locator(
+      `[data-cy="pinned-message-button-go-to"]`,
+    );
+
+    // Click on the unpin button
+    await goToButton.click();
+  }
+
+  async clickOnUnpinMessageButton(message: string) {
+    const pinnedMessage = this.page
+      .locator(`[data-cy="pinned-message"]`)
+      .filter({
+        has: this.page.getByText(message),
+      });
+
+    // Find the unpin button inside the parent element
+    const unpinButton = pinnedMessage.locator(
+      `[data-cy="pinned-message-button-unpin"]`,
+    );
+
+    // Click on the unpin button
+    await unpinButton.click();
   }
 
   async exitCreateGroup() {
@@ -272,6 +312,10 @@ export class ChatsMainPage extends MainPage {
 
   async exitContextMenuChat() {
     await this.chatbarInput.click();
+  }
+
+  async exitPinMessagesContainer() {
+    await this.buttonChatPin.click({ force: true });
   }
 
   async getLastLocalProfilePicture() {
@@ -352,6 +396,22 @@ export class ChatsMainPage extends MainPage {
     return reactions;
   }
 
+  async getFirstMessageLocal() {
+    const lastMessage = this.messageGroupLocal
+      .first()
+      .getByTestId("message-bubble-content")
+      .first();
+    return lastMessage;
+  }
+
+  async getFirstMessageRemote() {
+    const lastMessage = this.messageGroupRemote
+      .first()
+      .getByTestId("message-bubble-content")
+      .first();
+    return lastMessage;
+  }
+
   async getLastMessageLocal() {
     const lastMessage = this.messageGroupLocal
       .last()
@@ -382,20 +442,58 @@ export class ChatsMainPage extends MainPage {
     return lastTimestamp;
   }
 
+  async getMessageLocal(message: string) {
+    const messageLocal = this.page.getByTestId("message-group-remote").filter({
+      has: this.page.getByText(message),
+    });
+    return messageLocal;
+  }
+  async getMessageRemote(message: string) {
+    const messageRemote = this.page.getByTestId("message-group-remote").filter({
+      has: this.page.getByText(message),
+    });
+    return messageRemote;
+  }
+
   async openContextMenuOnLastMessageReceived() {
     const lastMessage = await this.getLastMessageRemote();
     await lastMessage.click({ button: "right" });
     await this.contextMenuChatMessage.waitFor({ state: "visible" });
   }
+
   async openContextMenuOnLastMessageSent() {
     const lastMessage = await this.getLastMessageLocal();
     await lastMessage.click({ button: "right" });
     await this.contextMenuChatMessage.waitFor({ state: "visible" });
   }
 
+  async openContextMenuOnMessageReceived(message: string) {
+    const messageGroupRemote = this.page
+      .getByTestId("message-group-remote")
+      .filter({
+        has: this.page.getByText(message),
+      });
+    await messageGroupRemote.scrollIntoViewIfNeeded();
+    await messageGroupRemote.click({ button: "right" });
+  }
+
+  async openContextMenuOnMessageSent(message: string) {
+    const messageGroupLocal = this.page
+      .getByTestId("message-group-local")
+      .filter({
+        has: this.page.getByText(message),
+      });
+    await messageGroupLocal.scrollIntoViewIfNeeded();
+    await messageGroupLocal.click({ button: "right" });
+  }
+
   async openLocalQuickProfile() {
     const profilePicture = await this.getLastLocalProfilePicture();
     await profilePicture.click();
+  }
+
+  async openPinMessagesContainer() {
+    await this.buttonChatPin.click();
   }
 
   async openRemoteQuickProfile() {
@@ -408,7 +506,7 @@ export class ChatsMainPage extends MainPage {
     await this.page.keyboard.press("ControlOrMeta+v");
   }
 
-  async remnoveReactionInLocalMessage(reaction: string) {
+  async removeReactionInLocalMessage(reaction: string) {
     const reactionToRemove = this.page
       .getByTestId("message-reactions-local")
       .last()
@@ -486,6 +584,50 @@ export class ChatsMainPage extends MainPage {
   async validateMessageIsSent(message: string) {
     await this.messabeBubbleLocal.waitFor({ state: "visible" });
     await expect(this.messageBubbleContent).toHaveText(message);
+  }
+
+  async validateLastLocalMessageIsNotPinned() {
+    const pinnedIndicator = this.messageGroupLocal
+      .last()
+      .getByTestId("message-pin-indicator");
+    await pinnedIndicator.waitFor({ state: "detached" });
+  }
+
+  async validateLastLocalMessageIsPinned() {
+    const pinnedIndicator = this.messageGroupLocal
+      .last()
+      .getByTestId("message-pin-indicator");
+    await pinnedIndicator.waitFor({ state: "visible" });
+  }
+
+  async validateLastRemoteMessageIsNotPinned() {
+    const pinnedIndicator = this.messageGroupRemote
+      .last()
+      .getByTestId("message-pin-indicator");
+    await pinnedIndicator.waitFor({ state: "detached" });
+  }
+
+  async validateLastRemoteMessageIsPinned() {
+    const pinnedIndicator = this.messageGroupRemote
+      .last()
+      .getByTestId("message-pin-indicator");
+    await pinnedIndicator.waitFor({ state: "visible" });
+  }
+
+  async validatePinMessageShownInContainer(username: string, content: string) {
+    const dateRegex = /\d{1,2}\/\d{1,2}\/\d{4}, \d{1,2}:\d{2}:\d{2} (AM|PM)/;
+    await expect(this.pinnedMessagesContainer).toBeVisible();
+    await expect(this.pinnedMessagesEmpty).toBeHidden();
+    await expect(this.pinnedMessage).toBeVisible();
+    await expect(this.pinnedMessageProfilePicture).toBeVisible();
+    await expect(this.pinnedMessageProfileStatusIndicator).toHaveClass(
+      /.*\bonline\b.*/,
+    );
+    await expect(this.pinnedMessageTimestamp).toHaveText(dateRegex);
+    await expect(this.pinnedMessageSender).toHaveText(username);
+    await expect(this.pinnedMessageButtonGoTo).toBeVisible();
+    await expect(this.pinnedMessageButtonUnpin).toBeVisible();
+    await expect(this.pinnedMessageContent).toHaveText(content);
   }
 
   async validateReactionExistsInLocalMessage(reaction: string) {
