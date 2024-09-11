@@ -22,6 +22,7 @@ export class ChatsMainPage extends MainPage {
   readonly chatbar: Locator;
   readonly chatbarInput: Locator;
   readonly chatbarInputContainer: Locator;
+  readonly chatMessageEditInput: Locator;
   readonly chatTopbarProfilePicture: Locator;
   readonly chatTopbarProfilePictureImage: Locator;
   readonly chatTopbarProfileStatusIndicator: Locator;
@@ -49,6 +50,18 @@ export class ChatsMainPage extends MainPage {
   readonly emojiButton: Locator;
   readonly emojiGroup: Locator;
   readonly emojiPickerButton: Locator;
+  readonly fileEmbed: Locator;
+  readonly fileEmbedAddToFilesButton: Locator;
+  readonly fileEmbedDownloadButton: Locator;
+  readonly fileEmbedIcon: Locator;
+  readonly fileEmbedName: Locator;
+  readonly fileEmbedShareButton: Locator;
+  readonly fileEmbedSize: Locator;
+  readonly imageEmbedContainer: Locator;
+  readonly imageEmbedDownloadButton: Locator;
+  readonly imageEmbedFile: Locator;
+  readonly imageEmbedFileName: Locator;
+  readonly imageEmbedFileSize: Locator;
   readonly inputAddAttachment: Locator;
   readonly labelPinnedMessages: Locator;
   readonly messageBubbleContent: Locator;
@@ -86,6 +99,7 @@ export class ChatsMainPage extends MainPage {
   readonly sectionAddSomeone: Locator;
   readonly scrollToBottomButton: Locator;
   readonly statusIndicator: Locator;
+  readonly textChatMessage: Locator;
   readonly topbar: Locator;
 
   constructor(public readonly page: Page) {
@@ -129,6 +143,9 @@ export class ChatsMainPage extends MainPage {
     this.chatbarInputContainer = this.page
       .locator('[data-cy="chatbar-input"]')
       .locator("xpath=..");
+    this.chatMessageEditInput = this.page.getByTestId(
+      "chat-message-edit-input",
+    );
     this.chatTopbarProfilePicture = this.page.getByTestId(
       "chat-topbar-profile-picture",
     );
@@ -198,6 +215,31 @@ export class ChatsMainPage extends MainPage {
     this.emojiButton = this.page.locator('[data-cy^="button-emoji-"]');
     this.emojiGroup = this.page.getByTestId("emoji-group");
     this.emojiPickerButton = this.page.getByTestId("button-emoji-picker");
+    this.fileEmbed = this.page.getByTestId("file-embed");
+    this.fileEmbedAddToFilesButton = this.fileEmbed.getByTestId(
+      "file-embed-add-to-files-button",
+    );
+    this.fileEmbedDownloadButton = this.fileEmbed.getByTestId(
+      "file-embed-download-button",
+    );
+    this.fileEmbedIcon = this.fileEmbed.locator(".svg-icon");
+    this.fileEmbedName = this.fileEmbed.getByTestId("file-embed-name");
+    this.fileEmbedShareButton = this.fileEmbed.getByTestId(
+      "file-embed-share-button",
+    );
+    this.fileEmbedSize = this.fileEmbed.getByTestId("file-embed-size");
+    this.imageEmbedContainer = this.page.getByTestId("image-embed-container");
+    this.imageEmbedDownloadButton = this.imageEmbedContainer.getByTestId(
+      "image-embed-download-button",
+    );
+    this.imageEmbedFile =
+      this.imageEmbedContainer.getByTestId("image-embed-file");
+    this.imageEmbedFileName = this.imageEmbedContainer.getByTestId(
+      "image-embed-file-name",
+    );
+    this.imageEmbedFileSize = this.imageEmbedContainer.getByTestId(
+      "image-embed-file-size",
+    );
     this.inputAddAttachment = this.page
       .locator('[data-cy="button-add-attachment"]')
       .locator("xpath=..")
@@ -271,6 +313,7 @@ export class ChatsMainPage extends MainPage {
       .locator(".scroll-to-bottom")
       .locator("button");
     this.sectionAddSomeone = this.page.getByTestId("section-add-someone");
+    this.textChatMessage = this.page.getByTestId("text-chat-message");
     this.topbar = this.page.getByTestId("topbar");
   }
 
@@ -418,6 +461,98 @@ export class ChatsMainPage extends MainPage {
       .getByTestId("message-bubble-content")
       .last();
     return lastMessage;
+  }
+
+  async getMarkdownFromMessage(element: Locator) {
+    // Evaluate the DOM and extract both text and markdown as an array
+    const result = await element.evaluate((pElement) => {
+      // Recursive function to traverse DOM and collect text and markdown
+      const convertToArray = (node: any) => {
+        let textParts = [];
+        let markdownParts = [];
+
+        // Check the node type
+        if (node.nodeType === Node.TEXT_NODE) {
+          textParts.push(node.textContent); // Add plain text content
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          // Check for markdown-relevant tags and process them
+          if (node.tagName === "EM") {
+            markdownParts.push("Italic");
+          } else if (node.tagName === "STRONG") {
+            markdownParts.push("Bold");
+          } else if (node.tagName === "DEL") {
+            markdownParts.push("Strikethrough");
+          }
+        }
+
+        // Traverse children and collect their content
+        for (let child of node.childNodes) {
+          const [childText, childMarkdown] = convertToArray(child);
+          textParts = textParts.concat(childText);
+          markdownParts = markdownParts.concat(childMarkdown);
+        }
+
+        return [textParts, markdownParts];
+      };
+
+      // Get the final text and markdown array
+      const [text, markdown] = convertToArray(pElement);
+      return [text.join(""), markdown]; // Join text parts together as a single string
+    });
+
+    return result;
+  }
+
+  async getLastMessageLocalHyperlink() {
+    const lastMessage = this.messageGroupLocal
+      .last()
+      .getByTestId("message-bubble-content")
+      .last()
+      .getByTestId("text-chat-message")
+      .locator("p a"); // Target the <a> tag inside the <p> element
+
+    // Retrieve the href attribute from the <a> tag
+    const hyperlink = await lastMessage.getAttribute("href");
+
+    return hyperlink;
+  }
+
+  async getLastMessageRemoteHyperlink() {
+    const lastMessage = this.messageGroupRemote
+      .last()
+      .getByTestId("message-bubble-content")
+      .last()
+      .getByTestId("text-chat-message")
+      .locator("p a"); // Target the <a> tag inside the <p> element
+
+    // Retrieve the href attribute from the <a> tag
+    const hyperlink = await lastMessage.getAttribute("href");
+
+    return hyperlink;
+  }
+
+  async getLastMessageWithMarkdownLocal() {
+    const lastMessage = this.messageGroupLocal
+      .last()
+      .getByTestId("message-bubble-content")
+      .last()
+      .getByTestId("text-chat-message")
+      .locator("p");
+
+    const markdown = await this.getMarkdownFromMessage(lastMessage);
+    return markdown;
+  }
+
+  async getLastMessageWithMarkdownRemote() {
+    const lastMessage = this.messageGroupRemote
+      .last()
+      .getByTestId("message-bubble-content")
+      .last()
+      .getByTestId("text-chat-message")
+      .locator("p");
+
+    const markdown = await this.getMarkdownFromMessage(lastMessage);
+    return markdown;
   }
 
   async getLastMessageRemote() {
@@ -574,6 +709,52 @@ export class ChatsMainPage extends MainPage {
     await expect(this.emojiPickerButton).toBeVisible();
     await expect(this.contextMenuOptionPinMessage).toBeVisible();
     await expect(this.contextMenuOptionReplyMessage).toBeVisible();
+  }
+
+  async validateHyperlinkFromLastMessageLocal(
+    expectedText: string,
+    expectedHyperlink: string,
+  ) {
+    await this.messabeBubbleLocal
+      .getByText(expectedText)
+      .waitFor({ state: "visible" });
+    const lastMessageWithHyperlink = await this.getLastMessageLocalHyperlink();
+    expect(lastMessageWithHyperlink).toEqual(expectedHyperlink);
+  }
+
+  async validateHyperlinkFromLastMessageRemote(
+    expectedText: string,
+    expectedHyperlink: string,
+  ) {
+    await this.messageBubbleRemote
+      .getByText(expectedText)
+      .waitFor({ state: "visible" });
+    const lastMessageWithHyperlink = await this.getLastMessageRemoteHyperlink();
+    expect(lastMessageWithHyperlink).toEqual(expectedHyperlink);
+  }
+
+  async validateMarkdownFromLastMessageLocal(
+    expectedText: string,
+    expectedMarkdown: string[],
+  ) {
+    await this.messabeBubbleLocal
+      .getByText(expectedText)
+      .waitFor({ state: "visible" });
+    const lastMessageWithMarkdown =
+      await this.getLastMessageWithMarkdownLocal();
+    expect(lastMessageWithMarkdown).toEqual([expectedText, expectedMarkdown]);
+  }
+
+  async validateMarkdownFromLastMessageRemote(
+    expectedText: string,
+    expectedMarkdown: string[],
+  ) {
+    await this.messageBubbleRemote
+      .getByText(expectedText)
+      .waitFor({ state: "visible" });
+    const lastMessageWithMarkdown =
+      await this.getLastMessageWithMarkdownRemote();
+    expect(lastMessageWithMarkdown).toEqual([expectedText, expectedMarkdown]);
   }
 
   async validateMessageIsReceived(message: string) {
