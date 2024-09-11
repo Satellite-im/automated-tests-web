@@ -140,12 +140,9 @@ export class ChatsMainPage extends MainPage {
       .locator(".cm-editor")
       .locator(".cm-scroller")
       .getByRole("textbox");
-    this.chatbarInputContainer = this.page
-      .locator('[data-cy="chatbar-input"]')
-      .locator("xpath=..");
-    this.chatMessageEditInput = this.page.getByTestId(
-      "chat-message-edit-input",
-    );
+    this.chatbarInputContainer = this.chatbar
+      .locator(".input-group")
+      .locator(".input-container");
     this.chatTopbarProfilePicture = this.page.getByTestId(
       "chat-topbar-profile-picture",
     );
