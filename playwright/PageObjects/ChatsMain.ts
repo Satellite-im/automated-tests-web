@@ -143,6 +143,9 @@ export class ChatsMainPage extends MainPage {
     this.chatbarInputContainer = this.chatbar
       .locator(".input-group")
       .locator(".input-container");
+    this.chatMessageEditInput = this.page.getByTestId(
+      "chat-message-edit-input",
+    );
     this.chatTopbarProfilePicture = this.page.getByTestId(
       "chat-topbar-profile-picture",
     );
