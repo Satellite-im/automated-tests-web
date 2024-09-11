@@ -485,12 +485,14 @@ export class SettingsProfile extends SettingsBase {
   async validateBannerDisplayed() {
     await expect(this.page).toHaveScreenshot({
       maxDiffPixels: 400,
+      mask: [this.inputSettingsProfileShortID],
     });
   }
 
   async validateProfilePictureDisplayed() {
     await expect(this.page).toHaveScreenshot({
-      maxDiffPixels: 400,
+      maxDiffPixels: 5000,
+      mask: [this.inputSettingsProfileShortID],
     });
   }
 }

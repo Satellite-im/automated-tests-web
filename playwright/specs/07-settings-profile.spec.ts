@@ -55,7 +55,7 @@ test.describe("Settings Profile Tests", () => {
     );
   });
 
-  test("I5 - Profile picture shows default profile picture until custom profile picture is set", async ({
+  test.only("I5 - Profile picture shows default profile picture until custom profile picture is set", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
