@@ -57,6 +57,12 @@ export class QuickProfile extends MainPage {
     await this.page.mouse.click(0, 0);
   }
 
+  async pasteOnQuickProfileNote() {
+    await this.quickProfileNoteInput.focus();
+    await expect(this.quickProfileNoteInput).toBeFocused();
+    await this.page.keyboard.press("ControlOrMeta+v");
+  }
+
   async validateQuickProfileSnapshot() {
     await expect(this.page).toHaveScreenshot({
       maxDiffPixels: 400,

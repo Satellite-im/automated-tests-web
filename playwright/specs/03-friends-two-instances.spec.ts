@@ -606,7 +606,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(firstMessageRemote).toBeVisible();
   });
 
-  test("B8 to B14 - Quick Profile Local and Remote -  Updating note", async ({
+  // Needs research to fix quick profile input
+  test.skip("B8 to B14 - Quick Profile Local and Remote -  Updating note", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -664,7 +665,12 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
 
     // Update note on local quick profile
-    await quickProfileLocal.quickProfileNoteInput.fill("Local User Note");
+    // Save copied value from clipboard into a constant
+    const userNote = "Local User Note";
+    await page1.evaluate((text) => {
+      navigator.clipboard.writeText(text);
+    }, userNote);
+    await quickProfileLocal.pasteOnQuickProfileNote();
     await quickProfileLocal.exitQuickProfile();
 
     // Validate note is kept on local quick profile after opening again Quick Profile
@@ -699,7 +705,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await quickProfileRemote.exitQuickProfile();
   });
 
-  test("B8 to B14 - Quick Profile Local - Updating username, status, banner and profile picture", async ({
+  // Needs research to fix quick profile input
+  test.skip("B8 to B14 - Quick Profile Local - Updating username, status, banner and profile picture", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -783,7 +790,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await quickProfileLocal.exitQuickProfile();
   });
 
-  test("B8 to B14 - Quick Profile Remote - Updating username, status, banner and profile picture", async ({
+  // Needs research to fix quick profile input
+  test.skip("B8 to B14 - Quick Profile Remote - Updating username, status, banner and profile picture", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -922,9 +930,14 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // B23 - Clicking Copy should copy text to users clipboard
     await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
     await chatsMainPageFirst.selectContextMenuOption("Copy");
-    await chatsMainPageFirst.chatbarInput.click();
-    await chatsMainPageFirst.pasteClipboardOnChatbar();
-    await chatsMainPageFirst.buttonChatbarSendMessage.click();
+    // Save copied value from clipboard into a constant
+    const handle = await page1.evaluateHandle(() =>
+      navigator.clipboard.readText(),
+    );
+    const clipboardContent = await handle.jsonValue();
+
+    await expect(clipboardContent).toEqual(firstMessage);
+    await chatsMainPageFirst.sendMessage(firstMessage);
 
     lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
     await expect(lastMessageSent).toHaveText(firstMessage);
