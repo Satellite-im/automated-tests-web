@@ -6,7 +6,7 @@ import { test, expect } from "../fixtures/setup";
 import type { BrowserContext, Locator, Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
-import { stat } from "fs";
+import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessages";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
@@ -1263,6 +1263,164 @@ test.describe("Two instances tests - Friends and Chats", () => {
     remoteMessageReactions =
       await chatsMainPageFirst.getLastRemoteReactionsContainer();
     expect(remoteMessageReactions).toEqual(expectedReactions);
+  });
+
+  test("B51 - Chats Markdowns Tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const settingsProfileSecond = new SettingsProfile(page2);
+    const settingsMessagesSecond = new SettingsMessages(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // Go to Settings, then Settings Messages and disable convert to emoji functionality
+    await chatsMainPageSecond.goToSettings();
+    await page2.waitForURL("/settings/profile");
+    await settingsProfileSecond.buttonMessages.click();
+    await page2.waitForURL("/settings/messages");
+    await settingsMessagesSecond.convertToEmojiSectionSlider.click();
+    await expect(
+      settingsMessagesSecond.convertToEmojiSectionCheckbox,
+    ).not.toBeChecked();
+    await settingsMessagesSecond.goToChat();
+    await page2.waitForURL("/chat");
+
+    // Send message with *test1* from second user to first user - Italic
+    await chatsMainPageSecond.sendMessage("*test1*");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test1", [
+      "Italic",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test1", [
+      "Italic",
+    ]);
+
+    // Send message _test2_ from second user to first user - Italic
+    await chatsMainPageSecond.sendMessage("_test2_");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test2", [
+      "Italic",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test2", [
+      "Italic",
+    ]);
+
+    // Send message **test3** from second user to first user - Bold
+    await chatsMainPageSecond.sendMessage("**test3**");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test3", [
+      "Bold",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test3", [
+      "Bold",
+    ]);
+
+    // Send message __test4__ from second user to first user - Bold
+    await chatsMainPageSecond.sendMessage("__test4__");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test4", [
+      "Bold",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test4", [
+      "Bold",
+    ]);
+
+    // Send message ~test5~ from second user to first user - Strikethroug
+    await chatsMainPageSecond.sendMessage("~test5~");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test5", [
+      "Strikethrough",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test5", [
+      "Strikethrough",
+    ]);
+
+    // Send message ~~test6~~ from second user to first user - Strikethroug
+    await chatsMainPageSecond.sendMessage("~~test6~~");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test6", [
+      "Strikethrough",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test6", [
+      "Strikethrough",
+    ]);
+
+    // Send message ~_test7_~ from second user to first user - Strikethrough
+    await chatsMainPageSecond.sendMessage("~_test7_~");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test7", [
+      "Strikethrough",
+      "Italic",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test7", [
+      "Strikethrough",
+      "Italic",
+    ]);
+
+    // Send message _~test8~_ from second user to first user - Strikethrough
+    await chatsMainPageSecond.sendMessage("_~test8~_");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test8", [
+      "Italic",
+      "Strikethrough",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test8", [
+      "Italic",
+      "Strikethrough",
+    ]);
+
+    // Send message ~*test9*~ from second user to first user - Strikethrough
+    await chatsMainPageSecond.sendMessage("~*test9*~");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test9", [
+      "Strikethrough",
+      "Italic",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test9", [
+      "Strikethrough",
+      "Italic",
+    ]);
+
+    // Send message *~test10*~ from second user to first user - Strikethrough
+    await chatsMainPageSecond.sendMessage("*~test10~*");
+    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test10", [
+      "Italic",
+      "Strikethrough",
+    ]);
+    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test10", [
+      "Italic",
+      "Strikethrough",
+    ]);
+
+    // Send message with hyperlink like www.google.com
+    await chatsMainPageSecond.sendMessage("www.google.com");
+    await chatsMainPageSecond.validateHyperlinkFromLastMessageLocal(
+      "www.google.com",
+      "http://www.google.com",
+    );
+    await chatsMainPageFirst.validateHyperlinkFromLastMessageRemote(
+      "www.google.com",
+      "http://www.google.com",
+    );
+
+    // Send message with hyperlink like https://www.satellite.im
+    await chatsMainPageSecond.sendMessage("https://www.satellite.im");
+    await chatsMainPageSecond.validateHyperlinkFromLastMessageLocal(
+      "https://www.satellite.im",
+      "https://www.satellite.im",
+    );
+    await chatsMainPageFirst.validateHyperlinkFromLastMessageRemote(
+      "https://www.satellite.im",
+      "https://www.satellite.im",
+    );
   });
 });
 
