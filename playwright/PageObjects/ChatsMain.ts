@@ -29,7 +29,9 @@ export class ChatsMainPage extends MainPage {
   readonly chatTopbarStatus: Locator;
   readonly chatTopbarUsername: Locator;
   readonly coinAmountIndicator: Locator;
+  readonly contextMenuAddAttachment: Locator;
   readonly contextMenuChatMessage: Locator;
+  readonly contextMenuOptionBrowseFiles: Locator;
   readonly contextMenuOptionCopyMessage: Locator;
   readonly contextMenuOptionDeleteMessage: Locator;
   readonly contextMenuOptionEditMessage: Locator;
@@ -39,6 +41,7 @@ export class ChatsMainPage extends MainPage {
   readonly contextMenuOptionPinMessage: Locator;
   readonly contextMenuOptionReplyMessage: Locator;
   readonly contextMenuOptionUnpinMessage: Locator;
+  readonly contextMenuOptionUpload: Locator;
   readonly contextMenuSidebarChat: Locator;
   readonly createGroupButton: Locator;
   readonly createGroupModal: Locator;
@@ -101,11 +104,20 @@ export class ChatsMainPage extends MainPage {
   readonly statusIndicator: Locator;
   readonly textChatMessage: Locator;
   readonly topbar: Locator;
+  readonly uploadFileInput: Locator;
+  readonly uploadFilesSelectedAll: Locator;
+  readonly uploadFilesSelectedSingle: Locator;
+  readonly uploadFilesSelectedSingleDeleteButton: Locator;
+  readonly uploadFilesSelectedSingleFilename: Locator;
+  readonly uploadFilesSelectedSinglePreviewIcon: Locator;
+  readonly uploadFilesSelectedSinglePreviewImage: Locator;
 
   constructor(public readonly page: Page) {
     super(page);
     this.addSomeone = this.page.locator(".add-someone");
-    this.buttonAddAttachment = this.page.getByTestId("button-add-attachment");
+    this.buttonAddAttachment = this.page.getByTestId(
+      "button-chat-add-attachment",
+    );
     this.buttonAddFriends = this.page.getByTestId("button-add-friends");
     this.buttonChatAddAttachment = this.page.getByTestId(
       "button-chat-add-attachment",
@@ -160,8 +172,14 @@ export class ChatsMainPage extends MainPage {
       .locator("button")
       .first()
       .locator("p");
+    this.contextMenuAddAttachment = this.page.getByTestId(
+      "context-menu-chat-add-attachment",
+    );
     this.contextMenuChatMessage = this.page.getByTestId(
       "context-menu-chat-message",
+    );
+    this.contextMenuOptionBrowseFiles = this.page.getByTestId(
+      "context-menu-option-Browse Files",
     );
     this.contextMenuOptionDeleteMessage = this.page.getByTestId(
       "context-menu-option-Delete",
@@ -186,6 +204,9 @@ export class ChatsMainPage extends MainPage {
     );
     this.contextMenuOptionReplyMessage = this.page.getByTestId(
       "context-menu-option-Reply",
+    );
+    this.contextMenuOptionUpload = this.page.getByTestId(
+      "context-menu-option-Upload",
     );
     this.contextMenuSidebarChat = this.page.getByTestId(
       "context-menu-sidebar-chat",
@@ -315,6 +336,21 @@ export class ChatsMainPage extends MainPage {
     this.sectionAddSomeone = this.page.getByTestId("section-add-someone");
     this.textChatMessage = this.page.getByTestId("text-chat-message");
     this.topbar = this.page.getByTestId("topbar");
+    this.uploadFileInput = this.chatbar.locator('input[type="file"]');
+    this.uploadFilesSelectedAll = this.page.locator(".files-selected");
+
+    this.uploadFilesSelectedSingle =
+      this.uploadFilesSelectedAll.locator(".selected-file");
+    this.uploadFilesSelectedSingleDeleteButton = this.uploadFilesSelectedSingle
+      .locator(".control")
+      .locator("button");
+    this.uploadFilesSelectedSingleFilename = this.uploadFilesSelectedSingle
+      .locator(".details")
+      .locator("p");
+    this.uploadFilesSelectedSinglePreviewIcon =
+      this.uploadFilesSelectedSingle.locator(".svg-icon");
+    this.uploadFilesSelectedSinglePreviewImage =
+      this.uploadFilesSelectedSingle.locator(".file-preview-image");
   }
 
   async clickOnGoToPinnedMessageButton(message: string) {
@@ -841,5 +877,92 @@ export class ChatsMainPage extends MainPage {
       .last()
       .getByTestId("emoji-reaction-" + reaction);
     await expectedReaction.waitFor({ state: "detached" });
+  }
+
+  // Upload Files Methods
+  async deleteFilePreview(numberOfFile: number) {
+    const deleteButton = this.page.locator(
+      "div:nth-child(" + numberOfFile + ") > .control > .button",
+    );
+    await deleteButton.click();
+  }
+
+  async getFilePreview(filename: string) {
+    const filePreview = this.uploadFilesSelectedSingle.filter({
+      has: this.page.locator(`.details p`, { hasText: filename }),
+    });
+    return filePreview;
+  }
+
+  async getLastFilesReceived() {
+    await this.page
+      .getByTestId("message-bubble-remote")
+      .waitFor({ state: "visible" });
+    const lastMessageSent = this.page
+      .getByTestId("message-bubble-remote")
+      .last();
+    const lastFilesSent = lastMessageSent.getByTestId("file-embed");
+    return lastFilesSent;
+  }
+
+  async getLastFilesSent() {
+    await this.page
+      .getByTestId("message-bubble-local")
+      .waitFor({ state: "visible" });
+    const lastMessageSent = this.page
+      .getByTestId("message-bubble-local")
+      .last();
+    const lastFilesSent = lastMessageSent.getByTestId("file-embed");
+    return lastFilesSent;
+  }
+
+  async getLastImagesReceived() {
+    await this.page
+      .getByTestId("message-bubble-remote")
+      .waitFor({ state: "visible" });
+    const lastMessageSent = this.page
+      .getByTestId("message-bubble-remote")
+      .last();
+    const lastImagesSent = lastMessageSent.getByTestId("image-embed-container");
+    return lastImagesSent;
+  }
+
+  async getLastImagesSent() {
+    await this.page
+      .getByTestId("message-bubble-local")
+      .last()
+      .waitFor({ state: "visible" });
+    const lastMessageSent = this.page
+      .getByTestId("message-bubble-local")
+      .last();
+    const lastImagesSent = lastMessageSent.getByTestId("image-embed-container");
+    return lastImagesSent;
+  }
+
+  async uploadFiles(filePaths: string[]) {
+    await this.buttonAddAttachment.click();
+    await expect(this.contextMenuAddAttachment).toBeVisible();
+    await this.contextMenuOptionUpload.click();
+    for (let i = 0; i < filePaths.length; i++) {
+      await this.uploadFileInput.setInputFiles(filePaths[i]);
+    }
+  }
+
+  async validateFilePreviews(filePaths: string[]) {
+    const filenames = filePaths.map((path) => path.split("/").pop());
+    const fileExtensions = filenames.map((path) => "." + path.split(".").pop());
+    for (let i = 0; i < filePaths.length; i++) {
+      const filePreview = await this.getFilePreview(filenames[i]);
+      await filePreview.waitFor({ state: "visible" });
+      const fileDetailsName = filePreview.locator(".details p");
+      await expect(fileDetailsName).toHaveText(filenames[i]);
+      if (fileExtensions[i] === ".png" || fileExtensions[i] === ".jpg") {
+        const filePreviewImage = filePreview.locator(".file-preview-image");
+        await expect(filePreviewImage).toBeVisible();
+      } else {
+        const fileIcon = filePreview.locator(".file-preview .svg-icon");
+        await expect(fileIcon).toBeVisible();
+      }
+    }
   }
 }

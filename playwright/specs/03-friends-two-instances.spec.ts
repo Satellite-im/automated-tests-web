@@ -1435,6 +1435,51 @@ test.describe("Two instances tests - Friends and Chats", () => {
       "https://www.satellite.im",
     );
   });
+
+  test("B52 and B53 - Sending and receiving files tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // B52 - User should be able to click on image in chat to see image preview
+    let fileLocations = [
+      "playwright/assets/logo.jpg",
+      "playwright/assets/test.txt",
+    ];
+
+    await chatsMainPageSecond.uploadFiles(fileLocations);
+    await chatsMainPageSecond.validateFilePreviews(fileLocations);
+    await chatsMainPageSecond.sendMessage("bunch of files");
+
+    const lastFileSent = await chatsMainPageSecond.getLastFilesSent();
+    const lastImagesSent = await chatsMainPageSecond.getLastImagesSent();
+    await expect(lastFileSent).toBeVisible();
+    await expect(lastImagesSent).toBeVisible();
+
+    const lastFileReceived = await chatsMainPageFirst.getLastFilesReceived();
+    const lastImagesReceived = await chatsMainPageFirst.getLastImagesReceived();
+    await expect(lastFileReceived).toBeVisible();
+    await expect(lastImagesReceived).toBeVisible();
+    // B53 - User can download media from chat by clicking download
+  });
 });
 
 async function setupChats(
