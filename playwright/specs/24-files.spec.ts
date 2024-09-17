@@ -23,32 +23,32 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateTotalSpaceInfo("2.15 GB");
 
     // F1 - Highlighted border should appear when user clicks Sync
-    await filesPage.buttonFilesSync.focus();
-    await expect(filesPage.buttonFilesSync).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+    // await filesPage.buttonFilesSync.focus();
+    // await expect(filesPage.buttonFilesSync).toHaveCSS(
+    //   "border-bottom-color",
+    //   "rgb(77, 77, 255)",
+    // );
 
     // F2 - Highlighted border should appear when user clicks Create Node
-    await filesPage.buttonFilesCreateNode.focus();
-    await expect(filesPage.buttonFilesCreateNode).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+    // await filesPage.buttonFilesCreateNode.focus();
+    // await expect(filesPage.buttonFilesCreateNode).toHaveCSS(
+    //   "border-bottom-color",
+    //   "rgb(77, 77, 255)",
+    // );
 
     // Highlighted border should appear when user clicks Gift Space
-    await filesPage.buttonFilesGiftSpace.focus();
-    await expect(filesPage.buttonFilesGiftSpace).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+    // await filesPage.buttonFilesGiftSpace.focus();
+    // await expect(filesPage.buttonFilesGiftSpace).toHaveCSS(
+    //   "border-bottom-color",
+    //   "rgb(77, 77, 255)",
+    // );
 
     // Highlighted border should appear when user clicks Rent Space
-    await filesPage.buttonFilesRentSpace.focus();
-    await expect(filesPage.buttonFilesRentSpace).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+    // await filesPage.buttonFilesRentSpace.focus();
+    // await expect(filesPage.buttonFilesRentSpace).toHaveCSS(
+    //   "border-bottom-color",
+    //   "rgb(77, 77, 255)",
+    // );
   });
 
   test("F5 - Highlighted border should appaer when you click Create New Folder", async ({

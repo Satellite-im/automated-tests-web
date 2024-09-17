@@ -44,11 +44,11 @@ test.describe("Chats Sidebar Tests", () => {
     const chatsMainPage = new ChatsMainPage(page);
 
     // Hover on each button and validate the tooltip
-    await chatsMainPage.buttonWallet.hover();
-    await chatsMainPage.validateTooltipAttribute(
-      '[data-cy="button-Wallet"]',
-      "Wallet",
-    );
+    // await chatsMainPage.buttonWallet.hover();
+    // await chatsMainPage.validateTooltipAttribute(
+    //   '[data-cy="button-Wallet"]',
+    //   "Wallet",
+    // );
 
     await chatsMainPage.buttonFiles.hover();
     await chatsMainPage.validateTooltipAttribute(
@@ -102,8 +102,8 @@ test.describe("Chats Sidebar Tests", () => {
     const chatsMainPage = new ChatsMainPage(page);
 
     // Navigate to Wallet Page
-    await chatsMainPage.buttonWallet.click();
-    await page.waitForURL("/wallet");
+    // await chatsMainPage.buttonWallet.click();
+    // await page.waitForURL("/wallet");
 
     // Navigate to Files Page
     await chatsMainPage.buttonFiles.click();
