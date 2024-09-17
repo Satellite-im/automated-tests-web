@@ -1459,7 +1459,6 @@ test.describe("Two instances tests - Friends and Chats", () => {
       page1,
     );
 
-    // B52 - User should be able to click on image in chat to see image preview
     let fileLocations = [
       "playwright/assets/logo.jpg",
       "playwright/assets/test.txt",
@@ -1469,16 +1468,43 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageSecond.validateFilePreviews(fileLocations);
     await chatsMainPageSecond.sendMessage("bunch of files");
 
-    const lastFileSent = await chatsMainPageSecond.getLastFilesSent();
-    const lastImagesSent = await chatsMainPageSecond.getLastImagesSent();
-    await expect(lastFileSent).toBeVisible();
-    await expect(lastImagesSent).toBeVisible();
+    // Validate file sent is displayed on local side
+    await chatsMainPageSecond.validateFileEmbedInChat("test.txt", "14 B", true);
 
-    const lastFileReceived = await chatsMainPageFirst.getLastFilesReceived();
-    const lastImagesReceived = await chatsMainPageFirst.getLastImagesReceived();
-    await expect(lastFileReceived).toBeVisible();
-    await expect(lastImagesReceived).toBeVisible();
+    // Validate image sent is displayed on local side
+    await chatsMainPageSecond.validateImageEmbedInChat(
+      "logo.jpg",
+      "7.75 kB",
+      true,
+    );
+
+    // Validate file received is displayed in chat on remote side
+    await chatsMainPageFirst.validateFileEmbedInChat("test.txt", "14 B", false);
+
+    // Validate image received is displayed in chat on remote side
+    await chatsMainPageFirst.validateImageEmbedInChat(
+      "logo.jpg",
+      "7.75 kB",
+      false,
+    );
+
     // B53 - User can download media from chat by clicking download
+    // Download last files sent and received
+    await chatsMainPageSecond.downloadFileLastMessage("file", true);
+    await chatsMainPageFirst.downloadFileLastMessage("file", false);
+
+    // Download last images sent and received
+    await chatsMainPageSecond.downloadFileLastMessage("image", true);
+    await chatsMainPageFirst.downloadFileLastMessage("image", false);
+
+    // B52 - User should be able to click on image in chat to see image preview
+    await chatsMainPageSecond.openImagePreviewLastImageSent();
+    await chatsMainPageSecond.validateImagePreviewIsVisible();
+    await chatsMainPageSecond.closeImagePreview();
+
+    await chatsMainPageFirst.openImagePreviewLastImageReceived();
+    await chatsMainPageFirst.validateImagePreviewIsVisible();
+    await chatsMainPageFirst.closeImagePreview();
   });
 });
 
