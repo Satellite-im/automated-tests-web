@@ -150,7 +150,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and see the friend request displayed
-    await friendsScreenFirst.closeToastNotification();
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
   });
