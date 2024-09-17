@@ -350,8 +350,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const timestampMessageSent =
       await chatsMainPageSecond.getLastTimestampLocal();
 
-    await expect(timestampMessageReceived).toHaveText("just now");
-    await expect(timestampMessageSent).toHaveText("just now");
+    await expect(timestampMessageReceived).toHaveText("ChatUserB - just now");
+    await expect(timestampMessageSent).toHaveText("ChatUserB - just now");
 
     // B17 - Users profile picture appears next to messages sent
     // Validate profile pictures for local and remote users are displayed on conversation next to chat bubbles
