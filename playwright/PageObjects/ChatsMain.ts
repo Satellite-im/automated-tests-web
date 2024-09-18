@@ -879,12 +879,39 @@ export class ChatsMainPage extends MainPage {
     await expectedReaction.waitFor({ state: "detached" });
   }
 
-  // Upload Files Methods
+  // Upload Files and Images Methods
+  async closeImagePreview(): Promise<void> {
+    await this.page.mouse.click(0, 0);
+  }
+
   async deleteFilePreview(numberOfFile: number) {
     const deleteButton = this.page.locator(
       "div:nth-child(" + numberOfFile + ") > .control > .button",
     );
     await deleteButton.click();
+  }
+
+  async downloadFileLastMessage(type: string = "file", sent: boolean = true) {
+    let fileLocator: Locator;
+    if (sent) {
+      if (type === "file") {
+        fileLocator = await this.getLastFilesSent();
+      } else {
+        fileLocator = await this.getLastImagesSent();
+      }
+    } else {
+      if (type === "file") {
+        fileLocator = await this.getLastFilesReceived();
+      } else {
+        fileLocator = await this.getLastImagesReceived();
+      }
+    }
+    const downloadButton = fileLocator.getByTestId(
+      type === "file"
+        ? "file-embed-download-button"
+        : "image-embed-download-button",
+    );
+    await downloadButton.click();
   }
 
   async getFilePreview(filename: string) {
@@ -939,6 +966,16 @@ export class ChatsMainPage extends MainPage {
     return lastImagesSent;
   }
 
+  async openImagePreviewLastImageReceived() {
+    const lastImage = await this.getLastImagesReceived();
+    await lastImage.getByTestId("image-embed-file").click();
+  }
+
+  async openImagePreviewLastImageSent() {
+    const lastImage = await this.getLastImagesSent();
+    await lastImage.getByTestId("image-embed-file").click();
+  }
+
   async uploadFiles(filePaths: string[]) {
     await this.buttonAddAttachment.click();
     await expect(this.contextMenuAddAttachment).toBeVisible();
@@ -964,5 +1001,61 @@ export class ChatsMainPage extends MainPage {
         await expect(fileIcon).toBeVisible();
       }
     }
+  }
+
+  async validateFileEmbedInChat(name: string, size: string, sent: boolean) {
+    let fileEmbed: Locator;
+    if (sent) {
+      fileEmbed = await this.getLastFilesSent();
+    } else {
+      fileEmbed = await this.getLastFilesReceived();
+    }
+    await fileEmbed.waitFor({ state: "visible" });
+    const fileEmbedIcon = fileEmbed.locator(".svg-icon").first();
+    const fileEmbedName = fileEmbed.getByTestId("file-embed-name");
+    const fileEmbedSize = fileEmbed.getByTestId("file-embed-size");
+    const downloadButton = fileEmbed.getByTestId("file-embed-download-button");
+    const shareButton = fileEmbed.getByTestId("file-embed-share-button");
+    const addToFilesButton = fileEmbed.getByTestId(
+      "file-embed-add-to-files-button",
+    );
+    await expect(fileEmbedIcon).toBeVisible();
+    await expect(fileEmbedName).toHaveText(name);
+    await expect(fileEmbedSize).toHaveText(size);
+    await expect(downloadButton).toBeVisible();
+    await expect(shareButton).toBeVisible();
+    await expect(addToFilesButton).toBeVisible();
+  }
+
+  async validateImageEmbedInChat(name: string, size: string, sent: boolean) {
+    let imageEmbed: Locator;
+    if (sent) {
+      imageEmbed = await this.getLastImagesSent();
+    } else {
+      imageEmbed = await this.getLastImagesReceived();
+    }
+    await imageEmbed.waitFor({ state: "visible" });
+    const imageEmbedFile = imageEmbed.getByTestId("image-embed-file");
+    const imageEmbedName = imageEmbed.getByTestId("image-embed-file-name");
+    const imageEmbedSize = imageEmbed.getByTestId("image-embed-file-size");
+    const downloadButton = imageEmbed.getByTestId(
+      "image-embed-download-button",
+    );
+    await expect(imageEmbedFile).toBeVisible();
+    await expect(imageEmbedName).toHaveText(name);
+    await expect(imageEmbedSize).toHaveText(size);
+    await expect(downloadButton).toBeVisible();
+  }
+
+  async validateImagePreviewIsVisible() {
+    const modalPreview = this.page.locator(".modal");
+    const modalPreviewImageContainer = modalPreview.getByTestId(
+      "image-embed-container",
+    );
+    const modalPreviewImage =
+      modalPreviewImageContainer.getByTestId("image-embed-file");
+    await expect(modalPreview).toHaveClass(/.*\bblurred\b.*/);
+    await expect(modalPreviewImageContainer).toBeVisible();
+    await expect(modalPreviewImage).toBeVisible();
   }
 }
