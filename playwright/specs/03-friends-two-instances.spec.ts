@@ -1490,12 +1490,91 @@ test.describe("Two instances tests - Friends and Chats", () => {
 
     // B53 - User can download media from chat by clicking download
     // Download last files sent and received
+    await chatsMainPageSecond.downloadFileLastMessage("test.txt", true);
+    await chatsMainPageSecond.validateDownloadedFile("test.txt");
+    await chatsMainPageFirst.downloadFileLastMessage("test.txt", false);
+    await chatsMainPageFirst.validateDownloadedFile("test.txt");
+
+    // Download last images sent and received
+    await chatsMainPageSecond.downloadFileLastMessage("logo.jpg", true);
+    await chatsMainPageSecond.validateDownloadedFile("logo.jpg");
+    await chatsMainPageFirst.downloadFileLastMessage("logo.jpg", false);
+    await chatsMainPageFirst.validateDownloadedFile("logo.jpg");
+
+    // B52 - User should be able to click on image in chat to see image preview
+    await chatsMainPageSecond.openImagePreviewLastImageSent();
+    await chatsMainPageSecond.validateImagePreviewIsVisible();
+    await chatsMainPageSecond.closeImagePreview();
+
+    await chatsMainPageFirst.openImagePreviewLastImageReceived();
+    await chatsMainPageFirst.validateImagePreviewIsVisible();
+    await chatsMainPageFirst.closeImagePreview();
+  });
+
+  test("Sending and receiving emojis, gifs and stickers tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    let fileLocations = [
+      "playwright/assets/logo.jpg",
+      "playwright/assets/test.txt",
+    ];
+
+    await chatsMainPageSecond.uploadFiles(fileLocations);
+    await chatsMainPageSecond.validateFilePreviews(fileLocations);
+    await chatsMainPageSecond.sendMessage("bunch of files");
+
+    // Validate file sent is displayed on local side
+    await chatsMainPageSecond.validateFileEmbedInChat("test.txt", "14 B", true);
+
+    // Validate image sent is displayed on local side
+    await chatsMainPageSecond.validateImageEmbedInChat(
+      "logo.jpg",
+      "7.75 kB",
+      true,
+    );
+
+    // Validate file received is displayed in chat on remote side
+    await chatsMainPageFirst.validateFileEmbedInChat("test.txt", "14 B", false);
+
+    // Validate image received is displayed in chat on remote side
+    await chatsMainPageFirst.validateImageEmbedInChat(
+      "logo.jpg",
+      "7.75 kB",
+      false,
+    );
+
+    // B53 - User can download media from chat by clicking download
+    // Download last files sent and received
     await chatsMainPageSecond.downloadFileLastMessage("file", true);
+    await chatsMainPageSecond.validateDownloadedFile("test.txt");
     await chatsMainPageFirst.downloadFileLastMessage("file", false);
+    await chatsMainPageFirst.validateDownloadedFile("test.txt");
 
     // Download last images sent and received
     await chatsMainPageSecond.downloadFileLastMessage("image", true);
+    await chatsMainPageSecond.validateDownloadedFile("logo.jpg");
     await chatsMainPageFirst.downloadFileLastMessage("image", false);
+    await chatsMainPageFirst.validateDownloadedFile("logo.jpg");
 
     // B52 - User should be able to click on image in chat to see image preview
     await chatsMainPageSecond.openImagePreviewLastImageSent();
