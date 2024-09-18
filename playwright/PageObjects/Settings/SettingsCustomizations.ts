@@ -221,7 +221,7 @@ export class SettingsCustomizations extends SettingsBase {
 
   async selectFont(font: string) {
     await this.page
-      .getByTestId("selector-current-font-poppins")
+      .getByTestId("selector-current-font-Poppins")
       .locator("select")
       .selectOption({ label: font });
   }
