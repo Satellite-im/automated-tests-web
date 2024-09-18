@@ -176,11 +176,11 @@ export class SettingsCustomizations extends SettingsBase {
       "button-theme-open-folder",
     );
     this.themeSectionThemeMoonButton =
-      this.page.getByTestId("theme-moon-button");
+      this.page.getByTestId("button-theme-moon");
     this.themeSectionLabel = this.themeSection.getByTestId(
       "setting-section-label",
     );
-    this.themeSectionSelector = this.page.getByTestId("selector-theme");
+    this.themeSectionSelector = this.themeSection.locator(".select-group");
     this.themeSectionSelectorOption =
       this.themeSectionSelector.getByTestId("select-option");
     this.themeSectionText = this.themeSection.getByTestId(
@@ -224,6 +224,18 @@ export class SettingsCustomizations extends SettingsBase {
       .getByTestId("selector-current-font-Poppins")
       .locator("select")
       .selectOption({ label: font });
+  }
+
+  async selectTheme(theme: string) {
+    await this.themeSection
+      .locator(".select-group")
+      .locator("select")
+      .selectOption({ label: theme });
+  }
+
+  async validateCurrentTheme(theme: string) {
+    const stylesheet = this.page.locator("#app link[rel='stylesheet']");
+    await expect(stylesheet).toHaveAttribute("href", theme);
   }
 
   async validateDefaultProfileStyles(expectedStyles: string[]) {
