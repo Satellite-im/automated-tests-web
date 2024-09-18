@@ -80,7 +80,11 @@ export class SettingsProfile extends SettingsBase {
   readonly storeRecoverySeedSection: Locator;
   readonly storeRecoverySeedCheckbox: Locator;
   readonly storeRecoverySeedText: Locator;
-  readonly warningMessage: Locator;
+  readonly warningMessageFieldRequired: Locator;
+  readonly warningMessageInvalidFormat: Locator;
+  readonly warningMessageMaxLengthIs128: Locator;
+  readonly warningMessageMaxLengthIs32: Locator;
+  readonly warningMessageMinLengthIs4: Locator;
 
   constructor(public readonly page: Page) {
     super(page);
@@ -281,7 +285,19 @@ export class SettingsProfile extends SettingsBase {
     this.storeRecoverySeedText = this.storeRecoverySeedSection.getByTestId(
       "text-store-recovery-seed",
     );
-    this.warningMessage = this.page.locator(".warning");
+    this.warningMessageFieldRequired = this.page.getByText(
+      "This field is required.",
+    );
+    this.warningMessageInvalidFormat = this.page.getByText("Invalid format.");
+    this.warningMessageMaxLengthIs128 = this.page.getByText(
+      "Maximum length is 128 characters.",
+    );
+    this.warningMessageMaxLengthIs32 = this.page.getByText(
+      "Maximum length is 32 characters.",
+    );
+    this.warningMessageMinLengthIs4 = this.page.getByText(
+      "Minimum length is 4 characters.",
+    );
   }
 
   // Rewrite everything here in playwright
