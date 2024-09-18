@@ -138,16 +138,41 @@ test.describe("Settings Customization Tests", () => {
     );
   });
 
-  // Cannot be automated now since button does not perform any action
-  // test.skip("K8 - Clicking the moon button should change theme of the app from Dark to Light", async () => {});
-
-  test("K9 - Themes dropdown should display Default", async ({
+  test("K8 - Clicking the moon button should change theme of the app from Dark to Light", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
     const settingsCustomizations = new SettingsCustomizations(page);
 
-    const expectedThemes = ["Default"];
+    // Validate default theme is applied
+    await settingsCustomizations.validateCurrentTheme(
+      "/assets/themes/default.css",
+    );
+
+    // Change theme to Light by clicking on moon button
+    await settingsCustomizations.themeSectionThemeMoonButton.click();
+
+    // Validate Dracula theme is applied
+    await settingsCustomizations.validateCurrentTheme(
+      "/assets/themes/light.css",
+    );
+
+    // Return theme to Default by clicking again on moon button
+    await settingsCustomizations.themeSectionThemeMoonButton.click();
+
+    // Validate Dracula theme is applied
+    await settingsCustomizations.validateCurrentTheme(
+      "/assets/themes/default.css",
+    );
+  });
+
+  test("K9 - Themes dropdown should display Default and user can change theme from dropdown", async ({
+    singleUserContext,
+  }) => {
+    const page = singleUserContext.page;
+    const settingsCustomizations = new SettingsCustomizations(page);
+
+    const expectedThemes = ["Default", "Dracula", "Olivia", "Light"];
 
     await expect(settingsCustomizations.themeSectionLabel).toHaveText("Theme");
     await expect(settingsCustomizations.themeSectionText).toHaveText(
@@ -156,8 +181,37 @@ test.describe("Settings Customization Tests", () => {
 
     const numberOfDropdownThemes =
       await settingsCustomizations.themeSectionSelectorOption.count();
-    expect(numberOfDropdownThemes).toEqual(1);
+    expect(numberOfDropdownThemes).toEqual(4);
     await settingsCustomizations.validateThemeNames(expectedThemes);
+
+    // Validate default theme is applied
+    await settingsCustomizations.validateCurrentTheme(
+      "/assets/themes/default.css",
+    );
+
+    // Change theme to Dracula
+    await settingsCustomizations.selectTheme("Dracula");
+
+    // Validate Dracula theme is applied
+    await settingsCustomizations.validateCurrentTheme(
+      "/assets/themes/dracula.css",
+    );
+
+    // Change theme to Olivia
+    await settingsCustomizations.selectTheme("Olivia");
+
+    // Validate Olivia theme is applied
+    await settingsCustomizations.validateCurrentTheme(
+      "/assets/themes/olivia.css",
+    );
+
+    // Change theme to Light
+    await settingsCustomizations.selectTheme("Light");
+
+    // Validate Olivia theme is applied
+    await settingsCustomizations.validateCurrentTheme(
+      "/assets/themes/light.css",
+    );
   });
 
   // Cannot be automated now since button does not perform any action
