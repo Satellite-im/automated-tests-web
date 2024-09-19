@@ -247,30 +247,31 @@ test.describe("Settings Profile Tests", () => {
     // User leaves empty username - Warning message is displayed
     await settingsProfile.inputSettingsProfileUsername.click();
     await settingsProfile.inputSettingsProfileUsername.clear();
-    await settingsProfile.warningMessage.waitFor({ state: "visible" });
-    await expect(settingsProfile.warningMessage).toHaveText(
-      "This field is required.",
-    );
+    await settingsProfile.warningMessageFieldRequired.waitFor({
+      state: "visible",
+    });
 
     // User types less characters than expected into username - Warning message is displayed
     await settingsProfile.inputSettingsProfileUsername.fill("123");
-    await expect(settingsProfile.warningMessage).toHaveText(
-      "Minimum length is 4 characters.",
-    );
+    await settingsProfile.warningMessageMinLengthIs4.waitFor({
+      state: "visible",
+    });
 
     // User types long username - Warning message is displayed
     await settingsProfile.inputSettingsProfileUsername.clear();
     await settingsProfile.inputSettingsProfileUsername.fill(
       "123456789012345678901234567890123",
     );
-    await expect(settingsProfile.warningMessage).toHaveText(
-      "Maximum length is 32 characters.",
-    );
+    await settingsProfile.warningMessageMaxLengthIs32.waitFor({
+      state: "visible",
+    });
 
     // User types invalid  username - Warning message is displayed
     await settingsProfile.inputSettingsProfileUsername.clear();
     await settingsProfile.inputSettingsProfileUsername.fill("&*&*&&*");
-    await expect(settingsProfile.warningMessage).toHaveText("Invalid format.");
+    await settingsProfile.warningMessageInvalidFormat.waitFor({
+      state: "visible",
+    });
   });
 
   test("I14 - Highlighted border should appear when user is clicked into Status textbox", async ({
@@ -362,10 +363,9 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.inputSettingsProfileStatus.fill(
       "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
     );
-    await settingsProfile.warningMessage.waitFor({ state: "visible" });
-    await expect(settingsProfile.warningMessage).toHaveText(
-      "Maximum length is 128 characters.",
-    );
+    await settingsProfile.warningMessageMaxLengthIs128.waitFor({
+      state: "visible",
+    });
   });
 
   test("I19 - Status dropdown should show Online, Offline, Idle, Do not Disturb", async ({
