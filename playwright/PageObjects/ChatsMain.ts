@@ -1,5 +1,6 @@
 import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
+const fs = require("fs");
 
 export class ChatsMainPage extends MainPage {
   readonly addSomeone: Locator;
@@ -891,27 +892,45 @@ export class ChatsMainPage extends MainPage {
     await deleteButton.click();
   }
 
-  async downloadFileLastMessage(type: string = "file", sent: boolean = true) {
+  async downloadFileLastMessage(filename: string, sent: boolean = true) {
+    // Declare variable for file locator
     let fileLocator: Locator;
-    if (sent) {
-      if (type === "file") {
-        fileLocator = await this.getLastFilesSent();
-      } else {
+    let downloadButton: Locator;
+
+    // Extract the file extension from the filename
+    const extension = filename.split(".").pop();
+
+    // Define a list of image file extensions
+    const imageExtensions = ["jpg", "png", "gif"];
+
+    if (imageExtensions.includes(extension)) {
+      if (sent) {
         fileLocator = await this.getLastImagesSent();
-      }
-    } else {
-      if (type === "file") {
-        fileLocator = await this.getLastFilesReceived();
       } else {
         fileLocator = await this.getLastImagesReceived();
       }
+      downloadButton = fileLocator.getByTestId("image-embed-download-button");
+    } else {
+      if (sent) {
+        fileLocator = await this.getLastFilesSent();
+      } else {
+        fileLocator = await this.getLastFilesReceived();
+      }
+      downloadButton = fileLocator.getByTestId("file-embed-download-button");
     }
-    const downloadButton = fileLocator.getByTestId(
-      type === "file"
-        ? "file-embed-download-button"
-        : "image-embed-download-button",
-    );
+
+    // Wait for the download event
+    const downloadPromise = this.page.waitForEvent("download");
     await downloadButton.click();
+    const download = await downloadPromise;
+
+    // Save the file manually to the specified folder
+    const savedFilePath = "./downloads/" + filename;
+
+    await download.saveAs(savedFilePath); // Save the file to the desired folder
+
+    // Return the saved file path for further validation
+    return savedFilePath;
   }
 
   async getFilePreview(filename: string) {
@@ -982,6 +1001,22 @@ export class ChatsMainPage extends MainPage {
     await this.contextMenuOptionUpload.click();
     for (let i = 0; i < filePaths.length; i++) {
       await this.uploadFileInput.setInputFiles(filePaths[i]);
+    }
+  }
+
+  async validateDownloadedFile(filename: string) {
+    const downloadPath = "./downloads/" + filename; // Specify your download folder
+
+    // Check if the file exists
+    const fileExists = fs.existsSync(downloadPath);
+
+    // Assert that the file exists
+    if (fileExists) {
+      console.log(`File ${filename} was downloaded successfully.`);
+      return true;
+    } else {
+      console.error(`File ${filename} was not found.`);
+      return false;
     }
   }
 
