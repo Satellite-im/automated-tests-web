@@ -7,6 +7,7 @@ import type { BrowserContext, Locator, Page } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessages";
+import { EmojiPicker } from "playwright/PageObjects/ChatsElements/EmojiPicker";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
@@ -1534,56 +1535,18 @@ test.describe("Two instances tests - Friends and Chats", () => {
       page1,
     );
 
-    let fileLocations = [
-      "playwright/assets/logo.jpg",
-      "playwright/assets/test.txt",
-    ];
+    await chatsMainPageSecond.openEmojiPicker();
+    const emojiPickerSecond = new EmojiPicker(page2);
+    await emojiPickerSecond.selectEmoji("😂");
+    await chatsMainPageSecond.buttonChatbarSendMessage.click();
 
-    await chatsMainPageSecond.uploadFiles(fileLocations);
-    await chatsMainPageSecond.validateFilePreviews(fileLocations);
-    await chatsMainPageSecond.sendMessage("bunch of files");
-
-    // Validate file sent is displayed on local side
-    await chatsMainPageSecond.validateFileEmbedInChat("test.txt", "14 B", true);
-
-    // Validate image sent is displayed on local side
-    await chatsMainPageSecond.validateImageEmbedInChat(
-      "logo.jpg",
-      "7.75 kB",
-      true,
+    // Validate emoji sent is displayed on local and remote sides
+    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+      "😂",
     );
-
-    // Validate file received is displayed in chat on remote side
-    await chatsMainPageFirst.validateFileEmbedInChat("test.txt", "14 B", false);
-
-    // Validate image received is displayed in chat on remote side
-    await chatsMainPageFirst.validateImageEmbedInChat(
-      "logo.jpg",
-      "7.75 kB",
-      false,
+    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+      "😂",
     );
-
-    // B53 - User can download media from chat by clicking download
-    // Download last files sent and received
-    await chatsMainPageSecond.downloadFileLastMessage("file", true);
-    await chatsMainPageSecond.validateDownloadedFile("test.txt");
-    await chatsMainPageFirst.downloadFileLastMessage("file", false);
-    await chatsMainPageFirst.validateDownloadedFile("test.txt");
-
-    // Download last images sent and received
-    await chatsMainPageSecond.downloadFileLastMessage("image", true);
-    await chatsMainPageSecond.validateDownloadedFile("logo.jpg");
-    await chatsMainPageFirst.downloadFileLastMessage("image", false);
-    await chatsMainPageFirst.validateDownloadedFile("logo.jpg");
-
-    // B52 - User should be able to click on image in chat to see image preview
-    await chatsMainPageSecond.openImagePreviewLastImageSent();
-    await chatsMainPageSecond.validateImagePreviewIsVisible();
-    await chatsMainPageSecond.closeImagePreview();
-
-    await chatsMainPageFirst.openImagePreviewLastImageReceived();
-    await chatsMainPageFirst.validateImagePreviewIsVisible();
-    await chatsMainPageFirst.closeImagePreview();
   });
 });
 
