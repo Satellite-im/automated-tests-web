@@ -1547,6 +1547,45 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
       "😂",
     );
+
+    // Change skin tone of emojis
+    await chatsMainPageSecond.openEmojiPicker();
+    await emojiPickerSecond.changeSkinToneEmoji(2);
+    await emojiPickerSecond.selectEmoji("🖐🏽");
+    await chatsMainPageSecond.buttonChatbarSendMessage.click();
+
+    // Validate emoji sent is displayed on local and remote sides
+    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+      "🖐🏽",
+    );
+    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+      "🖐🏽",
+    );
+
+    // Change emoji size in emojis container view
+    await chatsMainPageSecond.openEmojiPicker();
+    await emojiPickerSecond.changeEmojiSizeView("1");
+    await emojiPickerSecond.validateEmojiSnapshot();
+    await emojiPickerSecond.changeEmojiSizeView("99");
+    await emojiPickerSecond.validateEmojiSnapshot();
+    await emojiPickerSecond.changeEmojiSizeView("50");
+    await emojiPickerSecond.validateEmojiSnapshot();
+
+    // Validate emoji categories displayed in emoji container
+    const emojiCategories = ["Frequently Used", "Smileys And Emotion"];
+    await emojiPickerSecond.validateEmojiCategories(emojiCategories);
+
+    // Validate number of emojis per category
+    await emojiPickerSecond.validateNumberOfEmojisPerSection(
+      "frequently-used",
+      1,
+    );
+
+    // Validate user can navigate through all categories of emojis
+    await emojiPickerSecond.navigateThroughEmojiCategories(
+      "smileys-and-emotion",
+    );
+    await emojiPickerSecond.navigateThroughEmojiCategories("people-and-body");
   });
 });
 
