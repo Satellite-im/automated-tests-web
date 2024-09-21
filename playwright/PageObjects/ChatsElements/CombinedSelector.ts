@@ -16,15 +16,11 @@ export class CombinedSelector extends MainPage {
     this.combinedSelector = this.page.getByTestId("combined-selector");
     this.emojiContainer = this.page.getByTestId("emoji-container");
     this.footerTabs = this.page.getByTestId(".pill-tabs");
-    this.footerTabsEmojiButton = this.page
-      .getByTestId(".pill-tabs")
-      .getByTestId("button-Emojis");
-    this.footerTabsGifButton = this.page
-      .getByTestId(".pill-tabs")
-      .getByTestId("button-GIFs");
-    this.footerTabsStickerButton = this.page
-      .getByTestId(".pill-tabs")
-      .getByTestId("button-Stickers");
+    this.footerTabsEmojiButton = this.page.getByTestId("button-Emojis");
+    this.footerTabsGifButton = this.page.getByTestId("button-GIFs");
+    this.footerTabsStickerButton = this.page.getByTestId("button-Stickers");
+    this.giphySelector = this.page.getByTestId("giphy-selector");
+    this.stickerSelector = this.page.getByTestId("sticker-selector");
   }
 
   async goToEmojisTab() {

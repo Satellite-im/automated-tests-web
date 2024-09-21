@@ -1512,7 +1512,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.closeImagePreview();
   });
 
-  test("Sending and receiving emojis, gifs and stickers tests", async ({
+  test("B66 - Sending and receiving emojis and emoji picker tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1551,41 +1551,90 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Change skin tone of emojis
     await chatsMainPageSecond.openEmojiPicker();
     await emojiPickerSecond.changeSkinToneEmoji(2);
-    await emojiPickerSecond.selectEmoji("🖐🏽");
+    await emojiPickerSecond.selectEmoji("🖐🏾");
     await chatsMainPageSecond.buttonChatbarSendMessage.click();
 
     // Validate emoji sent is displayed on local and remote sides
     await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      "🖐🏽",
+      "🖐🏾",
     );
     await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      "🖐🏽",
+      "🖐🏾",
     );
 
     // Change emoji size in emojis container view
     await chatsMainPageSecond.openEmojiPicker();
-    await emojiPickerSecond.changeEmojiSizeView("1");
+    await emojiPickerSecond.changeEmojiSizeView("16");
     await emojiPickerSecond.validateEmojiSnapshot();
-    await emojiPickerSecond.changeEmojiSizeView("99");
+    await emojiPickerSecond.changeEmojiSizeView("45");
     await emojiPickerSecond.validateEmojiSnapshot();
-    await emojiPickerSecond.changeEmojiSizeView("50");
+    await emojiPickerSecond.changeEmojiSizeView("30");
     await emojiPickerSecond.validateEmojiSnapshot();
 
     // Validate emoji categories displayed in emoji container
-    const emojiCategories = ["Frequently Used", "Smileys And Emotion"];
+    const emojiCategories = [
+      "Frequently Used",
+      "smileys and emotion",
+      "people and body",
+      "animals and nature",
+      "food and drink",
+      "travel and places",
+      "activities",
+      "objects",
+      "symbols",
+      "flags",
+    ];
     await emojiPickerSecond.validateEmojiCategories(emojiCategories);
 
     // Validate number of emojis per category
     await emojiPickerSecond.validateNumberOfEmojisPerSection(
       "frequently-used",
-      1,
+      2,
     );
+    await emojiPickerSecond.validateNumberOfEmojisPerSection(
+      "smileys-and-emotion",
+      168,
+    );
+    await emojiPickerSecond.validateNumberOfEmojisPerSection(
+      "people-and-body",
+      367,
+    );
+    await emojiPickerSecond.validateNumberOfEmojisPerSection(
+      "animals-and-nature",
+      153,
+    );
+    await emojiPickerSecond.validateNumberOfEmojisPerSection(
+      "food-and-drink",
+      135,
+    );
+    await emojiPickerSecond.validateNumberOfEmojisPerSection(
+      "travel-and-places",
+      218,
+    );
+    await emojiPickerSecond.validateNumberOfEmojisPerSection("activities", 84);
+    await emojiPickerSecond.validateNumberOfEmojisPerSection("objects", 261);
+    await emojiPickerSecond.validateNumberOfEmojisPerSection("symbols", 223);
+    await emojiPickerSecond.validateNumberOfEmojisPerSection("flags", 269);
 
     // Validate user can navigate through all categories of emojis
     await emojiPickerSecond.navigateThroughEmojiCategories(
       "smileys-and-emotion",
     );
     await emojiPickerSecond.navigateThroughEmojiCategories("people-and-body");
+    await emojiPickerSecond.navigateThroughEmojiCategories(
+      "animals-and-nature",
+    );
+    await emojiPickerSecond.navigateThroughEmojiCategories("food-and-drink");
+    await emojiPickerSecond.navigateThroughEmojiCategories("travel-and-places");
+    await emojiPickerSecond.navigateThroughEmojiCategories("activities");
+    await emojiPickerSecond.navigateThroughEmojiCategories("objects");
+    await emojiPickerSecond.navigateThroughEmojiCategories("symbols");
+    await emojiPickerSecond.navigateThroughEmojiCategories("flags");
+
+    // Validate user can navigate through tabs in emoji picker
+    await emojiPickerSecond.goToGifsTab();
+    await emojiPickerSecond.goToStickersTab();
+    await emojiPickerSecond.goToEmojisTab();
   });
 });
 

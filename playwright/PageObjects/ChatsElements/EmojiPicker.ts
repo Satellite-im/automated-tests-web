@@ -14,6 +14,7 @@ export class EmojiPicker extends CombinedSelector {
   readonly emojiContainerSizeRangeSelectorInput: Locator;
   readonly emojiContainerSizeSection: Locator;
   readonly emojiSelector: Locator;
+  readonly frequentlyUsedSection: Locator;
   readonly skinToneSelector: Locator;
   readonly skinToneSelectorButton: Locator;
 
@@ -27,15 +28,19 @@ export class EmojiPicker extends CombinedSelector {
       "emoji-container-size-label",
     );
     this.emojiContainerSizeRangeSelector = this.page
-      .getByTestId("emoji-container-size-selection")
+      .getByTestId("emoji-container-size-section")
       .getByTestId("range-selector");
     this.emojiContainerSizeRangeSelectorInput = this.page
-      .getByTestId("emoji-container-size-selection")
+      .getByTestId("emoji-container-size-section")
+      .getByTestId("range-selector")
       .getByTestId("range-selector-input");
     this.emojiContainerSizeSection = this.page.getByTestId(
-      "emoji-container-size-selection",
+      "emoji-container-size-section",
     );
     this.emojiSelector = this.page.getByTestId("emoji-selector");
+    this.frequentlyUsedSection = this.page.getByTestId(
+      "frequently-used-section",
+    );
     this.skinToneSelector = this.page.getByTestId("skin-tone-selector");
     this.skinToneSelectorButton = this.page.getByTestId(
       "skin-tone-selector-button",
@@ -98,7 +103,7 @@ export class EmojiPicker extends CombinedSelector {
   ) {
     const emojisCount = await this.page
       .getByTestId(section + "-section")
-      .locator("span .emoji")
+      .locator("span")
       .count();
     expect(emojisCount).toEqual(expectedNumber);
   }
@@ -106,6 +111,7 @@ export class EmojiPicker extends CombinedSelector {
   async validateEmojiSnapshot() {
     await expect(this.page).toHaveScreenshot({
       maxDiffPixels: 400,
+      mask: [this.skinToneSelector, this.frequentlyUsedSection],
     });
   }
 }
