@@ -68,6 +68,10 @@ export class EmojiPicker extends CombinedSelector {
     await section.waitFor({ state: "visible" });
   }
 
+  async searchEmoji(emoji: string) {
+    await this.emojiContainerSearchInput.fill(emoji);
+  }
+
   async selectEmoji(emoji: string) {
     await this.page
       .getByTestId("emoji-container")
@@ -111,7 +115,12 @@ export class EmojiPicker extends CombinedSelector {
   async validateEmojiSnapshot() {
     await expect(this.page).toHaveScreenshot({
       maxDiffPixels: 400,
-      mask: [this.skinToneSelector, this.frequentlyUsedSection],
+      mask: [
+        this.skinToneSelector,
+        this.frequentlyUsedSection,
+        this.page.getByTestId("chat-topbar-profile-picture"),
+        this.page.getByTestId("chat-preview-picture"),
+      ],
     });
   }
 }

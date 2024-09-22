@@ -1635,6 +1635,9 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await emojiPickerSecond.goToGifsTab();
     await emojiPickerSecond.goToStickersTab();
     await emojiPickerSecond.goToEmojisTab();
+
+    // Search for emojis in emoji picker
+    await emojiPickerSecond.searchEmoji("mexico");
   });
 });
 
