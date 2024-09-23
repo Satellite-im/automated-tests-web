@@ -112,15 +112,13 @@ export class EmojiPicker extends CombinedSelector {
     expect(emojisCount).toEqual(expectedNumber);
   }
 
-  async validateEmojiSnapshot() {
-    await expect(this.page).toHaveScreenshot({
-      maxDiffPixels: 400,
-      mask: [
-        this.skinToneSelector,
-        this.frequentlyUsedSection,
-        this.page.getByTestId("chat-topbar-profile-picture"),
-        this.page.getByTestId("chat-preview-picture"),
-      ],
-    });
+  async validateSingleEmojiSize(emoji: string, expectedSize: string) {
+    const emojiLocator = this.page
+      .getByTestId("emoji-container")
+      .locator("span")
+      .filter({
+        hasText: emoji,
+      });
+    await expect(emojiLocator).toHaveCSS("font-size", expectedSize);
   }
 }

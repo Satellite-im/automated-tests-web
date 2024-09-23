@@ -1565,11 +1565,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Change emoji size in emojis container view
     await chatsMainPageSecond.openEmojiPicker();
     await emojiPickerSecond.changeEmojiSizeView("16");
-    await emojiPickerSecond.validateEmojiSnapshot();
+    await emojiPickerSecond.validateSingleEmojiSize("😀", "16px");
     await emojiPickerSecond.changeEmojiSizeView("45");
-    await emojiPickerSecond.validateEmojiSnapshot();
+    await emojiPickerSecond.validateSingleEmojiSize("😀", "45px");
     await emojiPickerSecond.changeEmojiSizeView("30");
-    await emojiPickerSecond.validateEmojiSnapshot();
+    await emojiPickerSecond.validateSingleEmojiSize("😀", "30px");
 
     // Validate emoji categories displayed in emoji container
     const emojiCategories = [
