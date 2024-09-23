@@ -61,6 +61,7 @@ export class ChatsMainPage extends MainPage {
   readonly fileEmbedName: Locator;
   readonly fileEmbedShareButton: Locator;
   readonly fileEmbedSize: Locator;
+  readonly gifPickerButton: Locator;
   readonly imageEmbedContainer: Locator;
   readonly imageEmbedDownloadButton: Locator;
   readonly imageEmbedFile: Locator;
@@ -103,6 +104,7 @@ export class ChatsMainPage extends MainPage {
   readonly sectionAddSomeone: Locator;
   readonly scrollToBottomButton: Locator;
   readonly statusIndicator: Locator;
+  readonly stickerPickerButton: Locator;
   readonly textChatMessage: Locator;
   readonly topbar: Locator;
   readonly uploadFileInput: Locator;
@@ -236,7 +238,9 @@ export class ChatsMainPage extends MainPage {
       .getByRole("textbox");
     this.emojiButton = this.page.locator('[data-cy^="button-emoji-"]');
     this.emojiGroup = this.page.getByTestId("emoji-group");
-    this.emojiPickerButton = this.page.getByTestId("button-emoji-picker");
+    this.emojiPickerButton = this.page.getByTestId(
+      "button-chatbar-emoji-picker",
+    );
     this.fileEmbed = this.page.getByTestId("file-embed");
     this.fileEmbedAddToFilesButton = this.fileEmbed.getByTestId(
       "file-embed-add-to-files-button",
@@ -250,6 +254,7 @@ export class ChatsMainPage extends MainPage {
       "file-embed-share-button",
     );
     this.fileEmbedSize = this.fileEmbed.getByTestId("file-embed-size");
+    this.gifPickerButton = this.page.getByTestId("button-chatbar-gif-picker");
     this.imageEmbedContainer = this.page.getByTestId("image-embed-container");
     this.imageEmbedDownloadButton = this.imageEmbedContainer.getByTestId(
       "image-embed-download-button",
@@ -335,6 +340,9 @@ export class ChatsMainPage extends MainPage {
       .locator(".scroll-to-bottom")
       .locator("button");
     this.sectionAddSomeone = this.page.getByTestId("section-add-someone");
+    this.stickerPickerButton = this.page.getByTestId(
+      "button-chatbar-sticker-picker",
+    );
     this.textChatMessage = this.page.getByTestId("text-chat-message");
     this.topbar = this.page.getByTestId("topbar");
     this.uploadFileInput = this.chatbar.locator('input[type="file"]');
@@ -1092,5 +1100,19 @@ export class ChatsMainPage extends MainPage {
     await expect(modalPreview).toHaveClass(/.*\bblurred\b.*/);
     await expect(modalPreviewImageContainer).toBeVisible();
     await expect(modalPreviewImage).toBeVisible();
+  }
+
+  // Emojis, GIFs and Stickers methods
+
+  async openEmojiPicker() {
+    await this.emojiPickerButton.click();
+  }
+
+  async openGifPicker() {
+    await this.gifPickerButton.click();
+  }
+
+  async openStickerPicker() {
+    await this.stickerPickerButton.click();
   }
 }

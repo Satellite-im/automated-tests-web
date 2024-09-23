@@ -86,3 +86,4 @@ $RECYCLE.BIN/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+/downloads/
