@@ -2,6 +2,7 @@ import { expect, type Locator, type Page } from "@playwright/test";
 
 export default class MainPage {
   readonly buttonChat: Locator;
+  readonly buttonDismissInstallAlert: Locator;
   readonly buttonFiles: Locator;
   readonly buttonFriends: Locator;
   readonly buttonHideSidebar: Locator;
@@ -23,6 +24,7 @@ export default class MainPage {
   readonly favoriteProfilePicture: Locator;
   readonly favoriteProfileStatusIndicator: Locator;
   readonly favoritesLabel: Locator;
+  readonly installAlert: Locator;
   readonly inputSidebarSearch: Locator;
   readonly navigationBar: Locator;
   readonly sidebar: Locator;
@@ -35,13 +37,17 @@ export default class MainPage {
 
   constructor(public readonly page: Page) {
     this.buttonChat = this.page.getByTestId("button-Chat");
+    this.buttonDismissInstallAlert = this.page
+      .locator("#install-banner")
+      .getByRole("button")
+      .first();
     this.buttonFiles = this.page.getByTestId("button-Files");
     this.buttonFriends = this.page.getByTestId("button-Friends");
     this.buttonHideSidebar = this.page.getByTestId("button-hide-sidebar");
     this.buttonSettings = this.page.getByTestId("button-Settings");
     this.buttonShowSidebar = this.page
-      .getByTestId("button-show-sidebar")
-      .first();
+      .getByTestId("topbar")
+      .getByTestId("button-show-sidebar");
     this.buttonSidebarChats = this.page.getByTestId("button-sidebar-chats");
     this.buttonSidebarFiles = this.page.getByTestId("button-sidebar-files");
     this.buttonWallet = this.page.getByTestId("button-Wallet");
@@ -66,6 +72,7 @@ export default class MainPage {
     this.favoriteProfileStatusIndicator =
       this.favoriteProfilePicture.getByTestId("status-indicator");
     this.favoritesLabel = this.page.getByTestId("label-favorites");
+    this.installAlert = this.page.locator("#install-banner");
     this.inputSidebarSearch = this.page.getByTestId("input-sidebar-search");
     this.navigationBar = this.page.getByTestId(".navigation");
     this.sidebar = this.page.getByTestId("sidebar");
@@ -111,6 +118,11 @@ export default class MainPage {
 
   async closeToastNotification() {
     await this.toastNotificationButton.click();
+  }
+
+  async dismissDownloadAlert() {
+    await this.buttonDismissInstallAlert.click();
+    await this.installAlert.waitFor({ state: "detached" });
   }
 
   async expectElementToHaveClass(selector: string, className: string) {

@@ -6,11 +6,18 @@ test.describe("Settings Profile Tests", () => {
   const username = "test123";
   const status = "fixed status";
 
-  test.beforeEach(async ({ singleUserContext }) => {
+  test.beforeEach(async ({ singleUserContext }, testoptions) => {
     const page = singleUserContext.page;
     const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
+    const viewport = testoptions.project.name;
+
+    // Hide sidebar if viewport is Mobile Chrome
+    if (viewport === "Mobile Chrome") {
+      await chatsMainPage.buttonHideSidebar.click();
+    }
   });
 
   test("I1 - Banner Picture - Tooltip displayed", async ({
@@ -163,10 +170,11 @@ test.describe("Settings Profile Tests", () => {
 
   test("I9, I10 - User should be able to change username and see toast notification of change", async ({
     singleUserContext,
-  }) => {
+  }, testoptions) => {
     const page = singleUserContext.page;
     const settingsProfile = new SettingsProfile(page);
     const chatsMainPage = new ChatsMainPage(page);
+    const viewport = testoptions.project.name;
 
     // User types into username and change value
     const newUsername = "newUsername";
@@ -200,10 +208,20 @@ test.describe("Settings Profile Tests", () => {
       newUsername,
     );
 
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "Mobile Chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
+
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
     await chatsMainPage.goToSettings();
+
+    // Hide sidebar if viewport is Mobile Chrome
+    if (viewport === "Mobile Chrome") {
+      await settingsProfile.buttonHideSidebar.click();
+    }
     await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
       newUsername,
     );
@@ -293,10 +311,11 @@ test.describe("Settings Profile Tests", () => {
 
   test("I15, I16 - User should be able to change Status Message and see toast notification for update", async ({
     singleUserContext,
-  }) => {
+  }, testoptions) => {
     const page = singleUserContext.page;
     const settingsProfile = new SettingsProfile(page);
     const chatsMainPage = new ChatsMainPage(page);
+    const viewport = testoptions.project.name;
 
     // User types into username and change value
     const newStatus = "this is my new status";
@@ -330,10 +349,20 @@ test.describe("Settings Profile Tests", () => {
       newStatus,
     );
 
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "Mobile Chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
+
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
     await chatsMainPage.goToSettings();
+
+    // Hide sidebar if viewport is Mobile Chrome
+    if (viewport === "Mobile Chrome") {
+      await settingsProfile.buttonHideSidebar.click();
+    }
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       newStatus,
     );
