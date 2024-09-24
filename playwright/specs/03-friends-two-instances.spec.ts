@@ -8,6 +8,8 @@ import { faker } from "@faker-js/faker";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessages";
 import { EmojiPicker } from "playwright/PageObjects/ChatsElements/EmojiPicker";
+import { GifPicker } from "playwright/PageObjects/ChatsElements/GifPicker";
+import { StickerPicker } from "playwright/PageObjects/ChatsElements/StickerPicker";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
@@ -499,7 +501,15 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
       "Hello from the second user",
     );
+    await chatsMainPageFirst.validateChatPreviewMessageText(
+      usernameTwo,
+      "Hello from the second user",
+    );
     await expect(chatsMainPageSecond.chatPreviewLastMessage).toHaveText(
+      "Hello from the second user",
+    );
+    await chatsMainPageSecond.validateChatPreviewMessageText(
+      username,
       "Hello from the second user",
     );
 
@@ -1638,6 +1648,176 @@ test.describe("Two instances tests - Friends and Chats", () => {
 
     // Search for emojis in emoji picker
     await emojiPickerSecond.searchEmoji("mexico");
+  });
+
+  test("B67 - Sending and receiving GIFs and gif picker tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // Change GIF size in gifs container view
+    await chatsMainPageSecond.openGifPicker();
+    const gifPickerSecond = new GifPicker(page2);
+    await gifPickerSecond.waitForGifsToLoad();
+    await gifPickerSecond.changeGifSizeView("100");
+    await gifPickerSecond.changeGifSizeView("200");
+    await gifPickerSecond.changeGifSizeView("150");
+
+    // Send a Gif to the other user
+    const gifToSelect = await gifPickerSecond.getGifAltText(0);
+    await gifPickerSecond.selectGif(gifToSelect);
+
+    // Validate GIF sent is displayed on local and remote sides
+    const imageSent = chatsMainPageSecond.messageBubbleContent
+      .last()
+      .locator("img");
+    const imageReceived = chatsMainPageFirst.messageBubbleContent
+      .last()
+      .locator("img");
+    await expect(imageSent).toHaveAttribute("alt", gifToSelect);
+    await expect(imageSent).toBeVisible();
+    await expect(imageReceived).toHaveAttribute("alt", gifToSelect);
+    await expect(imageReceived).toBeVisible();
+
+    // Validate GIF sent is displayed in chat preview from sidebar as last message sent
+    await chatsMainPageSecond.validateChatPreviewMessageImage(
+      username,
+      gifToSelect,
+    );
+    await chatsMainPageFirst.validateChatPreviewMessageImage(
+      usernameTwo,
+      gifToSelect,
+    );
+
+    // Validate user can navigate through tabs in Gif picker
+    await chatsMainPageSecond.openGifPicker();
+    await gifPickerSecond.goToStickersTab();
+    await gifPickerSecond.goToEmojisTab();
+    await gifPickerSecond.goToGifsTab();
+  });
+
+  test("B68 - Sending and receiving stickers and sticker picker tests", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const friendsScreenFirst = new FriendsScreen(page1);
+    const friendsScreenSecond = new FriendsScreen(page2);
+    const chatsMainPageFirst = new ChatsMainPage(page1);
+    const chatsMainPageSecond = new ChatsMainPage(page2);
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    await chatsMainPageSecond.openStickerPicker();
+    const stickerPickerSecond = new StickerPicker(page2);
+    await stickerPickerSecond.waitForStickersToLoad();
+
+    // Send a Sticker to the other user
+    await stickerPickerSecond.selectSticker("Space Cat", "Power Up");
+
+    // Validate Sticker sent is displayed on local and remote sides
+    const imageSent = chatsMainPageSecond.messageBubbleContent
+      .last()
+      .locator("img");
+    const imageReceived = chatsMainPageFirst.messageBubbleContent
+      .last()
+      .locator("img");
+    await expect(imageSent).toHaveAttribute("alt", "Power Up");
+    await expect(imageSent).toBeVisible();
+    await expect(imageReceived).toHaveAttribute("alt", "Power Up");
+    await expect(imageReceived).toBeVisible();
+
+    // Validate Sticker sent is displayed in chat preview from sidebar as last message sent
+    await chatsMainPageSecond.validateChatPreviewMessageImage(
+      username,
+      "Power Up",
+    );
+    await chatsMainPageFirst.validateChatPreviewMessageImage(
+      usernameTwo,
+      "Power Up",
+    );
+
+    // Validate user can navigate through tabs in sticker picker
+    await chatsMainPageSecond.openStickerPicker();
+    await stickerPickerSecond.goToEmojisTab();
+    await stickerPickerSecond.goToGifsTab();
+    await stickerPickerSecond.goToStickersTab();
+
+    // Validate sticker categories displayed in sticker container
+    const stickerCategories = [
+      "Space Cat (Team Satellite)",
+      "Bad Animals (Team Satellite)",
+      "Anime (Team Satellite)",
+      "Words (Team Satellite)",
+      "Fishy Business (Team Satellite)",
+      "The Garden (Team Satellite)",
+      "Sassy Toons (Team Satellite)",
+    ];
+    await stickerPickerSecond.validateStickerCategories(stickerCategories);
+
+    // Validate number of stickers per category
+    await stickerPickerSecond.validateNumberOfStickersPerSection(
+      "Space Cat",
+      16,
+    );
+    await stickerPickerSecond.validateNumberOfStickersPerSection(
+      "Bad Animals",
+      18,
+    );
+    await stickerPickerSecond.validateNumberOfStickersPerSection("Anime", 13);
+    await stickerPickerSecond.validateNumberOfStickersPerSection("Words", 9);
+    await stickerPickerSecond.validateNumberOfStickersPerSection(
+      "Fishy Business",
+      9,
+    );
+    await stickerPickerSecond.validateNumberOfStickersPerSection(
+      "The Garden",
+      9,
+    );
+    await stickerPickerSecond.validateNumberOfStickersPerSection(
+      "Sassy Toons",
+      5,
+    );
+
+    // Validate user can navigate through all categories of stickers
+    await stickerPickerSecond.navigateThroughStickerCategories("Space Cat");
+    await stickerPickerSecond.navigateThroughStickerCategories("Bad Animals");
+    await stickerPickerSecond.navigateThroughStickerCategories("Anime");
+    await stickerPickerSecond.navigateThroughStickerCategories("Words");
+    await stickerPickerSecond.navigateThroughStickerCategories(
+      "Fishy Business",
+    );
+    await stickerPickerSecond.navigateThroughStickerCategories("The Garden");
+    await stickerPickerSecond.navigateThroughStickerCategories("Sassy Toons");
   });
 });
 
