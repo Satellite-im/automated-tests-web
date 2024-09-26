@@ -120,8 +120,13 @@ test.describe("Files Page Tests", () => {
     // Create again the same folder
     await filesPage.createNewFolder("NewFolder");
 
+    // Validate only one folder is created
+    const countOfFolders = await page.locator('[data-cy^="folder-"]').count();
+    // One element located by the count is '[data-cy="folder-list"]' which is the sidebar folder list, therefore only one folder is created
+    expect(countOfFolders).toEqual(2);
+
     // Toast notification should be displayed
-    await expect(filesPage.toastNotification).toBeVisible();
+    await filesPage.toastNotification.last().waitFor({ state: "visible" });
   });
 
   test("F10 - User can create subfolders and navigate to parent folder with go back button", async ({

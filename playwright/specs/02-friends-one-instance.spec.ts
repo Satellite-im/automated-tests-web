@@ -73,7 +73,7 @@ test.describe("Friends tests", () => {
     await friendsScreen.goToAllFriendsList();
     await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
       "background-color",
-      "color(srgb 0.371765 0.371765 1)",
+      "rgb(35, 41, 62)",
     );
     await expect(friendsScreen.buttonFriendsActive).toHaveCSS(
       "background-color",

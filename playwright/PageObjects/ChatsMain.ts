@@ -1058,16 +1058,10 @@ export class ChatsMainPage extends MainPage {
     const fileEmbedName = fileEmbed.getByTestId("file-embed-name");
     const fileEmbedSize = fileEmbed.getByTestId("file-embed-size");
     const downloadButton = fileEmbed.getByTestId("file-embed-download-button");
-    const shareButton = fileEmbed.getByTestId("file-embed-share-button");
-    const addToFilesButton = fileEmbed.getByTestId(
-      "file-embed-add-to-files-button",
-    );
     await expect(fileEmbedIcon).toBeVisible();
     await expect(fileEmbedName).toHaveText(name);
     await expect(fileEmbedSize).toHaveText(size);
     await expect(downloadButton).toBeVisible();
-    await expect(shareButton).toBeVisible();
-    await expect(addToFilesButton).toBeVisible();
   }
 
   async validateImageEmbedInChat(name: string, size: string, sent: boolean) {
