@@ -12,8 +12,10 @@ export default class MainPage {
   readonly buttonWallet: Locator;
   readonly chatPreview: Locator;
   readonly chatPreviewLastMessage: Locator;
+  readonly chatPreviewLastMessageImage: Locator;
   readonly chatPreviewName: Locator;
   readonly chatPreviewPicture: Locator;
+  readonly chatPreviewPictureIdenticon: Locator;
   readonly chatPreviewPictureImage: Locator;
   readonly chatPreviewStatusIndicator: Locator;
   readonly chatPreviewTimestamp: Locator;
@@ -47,8 +49,12 @@ export default class MainPage {
     this.chatPreviewLastMessage = this.page.getByTestId(
       "chat-preview-last-message",
     );
+    this.chatPreviewLastMessageImage =
+      this.chatPreviewLastMessage.locator("img");
     this.chatPreviewName = this.page.getByTestId("chat-preview-name");
     this.chatPreviewPicture = this.page.getByTestId("chat-preview-picture");
+    this.chatPreviewPictureIdenticon =
+      this.chatPreviewPicture.locator(".identicon img");
     this.chatPreviewPictureImage = this.chatPreviewPicture.locator("img");
     this.chatPreviewStatusIndicator =
       this.chatPreview.getByTestId("status-indicator");
@@ -156,13 +162,6 @@ export default class MainPage {
     return svgString.replace(/(width|height)="\d+"/g, "");
   }
 
-  async openContextMenuOnChatPreview(chatName: string) {
-    await this.page
-      .getByTestId("chat-preview-name")
-      .filter({ hasText: chatName })
-      .click({ button: "right" });
-  }
-
   async visitOtherSite(url: string) {
     await this.page.goto(url);
   }
@@ -223,5 +222,52 @@ export default class MainPage {
 
   async waitForToastNotificationToDisappear() {
     await this.toastNotification.waitFor({ state: "detached" });
+  }
+
+  // Chat Preview Methods
+  async openContextMenuOnChatPreview(chatName: string) {
+    await this.page
+      .getByTestId("chat-preview-name")
+      .filter({ hasText: chatName })
+      .click({ button: "right" });
+  }
+
+  async validateChatPreviewMessageImage(
+    chatName: string,
+    expectedAltText: string,
+  ) {
+    const chatPreviewLocator = this.page
+      .getByTestId("chat-preview-name")
+      .filter({ hasText: chatName })
+      .locator("xpath=../../..");
+    const imagePreview = chatPreviewLocator
+      .getByTestId("chat-preview-last-message")
+      .locator("img");
+    const altText = await imagePreview.getAttribute("alt");
+    const timestamp = await chatPreviewLocator
+      .getByTestId("chat-preview-timestamp")
+      .textContent();
+    const statusIndicator = chatPreviewLocator.getByTestId("status-indicator");
+    await expect(imagePreview).toBeVisible();
+    expect(altText).toEqual(expectedAltText);
+    expect(timestamp).toEqual("just now");
+    expect(statusIndicator).toHaveClass(/.*\bonline\b.*/);
+  }
+
+  async validateChatPreviewMessageText(chatName: string, expectedText: string) {
+    const chatPreviewLocator = this.page
+      .getByTestId("chat-preview-name")
+      .filter({ hasText: chatName })
+      .locator("xpath=../../..");
+    const text = await chatPreviewLocator
+      .getByTestId("chat-preview-last-message")
+      .textContent();
+    const timestamp = await chatPreviewLocator
+      .getByTestId("chat-preview-timestamp")
+      .textContent();
+    const statusIndicator = chatPreviewLocator.getByTestId("status-indicator");
+    expect(text).toEqual(expectedText);
+    expect(timestamp).toEqual("just now");
+    expect(statusIndicator).toHaveClass(/.*\bonline\b.*/);
   }
 }
