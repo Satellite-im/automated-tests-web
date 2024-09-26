@@ -8,6 +8,7 @@ test.describe("Files Page Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
     const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToFiles();
     await page.waitForURL("/files");
   });

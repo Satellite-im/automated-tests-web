@@ -399,7 +399,7 @@ export class SettingsProfile extends SettingsBase {
         break;
     }
     await this.validateToastProfileUpdated();
-    await this.waitForToastNotificationToDisappear();
+    await this.closeToastNotification();
   }
 
   async updateStatus(newStatus: string) {

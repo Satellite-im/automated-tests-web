@@ -8,6 +8,7 @@ test.describe("Friends tests", () => {
     const chatsMainPage = new ChatsMainPage(page);
 
     // Go to Friends
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToFriends();
   });
 

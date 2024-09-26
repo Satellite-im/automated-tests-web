@@ -6,6 +6,7 @@ test.describe("Settings Network Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
     const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 

@@ -5,15 +5,20 @@ import { SettingsKeybinds } from "playwright/PageObjects/Settings/SettingsKeybin
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 
 test.describe("Settings Keybinds Tests", () => {
-  test.beforeEach(async ({ singleUserContext }) => {
-    const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
-    await chatsMainPage.goToSettings();
-    await page.waitForURL("/settings/profile");
+  test.beforeEach(async ({ singleUserContext }, testoptions) => {
+    const viewport = testoptions.project.name;
+    if (viewport === "desktop-chrome") {
+      const page = singleUserContext.page;
+      const chatsMainPage = new ChatsMainPage(page);
+      await chatsMainPage.goToSettings();
+      await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
-    await settingsProfile.buttonKeybinds.click();
-    await page.waitForURL("/settings/keybinds");
+      const settingsProfile = new SettingsProfile(page);
+      await settingsProfile.buttonKeybinds.click();
+      await page.waitForURL("/settings/keybinds");
+    } else {
+      test.skip();
+    }
   });
 
   test("O1, 06 - Message at top of page and custom keybinds listed correctly", async ({

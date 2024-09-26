@@ -15,7 +15,7 @@ test.describe("Settings Profile Tests", () => {
     const viewport = testoptions.project.name;
 
     // Hide sidebar if viewport is Mobile Chrome
-    if (viewport === "Mobile Chrome") {
+    if (viewport === "mobile-chrome") {
       await chatsMainPage.buttonHideSidebar.click();
     }
   });
@@ -203,23 +203,28 @@ test.describe("Settings Profile Tests", () => {
     await expect(settingsProfile.toastNotificationText).toHaveText(
       "Profile Updated!",
     );
-    await settingsProfile.toastNotification.waitFor({ state: "detached" });
+    await settingsProfile.closeToastNotification();
     await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
       newUsername,
     );
 
     // Show sidebar if viewport is Mobile Chrome
-    if (viewport === "Mobile Chrome") {
+    if (viewport === "mobile-chrome") {
       await settingsProfile.buttonShowSidebar.click();
     }
 
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
+
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
     await chatsMainPage.goToSettings();
 
     // Hide sidebar if viewport is Mobile Chrome
-    if (viewport === "Mobile Chrome") {
+    if (viewport === "mobile-chrome") {
       await settingsProfile.buttonHideSidebar.click();
     }
     await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
@@ -344,23 +349,28 @@ test.describe("Settings Profile Tests", () => {
     await expect(settingsProfile.toastNotificationText).toHaveText(
       "Profile Updated!",
     );
-    await settingsProfile.toastNotification.waitFor({ state: "detached" });
+    await settingsProfile.closeToastNotification();
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       newStatus,
     );
 
     // Show sidebar if viewport is Mobile Chrome
-    if (viewport === "Mobile Chrome") {
+    if (viewport === "mobile-chrome") {
       await settingsProfile.buttonShowSidebar.click();
     }
 
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
+
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
     await chatsMainPage.goToSettings();
 
     // Hide sidebar if viewport is Mobile Chrome
-    if (viewport === "Mobile Chrome") {
+    if (viewport === "mobile-chrome") {
       await settingsProfile.buttonHideSidebar.click();
     }
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(

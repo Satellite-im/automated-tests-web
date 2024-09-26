@@ -149,25 +149,25 @@ export default class MainPage {
   }
 
   async goToChat() {
-    await this.buttonChat.click();
+    await this.buttonChat.first().click();
   }
 
   async goToFiles() {
-    await this.buttonFiles.click();
+    await this.buttonFiles.first().click();
     await this.page.waitForURL("/files");
   }
 
   async goToFriends() {
-    await this.buttonFriends.click();
+    await this.buttonFriends.first().click();
     await this.page.waitForURL("/friends");
   }
 
   async goToSettings() {
-    await this.buttonSettings.click();
+    await this.buttonSettings.first().click();
   }
 
   async goToWallet() {
-    await this.buttonWallet.click();
+    await this.buttonWallet.first().click();
   }
 
   async normalizeSvg(svgString: string) {

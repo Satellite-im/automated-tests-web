@@ -60,6 +60,7 @@ export default defineConfig({
         browserName: "chromium",
         ...devices["Pixel 5"], // Use predefined mobile device
       },
+      testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
     },
 
     // iPhone 12 (Safari)

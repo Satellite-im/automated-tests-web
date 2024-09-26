@@ -7,6 +7,7 @@ test.describe("Settings Customization Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
     const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
@@ -71,9 +72,10 @@ test.describe("Settings Customization Tests", () => {
 
   test("K3 - Selected Fonts should be applied everywhere throughout the app", async ({
     singleUserContext,
-  }) => {
+  }, testoptions) => {
     const page = singleUserContext.page;
     const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = testoptions.project.name;
 
     const selectedFont = "JosefinSans";
     await settingsCustomizations.selectFont(selectedFont);
@@ -81,6 +83,11 @@ test.describe("Settings Customization Tests", () => {
       "font-family",
       selectedFont,
     );
+
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await settingsCustomizations.goToChat();
     const welcomeText = await page.getByText("Let's get something started!");
     await expect(welcomeText).toHaveCSS("font-family", selectedFont);
@@ -252,14 +259,22 @@ test.describe("Settings Customization Tests", () => {
 
   test("K12 - Clicking Pick should open up the finetune color selector", async ({
     singleUserContext,
-  }) => {
+  }, testoptions) => {
     const page = singleUserContext.page;
     const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = testoptions.project.name;
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
-      "color(srgb 0.371765 0.371765 1)",
+      "rgb(77, 77, 255)",
     );
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonHideSidebar.click();
+    }
     await settingsCustomizations.primaryColorSectionPopUpButton.click();
 
     const customColorInput =
@@ -274,25 +289,43 @@ test.describe("Settings Customization Tests", () => {
     await expect(customColorPicker).toBeVisible();
     await customColorInput.clear();
     await customColorInput.fill("#ff8fb8");
-    await settingsCustomizations.buttonCustomization.click({ force: true });
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click({ force: true });
+      await settingsCustomizations.buttonShowSidebar.click();
+    } else {
+      await settingsCustomizations.buttonCustomization.click({ force: true });
+    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
-      "color(srgb 1 0.604706 0.749412)",
+      "rgb(255, 143, 184)",
     );
   });
 
   test("K13 - Selected primary color should be applied throughout the entire app", async ({
     singleUserContext,
-  }) => {
+  }, testoptions) => {
     const page = singleUserContext.page;
     const settingsCustomizations = new SettingsCustomizations(page);
     const chatsMainPage = new ChatsMainPage(page);
+    const viewport = testoptions.project.name;
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
-      "color(srgb 0.371765 0.371765 1)",
+      "rgb(77, 77, 255)",
     );
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonHideSidebar.click();
+    }
     await settingsCustomizations.selectColorSwatch("Traffic Cone");
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
       "rgb(255, 60, 0)",
@@ -306,15 +339,22 @@ test.describe("Settings Customization Tests", () => {
 
   test("K14 - User should be able to add additional custom CSS to the application", async ({
     singleUserContext,
-  }) => {
+  }, testoptions) => {
     const page = singleUserContext.page;
     const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = testoptions.project.name;
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
       "rgba(0, 0, 0, 0)",
     );
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonHideSidebar.click();
+    }
     await expect(settingsCustomizations.customCSSSectionLabel).toHaveText(
       "Custom CSS",
     );
@@ -326,12 +366,18 @@ test.describe("Settings Customization Tests", () => {
       ".slimbar {background-color: rgb(255, 0, 141)}",
     );
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await settingsCustomizations.buttonCustomization.click();
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
       "rgb(255, 0, 141)",
     );
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await settingsCustomizations.goToChat();
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",

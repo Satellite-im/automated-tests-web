@@ -5,6 +5,7 @@ test.describe("Wallet Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
     const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToWallet();
     await page.waitForURL("/wallet");
   });

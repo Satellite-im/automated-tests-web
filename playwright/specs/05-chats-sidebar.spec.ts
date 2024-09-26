@@ -7,6 +7,7 @@ test.describe("Chats Sidebar Tests", () => {
   }) => {
     const page = singleUserContext.page;
     const chatsMainPage = new ChatsMainPage(page);
+    await chatsMainPage.dismissDownloadAlert();
 
     await chatsMainPage.buttonCreateGroupChat.click();
 
