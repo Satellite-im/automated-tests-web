@@ -21,9 +21,9 @@ export class EmojiPicker extends CombinedSelector {
   constructor(public readonly page: Page) {
     super(page);
     this.categoryNav = this.page.getByTestId("emoji-category-nav");
-    this.emojiContainerSearchInput = this.page.getByTestId(
-      "emoji-container-search-input",
-    );
+    this.emojiContainerSearchInput = this.page
+      .getByTestId("emoji-container-search-input")
+      .locator("input");
     this.emojiContainerSizeLabel = this.page.getByTestId(
       "emoji-container-size-label",
     );

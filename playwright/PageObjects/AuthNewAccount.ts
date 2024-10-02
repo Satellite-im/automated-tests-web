@@ -28,12 +28,12 @@ export class AuthNewAccount extends MainPage {
     );
     this.identiconNewAccount = this.page.locator(".identicon").locator("img");
     this.inputNewAccountFileUpload = this.page.locator("input[type=file]");
-    this.inputNewAccountStatus = this.page.getByTestId(
-      "input-new-account-status",
-    );
-    this.inputNewAccountUsername = this.page.getByTestId(
-      "input-new-account-username",
-    );
+    this.inputNewAccountStatus = this.page
+      .getByTestId("input-new-account-status")
+      .locator("input");
+    this.inputNewAccountUsername = this.page
+      .getByTestId("input-new-account-username")
+      .locator("input");
     this.labelNewAccountUsername = this.page.getByTestId(
       "label-new-account-username",
     );

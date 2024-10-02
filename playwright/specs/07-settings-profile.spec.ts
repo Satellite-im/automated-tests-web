@@ -217,7 +217,7 @@ test.describe("Settings Profile Tests", () => {
 
     // User clicks on username textbox and all text is selected
     await settingsProfile.assertInputTextSelected(
-      "[data-cy='input-settings-profile-username']",
+      "[data-cy='input-settings-profile-username'] input",
     );
   });
 
@@ -347,7 +347,7 @@ test.describe("Settings Profile Tests", () => {
 
     // User clicks on status textbox and all text is selected
     await settingsProfile.assertInputTextSelected(
-      "[data-cy='input-settings-profile-status-message']",
+      "[data-cy='input-settings-profile-status-message'] input",
     );
   });
 

@@ -70,14 +70,18 @@ export class FriendsScreen extends MainPage {
     this.friendsSectionRequests = this.page.getByTestId(
       "friends-section-requests",
     );
-    this.inputAddFriend = this.page.getByTestId("input-add-friend");
+    this.inputAddFriend = this.page
+      .getByTestId("input-add-friend")
+      .locator("input");
     this.inputContainerAddFriend = this.page
       .getByTestId("input-add-friend")
-      .locator("xpath=..");
+      .locator(".input-container");
     this.inputContainerSearchFriends = this.page
       .getByTestId("input-search-friends")
-      .locator("xpath=..");
-    this.inputSearchFriends = this.page.getByTestId("input-search-friends");
+      .locator(".input-container");
+    this.inputSearchFriends = this.page
+      .getByTestId("input-search-friends")
+      .locator("input");
     this.labelAddSomeone = this.page.getByTestId("label-add-someone");
     this.labelBlockedUsers = this.page.getByTestId("label-blocked-users");
     this.labelFriendList = this.page.locator('[data-cy^="label-friend-list-"]');
