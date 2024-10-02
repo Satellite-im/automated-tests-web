@@ -49,7 +49,7 @@ export class EmojiPicker extends CombinedSelector {
 
   async changeSkinToneEmoji(index: number) {
     await this.skinToneSelector.click();
-    await this.page.locator(".skin-tone-popup").waitFor({ state: "visible" });
+    await this.page.locator(".skin-tone-popup").waitFor({ state: "attached" });
     const skinToneButton = this.page
       .getByTestId("skin-tone-selector-button")
       .nth(index);
@@ -65,7 +65,7 @@ export class EmojiPicker extends CombinedSelector {
     const locator = this.page.getByTestId("category-link-" + category);
     await locator.click();
     const section = this.page.getByTestId(category + "-section");
-    await section.waitFor({ state: "visible" });
+    await section.waitFor({ state: "attached" });
   }
 
   async searchEmoji(emoji: string) {
