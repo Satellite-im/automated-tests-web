@@ -326,7 +326,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
 
     // B35 - Highlighted border should appear around textbox in chat when user clicks into it
-    await chatsMainPageSecond.chatbarInput.focus();
+    await chatsMainPageSecond.chatbarInput.fill("test");
     await expect(chatsMainPageSecond.chatbarInputContainer).toHaveCSS(
       "box-shadow",
       "rgb(77, 77, 255) 0px 0px 0px 1px",
