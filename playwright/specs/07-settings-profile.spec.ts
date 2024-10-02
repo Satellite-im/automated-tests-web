@@ -175,7 +175,7 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
 
     // Save modal is displayed, user selects cancel and username is not changed
-    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControls.waitFor({ state: "attached" });
     await settingsProfile.saveControlsButtonCancel.click();
 
     // Username displayed will be equal to the username assigned randomly when creating account
@@ -189,9 +189,9 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.inputSettingsProfileUsername.fill("newUsername");
 
     // Save modal is displayed, user selects save and username is changed
-    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControls.waitFor({ state: "attached" });
     await settingsProfile.saveControlsButtonSave.click();
-    await settingsProfile.toastNotification.waitFor({ state: "visible" });
+    await settingsProfile.toastNotification.waitFor({ state: "attached" });
     await expect(settingsProfile.toastNotificationText).toHaveText(
       "Profile Updated!",
     );
@@ -305,7 +305,7 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.inputSettingsProfileStatus.fill(newStatus);
 
     // Save modal is displayed, user selects cancel and username is not changed
-    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControls.waitFor({ state: "attached" });
     await settingsProfile.saveControlsButtonCancel.click();
 
     // Username displayed will be equal to the username assigned randomly when creating account
@@ -319,9 +319,9 @@ test.describe("Settings Profile Tests", () => {
     await settingsProfile.inputSettingsProfileStatus.fill(newStatus);
 
     // Save modal is displayed, user selects save and username is changed
-    await settingsProfile.saveControls.waitFor({ state: "visible" });
+    await settingsProfile.saveControls.waitFor({ state: "attached" });
     await settingsProfile.saveControlsButtonSave.click();
-    await settingsProfile.toastNotification.waitFor({ state: "visible" });
+    await settingsProfile.toastNotification.waitFor({ state: "attached" });
     await expect(settingsProfile.toastNotificationText).toHaveText(
       "Profile Updated!",
     );

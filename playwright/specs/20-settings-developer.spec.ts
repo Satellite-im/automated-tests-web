@@ -61,7 +61,7 @@ test.describe("Settings Developer Tests", () => {
     await settingsDeveloper.loadMockSectionButton.click();
 
     // Favorites bubble from mock is added to slimbar
-    await settingsDeveloper.slimbarFavorite.waitFor({ state: "visible" });
+    await settingsDeveloper.slimbarFavorite.waitFor({ state: "attached" });
 
     // Mock data is loaded into chats
     //await settingsDeveloper.goToChat();

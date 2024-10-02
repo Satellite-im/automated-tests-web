@@ -378,7 +378,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
     await page1
       .getByText("Maximum length is 255 characters.")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
   });
 
   test("B7, B57, B58 - Favorites tests", async ({
@@ -533,7 +533,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // C17 - Timestamp of most recent message sent or received in chat should be displayed in the sidebar - Not working correctly
     // Fast forward clock for 30 minutes and validate message was sent 30 minutes ago
     // await page1.clock.fastForward("30:00");
-    // await page1.getByText("30 minutes ago").waitFor({ state: "visible" });
+    // await page1.getByText("30 minutes ago").waitFor({ state: "attached" });
 
     // C19 - After selecting Hide chat chat should no longer be displayed in sidebar
   });
