@@ -63,9 +63,11 @@ test.describe("Settings Customization Tests", () => {
       "Change the font used in the app.",
     );
 
-    const numberOfSelectorOptions =
-      await settingsCustomizations.fontSectionSelectorOption.count();
-    expect(numberOfSelectorOptions).toEqual(expectedFonts.length);
+    await settingsCustomizations.fontSectionSelectorOption
+      .count()
+      .then((count) => {
+        expect(count).toEqual(expectedFonts.length);
+      });
     await settingsCustomizations.validateFontNames(expectedFonts);
   });
 
@@ -179,9 +181,12 @@ test.describe("Settings Customization Tests", () => {
       "Change the theme of the app.",
     );
 
-    const numberOfDropdownThemes =
-      await settingsCustomizations.themeSectionSelectorOption.count();
-    expect(numberOfDropdownThemes).toEqual(4);
+    await settingsCustomizations.themeSectionSelectorOption
+      .count()
+      .then((count) => {
+        expect(count).toEqual(4);
+      });
+
     await settingsCustomizations.validateThemeNames(expectedThemes);
 
     // Validate default theme is applied
@@ -244,9 +249,12 @@ test.describe("Settings Customization Tests", () => {
       "Change the primary color of the app.",
     );
 
-    const numberOfColorSwatches =
-      await settingsCustomizations.primaryColorSectionColorSwatchButton.count();
-    expect(numberOfColorSwatches).toEqual(expectedPrimaryColors.length);
+    await settingsCustomizations.primaryColorSectionColorSwatchButton
+      .count()
+      .then((count) => {
+        expect(count).toEqual(expectedPrimaryColors.length);
+      });
+
     await settingsCustomizations.validatePrimaryColors(expectedPrimaryColors);
   });
 
@@ -360,9 +368,11 @@ test.describe("Settings Customization Tests", () => {
       "Change the emoji font used in the app.",
     );
 
-    const numberOfSelectorOptions =
-      await settingsCustomizations.emojiFontSectionSelectorOption.count();
-    expect(numberOfSelectorOptions).toEqual(expectedEmojiFonts.length);
+    await settingsCustomizations.emojiFontSectionSelectorOption
+      .count()
+      .then((numberOfSelectorOptions) => {
+        expect(numberOfSelectorOptions).toEqual(expectedEmojiFonts.length);
+      });
     await settingsCustomizations.validateEmojiFontNames(expectedEmojiFonts);
   });
 
@@ -411,11 +421,11 @@ test.describe("Settings Customization Tests", () => {
       "Change the style of the randomly generated profile pictures used when users haven't uploaded a profile picture yet.",
     );
 
-    const numberOfSelectorOptions =
-      await settingsCustomizations.identiconSectionSelectorOption.count();
-    expect(numberOfSelectorOptions).toEqual(
-      expectedDefaultProfileStyles.length,
-    );
+    await settingsCustomizations.identiconSectionSelectorOption
+      .count()
+      .then((count) => {
+        expect(count).toEqual(expectedDefaultProfileStyles.length);
+      });
     await settingsCustomizations.validateDefaultProfileStyles(
       expectedDefaultProfileStyles,
     );

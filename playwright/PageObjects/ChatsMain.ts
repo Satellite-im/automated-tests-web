@@ -411,6 +411,7 @@ export class ChatsMainPage extends MainPage {
       .last()
       .getByTestId("message-group-local-profile-picture")
       .locator("img");
+    await lastProfilePicture.waitFor({ state: "attached" });
     return lastProfilePicture;
   }
 
@@ -450,6 +451,7 @@ export class ChatsMainPage extends MainPage {
       .last()
       .getByTestId("message-group-remote-profile-picture")
       .locator("img");
+    await lastProfilePicture.waitFor({ state: "attached" });
     return lastProfilePicture;
   }
 
@@ -489,15 +491,17 @@ export class ChatsMainPage extends MainPage {
       .first()
       .getByTestId("message-bubble-content")
       .first();
+    await lastMessage.waitFor({ state: "attached" });
     return lastMessage;
   }
 
   async getFirstMessageRemote() {
-    const lastMessage = this.messageGroupRemote
+    const firstMessage = this.messageGroupRemote
       .first()
       .getByTestId("message-bubble-content")
       .first();
-    return lastMessage;
+    await firstMessage.waitFor({ state: "attached" });
+    return firstMessage;
   }
 
   async getLastMessageLocal() {
@@ -505,6 +509,7 @@ export class ChatsMainPage extends MainPage {
       .last()
       .getByTestId("message-bubble-content")
       .last();
+    await lastMessage.waitFor({ state: "attached" });
     return lastMessage;
   }
 
@@ -557,6 +562,7 @@ export class ChatsMainPage extends MainPage {
       .locator("p a"); // Target the <a> tag inside the <p> element
 
     // Retrieve the href attribute from the <a> tag
+    await lastMessage.waitFor({ state: "attached" });
     const hyperlink = await lastMessage.getAttribute("href");
 
     return hyperlink;
@@ -583,6 +589,7 @@ export class ChatsMainPage extends MainPage {
       .last()
       .getByTestId("text-chat-message")
       .locator("p");
+    await lastMessage.waitFor({ state: "attached" });
 
     const markdown = await this.getMarkdownFromMessage(lastMessage);
     return markdown;
@@ -605,6 +612,7 @@ export class ChatsMainPage extends MainPage {
       .last()
       .getByTestId("message-bubble-content")
       .last();
+    await lastMessage.waitFor({ state: "attached" });
     return lastMessage;
   }
 
@@ -612,6 +620,7 @@ export class ChatsMainPage extends MainPage {
     const lastTimestamp = this.messageGroupLocal
       .last()
       .getByTestId("message-group-timestamp");
+    await lastTimestamp.waitFor({ state: "attached" });
     return lastTimestamp;
   }
 
@@ -619,6 +628,7 @@ export class ChatsMainPage extends MainPage {
     const lastTimestamp = this.messageGroupRemote
       .last()
       .getByTestId("message-group-timestamp");
+    await lastTimestamp.waitFor({ state: "attached" });
     return lastTimestamp;
   }
 
@@ -638,13 +648,13 @@ export class ChatsMainPage extends MainPage {
   async openContextMenuOnLastMessageReceived() {
     const lastMessage = await this.getLastMessageRemote();
     await lastMessage.click({ button: "right" });
-    await this.contextMenuChatMessage.waitFor({ state: "visible" });
+    await this.contextMenuChatMessage.waitFor({ state: "attached" });
   }
 
   async openContextMenuOnLastMessageSent() {
     const lastMessage = await this.getLastMessageLocal();
     await lastMessage.click({ button: "right" });
-    await this.contextMenuChatMessage.waitFor({ state: "visible" });
+    await this.contextMenuChatMessage.waitFor({ state: "attached" });
   }
 
   async openContextMenuOnMessageReceived(message: string) {
@@ -762,9 +772,12 @@ export class ChatsMainPage extends MainPage {
   ) {
     await this.messabeBubbleLocal
       .getByText(expectedText)
-      .waitFor({ state: "visible" });
-    const lastMessageWithHyperlink = await this.getLastMessageLocalHyperlink();
-    expect(lastMessageWithHyperlink).toEqual(expectedHyperlink);
+      .waitFor({ state: "attached" });
+    await this.getLastMessageLocalHyperlink().then(
+      (lastMessageWithHyperlink) => {
+        expect(lastMessageWithHyperlink).toEqual(expectedHyperlink);
+      },
+    );
   }
 
   async validateHyperlinkFromLastMessageRemote(
@@ -773,9 +786,12 @@ export class ChatsMainPage extends MainPage {
   ) {
     await this.messageBubbleRemote
       .getByText(expectedText)
-      .waitFor({ state: "visible" });
-    const lastMessageWithHyperlink = await this.getLastMessageRemoteHyperlink();
-    expect(lastMessageWithHyperlink).toEqual(expectedHyperlink);
+      .waitFor({ state: "attached" });
+    await this.getLastMessageRemoteHyperlink().then(
+      (lastMessageWithHyperlink) => {
+        expect(lastMessageWithHyperlink).toEqual(expectedHyperlink);
+      },
+    );
   }
 
   async validateMarkdownFromLastMessageLocal(
@@ -784,10 +800,15 @@ export class ChatsMainPage extends MainPage {
   ) {
     await this.messabeBubbleLocal
       .getByText(expectedText)
-      .waitFor({ state: "visible" });
-    const lastMessageWithMarkdown =
-      await this.getLastMessageWithMarkdownLocal();
-    expect(lastMessageWithMarkdown).toEqual([expectedText, expectedMarkdown]);
+      .waitFor({ state: "attached" });
+    await this.getLastMessageWithMarkdownLocal().then(
+      (lastMessageWithMarkdown) => {
+        expect(lastMessageWithMarkdown).toEqual([
+          expectedText,
+          expectedMarkdown,
+        ]);
+      },
+    );
   }
 
   async validateMarkdownFromLastMessageRemote(
@@ -796,19 +817,24 @@ export class ChatsMainPage extends MainPage {
   ) {
     await this.messageBubbleRemote
       .getByText(expectedText)
-      .waitFor({ state: "visible" });
-    const lastMessageWithMarkdown =
-      await this.getLastMessageWithMarkdownRemote();
-    expect(lastMessageWithMarkdown).toEqual([expectedText, expectedMarkdown]);
+      .waitFor({ state: "attached" });
+    await this.getLastMessageWithMarkdownRemote().then(
+      (lastMessageWithMarkdown) => {
+        expect(lastMessageWithMarkdown).toEqual([
+          expectedText,
+          expectedMarkdown,
+        ]);
+      },
+    );
   }
 
   async validateMessageIsReceived(message: string) {
-    await this.messageBubbleRemote.waitFor({ state: "visible" });
+    await this.messageBubbleRemote.waitFor({ state: "attached" });
     await expect(this.messageBubbleContent).toHaveText(message);
   }
 
   async validateMessageIsSent(message: string) {
-    await this.messabeBubbleLocal.waitFor({ state: "visible" });
+    await this.messabeBubbleLocal.waitFor({ state: "attached" });
     await expect(this.messageBubbleContent).toHaveText(message);
   }
 
@@ -823,7 +849,7 @@ export class ChatsMainPage extends MainPage {
     const pinnedIndicator = this.messageGroupLocal
       .last()
       .getByTestId("message-pin-indicator");
-    await pinnedIndicator.waitFor({ state: "visible" });
+    await pinnedIndicator.waitFor({ state: "attached" });
   }
 
   async validateLastRemoteMessageIsNotPinned() {
@@ -837,7 +863,7 @@ export class ChatsMainPage extends MainPage {
     const pinnedIndicator = this.messageGroupRemote
       .last()
       .getByTestId("message-pin-indicator");
-    await pinnedIndicator.waitFor({ state: "visible" });
+    await pinnedIndicator.waitFor({ state: "attached" });
   }
 
   async validatePinMessageShownInContainer(username: string, content: string) {
@@ -861,7 +887,7 @@ export class ChatsMainPage extends MainPage {
       .getByTestId("message-reactions-local")
       .last()
       .getByTestId("emoji-reaction-" + reaction);
-    await expectedReaction.waitFor({ state: "visible" });
+    await expectedReaction.waitFor({ state: "attached" });
   }
 
   async validateReactionExistsInRemoteMessage(reaction: string) {
@@ -869,7 +895,7 @@ export class ChatsMainPage extends MainPage {
       .getByTestId("message-reactions-remote")
       .last()
       .getByTestId("emoji-reaction-" + reaction);
-    await expectedReaction.waitFor({ state: "visible" });
+    await expectedReaction.waitFor({ state: "attached" });
   }
 
   async validateReactionDoesNotExistInLocalMessage(reaction: string) {
@@ -951,10 +977,11 @@ export class ChatsMainPage extends MainPage {
   async getLastFilesReceived() {
     await this.page
       .getByTestId("message-bubble-remote")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
     const lastMessageSent = this.page
       .getByTestId("message-bubble-remote")
       .last();
+    await lastMessageSent.waitFor({ state: "attached" });
     const lastFilesSent = lastMessageSent.getByTestId("file-embed");
     return lastFilesSent;
   }
@@ -962,10 +989,11 @@ export class ChatsMainPage extends MainPage {
   async getLastFilesSent() {
     await this.page
       .getByTestId("message-bubble-local")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
     const lastMessageSent = this.page
       .getByTestId("message-bubble-local")
       .last();
+    await lastMessageSent.waitFor({ state: "attached" });
     const lastFilesSent = lastMessageSent.getByTestId("file-embed");
     return lastFilesSent;
   }
@@ -973,10 +1001,11 @@ export class ChatsMainPage extends MainPage {
   async getLastImagesReceived() {
     await this.page
       .getByTestId("message-bubble-remote")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
     const lastMessageSent = this.page
       .getByTestId("message-bubble-remote")
       .last();
+    await lastMessageSent.waitFor({ state: "attached" });
     const lastImagesSent = lastMessageSent.getByTestId("image-embed-container");
     return lastImagesSent;
   }
@@ -985,10 +1014,11 @@ export class ChatsMainPage extends MainPage {
     await this.page
       .getByTestId("message-bubble-local")
       .last()
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
     const lastMessageSent = this.page
       .getByTestId("message-bubble-local")
       .last();
+    await lastMessageSent.waitFor({ state: "attached" });
     const lastImagesSent = lastMessageSent.getByTestId("image-embed-container");
     return lastImagesSent;
   }
@@ -1033,7 +1063,7 @@ export class ChatsMainPage extends MainPage {
     const fileExtensions = filenames.map((path) => "." + path.split(".").pop());
     for (let i = 0; i < filePaths.length; i++) {
       const filePreview = await this.getFilePreview(filenames[i]);
-      await filePreview.waitFor({ state: "visible" });
+      await filePreview.waitFor({ state: "attached" });
       const fileDetailsName = filePreview.locator(".details p");
       await expect(fileDetailsName).toHaveText(filenames[i]);
       if (fileExtensions[i] === ".png" || fileExtensions[i] === ".jpg") {
@@ -1053,7 +1083,7 @@ export class ChatsMainPage extends MainPage {
     } else {
       fileEmbed = await this.getLastFilesReceived();
     }
-    await fileEmbed.waitFor({ state: "visible" });
+    await fileEmbed.waitFor({ state: "attached" });
     const fileEmbedIcon = fileEmbed.locator(".svg-icon").first();
     const fileEmbedName = fileEmbed.getByTestId("file-embed-name");
     const fileEmbedSize = fileEmbed.getByTestId("file-embed-size");
@@ -1071,7 +1101,7 @@ export class ChatsMainPage extends MainPage {
     } else {
       imageEmbed = await this.getLastImagesReceived();
     }
-    await imageEmbed.waitFor({ state: "visible" });
+    await imageEmbed.waitFor({ state: "attached" });
     const imageEmbedFile = imageEmbed.getByTestId("image-embed-file");
     const imageEmbedName = imageEmbed.getByTestId("image-embed-file-name");
     const imageEmbedSize = imageEmbed.getByTestId("image-embed-file-size");

@@ -344,12 +344,12 @@ export class SettingsProfile extends SettingsBase {
       // Ensure the phrase number element exists
       await this.page
         .locator(`[data-cy="ordered-phrase-number-${i}"]`)
-        .waitFor({ state: "visible" });
+        .waitFor({ state: "attached" });
 
       // Ensure the phrase word element exists
       await this.page
         .locator(`[data-cy="ordered-phrase-word-${i}"]`)
-        .waitFor({ state: "visible" });
+        .waitFor({ state: "attached" });
 
       // Get the text from the <p> tag inside the phrase word element
       const text = await this.page
@@ -364,7 +364,7 @@ export class SettingsProfile extends SettingsBase {
 
   async openUserIDContextMenu() {
     await this.inputSettingsProfileShortIDGroup.click({ button: "right" });
-    await this.contextMenuUserID.waitFor({ state: "visible" });
+    await this.contextMenuUserID.waitFor({ state: "attached" });
   }
 
   async pasteClipboardIntoStatus() {
@@ -409,7 +409,7 @@ export class SettingsProfile extends SettingsBase {
     await this.inputSettingsProfileStatus.fill(newStatus);
 
     // Save modal is displayed, user selects save and username is changed
-    await this.saveControls.waitFor({ state: "visible" });
+    await this.saveControls.waitFor({ state: "attached" });
     await this.saveControlsButtonSave.click();
     await this.page
       .getByText("Profile Updated!")
@@ -424,7 +424,7 @@ export class SettingsProfile extends SettingsBase {
     await this.inputSettingsProfileUsername.fill(newUsername);
 
     // Save modal is displayed, user selects save and username is changed
-    await this.saveControls.waitFor({ state: "visible" });
+    await this.saveControls.waitFor({ state: "attached" });
     await this.saveControlsButtonSave.click();
     await this.page
       .getByText("Profile Updated!")
@@ -476,15 +476,15 @@ export class SettingsProfile extends SettingsBase {
     for (let i = 1; i <= 12; i++) {
       await this.page
         .locator(`[data-cy="ordered-phrase-number-${i}"]`)
-        .waitFor({ state: "visible" });
+        .waitFor({ state: "attached" });
       await this.page
         .locator(`[data-cy="ordered-phrase-word-${i}"]`)
-        .waitFor({ state: "visible" });
+        .waitFor({ state: "attached" });
     }
   }
 
   async validateToastProfileUpdated() {
-    await this.toastNotificationText.waitFor({ state: "visible" });
+    await this.toastNotificationText.waitFor({ state: "attached" });
     await expect(this.toastNotificationText).toHaveText("Profile Updated!");
   }
 

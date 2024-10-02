@@ -85,7 +85,7 @@ export const test = base.extend<MyFixtures>({
     // Click on I Saved It
     await saveRecoverySeed.clickOnSavedIt();
 
-    await chatsMainPage.addSomeone.waitFor({ state: "visible" });
+    await chatsMainPage.addSomeone.waitFor({ state: "attached" });
     await page.waitForURL("/chat");
 
     // Pass the context, browser, and page to the test

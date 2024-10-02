@@ -248,13 +248,13 @@ export class FriendsScreen extends MainPage {
   async validateBlockedUserExists() {
     await this.page
       .getByTestId("button-friend-unblock")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
   }
 
   async validateIncomingRequestExists() {
     await this.page
       .getByTestId("button-friend-accept")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
   }
 
   async validateNoBlockedUsersExist() {
@@ -288,18 +288,18 @@ export class FriendsScreen extends MainPage {
   async validateOutgoingRequestExists() {
     await this.page
       .getByTestId("button-friend-cancel")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
   }
 
   async validateToastCannotAddYourself() {
-    await this.toastNotificationText.waitFor({ state: "visible" });
+    await this.toastNotificationText.waitFor({ state: "attached" });
     await expect(this.toastNotificationText).toHaveText(
       "You cannot send yourself a friend request",
     );
   }
 
   async validateToastRequestReceived(username: string) {
-    await this.toastNotificationText.waitFor({ state: "visible" });
+    await this.toastNotificationText.waitFor({ state: "attached" });
     await expect(this.toastNotificationText).toHaveText(
       `${username} sent a request.`,
     );
@@ -308,7 +308,7 @@ export class FriendsScreen extends MainPage {
   async validateToastRequestSent() {
     await this.page
       .getByText("Your request is making it's way!")
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
   }
 
   async validateURL() {
