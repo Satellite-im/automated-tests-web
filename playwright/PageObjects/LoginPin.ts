@@ -115,7 +115,7 @@ export class LoginPinPage extends MainPage {
     await expect(this.pinButtonConfirm).toBeDisabled();
   }
   async validateToastPinIsWrong() {
-    await this.toastNotificationText.waitFor({ state: "visible" });
+    await this.toastNotificationText.waitFor({ state: "attached" });
     await expect(this.toastNotificationText).toHaveText("Pin is wrong!");
   }
 

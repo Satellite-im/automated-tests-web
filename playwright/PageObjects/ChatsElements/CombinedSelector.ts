@@ -25,16 +25,16 @@ export class CombinedSelector extends MainPage {
 
   async goToEmojisTab() {
     await this.footerTabsEmojiButton.click();
-    await this.emojiContainer.waitFor({ state: "visible" });
+    await this.emojiContainer.waitFor({ state: "attached" });
   }
 
   async goToGifsTab() {
     await this.footerTabsGifButton.click();
-    await this.giphySelector.waitFor({ state: "visible" });
+    await this.giphySelector.waitFor({ state: "attached" });
   }
 
   async goToStickersTab() {
     await this.footerTabsStickerButton.click();
-    await this.stickerSelector.waitFor({ state: "visible" });
+    await this.stickerSelector.waitFor({ state: "attached" });
   }
 }

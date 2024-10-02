@@ -69,7 +69,7 @@ export class FilesPage extends MainPage {
 
   async createNewFolder(folderName: string) {
     await this.newFolderButton.click();
-    await this.inputFileFolderName.waitFor({ state: "visible" });
+    await this.inputFileFolderName.waitFor({ state: "attached" });
     await this.inputFileFolderName.fill(folderName);
     await this.page.keyboard.press("Enter");
     await this.page

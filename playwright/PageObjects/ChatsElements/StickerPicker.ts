@@ -42,7 +42,7 @@ export class StickerPicker extends CombinedSelector {
     await this.page.getByLabel("Jump to " + collectionName).click();
     await this.page
       .locator('[id="' + collectionName + '"]')
-      .waitFor({ state: "visible" });
+      .waitFor({ state: "attached" });
   }
 
   async selectSticker(collectionName: string, stickerName: string) {

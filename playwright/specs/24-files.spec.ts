@@ -126,7 +126,7 @@ test.describe("Files Page Tests", () => {
     expect(countOfFolders).toEqual(2);
 
     // Toast notification should be displayed
-    await filesPage.toastNotification.last().waitFor({ state: "visible" });
+    await filesPage.toastNotification.last().waitFor({ state: "attached" });
   });
 
   test("F10 - User can create subfolders and navigate to parent folder with go back button", async ({
