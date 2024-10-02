@@ -120,8 +120,9 @@ export class SettingsCustomizations extends SettingsBase {
     this.fontScalingSectionIncreaseButton = this.fontScalingSection.getByTestId(
       "button-font-scaling-increase",
     );
-    this.fontScalingSectionInput =
-      this.fontScalingSection.getByTestId("input-font-scaling");
+    this.fontScalingSectionInput = this.fontScalingSection
+      .getByTestId("input-font-scaling")
+      .locator("input");
     this.fontScalingSectionLabel = this.fontScalingSection.getByTestId(
       "setting-section-label",
     );

@@ -98,8 +98,9 @@ test.describe("Friends tests", () => {
     await expect(friendsScreen.buttonAddFriend).toBeDisabled();
 
     // H8 - Highlighted border should appear around Search Friends textbox when user enters a text on input field
-    await friendsScreen.inputSearchFriends.focus();
-    await expect(friendsScreen.inputContainerSearchFriends).toHaveCSS(
+    await friendsScreen.inputSearchFriends.fill("1234");
+    const container = friendsScreen.inputContainerSearchFriends;
+    await expect(container).toHaveCSS(
       "box-shadow",
       "rgb(77, 77, 255) 0px 0px 0px 1px",
     );

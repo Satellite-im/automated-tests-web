@@ -24,6 +24,7 @@ export default class MainPage {
   readonly favoriteProfileStatusIndicator: Locator;
   readonly favoritesLabel: Locator;
   readonly inputSidebarSearch: Locator;
+  readonly inputSidebarSearchContainer: Locator;
   readonly navigationBar: Locator;
   readonly sidebar: Locator;
   readonly sidebarChatPreview: Locator;
@@ -66,7 +67,12 @@ export default class MainPage {
     this.favoriteProfileStatusIndicator =
       this.favoriteProfilePicture.getByTestId("status-indicator");
     this.favoritesLabel = this.page.getByTestId("label-favorites");
-    this.inputSidebarSearch = this.page.getByTestId("input-sidebar-search");
+    this.inputSidebarSearch = this.page
+      .getByTestId("input-sidebar-search")
+      .locator("input");
+    this.inputSidebarSearchContainer = this.page
+      .getByTestId("input-sidebar-search")
+      .locator(".input-container");
     this.navigationBar = this.page.getByTestId(".navigation");
     this.sidebar = this.page.getByTestId("sidebar");
     this.sidebarChatPreview = this.sidebar.locator(".chat-preview");
