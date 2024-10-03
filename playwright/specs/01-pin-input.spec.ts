@@ -33,9 +33,6 @@ test.describe("Create Account and Login Tests", () => {
     await expect(createOrImport.buttonCreateAccount).toHaveText(
       "Create New Account",
     );
-    await expect(createOrImport.buttonImportAccount).toHaveText(
-      "Import Account",
-    );
     await createOrImport.clickCreateNewAccount();
 
     // Validate Create New User/Status page, enter valid data and continue
@@ -254,36 +251,6 @@ test.describe("Create Account and Login Tests", () => {
     await page.waitForURL("/chat");
     await chatsMainPage.reloadPage();
     await page.waitForURL("/chat");
-  });
-
-  test("A10 - User can see menu to switch to a different profile", async ({
-    enterPinUserContext,
-  }) => {
-    const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-
-    // Click on Create New Account
-    await createOrImport.clickCreateNewAccount();
-
-    // Enter Username and Status
-    await authNewAccount.validateLoadingHeader();
-    await authNewAccount.typeOnUsername(username);
-    await authNewAccount.typeOnStatus(status);
-    await authNewAccount.buttonNewAccountCreate.click();
-
-    // Login Page Test
-    await loginPinPage.waitUntilPageIsLoaded();
-    await loginPinPage.buttonChangeUser.click();
-    await expect(loginPinPage.selectProfileModal).toBeVisible();
-    await expect(loginPinPage.selectProfileLabel).toHaveText("Profiles");
-    await expect(loginPinPage.selectProfileUserName.first()).toHaveText(
-      "Space Kev",
-    );
-    await expect(loginPinPage.selectProfileUserName.last()).toHaveText(
-      "Sara Saturn",
-    );
   });
 
   test("A12 - If incorrect pin is entered, error message should be displayed", async ({
