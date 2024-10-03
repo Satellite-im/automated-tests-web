@@ -74,7 +74,6 @@ export default class MainPage {
       this.favoriteProfilePicture.getByTestId("status-indicator");
     this.favoritesLabel = this.page.getByTestId("label-favorites");
     this.installAlert = this.page.locator("#install-banner");
-    this.inputSidebarSearch = this.page.getByTestId("input-sidebar-search");
     this.inputSidebarSearch = this.page
       .getByTestId("input-sidebar-search")
       .locator("input");
