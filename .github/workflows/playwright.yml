@@ -39,7 +39,7 @@ jobs:
           node-version: 20
 
       - name: Install dependencies for Uplink Web 📦
-        run: npm ci
+        run: npm install
 
       - name: Install dependencies for Testing Repo 📦
         working-directory: automated-tests
