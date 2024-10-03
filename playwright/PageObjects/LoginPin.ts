@@ -2,7 +2,6 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class LoginPinPage extends MainPage {
-  readonly buttonChangeUser: Locator;
   readonly buttonClearInput: Locator;
   readonly buttonCreateNewProfile: Locator;
   readonly buttonPinSettings: Locator;
@@ -25,18 +24,12 @@ export class LoginPinPage extends MainPage {
   readonly scrambleKeypadCheckbox: Locator;
   readonly scrambleKeypadLabel: Locator;
   readonly scrambleKeypadSwitch: Locator;
-  readonly selectProfileLabel: Locator;
-  readonly selectProfileUser: Locator;
-  readonly selectProfileUserImage: Locator;
-  readonly selectProfileUserName: Locator;
-  readonly selectProfileModal: Locator;
   readonly stayUnlockedCheckbox: Locator;
   readonly stayUnlockedLabel: Locator;
   readonly stayUnlockedSwitch: Locator;
 
   constructor(public readonly page: Page) {
     super(page);
-    this.buttonChangeUser = this.page.getByTestId("button-change-user");
     this.buttonClearInput = this.page.getByTestId("button-clear-input");
     this.buttonCreateNewProfile = this.page.getByTestId(
       "button-create-new-profile",
@@ -61,15 +54,6 @@ export class LoginPinPage extends MainPage {
     this.scrambleKeypadCheckbox = this.page.locator(".slider").first();
     this.scrambleKeypadLabel = this.page.getByTestId("label-scramble-keypad");
     this.scrambleKeypadSwitch = this.page.getByTestId("switch-scramble-keypad");
-    this.selectProfileLabel = this.page.getByTestId("label-select-profile");
-    this.selectProfileUser = this.page.getByTestId("select-profile-user");
-    this.selectProfileUserImage = this.page.getByTestId(
-      "select-profile-user-image",
-    );
-    this.selectProfileUserName = this.page.getByTestId(
-      "select-profile-user-name",
-    );
-    this.selectProfileModal = this.page.getByTestId("modal-select-profile");
     this.stayUnlockedCheckbox = this.page.locator(".slider").last();
     this.stayUnlockedLabel = this.page.getByTestId("label-stay-unlocked");
     this.stayUnlockedSwitch = this.page.getByTestId("switch-stay-unlocked");

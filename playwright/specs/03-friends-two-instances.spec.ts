@@ -1748,9 +1748,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const imageSent = chatsMainPageSecond.messageBubbleContent
       .last()
       .locator("img");
+    await imageSent.waitFor({ state: "attached" });
     const imageReceived = chatsMainPageFirst.messageBubbleContent
       .last()
       .locator("img");
+    await imageReceived.waitFor({ state: "attached" });
     await expect(imageSent).toHaveAttribute("alt", "Power Up");
     await expect(imageSent).toBeVisible();
     await expect(imageReceived).toHaveAttribute("alt", "Power Up");

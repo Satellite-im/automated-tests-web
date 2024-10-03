@@ -131,9 +131,7 @@ test.describe("Chats Sidebar Tests", () => {
 
     await chatsMainPage.inputSidebarSearch.focus();
 
-    const inputContainer = chatsMainPage.inputSidebarSearch.locator("xpath=..");
-
-    await expect(inputContainer).toHaveCSS(
+    await expect(chatsMainPage.inputSidebarSearchContainer).toHaveCSS(
       "box-shadow",
       "rgb(77, 77, 255) 0px 0px 0px 1px",
     );

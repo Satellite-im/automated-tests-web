@@ -100,10 +100,9 @@ export class SettingsProfile extends SettingsBase {
     this.accountIntegrationsItem = this.page.getByTestId(
       "account-integrations-item",
     );
-    this.accountIntegrationsItemAddressInput =
-      this.accountIntegrationsItem.getByTestId(
-        "input-address-account-integration-item",
-      );
+    this.accountIntegrationsItemAddressInput = this.accountIntegrationsItem
+      .getByTestId("input-address-account-integration-item")
+      .locator("input");
     this.accountIntegrationsItemCopyButton =
       this.accountIntegrationsItem.getByTestId(
         "button-account-integration-item",
@@ -116,10 +115,9 @@ export class SettingsProfile extends SettingsBase {
       this.accountIntegrationsItem.getByTestId(
         "button-account-integrations-item-edit",
       );
-    this.accountIntegrationsItemInput =
-      this.accountIntegrationsItem.getByTestId(
-        "input-account-integration-item",
-      );
+    this.accountIntegrationsItemInput = this.accountIntegrationsItem
+      .getByTestId("input-account-integration-item")
+      .locator("input");
     this.accountIntegrationsItemLabel =
       this.accountIntegrationsItem.getByTestId(
         "label-account-integrations-item",
@@ -130,25 +128,24 @@ export class SettingsProfile extends SettingsBase {
     this.accountIntegrationsItemLogo = this.accountIntegrationsItem.getByTestId(
       "account-integration-item-logo",
     );
-    this.accountIntegrationsItemPlatformInput =
-      this.accountIntegrationsItem.getByTestId(
-        "input-platform-account-integration-item",
-      );
+    this.accountIntegrationsItemPlatformInput = this.accountIntegrationsItem
+      .getByTestId("input-platform-account-integration-item")
+      .locator("input");
     this.accountIntegrationsNewAddButton = this.page.getByTestId(
       "button-account-integrations-new-add",
     );
     this.accountIntegrationsNewCancelButton = this.page.getByTestId(
       "button-account-integrations-new-cancel",
     );
-    this.accountIntegrationsNewAddressInput = this.page.getByTestId(
-      "input-account-integrations-new-address",
-    );
+    this.accountIntegrationsNewAddressInput = this.page
+      .getByTestId("input-account-integrations-new-address")
+      .locator("input");
     this.accountIntegrationsNewAddressLabel = this.page.getByTestId(
       "label-account-integration-new-address",
     );
-    this.accountIntegrationsNewGenericInput = this.page.getByTestId(
-      "input-account-integrations-new-generic",
-    );
+    this.accountIntegrationsNewGenericInput = this.page
+      .getByTestId("input-account-integrations-new-generic")
+      .locator("input");
     this.accountIntegrationsNewLogo = this.page.getByTestId(
       "logo-account-integrations-new",
     );
@@ -192,12 +189,12 @@ export class SettingsProfile extends SettingsBase {
     this.inputSettingsProfileShortIDGroup = this.page.locator(
       '[data-tooltip="Copy"]',
     );
-    this.inputSettingsProfileStatus = this.page.getByTestId(
-      "input-settings-profile-status-message",
-    );
-    this.inputSettingsProfileUsername = this.page.getByTestId(
-      "input-settings-profile-username",
-    );
+    this.inputSettingsProfileStatus = this.page
+      .getByTestId("input-settings-profile-status-message")
+      .locator("input");
+    this.inputSettingsProfileUsername = this.page
+      .getByTestId("input-settings-profile-username")
+      .locator("input");
     this.labelSettingsProfileStatusMessage = this.page.getByTestId(
       "label-settings-profile-status-message",
     );
