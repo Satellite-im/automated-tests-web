@@ -1,6 +1,5 @@
 # Testing Uplink Web
 node_modules/
-package-lock.json
 
 ### Linux ###
 *~

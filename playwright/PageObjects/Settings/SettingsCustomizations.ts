@@ -94,9 +94,7 @@ export class SettingsCustomizations extends SettingsBase {
     this.emojiFontSectionRandomEmoji = this.page.getByTestId(
       "emoji-font-random-emoji",
     );
-    this.emojiFontSectionSelector = this.page.locator(
-      '[data-cy^="selector-current-emoji-font-"]',
-    );
+    this.emojiFontSectionSelector = this.emojiFontSection.locator("select");
     this.emojiFontSectionSelectorOption =
       this.emojiFontSectionSelector.getByTestId("select-option");
     this.emojiFontSectionText = this.emojiFontSection.getByTestId(
@@ -107,9 +105,7 @@ export class SettingsCustomizations extends SettingsBase {
     this.fontSectionLabel = this.fontSection.getByTestId(
       "setting-section-label",
     );
-    this.fontSectionSelector = this.page.locator(
-      '[data-cy^="selector-current-font-"]',
-    );
+    this.fontSectionSelector = this.fontSection.locator("select");
     this.fontSectionSelectorOption =
       this.fontSectionSelector.getByTestId("select-option");
     this.fontSectionText = this.fontSection.getByTestId("setting-section-text");
@@ -139,9 +135,7 @@ export class SettingsCustomizations extends SettingsBase {
     this.identiconSectionProfilePicture = this.page.getByTestId(
       "identicon-profile-picture",
     );
-    this.identiconSectionSelector = this.page.locator(
-      '[data-cy^="selector-current-identicon-"]',
-    );
+    this.identiconSectionSelector = this.identiconSection.locator("select");
     this.identiconSectionSelectorOption =
       this.identiconSectionSelector.getByTestId("select-option");
     this.identiconSectionText = this.identiconSection.getByTestId(
@@ -207,24 +201,17 @@ export class SettingsCustomizations extends SettingsBase {
   }
 
   async selectDefaultProfileStyle(style: string) {
-    await this.page
-      .locator('[data-cy^="selector-current-identicon-"]')
+    await this.identiconSection
       .locator("select")
       .selectOption({ label: style });
   }
 
   async selectEmojiFont(font: string) {
-    await this.page
-      .locator('[data-cy^="selector-current-emoji-font-"]')
-      .locator("select")
-      .selectOption({ label: font });
+    await this.emojiFontSection.locator("select").selectOption({ label: font });
   }
 
   async selectFont(font: string) {
-    await this.page
-      .getByTestId("selector-current-font-Poppins")
-      .locator("select")
-      .selectOption({ label: font });
+    await this.fontSection.locator("select").selectOption({ label: font });
   }
 
   async selectTheme(theme: string) {
