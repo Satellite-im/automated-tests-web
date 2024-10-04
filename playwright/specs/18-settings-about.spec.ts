@@ -10,12 +10,13 @@ test.describe("Settings About Tests", () => {
 
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
     await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonAbout.click();
     await page.waitForURL("/settings/about");
   });
@@ -24,7 +25,8 @@ test.describe("Settings About Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsAbout.aboutSectionLabel).toHaveText("About");
@@ -35,7 +37,8 @@ test.describe("Settings About Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsAbout.versionSectionLabel).toHaveText("Version");
@@ -47,7 +50,8 @@ test.describe("Settings About Tests", () => {
   //   singleUserContext,
   // }) => {
   //   const page = singleUserContext.page;
-  //   const settingsAbout = new SettingsAbout(page);
+  //   const viewport = singleUserContext.viewport;
+  //   const settingsAbout = new SettingsAbout(page, viewport);
 
   //   await settingsAbout.versionSectionButton.click();
   // });
@@ -56,7 +60,8 @@ test.describe("Settings About Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsAbout.websiteSectionLabel).toHaveText("Website");
@@ -76,7 +81,8 @@ test.describe("Settings About Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsAbout.openSourceCodeSectionLabel).toHaveText(
@@ -98,7 +104,8 @@ test.describe("Settings About Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsAbout.madeInSectionLabel).toHaveText("Made In");
@@ -114,7 +121,8 @@ test.describe("Settings About Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsAbout.devModeSectionLabel).toHaveText("Dev Mode");

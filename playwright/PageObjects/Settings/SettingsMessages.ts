@@ -28,8 +28,11 @@ export class SettingsMessages extends SettingsBase {
   readonly spamBotDetectionSectionText: Locator;
   readonly spamBotDetectionSectionSlider: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.compactMessagingSection = this.page.getByTestId(
       "section-compact-messaging",
     );

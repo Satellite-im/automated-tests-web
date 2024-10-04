@@ -6,12 +6,13 @@ import { SettingsLicenses } from "playwright/PageObjects/Settings/SettingsLicens
 test.describe("Settings Licenses Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
     await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonLicenses.click();
     await page.waitForURL("/settings/licenses");
   });
@@ -20,7 +21,8 @@ test.describe("Settings Licenses Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsLicenses = new SettingsLicenses(page);
+    const viewport = singleUserContext.viewport;
+    const settingsLicenses = new SettingsLicenses(page, viewport);
 
     // Declare the page object implementations and constants
     const LICENSE_URL =

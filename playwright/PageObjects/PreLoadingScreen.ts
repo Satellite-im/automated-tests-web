@@ -5,8 +5,11 @@ export class PreLoadingScreen extends MainPage {
   readonly loadingHeader: Locator;
   readonly loadingMessage: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.loadingHeader = this.page.locator(".small");
     this.loadingMessage = this.page.locator(".text.medium");
   }

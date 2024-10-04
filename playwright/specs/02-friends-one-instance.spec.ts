@@ -5,7 +5,8 @@ import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 test.describe("Friends tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // Go to Friends
     await chatsMainPage.dismissDownloadAlert();
@@ -16,7 +17,8 @@ test.describe("Friends tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const friendsScreen = new FriendsScreen(page);
+    const viewport = singleUserContext.viewport;
+    const friendsScreen = new FriendsScreen(page, viewport);
 
     // H2 - Clicking Active should take you to Active page within Friends
     await friendsScreen.goToRequestList();
@@ -112,7 +114,8 @@ test.describe("Friends tests", () => {
   }) => {
     const context = singleUserContext.context;
     const page = singleUserContext.page;
-    const friendsScreen = new FriendsScreen(page);
+    const viewport = singleUserContext.viewport;
+    const friendsScreen = new FriendsScreen(page, viewport);
 
     // H10 - Clicking the Copy button should copy your personal did:key
     // Grant clipboard permissions
@@ -174,7 +177,8 @@ test.describe("Friends tests", () => {
   }) => {
     const context = singleUserContext.context;
     const page = singleUserContext.page;
-    const friendsScreen = new FriendsScreen(page);
+    const viewport = singleUserContext.viewport;
+    const friendsScreen = new FriendsScreen(page, viewport);
 
     // H22 - User cannot add himself as a friend
     // Grant clipboard permissions

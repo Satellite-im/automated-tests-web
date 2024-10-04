@@ -11,8 +11,11 @@ export class CombinedSelector extends MainPage {
   readonly giphySelector: Locator;
   readonly stickerSelector: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.combinedSelector = this.page.getByTestId("combined-selector");
     this.emojiContainer = this.page.getByTestId("emoji-container");
     this.footerTabs = this.page.getByTestId(".pill-tabs");

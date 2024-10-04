@@ -22,8 +22,11 @@ export class SettingsNetwork extends SettingsBase {
   readonly relaySaveButton: Locator;
   readonly underConstruction: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonCdnSave = this.page.getByTestId("button-cdn-save");
     this.inputCdnAddress = this.page.getByTestId("input-cdn-address");
     this.inputCdnName = this.page.getByTestId("input-cdn-name");

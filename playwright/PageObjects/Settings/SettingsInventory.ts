@@ -20,8 +20,11 @@ export class SettingsInventory extends SettingsBase {
   readonly inventoryItemName: Locator;
   readonly inventoryItemType: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonUnequipInventory = this.page.getByTestId(
       "button-unequip-inventory",
     );

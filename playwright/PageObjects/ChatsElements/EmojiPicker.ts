@@ -18,8 +18,11 @@ export class EmojiPicker extends CombinedSelector {
   readonly skinToneSelector: Locator;
   readonly skinToneSelectorButton: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.categoryNav = this.page.getByTestId("emoji-category-nav");
     this.emojiContainerSearchInput = this.page
       .getByTestId("emoji-container-search-input")

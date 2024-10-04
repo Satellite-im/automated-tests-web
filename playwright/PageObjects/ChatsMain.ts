@@ -115,8 +115,11 @@ export class ChatsMainPage extends MainPage {
   readonly uploadFilesSelectedSinglePreviewIcon: Locator;
   readonly uploadFilesSelectedSinglePreviewImage: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.addSomeone = this.page.locator(".add-someone");
     this.buttonAddAttachment = this.page.getByTestId(
       "button-chat-add-attachment",

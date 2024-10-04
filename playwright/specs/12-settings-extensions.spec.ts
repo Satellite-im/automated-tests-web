@@ -6,12 +6,13 @@ import { SettingsExtensions } from "playwright/PageObjects/Settings/SettingsExte
 test.describe("Settings Extensions Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
     await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonExtensions.click();
     await page.waitForURL("/settings/extensions");
   });
@@ -20,7 +21,8 @@ test.describe("Settings Extensions Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsExtensions = new SettingsExtensions(page);
+    const viewport = singleUserContext.viewport;
+    const settingsExtensions = new SettingsExtensions(page, viewport);
 
     await expect(settingsExtensions.installedButton).toBeVisible();
     await expect(settingsExtensions.exploreButton).toBeVisible();

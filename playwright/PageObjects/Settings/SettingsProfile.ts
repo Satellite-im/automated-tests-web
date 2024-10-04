@@ -86,8 +86,11 @@ export class SettingsProfile extends SettingsBase {
   readonly warningMessageMaxLengthIs32: Locator;
   readonly warningMessageMinLengthIs4: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.accountIntegrations = this.page.getByTestId(
       "section-account-integrations",
     );

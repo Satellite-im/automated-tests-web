@@ -27,8 +27,11 @@ export class FilesPage extends MainPage {
   readonly uploadFileButton: Locator;
   readonly uploadFileInput: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonFilesSync = this.page.getByTestId("button-files-sync");
     this.buttonFilesGiftSpace = this.page.getByTestId(
       "button-files-gift-space",

@@ -7,8 +7,11 @@ export class SettingsLicenses extends SettingsBase {
   readonly licensesSectionLabel: Locator;
   readonly licensesSectionText: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.licensesSection = this.page.getByTestId("section-licenses-uplink");
     this.licensesSectionButton = this.page.getByTestId("button-view-license");
     this.licensesSectionLabel = this.licensesSection.locator(

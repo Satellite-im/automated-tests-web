@@ -6,12 +6,13 @@ import { SettingsNotifications } from "playwright/PageObjects/Settings/SettingsN
 test.describe("Settings Notifications Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
     await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonNotifications.click();
     await page.waitForURL("/settings/notifications");
   });
@@ -20,7 +21,8 @@ test.describe("Settings Notifications Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsNotifications = new SettingsNotifications(page);
+    const viewport = singleUserContext.viewport;
+    const settingsNotifications = new SettingsNotifications(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsNotifications.enabledSectionLabel).toHaveText(
@@ -48,7 +50,8 @@ test.describe("Settings Notifications Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsNotifications = new SettingsNotifications(page);
+    const viewport = singleUserContext.viewport;
+    const settingsNotifications = new SettingsNotifications(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsNotifications.friendsSectionLabel).toHaveText(
@@ -76,7 +79,8 @@ test.describe("Settings Notifications Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsNotifications = new SettingsNotifications(page);
+    const viewport = singleUserContext.viewport;
+    const settingsNotifications = new SettingsNotifications(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsNotifications.messagesSectionLabel).toHaveText(
@@ -104,7 +108,8 @@ test.describe("Settings Notifications Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsNotifications = new SettingsNotifications(page);
+    const viewport = singleUserContext.viewport;
+    const settingsNotifications = new SettingsNotifications(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsNotifications.settingsSectionLabel).toHaveText(

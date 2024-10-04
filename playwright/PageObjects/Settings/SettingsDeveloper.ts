@@ -40,8 +40,11 @@ export class SettingsDeveloper extends SettingsBase {
   readonly testVoiceSectionText: Locator;
   readonly widgetBar: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.batteryIndicator = this.page.getByTestId("battery-indicator");
     this.batteryIndicatorIcon = this.page.getByTestId("battery-indicator-icon");
     this.batteryIndicatorNotSupportedError = this.page.getByTestId(

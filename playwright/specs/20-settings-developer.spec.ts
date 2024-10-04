@@ -7,12 +7,13 @@ import { SettingsDeveloper } from "playwright/PageObjects/Settings/SettingsDevel
 test.describe("Settings Developer Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
     await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonAbout.click();
     await page.waitForURL("/settings/about");
   });
@@ -21,8 +22,9 @@ test.describe("Settings Developer Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
-    const settingsDeveloper = new SettingsDeveloper(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
+    const settingsDeveloper = new SettingsDeveloper(page, viewport);
 
     // Open DevMode
     await settingsAbout.openDevModeSection();
@@ -44,8 +46,9 @@ test.describe("Settings Developer Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
-    const settingsDeveloper = new SettingsDeveloper(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
+    const settingsDeveloper = new SettingsDeveloper(page, viewport);
 
     // Open DevMode
     await settingsAbout.openDevModeSection();
@@ -75,8 +78,9 @@ test.describe("Settings Developer Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
-    const settingsDeveloper = new SettingsDeveloper(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
+    const settingsDeveloper = new SettingsDeveloper(page, viewport);
 
     // Open DevMode
     await settingsAbout.openDevModeSection();
@@ -97,8 +101,9 @@ test.describe("Settings Developer Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
-    const settingsDeveloper = new SettingsDeveloper(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
+    const settingsDeveloper = new SettingsDeveloper(page, viewport);
 
     // Open DevMode
     await settingsAbout.openDevModeSection();
@@ -117,8 +122,9 @@ test.describe("Settings Developer Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
-    const settingsDeveloper = new SettingsDeveloper(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
+    const settingsDeveloper = new SettingsDeveloper(page, viewport);
 
     // Open DevMode
     await settingsAbout.openDevModeSection();
@@ -137,8 +143,9 @@ test.describe("Settings Developer Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
-    const settingsDeveloper = new SettingsDeveloper(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
+    const settingsDeveloper = new SettingsDeveloper(page, viewport);
 
     // Open DevMode
     await settingsAbout.openDevModeSection();
@@ -157,8 +164,9 @@ test.describe("Settings Developer Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAbout = new SettingsAbout(page);
-    const settingsDeveloper = new SettingsDeveloper(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAbout = new SettingsAbout(page, viewport);
+    const settingsDeveloper = new SettingsDeveloper(page, viewport);
 
     // Open DevMode
     await settingsAbout.openDevModeSection();

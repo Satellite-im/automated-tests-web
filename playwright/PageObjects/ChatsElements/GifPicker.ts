@@ -14,8 +14,11 @@ export class GifPicker extends CombinedSelector {
   readonly searchInput: Locator;
   readonly textNoFavoritesYet: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.allFavoritesButton = this.page.getByTestId(
       "giphy-selector-favorites-button",
     );

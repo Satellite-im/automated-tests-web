@@ -36,7 +36,10 @@ export default class MainPage {
   readonly toastNotificationButton: Locator;
   readonly toastNotificationText: Locator;
 
-  constructor(public readonly page: Page) {
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
     this.buttonChat = this.page.getByTestId("button-Chat");
     this.buttonDismissInstallAlert = this.page
       .locator("#install-banner")
@@ -47,7 +50,7 @@ export default class MainPage {
     this.buttonHideSidebar = this.page.getByTestId("button-hide-sidebar");
     this.buttonSettings = this.page.getByTestId("button-Settings");
     this.buttonShowSidebar = this.page
-      .getByTestId("topbar")
+      .getByTestId("slimbar")
       .getByTestId("button-show-sidebar");
     this.buttonSidebarChats = this.page.getByTestId("button-sidebar-chats");
     this.buttonSidebarFiles = this.page.getByTestId("button-sidebar-files");

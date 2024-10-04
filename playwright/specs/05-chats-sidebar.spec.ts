@@ -4,7 +4,8 @@ import { test, expect } from "../fixtures/setup";
 test.describe("Chats Sidebar Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
     await chatsMainPage.dismissDownloadAlert();
   });
 
@@ -12,7 +13,8 @@ test.describe("Chats Sidebar Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     await chatsMainPage.buttonCreateGroupChat.click();
     await expect(chatsMainPage.createGroupLabelGroupName).toBeVisible();
@@ -33,7 +35,8 @@ test.describe("Chats Sidebar Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     await chatsMainPage.buttonCreateGroupChat.hover();
     await chatsMainPage.validateTooltipAttribute(
@@ -46,7 +49,8 @@ test.describe("Chats Sidebar Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // Hover on each button and validate the tooltip
     // await chatsMainPage.buttonWallet.hover();
@@ -82,10 +86,10 @@ test.describe("Chats Sidebar Tests", () => {
 
   test("C4 - Clicking hamburger button should collapse sidebar", async ({
     singleUserContext,
-  }, testoptions) => {
+  }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
-    const viewport = testoptions.project.name;
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     await chatsMainPage.buttonHideSidebar.click();
 
@@ -108,10 +112,10 @@ test.describe("Chats Sidebar Tests", () => {
 
   test("C5, C6, C7, C8, C9 - Nav bar buttons should redirect to correct page", async ({
     singleUserContext,
-  }, testoptions) => {
+  }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
-    const viewport = testoptions.project.name;
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     await chatsMainPage.goToFiles();
     await page.waitForURL("/files");
@@ -143,7 +147,8 @@ test.describe("Chats Sidebar Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     await chatsMainPage.inputSidebarSearch.focus();
 

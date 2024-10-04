@@ -7,8 +7,11 @@ export class SaveRecoverySeedPage extends MainPage {
   readonly textRecoveryPageWarning: Locator;
   readonly titleRecoveryPage: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonDownloadPhrase = this.page.getByTestId("button-download-phrase");
     this.buttonSavedPhrase = this.page.getByTestId("button-save-phrase");
     this.textRecoveryPageWarning = this.page.getByTestId(

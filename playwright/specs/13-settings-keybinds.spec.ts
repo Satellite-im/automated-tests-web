@@ -5,15 +5,15 @@ import { SettingsKeybinds } from "playwright/PageObjects/Settings/SettingsKeybin
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 
 test.describe("Settings Keybinds Tests", () => {
-  test.beforeEach(async ({ singleUserContext }, testoptions) => {
-    const viewport = testoptions.project.name;
+  test.beforeEach(async ({ singleUserContext }) => {
+    const viewport = singleUserContext.viewport;
     if (viewport === "desktop-chrome") {
       const page = singleUserContext.page;
-      const chatsMainPage = new ChatsMainPage(page);
+      const chatsMainPage = new ChatsMainPage(page, viewport);
       await chatsMainPage.goToSettings();
       await page.waitForURL("/settings/profile");
 
-      const settingsProfile = new SettingsProfile(page);
+      const settingsProfile = new SettingsProfile(page, viewport);
       await settingsProfile.buttonKeybinds.click();
       await page.waitForURL("/settings/keybinds");
     } else {
@@ -25,7 +25,8 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
 
     // Validate banner text
     await expect(settingsKeybinds.bannerText).toHaveText(
@@ -86,9 +87,10 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
-    const friendsScreen = new FriendsScreen(page);
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
+    const friendsScreen = new FriendsScreen(page, viewport);
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Validate keybind instructions
     await expect(settingsKeybinds.recordKeybindLabel).toHaveText(
@@ -133,7 +135,8 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
 
     const expectedKeybinds = [
       "Increase font size within Uplink.",
@@ -159,7 +162,8 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
 
     // Setup a keybind and cancel the changes
     await expect(settingsKeybinds.recordKeybindLabel).toHaveText(
@@ -191,7 +195,8 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
 
     // Color before clicking button
     await expect(settingsKeybinds.newKeybindCancelButton).toHaveCSS(
@@ -213,7 +218,8 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
 
     // Setup a keybind and revert the changes
     const pushToTalkKeybind =
@@ -240,7 +246,8 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
 
     // Color before clicking on button
     await expect(settingsKeybinds.revertKeybindSectionAllButton).toHaveCSS(
@@ -262,7 +269,8 @@ test.describe("Settings Keybinds Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsKeybinds = new SettingsKeybinds(page);
+    const viewport = singleUserContext.viewport;
+    const settingsKeybinds = new SettingsKeybinds(page, viewport);
 
     // Setup a keybind and revert the changes
     const pushToTalkKeybind =

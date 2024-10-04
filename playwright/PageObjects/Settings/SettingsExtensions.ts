@@ -8,8 +8,11 @@ export class SettingsExtensions extends SettingsBase {
   readonly settingsButton: Locator;
   readonly underConstructionIndicator: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.exploreButton = this.page.getByTestId("button-explore");
     this.installedButton = this.page.getByTestId("button-installed");
     this.noExtensionsInstalledLabel = this.page.getByTestId(

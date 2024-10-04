@@ -6,12 +6,13 @@ import { SettingsAudio } from "playwright/PageObjects/Settings/SettingsAudio";
 test.describe("Settings Audio and Video Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
     await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonAudioAndVideo.click();
     await page.waitForURL("/settings/audio_video");
   });
@@ -20,7 +21,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     const expectedInputDevices = ["Default"];
 
     await expect(settingsAudio.inputDeviceSectionLabel).toHaveText(
@@ -37,7 +39,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     const expectedOutputDevices = ["Default"];
     await expect(settingsAudio.outputDeviceSectionLabel).toHaveText(
       "Output Device",
@@ -53,7 +56,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     // Label and texts for settings section are correct
     await expect(settingsAudio.echoCancellationSectionLabel).toHaveText(
       "Echo Cancellation",
@@ -80,7 +84,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     // Label and texts for settings section are correct
     await expect(settingsAudio.interfaceSoundsSectionLabel).toHaveText(
       "Interface Sounds",
@@ -109,7 +114,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     // Label and texts for settings section are correct
     await expect(settingsAudio.controlSoundsSectionLabel).toHaveText(
       "Control Sounds",
@@ -134,7 +140,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     // Label and texts for settings section are correct
     await expect(settingsAudio.messageSoundsSectionLabel).toHaveText(
       "Message Sounds",
@@ -159,7 +166,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     // Label and texts for settings section are correct
     await expect(settingsAudio.callTimerSectionLabel).toHaveText("Call Timer");
     await expect(settingsAudio.callTimerSectionText).toHaveText(
@@ -182,7 +190,8 @@ test.describe("Settings Audio and Video Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAudio = new SettingsAudio(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAudio = new SettingsAudio(page, viewport);
     await expect(settingsAudio.videoDeviceSectionLabel).toHaveText(
       "Video Device",
     );

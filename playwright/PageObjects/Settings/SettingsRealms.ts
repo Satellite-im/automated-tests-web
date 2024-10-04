@@ -6,8 +6,11 @@ export class SettingsRealms extends SettingsBase {
   readonly textSettingsRealmsDescriptionOne: Locator;
   readonly textSettingsRealmsDescriptionTwo: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.labelSettingsRealms = this.page.getByTestId("label-settings-realms");
     this.textSettingsRealmsDescriptionOne = this.page.getByTestId(
       "text-settings-realms-description-1",

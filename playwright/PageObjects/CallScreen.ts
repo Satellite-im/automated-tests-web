@@ -27,8 +27,11 @@ export class CallScreen extends MainPage {
   readonly remoteUserVideo: Locator;
   readonly usersInCallText: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.callCollapseExpandButton = this.callScreen.getByTestId(
       "button-call-collapse-expand",
     );

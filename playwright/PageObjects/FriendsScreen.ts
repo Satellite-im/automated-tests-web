@@ -45,8 +45,11 @@ export class FriendsScreen extends MainPage {
   readonly textNoOutgoingRequests: Locator;
   readonly textSearchFriendNoResults: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonAddFriend = this.page.getByTestId("button-add-friend");
     this.buttonCopyID = this.page.getByTestId("button-copy-id");
     this.buttonFriendCancel = this.page.getByTestId("button-friend-cancel");
