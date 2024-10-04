@@ -16,8 +16,11 @@ export class AuthNewAccount extends MainPage {
   readonly textNewAccountSecondary: Locator;
   readonly titleNewAccount: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonNewAccountCreate = this.page.getByTestId(
       "button-new-account-create",
     );

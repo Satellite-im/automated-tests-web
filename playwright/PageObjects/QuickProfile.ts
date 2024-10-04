@@ -16,8 +16,11 @@ export class QuickProfile extends MainPage {
   readonly quickProfileUsernameLabel: Locator;
   readonly quickProfileUsernameText: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.quickProfile = this.page.getByTestId("quick-profile");
     this.quickProfileBanner = this.quickProfile.getByTestId(
       "quick-profile-banner",

@@ -60,8 +60,11 @@ export class SettingsCustomizations extends SettingsBase {
   readonly widgetPanelSectionSlider: Locator;
   readonly widgetPanelSectionText: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.appLanguageSection = this.page.getByTestId("section-app-language");
     this.appLanguageSectionLabel = this.appLanguageSection.getByTestId(
       "setting-section-label",

@@ -8,8 +8,11 @@ export class SettingsAccessibility extends SettingsBase {
   readonly openDyslexicSectionText: Locator;
   readonly openDyslexicSectionSlider: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.openDyslexicSection = this.page.getByTestId("section-accessibility");
     this.openDyslexicSectionCheckbox = this.page.getByTestId(
       "switch-accessibility-open-dyslexic",

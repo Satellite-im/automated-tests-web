@@ -24,10 +24,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
     await chatsMainPageFirst.goToFriends();
@@ -91,10 +92,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
     await chatsMainPageFirst.goToFriends();
@@ -166,10 +168,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
     await chatsMainPageFirst.goToFriends();
@@ -220,10 +223,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
     await chatsMainPageFirst.goToFriends();
@@ -271,10 +275,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -389,11 +394,12 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const filesPageFirst = new FilesPage(page1);
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const filesPageFirst = new FilesPage(page1, viewport);
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -449,10 +455,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -546,10 +553,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -626,12 +634,13 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
-    const quickProfileLocal = new QuickProfile(page1);
-    const quickProfileRemote = new QuickProfile(page1);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const quickProfileLocal = new QuickProfile(page1, viewport);
+    const quickProfileRemote = new QuickProfile(page1, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -725,12 +734,13 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
-    const quickProfileLocal = new QuickProfile(page1);
-    const settingsProfileFirst = new SettingsProfile(page1);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const quickProfileLocal = new QuickProfile(page1, viewport);
+    const settingsProfileFirst = new SettingsProfile(page1, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -810,12 +820,13 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
-    const quickProfileRemote = new QuickProfile(page1);
-    const settingsProfileSecond = new SettingsProfile(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const quickProfileRemote = new QuickProfile(page1, viewport);
+    const settingsProfileSecond = new SettingsProfile(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -901,10 +912,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
     let lastMessageSent: Locator;
     let lastMessageReceived: Locator;
 
@@ -982,10 +994,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
     let lastMessageSent: Locator;
     let lastMessageReceived: Locator;
 
@@ -1166,10 +1179,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
     let lastMessageSent: Locator;
     let lastMessageReceived: Locator;
     let localMessageReactions: reactionContainer;
@@ -1297,12 +1311,13 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
-    const settingsProfileSecond = new SettingsProfile(page2);
-    const settingsMessagesSecond = new SettingsMessages(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const settingsProfileSecond = new SettingsProfile(page2, viewport);
+    const settingsMessagesSecond = new SettingsMessages(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -1455,10 +1470,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -1530,10 +1546,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -1546,7 +1563,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
 
     await chatsMainPageSecond.openEmojiPicker();
-    const emojiPickerSecond = new EmojiPicker(page2);
+    const emojiPickerSecond = new EmojiPicker(page2, viewport);
     await emojiPickerSecond.selectEmoji("😂");
     await chatsMainPageSecond.buttonChatbarSendMessage.click();
 
@@ -1658,10 +1675,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -1675,7 +1693,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
 
     // Change GIF size in gifs container view
     await chatsMainPageSecond.openGifPicker();
-    const gifPickerSecond = new GifPicker(page2);
+    const gifPickerSecond = new GifPicker(page2, viewport);
     await gifPickerSecond.waitForGifsToLoad();
     await gifPickerSecond.changeGifSizeView("100");
     await gifPickerSecond.changeGifSizeView("200");
@@ -1722,10 +1740,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const context1 = firstUserContext.context;
     const page1 = firstUserContext.page;
     const page2 = secondUserContext.page;
-    const friendsScreenFirst = new FriendsScreen(page1);
-    const friendsScreenSecond = new FriendsScreen(page2);
-    const chatsMainPageFirst = new ChatsMainPage(page1);
-    const chatsMainPageSecond = new ChatsMainPage(page2);
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // Setup accounts for testing
     await setupChats(
@@ -1738,7 +1757,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
 
     await chatsMainPageSecond.openStickerPicker();
-    const stickerPickerSecond = new StickerPicker(page2);
+    const stickerPickerSecond = new StickerPicker(page2, viewport);
     await stickerPickerSecond.waitForStickersToLoad();
 
     // Send a Sticker to the other user

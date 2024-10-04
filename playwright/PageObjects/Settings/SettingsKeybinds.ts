@@ -24,8 +24,11 @@ export class SettingsKeybinds extends SettingsBase {
   readonly revertKeybindSectionText: Locator;
   readonly revertKeybindSectionAllButton: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.bannerText = this.page.getByTestId("banner-text");
     this.existingKeybind = this.page.getByTestId("keybind");
     this.existingKeybindDescription = this.page.getByTestId(

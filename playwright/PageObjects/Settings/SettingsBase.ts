@@ -18,8 +18,11 @@ export class SettingsBase extends MainPage {
   readonly buttonProfile: Locator;
   readonly buttonRealms: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonAbout = this.page.getByTestId("button-About");
     this.buttonAccessibility = this.page.getByTestId("button-Accessibility");
     this.buttonAudioAndVideo = this.page.locator(

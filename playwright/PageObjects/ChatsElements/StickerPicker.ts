@@ -13,8 +13,11 @@ export class StickerPicker extends CombinedSelector {
   readonly stickerSidebarCollection: Locator;
   readonly stickerSelectorSidebarLabel: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.allStickers = this.page.getByTestId("sticker-contents");
     this.stickerCollection = this.page.getByTestId("sticker-collection");
     this.stickerCollectionItem = this.page.getByTestId(

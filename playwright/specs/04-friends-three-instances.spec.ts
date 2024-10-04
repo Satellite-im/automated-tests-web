@@ -1,5 +1,4 @@
 import { test } from "../fixtures/setup";
-import { faker } from "@faker-js/faker";
 
 test.describe("Friends tests", () => {
   /*

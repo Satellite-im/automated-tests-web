@@ -17,10 +17,11 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
 
     // Validate Create or Import Page and then click on Create New Account
     await createOrImport.labelCreateTitle.waitFor({ state: "attached" });
@@ -77,9 +78,10 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -100,9 +102,10 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -124,9 +127,10 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -149,9 +153,10 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -177,9 +182,10 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -217,11 +223,12 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -257,11 +264,12 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -295,11 +303,12 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -327,11 +336,12 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -362,12 +372,13 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();
@@ -406,12 +417,13 @@ test.describe("Create Account and Login Tests", () => {
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Click on Create New Account
     await createOrImport.clickCreateNewAccount();

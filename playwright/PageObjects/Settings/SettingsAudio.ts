@@ -48,8 +48,11 @@ export class SettingsAudio extends SettingsBase {
   readonly videoDeviceSectionSelectorOption: Locator;
   readonly videoDeviceSectionText: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.callTimerSection = this.page.getByTestId("section-call-timer");
     this.callTimerSectionCheckbox = this.page.getByTestId("switch-call-timer");
     this.callTimerSectionSlider = this.page.locator(

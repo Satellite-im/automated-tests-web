@@ -6,11 +6,13 @@ import { SettingsAccessibility } from "playwright/PageObjects/Settings/SettingsA
 test.describe("Settings Accessibility Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonAccessibility.click();
     await page.waitForURL("/settings/accessibility");
   });
@@ -19,9 +21,10 @@ test.describe("Settings Accessibility Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsAccessibility = new SettingsAccessibility(page);
-    const settingsProfile = new SettingsProfile(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const settingsAccessibility = new SettingsAccessibility(page, viewport);
+    const settingsProfile = new SettingsProfile(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsAccessibility.openDyslexicSectionLabel).toHaveText(

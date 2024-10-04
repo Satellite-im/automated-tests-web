@@ -13,8 +13,11 @@ export class CallControls extends MainPage {
   readonly inCallLabel: Locator;
   readonly incomingCallLabel: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.callAnswerButton = this.page.getByTestId("button-call-answer");
     this.callControls = this.page.getByTestId("call-controls");
     this.callDeafenButton = this.page.getByTestId("button-call-deafen");

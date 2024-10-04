@@ -7,7 +7,9 @@ import { LoginPinPage } from "playwright/PageObjects/LoginPin";
 test.describe("Files Page Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToFiles();
     await page.waitForURL("/files");
   });
@@ -16,7 +18,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // Validate Free and Total space data
     await filesPage.validateFreeSpaceInfo("2.15 GB");
@@ -55,7 +58,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // Validate border color when user clicks on New Folder button
     await expect(filesPage.newFolderButton).toHaveCSS(
@@ -73,7 +77,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // User can upload an image file
     await filesPage.uploadFile("playwright/assets/banner.jpg");
@@ -86,7 +91,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // User can create folders on root
     await filesPage.createNewFolder("NewFolder");
@@ -97,7 +103,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // Empty folders are named as undefined
     await filesPage.newFolderButton.click();
@@ -110,7 +117,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // Create a folder
     await filesPage.createNewFolder("NewFolder");
@@ -132,7 +140,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // Create a folder
     await filesPage.createNewFolder("NewFolder");
@@ -153,7 +162,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // Create a folder in root and enter on it
     await filesPage.createNewFolder("NewFolder");
@@ -174,10 +184,11 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
-    const settingsProfile = new SettingsProfile(page);
-    const loginPinPage = new LoginPinPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
+    const settingsProfile = new SettingsProfile(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // User can upload an image file in root
     await filesPage.uploadFile("playwright/assets/banner.jpg");
@@ -217,7 +228,8 @@ test.describe("Files Page Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const filesPage = new FilesPage(page);
+    const viewport = singleUserContext.viewport;
+    const filesPage = new FilesPage(page, viewport);
 
     // Upload a file
     await filesPage.uploadFile("playwright/assets/banner.jpg");

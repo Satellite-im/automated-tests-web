@@ -8,16 +8,24 @@ test.describe("Settings Profile Tests", () => {
 
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
+
+    // Hide sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await chatsMainPage.buttonHideSidebar.click();
+    }
   });
 
   test("I1 - Banner Picture - Tooltip displayed", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Shows tooltip when hovering
     await settingsProfile.profileBanner.hover();
@@ -31,7 +39,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // User can upload a banner picture
     await settingsProfile.uploadProfileBanner("playwright/assets/banner.jpg");
@@ -41,7 +50,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Profile Picture Upload Button tooltip shows "Change profile photo"
     // Validate user can upload profile pictures
@@ -59,7 +69,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Identicon picture is setup by default
     await expect(settingsProfile.identiconSettingsProfile).toBeVisible();
@@ -78,7 +89,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Username displayed will be equal to the username assigned randomly when creating account
     await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
@@ -91,7 +103,8 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     const context = singleUserContext.context;
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Validate hovering on Copy ID button shows "Copy"
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -121,7 +134,8 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     const context = singleUserContext.context;
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Copy ID by just right clicking on the Short ID button and selecting Copy ID
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -165,8 +179,9 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // User types into username and change value
     const newUsername = "newUsername";
@@ -195,15 +210,30 @@ test.describe("Settings Profile Tests", () => {
     await expect(settingsProfile.toastNotificationText).toHaveText(
       "Profile Updated!",
     );
-    await settingsProfile.toastNotification.waitFor({ state: "detached" });
+    await settingsProfile.closeToastNotification();
     await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
       newUsername,
     );
 
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
+
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
+
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
     await chatsMainPage.goToSettings();
+
+    // Hide sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonHideSidebar.click();
+    }
     await expect(settingsProfile.inputSettingsProfileUsername).toHaveValue(
       newUsername,
     );
@@ -213,7 +243,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // User clicks on username textbox and all text is selected
     await settingsProfile.assertInputTextSelected(
@@ -225,7 +256,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Click on Username textbox and validate border is highlighted
     await settingsProfile.inputSettingsProfileUsername.focus();
@@ -242,7 +274,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // User leaves empty username - Warning message is displayed
     await settingsProfile.inputSettingsProfileUsername.click();
@@ -278,7 +311,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Click on Status textbox and validate border is highlighted
     await settingsProfile.inputSettingsProfileStatus.focus();
@@ -295,8 +329,9 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
     // User types into username and change value
     const newStatus = "this is my new status";
@@ -325,15 +360,30 @@ test.describe("Settings Profile Tests", () => {
     await expect(settingsProfile.toastNotificationText).toHaveText(
       "Profile Updated!",
     );
-    await settingsProfile.toastNotification.waitFor({ state: "detached" });
+    await settingsProfile.closeToastNotification();
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       newStatus,
     );
 
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
+
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
+
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonShowSidebar.click();
+    }
     await chatsMainPage.goToSettings();
+
+    // Hide sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsProfile.buttonHideSidebar.click();
+    }
     await expect(settingsProfile.inputSettingsProfileStatus).toHaveValue(
       newStatus,
     );
@@ -343,7 +393,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // User clicks on status textbox and all text is selected
     await settingsProfile.assertInputTextSelected(
@@ -355,7 +406,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // User types more characters than expected into status - Warning message is displayed
     await settingsProfile.inputSettingsProfileStatus.click();
@@ -372,7 +424,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Validate Settings Section contents
     await expect(settingsProfile.onlineStatusSectionLabel).toHaveText("Status");
@@ -395,7 +448,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Change Status to Offline and validate is displayed correctly
     await settingsProfile.selectOnlineStatus("offline");
@@ -418,7 +472,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Validate Settings Section contents
     await expect(settingsProfile.revealPhraseSectionLabel).toHaveText(
@@ -445,7 +500,8 @@ test.describe("Settings Profile Tests", () => {
   }) => {
     const context = singleUserContext.context;
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Grant clipboard permissions to browser
     await context.grantPermissions(["clipboard-read", "clipboard-write"]);
@@ -468,7 +524,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Validate Store Recovery Seed checkbox is checked by default
     await expect(settingsProfile.storeRecoverySeedCheckbox).toHaveClass(
@@ -502,7 +559,8 @@ test.describe("Settings Profile Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsProfile = new SettingsProfile(page);
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
 
     // Validate Settings Section contents
     await expect(settingsProfile.logOutSectionLabel).toHaveText("Log Out");

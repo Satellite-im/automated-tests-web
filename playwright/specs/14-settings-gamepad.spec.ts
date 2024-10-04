@@ -5,11 +5,13 @@ import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile
 test.describe("Settings Extensions Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonGamepad.click();
     await page.waitForURL("/settings/gamepad");
   });
@@ -19,6 +21,7 @@ test.describe("Settings Extensions Tests", () => {
   //   singleUserContext,
   // }) => {
   //   const page = singleUserContext.page;
+  //   const viewport = singleUserContext.viewport;
 
   //   // Inject JavaScript to simulate gamepad connection and input
   //   await page.evaluate(() => {

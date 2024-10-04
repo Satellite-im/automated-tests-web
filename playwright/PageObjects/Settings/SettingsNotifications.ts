@@ -23,8 +23,11 @@ export class SettingsNotifications extends SettingsBase {
   readonly settingsSectionText: Locator;
   readonly settingsSectionSlider: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.enabledSection = this.page.getByTestId(
       "section-notifications-enabled",
     );

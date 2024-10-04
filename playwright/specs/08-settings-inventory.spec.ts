@@ -6,11 +6,13 @@ import { SettingsInventory } from "playwright/PageObjects/Settings/SettingsInven
 test.describe("Settings Inventory Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonInventory.click();
     await page.waitForURL("/settings/inventory");
   });
@@ -20,7 +22,8 @@ test.describe("Settings Inventory Tests", () => {
   //   singleUserContext,
   // }) => {
   //   const page = singleUserContext.page;
-  //   const settingsInventory = new SettingsInventory(page);
+  //   const viewport = singleUserContext.viewport;
+  //   const settingsInventory = new SettingsInventory(page, viewport);
 
   //   const expectedFrames = [
   //     { name: "Moon", type: "Profile Picture Frame" },
@@ -50,8 +53,9 @@ test.describe("Settings Inventory Tests", () => {
   //   singleUserContext,
   // }) => {
   //   const page = singleUserContext.page;
-  //   const settingsInventory = new SettingsInventory(page);
-  //   const settingsProfile = new SettingsProfile(page);
+  //   const viewport = singleUserContext.viewport;
+  //   const settingsInventory = new SettingsInventory(page, viewport);
+  //   const settingsProfile = new SettingsProfile(page, viewport);
 
   //   // Equip Quaint inventory frame
   //   await settingsInventory.equipFrame("Quaint");
@@ -80,7 +84,8 @@ test.describe("Settings Inventory Tests", () => {
   //   singleUserContext,
   // }) => {
   //   const page = singleUserContext.page;
-  //   const settingsInventory = new SettingsInventory(page);
+  //   const viewport = singleUserContext.viewport;
+  //   const settingsInventory = new SettingsInventory(page, viewport);
 
   //   // Equip Quaint inventory frame
   //   await settingsInventory.equipFrame("Quaint");

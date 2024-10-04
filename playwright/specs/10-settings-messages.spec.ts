@@ -6,11 +6,13 @@ import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessag
 test.describe("Settings Messages Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonMessages.click();
     await page.waitForURL("/settings/messages");
   });
@@ -19,7 +21,8 @@ test.describe("Settings Messages Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsMessages = new SettingsMessages(page);
+    const viewport = singleUserContext.viewport;
+    const settingsMessages = new SettingsMessages(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsMessages.convertToEmojiSectionLabel).toHaveText(
@@ -47,7 +50,8 @@ test.describe("Settings Messages Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsMessages = new SettingsMessages(page);
+    const viewport = singleUserContext.viewport;
+    const settingsMessages = new SettingsMessages(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsMessages.markdownSupportSectionLabel).toHaveText(
@@ -75,7 +79,8 @@ test.describe("Settings Messages Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsMessages = new SettingsMessages(page);
+    const viewport = singleUserContext.viewport;
+    const settingsMessages = new SettingsMessages(page, viewport);
 
     // Label and texts for settings section are correct
     await expect(settingsMessages.spamBotDetectionSectionLabel).toHaveText(

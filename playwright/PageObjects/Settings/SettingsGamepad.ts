@@ -1,3 +1,4 @@
+import { vi } from "@faker-js/faker";
 import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
@@ -21,8 +22,11 @@ export class SettingsGamepad extends SettingsBase {
   readonly switchGamepadEnabled: Locator;
   readonly textGamepadTestItOut: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.labelGamepadControllerInfo = this.page.getByTestId(
       "label-gamepad-controller-info",
     );

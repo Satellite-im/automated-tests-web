@@ -15,36 +15,42 @@ type MyFixtures = {
   enterPinUserContext: {
     context: BrowserContext;
     page: Page;
+    viewport: string;
   };
   singleUserContext: {
     context: BrowserContext;
     page: Page;
+    viewport: string;
   };
   firstUserContext: {
     context: BrowserContext;
     page: Page;
+    viewport: string;
   };
   secondUserContext: {
     context: BrowserContext;
     page: Page;
+    viewport: string;
   };
 };
 
 // Extend base test by providing page object classes as fixtures.
 // This new "test" can be used in multiple test files, and each of them will get the fixtures.
 export const test = base.extend<MyFixtures>({
-  enterPinUserContext: async ({}, use) => {
+  enterPinUserContext: async ({}, use, testInfo) => {
     // Declare all constants required for the precondition steps
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
-    const createOrImport = new CreateOrImportPage(page);
+    const viewport = testInfo.project.name;
+    const createOrImport = new CreateOrImportPage(page, viewport);
     await createOrImport.navigateTo();
 
     // Pass the context, browser, and page to the test
     await use({
       context,
       page,
+      viewport,
     });
 
     // Close the context and browser after the test is done
@@ -53,16 +59,18 @@ export const test = base.extend<MyFixtures>({
     await context.close();
   },
 
-  singleUserContext: async ({}, use) => {
+  singleUserContext: async ({}, use, testInfo) => {
     // Declare all constants required for the precondition steps
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = testInfo.project.name;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+
     const username = "test123";
     const status = "fixed status";
 
@@ -92,6 +100,7 @@ export const test = base.extend<MyFixtures>({
     await use({
       context,
       page,
+      viewport,
     });
 
     // Close the context and browser after the test is done
@@ -100,15 +109,16 @@ export const test = base.extend<MyFixtures>({
     await context.close();
   },
 
-  firstUserContext: async ({}, use) => {
+  firstUserContext: async ({}, use, testInfo) => {
     // Declare all constants required for the precondition steps
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const viewport = testInfo.project.name;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
     const username: string = "ChatUserA";
     const status: string = "status from first user";
 
@@ -135,6 +145,7 @@ export const test = base.extend<MyFixtures>({
     await use({
       context,
       page,
+      viewport,
     });
 
     // Close the context and browser after the test is done
@@ -143,15 +154,16 @@ export const test = base.extend<MyFixtures>({
     await context.close();
   },
 
-  secondUserContext: async ({}, use) => {
+  secondUserContext: async ({}, use, testInfo) => {
     // Declare all constants required for the precondition steps
     const browser = await chromium.launch();
     const context = await browser.newContext();
     const page = await context.newPage();
-    const createOrImport = new CreateOrImportPage(page);
-    const authNewAccount = new AuthNewAccount(page);
-    const loginPinPage = new LoginPinPage(page);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page);
+    const viewport = testInfo.project.name;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
     const username: string = "ChatUserB";
     const status: string = "status from second user";
 
@@ -178,6 +190,7 @@ export const test = base.extend<MyFixtures>({
     await use({
       context,
       page,
+      viewport,
     });
 
     // Close the context and browser after the test is done

@@ -39,8 +39,11 @@ export class CallSettings extends MainPage {
   readonly videoDeviceSelectorOption: Locator;
   readonly videoDeviceText: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.callSettings = this.page.locator(".call-settings");
     this.audioBitrate = this.page.getByTestId("section-audio-bitrate");
     this.audioBitrateLabel = this.audioBitrate.getByTestId(

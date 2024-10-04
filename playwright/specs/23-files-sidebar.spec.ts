@@ -4,7 +4,9 @@ import { test } from "../fixtures/setup";
 test.describe("Files Sidebar Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToFiles();
     await page.waitForURL("/files");
   });

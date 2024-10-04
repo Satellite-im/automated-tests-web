@@ -6,11 +6,13 @@ import { SettingsCustomizations } from "playwright/PageObjects/Settings/Settings
 test.describe("Settings Customization Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
     const page = singleUserContext.page;
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    await chatsMainPage.dismissDownloadAlert();
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    const settingsProfile = new SettingsProfile(page);
+    const settingsProfile = new SettingsProfile(page, viewport);
     await settingsProfile.buttonCustomization.click();
     await page.waitForURL("/settings/preferences");
   });
@@ -19,7 +21,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     await expect(settingsCustomizations.appLanguageSectionLabel).toHaveText(
       "App Language",
@@ -38,7 +41,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     const expectedFonts = [
       "Poppins",
@@ -76,7 +80,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     const selectedFont = "JosefinSans";
     await settingsCustomizations.selectFont(selectedFont);
@@ -84,6 +89,11 @@ test.describe("Settings Customization Tests", () => {
       "font-family",
       selectedFont,
     );
+
+    // Show sidebar if viewport is Mobile Chrome
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await settingsCustomizations.goToChat();
     const welcomeText = await page.getByText("Let's get something started!");
     await expect(welcomeText).toHaveCSS("font-family", selectedFont);
@@ -96,7 +106,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     await expect(settingsCustomizations.fontScalingSectionLabel).toHaveText(
       "Font Scaling",
@@ -124,7 +135,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     await expect(settingsCustomizations.fontScalingSectionInput).toHaveValue(
       "1.00",
@@ -145,7 +157,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     // Validate default theme is applied
     await settingsCustomizations.validateCurrentTheme(
@@ -173,7 +186,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     const expectedThemes = ["Default", "Dracula", "Olivia", "Light"];
 
@@ -227,7 +241,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     const expectedPrimaryColors = [
       "Neo Orbit",
@@ -263,12 +278,20 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
-      "color(srgb 0.371765 0.371765 1)",
+      /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
     );
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonHideSidebar.click();
+    }
     await settingsCustomizations.primaryColorSectionPopUpButton.click();
 
     const customColorInput =
@@ -283,10 +306,17 @@ test.describe("Settings Customization Tests", () => {
     await expect(customColorPicker).toBeVisible();
     await customColorInput.clear();
     await customColorInput.fill("#ff8fb8");
-    await settingsCustomizations.buttonCustomization.click({ force: true });
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click({ force: true });
+      await settingsCustomizations.buttonShowSidebar.click();
+    } else {
+      await settingsCustomizations.buttonCustomization.click({ force: true });
+    }
+
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
-      "color(srgb 1 0.604706 0.749412)",
+      /rgb\(255, 143, 184\)|color\(srgb 1 0.604706 0.749412\)/,
     );
   });
 
@@ -294,14 +324,26 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
-    const chatsMainPage = new ChatsMainPage(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
+    const chatsMainPage = new ChatsMainPage(page, viewport);
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
-      "color(srgb 0.371765 0.371765 1)",
+      /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
     );
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonHideSidebar.click();
+    }
     await settingsCustomizations.selectColorSwatch("Traffic Cone");
+
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
       "rgb(255, 60, 0)",
@@ -317,13 +359,20 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
       "rgba(0, 0, 0, 0)",
     );
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonHideSidebar.click();
+    }
     await expect(settingsCustomizations.customCSSSectionLabel).toHaveText(
       "Custom CSS",
     );
@@ -335,12 +384,18 @@ test.describe("Settings Customization Tests", () => {
       ".slimbar {background-color: rgb(255, 0, 141)}",
     );
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await settingsCustomizations.buttonCustomization.click();
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
       "rgb(255, 0, 141)",
     );
 
+    if (viewport === "mobile-chrome") {
+      await settingsCustomizations.buttonShowSidebar.click();
+    }
     await settingsCustomizations.goToChat();
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
@@ -353,7 +408,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     const expectedEmojiFonts = [
       "NotoEmoji",
@@ -382,7 +438,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     const selectedEmojiFont = "OpenMoji";
     await settingsCustomizations.selectEmojiFont(selectedEmojiFont);
@@ -400,7 +457,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     const expectedDefaultProfileStyles = [
       "avataaars",
@@ -438,7 +496,8 @@ test.describe("Settings Customization Tests", () => {
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
-    const settingsCustomizations = new SettingsCustomizations(page);
+    const viewport = singleUserContext.viewport;
+    const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
     // Change current default profile style to lorelei
     const selectedDefaultStyle = "lorelei";

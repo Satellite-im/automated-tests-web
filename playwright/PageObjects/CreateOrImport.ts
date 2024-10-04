@@ -6,8 +6,11 @@ export class CreateOrImportPage extends MainPage {
   readonly labelCreateTitle: Locator;
   readonly textCreateDescription: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonCreateAccount = this.page.getByTestId("button-create-account");
     this.labelCreateTitle = this.page.getByTestId("label-create-title");
     this.textCreateDescription = this.page.getByTestId(

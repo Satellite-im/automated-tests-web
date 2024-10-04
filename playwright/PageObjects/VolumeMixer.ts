@@ -15,8 +15,11 @@ export class VolumeMixer extends MainPage {
   readonly userVolumeText: Locator;
   readonly volumeMixer: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.masterVolumeLabel = this.page.getByTestId("label-master-volume");
     this.masterVolumeRangeSelector = this.page
       .getByTestId("range-selector")

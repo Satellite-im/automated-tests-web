@@ -28,8 +28,11 @@ export class LoginPinPage extends MainPage {
   readonly stayUnlockedLabel: Locator;
   readonly stayUnlockedSwitch: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonClearInput = this.page.getByTestId("button-clear-input");
     this.buttonCreateNewProfile = this.page.getByTestId(
       "button-create-new-profile",

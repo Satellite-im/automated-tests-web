@@ -11,6 +11,10 @@ export class FriendsScreen extends MainPage {
   readonly buttonFriendsActive: Locator;
   readonly buttonFriendsAll: Locator;
   readonly buttonFriendsBlocked: Locator;
+  readonly buttonFriendsHamburger: Locator;
+  readonly contextFriendListOptionAll: Locator;
+  readonly contextFriendListOptionBlocked: Locator;
+  readonly contextFriendListOptionRequests: Locator;
   readonly contextMenuCopyID: Locator;
   readonly contextOptionCopyDid: Locator;
   readonly contextOptionCopyID: Locator;
@@ -41,8 +45,11 @@ export class FriendsScreen extends MainPage {
   readonly textNoOutgoingRequests: Locator;
   readonly textSearchFriendNoResults: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.buttonAddFriend = this.page.getByTestId("button-add-friend");
     this.buttonCopyID = this.page.getByTestId("button-copy-id");
     this.buttonFriendCancel = this.page.getByTestId("button-friend-cancel");
@@ -52,6 +59,18 @@ export class FriendsScreen extends MainPage {
     this.buttonFriendsActive = this.page.getByTestId("button-friends-active");
     this.buttonFriendsAll = this.page.getByTestId("button-friends-all");
     this.buttonFriendsBlocked = this.page.getByTestId("button-friends-blocked");
+    this.buttonFriendsHamburger = this.page
+      .getByTestId("topbar")
+      .getByRole("button")
+      .nth(1);
+    this.contextFriendListOptionAll =
+      this.page.getByTestId("button-friends-all");
+    this.contextFriendListOptionBlocked = this.page.getByTestId(
+      "button-friends-blocked",
+    );
+    this.contextFriendListOptionRequests = this.page.getByTestId(
+      "button-friends-active",
+    );
     this.contextMenuCopyID = this.page.getByTestId("context-menu-copy-id");
     this.contextOptionCopyDid = this.contextMenuCopyID.getByTestId(
       "context-menu-option-Copy DID",
@@ -176,6 +195,21 @@ export class FriendsScreen extends MainPage {
 
   async goToRequestList() {
     await this.buttonFriendsActive.click();
+  }
+
+  async goToMobleAllFriendsList() {
+    await this.buttonFriendsHamburger.click();
+    await this.contextFriendListOptionAll.click();
+  }
+
+  async goToMobileBlockedList() {
+    await this.buttonFriendsHamburger.click();
+    await this.contextFriendListOptionBlocked.click();
+  }
+
+  async goToMobileRequestList() {
+    await this.buttonFriendsHamburger.click();
+    await this.contextFriendListOptionRequests.click();
   }
 
   async removeFriend(username: string) {

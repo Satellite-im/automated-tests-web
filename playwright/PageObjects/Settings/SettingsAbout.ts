@@ -26,8 +26,11 @@ export class SettingsAbout extends SettingsBase {
   readonly websiteSectionLabel: Locator;
   readonly websiteSectionText: Locator;
 
-  constructor(public readonly page: Page) {
-    super(page);
+  constructor(
+    public readonly page: Page,
+    public readonly viewport: string,
+  ) {
+    super(page, viewport);
     this.aboutSection = this.page.getByTestId("section-about-header");
     this.aboutSectionLabel = this.aboutSection.getByTestId(
       "setting-section-label",
