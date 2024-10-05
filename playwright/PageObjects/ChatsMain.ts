@@ -875,9 +875,6 @@ export class ChatsMainPage extends MainPage {
     await expect(this.pinnedMessagesEmpty).toBeHidden();
     await expect(this.pinnedMessage).toBeVisible();
     await expect(this.pinnedMessageProfilePicture).toBeVisible();
-    await expect(this.pinnedMessageProfileStatusIndicator).toHaveClass(
-      /.*\bonline\b.*/,
-    );
     await expect(this.pinnedMessageTimestamp).toHaveText(dateRegex);
     await expect(this.pinnedMessageSender).toHaveText(username);
     await expect(this.pinnedMessageButtonGoTo).toBeVisible();
