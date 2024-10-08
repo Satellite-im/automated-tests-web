@@ -6,9 +6,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths-ignore:
-      - ".github/workflows/**"
-      - "!.github/workflows/automated-tests.yml"
-      - "!.github/workflows/playwright.yml"
       - ".gitignore"
       - ".prettierignore"
       - ".prettierrc.json"
