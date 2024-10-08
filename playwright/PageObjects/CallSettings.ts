@@ -23,11 +23,11 @@ export class CallSettings extends MainPage {
   readonly gainControlSlider: Locator;
   readonly gainControlLabel: Locator;
   readonly gainControlText: Locator;
-  readonly noiseSupression: Locator;
-  readonly noiseSupressionCheckbox: Locator;
-  readonly noiseSupressionSlider: Locator;
-  readonly noiseSupressionLabel: Locator;
-  readonly noiseSupressionText: Locator;
+  readonly noiseSuppression: Locator;
+  readonly noiseSuppressionCheckbox: Locator;
+  readonly noiseSuppressionSlider: Locator;
+  readonly noiseSuppressionLabel: Locator;
+  readonly noiseSuppressionText: Locator;
   readonly sampleSize: Locator;
   readonly sampleSizeLabel: Locator;
   readonly sampleSizeSelector: Locator;
@@ -94,17 +94,17 @@ export class CallSettings extends MainPage {
     );
     this.gainControlText = this.gainControl.getByTestId("setting-section-text");
 
-    this.noiseSupression = this.page.getByTestId("section-noise-suppression");
-    this.noiseSupressionCheckbox = this.noiseSupression.getByTestId(
+    this.noiseSuppression = this.page.getByTestId("section-noise-suppression");
+    this.noiseSuppressionCheckbox = this.noiseSuppression.getByTestId(
       "switch-noise-suppression",
     );
-    this.noiseSupressionSlider = this.noiseSupression.locator(
+    this.noiseSuppressionSlider = this.noiseSuppression.locator(
       '[data-cy="section-echo-cancellation"] > .body > .content > .switch > .slider',
     );
-    this.noiseSupressionLabel = this.noiseSupression.getByTestId(
+    this.noiseSuppressionLabel = this.noiseSuppression.getByTestId(
       "setting-section-label",
     );
-    this.noiseSupressionText = this.noiseSupression.getByTestId(
+    this.noiseSuppressionText = this.noiseSuppression.getByTestId(
       "setting-section-text",
     );
     this.sampleSize = this.page.getByTestId("section-sample-size");

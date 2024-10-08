@@ -9,7 +9,7 @@ export class CallControls extends MainPage {
   readonly callEndButton: Locator;
   readonly callGoButton: Locator;
   readonly callMuteButton: Locator;
-  readonly ellapsedTimeCallText: Locator;
+  readonly elapsedTimeCallText: Locator;
   readonly inCallLabel: Locator;
   readonly incomingCallLabel: Locator;
 
@@ -25,8 +25,8 @@ export class CallControls extends MainPage {
     this.callEndButton = this.page.getByTestId("button-call-end");
     this.callGoButton = this.page.getByTestId("button-call-go");
     this.callMuteButton = this.page.getByTestId("button-call-mute");
-    this.ellapsedTimeCallText = this.callControls.getByTestId(
-      "text-ellapsed-time-call",
+    this.elapsedTimeCallText = this.callControls.getByTestId(
+      "text-elapsed-time-call",
     );
     this.inCallLabel = this.callControls.getByTestId("label-in-call");
     this.incomingCallLabel = this.page.getByTestId("label-incoming-call");
