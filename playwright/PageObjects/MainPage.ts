@@ -245,6 +245,7 @@ export default class MainPage {
   }
 
   async validateNoFavoritesAreVisible() {
+    await this.clickOnShowSidebarIfClosed();
     await this.favoriteCircle.waitFor({ state: "detached" });
   }
 

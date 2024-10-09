@@ -124,10 +124,6 @@ test.describe("Chats Sidebar Tests", () => {
     await chatsMainPage.goToChat();
     await page.waitForURL("/chat");
 
-    if (viewport === "mobile-chrome") {
-      await chatsMainPage.buttonAddFriends.click();
-    }
-
     // Navigate to Settings Page
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");

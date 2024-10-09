@@ -120,7 +120,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
     await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
+    await friendsScreenFirst.closeToastNotification();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and accept friend request
@@ -156,10 +156,10 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Now, send again the friend request to the unblocked user
     await friendsScreenSecond.addFriend(didKeyFirstUser);
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.closeToastNotification();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and see the friend request displayed
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
   });
@@ -310,33 +310,36 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // B4 - Amount of coin should be displayed at top right toolbar - Button is hidden now
     // await expect(chatsMainPageSecond.coinAmountIndicator).toHaveText("0");
 
-    // B5 - Highlighted border should appear around call button when clicked
-    await chatsMainPageSecond.buttonChatCall.focus();
-    await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+    // Validations only done in desktop view
+    if (chatsMainPageSecond.viewport === "desktop-chrome") {
+      // B5 - Highlighted border should appear around call button when clicked
+      await chatsMainPageSecond.buttonChatCall.focus();
+      await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+        "border-bottom-color",
+        "rgb(77, 77, 255)",
+      );
 
-    // Validate CSS from call button backs to normal
-    await page2.locator("body").click();
-    await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
-      "border-bottom-color",
-      "rgb(28, 29, 43)",
-    );
+      // Validate CSS from call button backs to normal
+      await page2.locator("body").click();
+      await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+        "border-bottom-color",
+        "rgb(28, 29, 43)",
+      );
 
-    // B6 - Highlighted border should appear around video button when clicked
-    await chatsMainPageSecond.buttonChatVideo.focus();
-    await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+      // B6 - Highlighted border should appear around video button when clicked
+      await chatsMainPageSecond.buttonChatVideo.focus();
+      await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
+        "border-bottom-color",
+        "rgb(77, 77, 255)",
+      );
 
-    // Validate CSS from video button backs to normal
-    await page2.locator("body").click();
-    await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
-      "border-bottom-color",
-      "rgb(28, 29, 43)",
-    );
+      // Validate CSS from video button backs to normal
+      await page2.locator("body").click();
+      await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
+        "border-bottom-color",
+        "rgb(28, 29, 43)",
+      );
+    }
 
     // B35 - Highlighted border should appear around textbox in chat when user clicks into it
     await chatsMainPageSecond.chatbarInput.fill("test");
@@ -424,19 +427,19 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.chatEncryptedMessage.waitFor({
       state: "visible",
     });
-    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
 
     // First user adds remote user as Favorite
-    await chatsMainPageFirst.buttonChatFavorite.click();
-    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
-      "background-color",
-      "color(srgb 0.371765 0.371765 1)",
+    await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
+      "rgb(33, 38, 58)",
+    );
+    await chatsMainPageFirst.clickOnFavoriteButton();
+    await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
+      /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
     );
 
     // C12 - Favorites should appear on left side of Sidebar
+
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
     await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
     await expect(chatsMainPageFirst.favoriteProfileStatusIndicator).toHaveClass(
@@ -446,12 +449,13 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
     // C14 - Clicking a favorite should take you to that chat
     await chatsMainPageFirst.goToFiles();
-    await filesPageFirst.uploadFileButton.waitFor({ state: "attached" });
+    await page1.waitForURL("/files");
+    await filesPageFirst.clickOnShowSidebarIfClosed();
     await filesPageFirst.favoriteProfilePicture.click();
     await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(usernameTwo);
 
     // B58 - User can remove Favorites and these will not be displayed on Slimbar
-    await chatsMainPageFirst.buttonChatFavorite.click();
+    await chatsMainPageFirst.clickOnFavoriteButton();
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
   });
 

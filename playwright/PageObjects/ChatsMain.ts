@@ -9,6 +9,7 @@ export class ChatsMainPage extends MainPage {
   readonly buttonChatAddAttachment: Locator;
   readonly buttonChatCall: Locator;
   readonly buttonChatFavorite: Locator;
+  readonly buttonChatHamburger: Locator;
   readonly buttonChatPin: Locator;
   readonly buttonChatTransact: Locator;
   readonly buttonChatVideo: Locator;
@@ -130,6 +131,10 @@ export class ChatsMainPage extends MainPage {
     );
     this.buttonChatCall = this.page.getByTestId("button-chat-call");
     this.buttonChatFavorite = this.page.getByTestId("button-chat-favorite");
+    this.buttonChatHamburger = this.page
+      .getByTestId("topbar")
+      .getByRole("button")
+      .nth(1);
     this.buttonChatPin = this.page.getByTestId("button-chat-pin");
     this.buttonChatTransact = this.page.getByTestId("button-chat-transact");
     this.buttonChatVideo = this.page.getByTestId("button-chat-video");
@@ -363,6 +368,17 @@ export class ChatsMainPage extends MainPage {
       this.uploadFilesSelectedSingle.locator(".svg-icon");
     this.uploadFilesSelectedSinglePreviewImage =
       this.uploadFilesSelectedSingle.locator(".file-preview-image");
+  }
+
+  async clickOnFavoriteButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerButton();
+    }
+    await this.buttonChatFavorite.click();
+  }
+
+  async clickOnHamburgerButton() {
+    await this.buttonChatHamburger.click();
   }
 
   async clickOnGoToPinnedMessageButton(message: string) {
@@ -742,6 +758,24 @@ export class ChatsMainPage extends MainPage {
   async validateChatsMainPageIsShown() {
     await expect(this.addSomeone).toBeVisible();
     await expect(this.page.url()).toContain("/chat");
+  }
+
+  async validateFavoriteButtonBackgroundColor(rgbColor: RegExp | string) {
+    // Open hamburger button if viewport is mobile
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerButton();
+    }
+
+    // Validate CSS background color of button
+    await expect(this.buttonChatFavorite).toHaveCSS(
+      "background-color",
+      rgbColor,
+    );
+
+    // Close outside to close hambuger menu if viewport is mobile
+    if (this.viewport === "mobile-chrome") {
+      await this.page.mouse.click(0, 0);
+    }
   }
 
   async validateLocalContextMenuOptions() {
