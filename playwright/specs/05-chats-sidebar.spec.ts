@@ -105,7 +105,7 @@ test.describe("Chats Sidebar Tests", () => {
     }
 
     await chatsMainPage.buttonShowSidebar.waitFor({ state: "attached" });
-    await chatsMainPage.buttonShowSidebar.click();
+    await chatsMainPage.clickOnShowSidebar();
     await chatsMainPage.buttonShowSidebar.waitFor({ state: "detached" });
     await chatsMainPage.expectElementToHaveClass('[data-cy="sidebar"]', "open");
   });
@@ -121,9 +121,6 @@ test.describe("Chats Sidebar Tests", () => {
     await page.waitForURL("/files");
 
     // Navigate to Chat Page
-    if (viewport === "mobile-chrome") {
-      await chatsMainPage.buttonShowSidebar.click();
-    }
     await chatsMainPage.goToChat();
     await page.waitForURL("/chat");
 
@@ -132,9 +129,6 @@ test.describe("Chats Sidebar Tests", () => {
     }
 
     // Navigate to Settings Page
-    if (viewport === "mobile-chrome") {
-      await chatsMainPage.buttonShowSidebar.click();
-    }
     await chatsMainPage.goToSettings();
     await page.waitForURL("/settings/profile");
 

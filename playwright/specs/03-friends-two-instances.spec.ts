@@ -31,6 +31,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -99,6 +101,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -116,10 +120,10 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and accept friend request
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
     await friendsScreenFirst.acceptFriendRequest(usernameTwo);
@@ -175,6 +179,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -230,6 +236,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -1851,6 +1859,8 @@ async function setupChats(
   page1: Page,
 ) {
   // With both users go to Friends Screen
+  await chatsMainPageFirst.dismissDownloadAlert();
+  await chatsMainPageSecond.dismissDownloadAlert();
   await chatsMainPageFirst.goToFriends();
   await chatsMainPageSecond.goToFriends();
 

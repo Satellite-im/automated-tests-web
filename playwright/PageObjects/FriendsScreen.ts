@@ -186,30 +186,30 @@ export class FriendsScreen extends MainPage {
   }
 
   async goToAllFriendsList() {
-    await this.buttonFriendsAll.click();
+    if (this.viewport === "mobile-chrome") {
+      await this.buttonFriendsHamburger.click();
+      await this.contextFriendListOptionAll.click();
+    } else {
+      await this.buttonFriendsAll.click();
+    }
   }
 
   async goToBlockedList() {
-    await this.buttonFriendsBlocked.click();
+    if (this.viewport === "mobile-chrome") {
+      await this.buttonFriendsHamburger.click();
+      await this.contextFriendListOptionBlocked.click();
+    } else {
+      await this.buttonFriendsBlocked.click();
+    }
   }
 
   async goToRequestList() {
-    await this.buttonFriendsActive.click();
-  }
-
-  async goToMobleAllFriendsList() {
-    await this.buttonFriendsHamburger.click();
-    await this.contextFriendListOptionAll.click();
-  }
-
-  async goToMobileBlockedList() {
-    await this.buttonFriendsHamburger.click();
-    await this.contextFriendListOptionBlocked.click();
-  }
-
-  async goToMobileRequestList() {
-    await this.buttonFriendsHamburger.click();
-    await this.contextFriendListOptionRequests.click();
+    if (this.viewport === "mobile-chrome") {
+      await this.buttonFriendsHamburger.click();
+      await this.contextFriendListOptionRequests.click();
+    } else {
+      await this.buttonFriendsActive.click();
+    }
   }
 
   async removeFriend(username: string) {

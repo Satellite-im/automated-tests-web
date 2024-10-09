@@ -10,6 +10,7 @@ test.describe("Settings Keybinds Tests", () => {
     if (viewport === "desktop-chrome") {
       const page = singleUserContext.page;
       const chatsMainPage = new ChatsMainPage(page, viewport);
+      await chatsMainPage.dismissDownloadAlert();
       await chatsMainPage.goToSettings();
       await page.waitForURL("/settings/profile");
 

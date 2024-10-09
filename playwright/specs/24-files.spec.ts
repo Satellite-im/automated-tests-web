@@ -24,34 +24,6 @@ test.describe("Files Page Tests", () => {
     // Validate Free and Total space data
     await filesPage.validateFreeSpaceInfo("2.15 GB");
     await filesPage.validateTotalSpaceInfo("2.15 GB");
-
-    // F1 - Highlighted border should appear when user clicks Sync
-    // await filesPage.buttonFilesSync.focus();
-    // await expect(filesPage.buttonFilesSync).toHaveCSS(
-    //   "border-bottom-color",
-    //   "rgb(77, 77, 255)",
-    // );
-
-    // F2 - Highlighted border should appear when user clicks Create Node
-    // await filesPage.buttonFilesCreateNode.focus();
-    // await expect(filesPage.buttonFilesCreateNode).toHaveCSS(
-    //   "border-bottom-color",
-    //   "rgb(77, 77, 255)",
-    // );
-
-    // Highlighted border should appear when user clicks Gift Space
-    // await filesPage.buttonFilesGiftSpace.focus();
-    // await expect(filesPage.buttonFilesGiftSpace).toHaveCSS(
-    //   "border-bottom-color",
-    //   "rgb(77, 77, 255)",
-    // );
-
-    // Highlighted border should appear when user clicks Rent Space
-    // await filesPage.buttonFilesRentSpace.focus();
-    // await expect(filesPage.buttonFilesRentSpace).toHaveCSS(
-    //   "border-bottom-color",
-    //   "rgb(77, 77, 255)",
-    // );
   });
 
   test("F5 - Highlighted border should appaer when you click Create New Folder", async ({
@@ -62,15 +34,17 @@ test.describe("Files Page Tests", () => {
     const filesPage = new FilesPage(page, viewport);
 
     // Validate border color when user clicks on New Folder button
-    await expect(filesPage.newFolderButton).toHaveCSS(
-      "border-color",
-      "rgb(28, 29, 43)",
-    );
-    await filesPage.newFolderButton.focus();
-    await expect(filesPage.newFolderButton).toHaveCSS(
-      "border-color",
-      "rgb(77, 77, 255)",
-    );
+    if (viewport === "desktop-chrome") {
+      await expect(filesPage.newFolderButton).toHaveCSS(
+        "border-color",
+        "rgb(28, 29, 43)",
+      );
+      await filesPage.newFolderButton.focus();
+      await expect(filesPage.newFolderButton).toHaveCSS(
+        "border-color",
+        "rgb(77, 77, 255)",
+      );
+    }
   });
 
   test("F6, F11 -Clicking Upload should then open up the OS files browser and user can upload files in root folder", async ({
@@ -107,7 +81,7 @@ test.describe("Files Page Tests", () => {
     const filesPage = new FilesPage(page, viewport);
 
     // Empty folders are named as undefined
-    await filesPage.newFolderButton.click();
+    await filesPage.clickOnCreateFolderButton();
     await filesPage.inputFileFolderName.fill("");
     await page.keyboard.press("Enter");
     await page.locator(`[data-cy="folder-"]`).waitFor({ state: "detached" });
@@ -128,9 +102,10 @@ test.describe("Files Page Tests", () => {
     await filesPage.createNewFolder("NewFolder");
 
     // Validate only one folder is created
-    const countOfFolders = await page.locator('[data-cy^="folder-"]').count();
-    // One element located by the count is '[data-cy="folder-list"]' which is the sidebar folder list, therefore only one folder is created
-    expect(countOfFolders).toEqual(2);
+    const countOfFolders = await page
+      .locator('[data-cy^="folder-"]:not([data-cy="folder-list"])')
+      .count();
+    expect(countOfFolders).toEqual(1);
 
     // Toast notification should be displayed
     await filesPage.toastNotification.last().waitFor({ state: "attached" });
@@ -210,6 +185,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
+    await settingsProfile.showSettingsPageIfNotOpen();
     await settingsProfile.logOutSectionButton.click();
     await page.waitForURL("/auth");
 

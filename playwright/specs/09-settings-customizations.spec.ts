@@ -91,9 +91,6 @@ test.describe("Settings Customization Tests", () => {
     );
 
     // Show sidebar if viewport is Mobile Chrome
-    if (viewport === "mobile-chrome") {
-      await settingsCustomizations.buttonShowSidebar.click();
-    }
     await settingsCustomizations.goToChat();
     const welcomeText = await page.getByText("Let's get something started!");
     await expect(welcomeText).toHaveCSS("font-family", selectedFont);
@@ -281,9 +278,6 @@ test.describe("Settings Customization Tests", () => {
     const viewport = singleUserContext.viewport;
     const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
-    if (viewport === "mobile-chrome") {
-      await settingsCustomizations.buttonShowSidebar.click();
-    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
       /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
@@ -328,9 +322,6 @@ test.describe("Settings Customization Tests", () => {
     const settingsCustomizations = new SettingsCustomizations(page, viewport);
     const chatsMainPage = new ChatsMainPage(page, viewport);
 
-    if (viewport === "mobile-chrome") {
-      await settingsCustomizations.buttonShowSidebar.click();
-    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
       /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
@@ -341,9 +332,6 @@ test.describe("Settings Customization Tests", () => {
     }
     await settingsCustomizations.selectColorSwatch("Traffic Cone");
 
-    if (viewport === "mobile-chrome") {
-      await settingsCustomizations.buttonShowSidebar.click();
-    }
     await expect(settingsCustomizations.buttonCustomization).toHaveCSS(
       "background-color",
       "rgb(255, 60, 0)",
@@ -362,9 +350,6 @@ test.describe("Settings Customization Tests", () => {
     const viewport = singleUserContext.viewport;
     const settingsCustomizations = new SettingsCustomizations(page, viewport);
 
-    if (viewport === "mobile-chrome") {
-      await settingsCustomizations.buttonShowSidebar.click();
-    }
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
       "rgba(0, 0, 0, 0)",
@@ -384,18 +369,12 @@ test.describe("Settings Customization Tests", () => {
       ".slimbar {background-color: rgb(255, 0, 141)}",
     );
 
-    if (viewport === "mobile-chrome") {
-      await settingsCustomizations.buttonShowSidebar.click();
-    }
     await settingsCustomizations.buttonCustomization.click();
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",
       "rgb(255, 0, 141)",
     );
 
-    if (viewport === "mobile-chrome") {
-      await settingsCustomizations.buttonShowSidebar.click();
-    }
     await settingsCustomizations.goToChat();
     await expect(settingsCustomizations.slimbar).toHaveCSS(
       "background-color",

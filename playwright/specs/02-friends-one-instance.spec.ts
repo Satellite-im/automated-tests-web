@@ -22,18 +22,22 @@ test.describe("Friends tests", () => {
 
     // H2 - Clicking Active should take you to Active page within Friends
     await friendsScreen.goToRequestList();
-    await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreen.buttonFriendsActive).toHaveCSS(
-      "background-color",
-      "color(srgb 0.371765 0.371765 1)",
-    );
-    await expect(friendsScreen.buttonFriendsBlocked).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
+
+    if (viewport === "desktop-chrome") {
+      await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
+        "background-color",
+        "rgb(33, 38, 58)",
+      );
+      await expect(friendsScreen.buttonFriendsActive).toHaveCSS(
+        "background-color",
+        "color(srgb 0.371765 0.371765 1)",
+      );
+      await expect(friendsScreen.buttonFriendsBlocked).toHaveCSS(
+        "background-color",
+        "rgb(33, 38, 58)",
+      );
+    }
+
     await expect(friendsScreen.labelIncomingRequests).toHaveText(
       "Incoming Requests",
     );
@@ -52,18 +56,22 @@ test.describe("Friends tests", () => {
 
     // H3 - Clicking Blocked should take you to Blocked page within Friends
     await friendsScreen.goToBlockedList();
-    await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreen.buttonFriendsActive).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreen.buttonFriendsBlocked).toHaveCSS(
-      "background-color",
-      "color(srgb 0.371765 0.371765 1)",
-    );
+
+    if (viewport === "desktop-chrome") {
+      await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
+        "background-color",
+        "rgb(33, 38, 58)",
+      );
+      await expect(friendsScreen.buttonFriendsActive).toHaveCSS(
+        "background-color",
+        "rgb(33, 38, 58)",
+      );
+      await expect(friendsScreen.buttonFriendsBlocked).toHaveCSS(
+        "background-color",
+        "color(srgb 0.371765 0.371765 1)",
+      );
+    }
+
     await expect(friendsScreen.labelBlockedUsers).toBeVisible();
     await expect(friendsScreen.labelBlockedUsers).toHaveText("Blocked Users");
     await expect(friendsScreen.textNoBlockedUsers).toBeVisible();
@@ -73,18 +81,22 @@ test.describe("Friends tests", () => {
 
     // H1 - Clicking All should take you to All page within Friends
     await friendsScreen.goToAllFriendsList();
-    await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
-      "background-color",
-      "rgb(35, 41, 62)",
-    );
-    await expect(friendsScreen.buttonFriendsActive).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
-    await expect(friendsScreen.buttonFriendsBlocked).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
+
+    if (viewport === "desktop-chrome") {
+      await expect(friendsScreen.buttonFriendsAll).toHaveCSS(
+        "background-color",
+        "rgb(35, 41, 62)",
+      );
+      await expect(friendsScreen.buttonFriendsActive).toHaveCSS(
+        "background-color",
+        "rgb(33, 38, 58)",
+      );
+      await expect(friendsScreen.buttonFriendsBlocked).toHaveCSS(
+        "background-color",
+        "rgb(33, 38, 58)",
+      );
+    }
+
     await expect(friendsScreen.labelAddSomeone).toBeVisible();
     await expect(friendsScreen.labelAddSomeone).toHaveText("Add Someone");
     await expect(friendsScreen.labelSearchFriends).toBeVisible();

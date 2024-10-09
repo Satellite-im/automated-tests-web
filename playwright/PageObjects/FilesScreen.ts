@@ -2,6 +2,7 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class FilesPage extends MainPage {
+  readonly buttonFilesHamburger: Locator;
   readonly buttonFilesSync: Locator;
   readonly buttonFilesGiftSpace: Locator;
   readonly buttonFilesRentSpace: Locator;
@@ -32,6 +33,10 @@ export class FilesPage extends MainPage {
     public readonly viewport: string,
   ) {
     super(page, viewport);
+    this.buttonFilesHamburger = this.page
+      .getByTestId("topbar")
+      .getByRole("button")
+      .nth(3);
     this.buttonFilesSync = this.page.getByTestId("button-files-sync");
     this.buttonFilesGiftSpace = this.page.getByTestId(
       "button-files-gift-space",
@@ -70,8 +75,23 @@ export class FilesPage extends MainPage {
     this.uploadFileInput = this.page.getByTestId("input=upload-files");
   }
 
-  async createNewFolder(folderName: string) {
+  async clickOnCreateFolderButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.buttonFilesHamburger.click();
+    }
     await this.newFolderButton.click();
+  }
+
+  async clickOnUploadFileButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.buttonFilesHamburger.click();
+    } else {
+      await this.uploadFileButton.click();
+    }
+  }
+
+  async createNewFolder(folderName: string) {
+    await this.clickOnCreateFolderButton();
     await this.inputFileFolderName.waitFor({ state: "attached" });
     await this.inputFileFolderName.fill(folderName);
     await this.page.keyboard.press("Enter");
@@ -205,8 +225,11 @@ export class FilesPage extends MainPage {
   }
 
   async uploadFile(filePath: string) {
-    await this.uploadFileButton.click();
+    await this.clickOnUploadFileButton();
     await this.uploadFileInput.setInputFiles(filePath);
+    if (this.viewport === "mobile-chrome") {
+      await this.uploadFileButton.click();
+    }
     const filename = await this.getFileName(filePath);
     await this.page
       .locator(`[data-cy="file-${filename}"]`)
