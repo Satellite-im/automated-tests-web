@@ -1728,14 +1728,19 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(imageReceived).toBeVisible();
 
     // Validate GIF sent is displayed in chat preview from sidebar as last message sent
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
     await chatsMainPageSecond.validateChatPreviewMessageImage(
       username,
       gifToSelect,
     );
+    await chatsMainPageSecond.hideSidebarOnMobileView();
+
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await chatsMainPageFirst.validateChatPreviewMessageImage(
       usernameTwo,
       gifToSelect,
     );
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // Validate user can navigate through tabs in Gif picker
     await chatsMainPageSecond.openGifPicker();
@@ -1790,14 +1795,19 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(imageReceived).toBeVisible();
 
     // Validate Sticker sent is displayed in chat preview from sidebar as last message sent
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
     await chatsMainPageSecond.validateChatPreviewMessageImage(
       username,
       "Power Up",
     );
+    await chatsMainPageSecond.hideSidebarOnMobileView();
+
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await chatsMainPageFirst.validateChatPreviewMessageImage(
       usernameTwo,
       "Power Up",
     );
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // Validate user can navigate through tabs in sticker picker
     await chatsMainPageSecond.openStickerPicker();

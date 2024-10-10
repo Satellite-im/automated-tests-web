@@ -185,7 +185,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.goToSettings();
     await page.waitForURL("/settings/profile");
 
-    await settingsProfile.showSettingsPageIfNotOpen();
+    await settingsProfile.hideSidebarOnMobileView();
     await settingsProfile.logOutSectionButton.click();
     await page.waitForURL("/auth");
 

@@ -422,6 +422,9 @@ export class ChatsMainPage extends MainPage {
   }
 
   async exitPinMessagesContainer() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerButton();
+    }
     await this.buttonChatPin.click({ force: true });
   }
 
@@ -702,6 +705,9 @@ export class ChatsMainPage extends MainPage {
   }
 
   async openPinMessagesContainer() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerButton();
+    }
     await this.buttonChatPin.click();
   }
 
@@ -1170,10 +1176,20 @@ export class ChatsMainPage extends MainPage {
   }
 
   async openGifPicker() {
-    await this.gifPickerButton.click();
+    if (this.viewport === "mobile-chrome") {
+      await this.emojiPickerButton.click();
+      await this.page.getByTestId("button-GIFs").click();
+    } else {
+      await this.gifPickerButton.click();
+    }
   }
 
   async openStickerPicker() {
-    await this.stickerPickerButton.click();
+    if (this.viewport === "mobile-chrome") {
+      await this.emojiPickerButton.click();
+      await this.page.getByTestId("button-Stickers").click();
+    } else {
+      await this.stickerPickerButton.click();
+    }
   }
 }

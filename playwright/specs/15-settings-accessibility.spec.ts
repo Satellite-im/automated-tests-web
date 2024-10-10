@@ -2,7 +2,6 @@ import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 import { SettingsAccessibility } from "playwright/PageObjects/Settings/SettingsAccessibility";
-import { vi } from "@faker-js/faker";
 
 test.describe("Settings Accessibility Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
@@ -58,9 +57,6 @@ test.describe("Settings Accessibility Tests", () => {
     await expect(textElement).toHaveCSS("font-family", "OpenDyslexic");
 
     // Return to Settings Accessibility page
-    if (viewport === "mobile-chrome") {
-      await chatsMainPage.buttonAddFriends.click();
-    }
     await chatsMainPage.goToSettings();
     await settingsProfile.buttonAccessibility.click();
     await page.waitForURL("/settings/accessibility");

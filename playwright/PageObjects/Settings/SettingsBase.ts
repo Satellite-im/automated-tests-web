@@ -41,13 +41,4 @@ export class SettingsBase extends MainPage {
     this.buttonProfile = this.page.getByTestId("button-Profile");
     this.buttonRealms = this.page.getByTestId("button-Realms");
   }
-
-  async showSettingsPageIfNotOpen() {
-    const isOpen = await this.sidebar.evaluate((element) => {
-      return element.classList.contains("open");
-    });
-    if (isOpen && this.viewport === "mobile-chrome") {
-      await this.buttonHideSidebar.click();
-    }
-  }
 }

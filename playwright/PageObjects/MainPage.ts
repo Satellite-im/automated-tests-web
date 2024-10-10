@@ -146,6 +146,15 @@ export default class MainPage {
     }
   }
 
+  async hideSidebarOnMobileView() {
+    const isOpen = await this.sidebar.evaluate((element) => {
+      return element.classList.contains("open");
+    });
+    if (isOpen && this.viewport === "mobile-chrome") {
+      await this.buttonHideSidebar.click();
+    }
+  }
+
   async closeToastNotification() {
     await this.toastNotificationButton.click();
   }
