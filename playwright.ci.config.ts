@@ -22,8 +22,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ["html", { outputFolder: "playwright-report" }],
-    ["json", { outputFile: "playwright-report/report.json" }],
+    ["list"],
+    ["blob"],
     ["allure-playwright", { outputFolder: "allure-results" }],
     [
       "@estruyf/github-actions-reporter",
@@ -41,6 +41,7 @@ export default defineConfig({
     actionTimeout: 30000,
     video: "retain-on-failure",
     screenshot: "only-on-failure",
+    trace: "on-first-retry",
   },
 
   /* Configure projects for major browsers */

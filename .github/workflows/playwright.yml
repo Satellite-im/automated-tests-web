@@ -57,8 +57,8 @@ jobs:
         if: always()
         with:
           name: playwright-report-${{ matrix.project }}
-          path: automated-tests/playwright-report/
-          retention-days: 5
+          path: automated-tests/blob-report/
+          retention-days: 1
 
       - name: Upload Allure results as artifact
         if: always()
@@ -66,7 +66,7 @@ jobs:
         with:
           name: allure-results-${{ matrix.project }}
           path: automated-tests/allure-results
-          retention-days: 5
+          retention-days: 1
 
       - name: Add label if any of build jobs failed
         if: failure()
@@ -81,7 +81,33 @@ jobs:
     if: always()
     needs: test
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.47.2-jammy
     steps:
+      - name: Checkout Automated Tests directory 🔖
+        uses: actions/checkout@v4
+        with:
+          path: automated-tests
+
+      - name: Install dependencies for Testing Repo 📦
+        working-directory: automated-tests
+        run: npm ci
+
+      - name: Download Blob Report from Desktop
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-report-desktop-chrome
+          path: automated-tests/blob-report
+
+      - name: Download Blob Report from Mobile
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-report-mobile-chrome
+          path: automated-tests/blob-report
+
+      - name: Merge Blob Reports into HTML Report
+        run: npx playwright merge-reports --reporter html ./blob-report
+
       - name: Download Allure results artifact for desktop
         uses: actions/download-artifact@v4
         with:
@@ -119,7 +145,7 @@ jobs:
           allure_history: allure-history
           keep_reports: 100
 
-      - name: Deploy report to Github Pages
+      - name: Deploy Allure report to Github Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -127,13 +153,26 @@ jobs:
           external_repository: Satellite-im/test-reports
           publish_branch: gh-pages
           publish_dir: allure-history
+          allow_empty_commit: true
+          destination_dir: allure
+
+      - name: Deploy Playwright HTML report to Github Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: Satellite-im/test-reports
+          publish_branch: gh-pages
+          publish_dir: automated-tests/playwright-report
+          allow_empty_commit: true
+          destination_dir: playwright
 
       - name: Comment PR with Allure test results
         if: always() && github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            Playwright test execution is complete! You can find the test results report [here](https://satellite-im.github.io/test-reports/${{ github.run_number }})
+            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/playwright/${{ github.run_number }}) and the Allure test report [here](https://satellite-im.github.io/test-reports/allure/${{ github.run_number }})
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
