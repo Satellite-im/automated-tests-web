@@ -46,15 +46,19 @@ export default defineConfig({
   /* Configure projects for major browsers */
   projects: [
     {
-      name: "Automated Tests on Chrome Desktop",
+      name: "desktop-chrome",
       use: { ...devices["Desktop Chrome"] },
     },
 
     /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
+    {
+      name: "mobile-chrome",
+      use: {
+        browserName: "chromium",
+        ...devices["Pixel 5"], // Use predefined mobile device
+      },
+      testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
+    },
     // {
     //   name: 'Mobile Safari',
     //   use: { ...devices['iPhone 12'] },

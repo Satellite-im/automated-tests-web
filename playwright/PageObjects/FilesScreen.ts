@@ -70,8 +70,23 @@ export class FilesPage extends MainPage {
     this.uploadFileInput = this.page.getByTestId("input=upload-files");
   }
 
-  async createNewFolder(folderName: string) {
+  async clickOnCreateFolderButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+    }
     await this.newFolderButton.click();
+  }
+
+  async clickOnUploadFileButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+    } else {
+      await this.uploadFileButton.click();
+    }
+  }
+
+  async createNewFolder(folderName: string) {
+    await this.clickOnCreateFolderButton();
     await this.inputFileFolderName.waitFor({ state: "attached" });
     await this.inputFileFolderName.fill(folderName);
     await this.page.keyboard.press("Enter");
@@ -205,8 +220,11 @@ export class FilesPage extends MainPage {
   }
 
   async uploadFile(filePath: string) {
-    await this.uploadFileButton.click();
+    await this.clickOnUploadFileButton();
     await this.uploadFileInput.setInputFiles(filePath);
+    if (this.viewport === "mobile-chrome") {
+      await this.uploadFileButton.click();
+    }
     const filename = await this.getFileName(filePath);
     await this.page
       .locator(`[data-cy="file-${filename}"]`)

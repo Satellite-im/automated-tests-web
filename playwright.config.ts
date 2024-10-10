@@ -54,14 +54,14 @@ export default defineConfig({
     },
 
     // Mobile Chrome (Pixel 5)
-    // {
-    //   name: "mobile-chrome",
-    //   use: {
-    //     browserName: "chromium",
-    //     ...devices["Pixel 5"], // Use predefined mobile device
-    //   },
-    //   testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
-    // },
+    {
+      name: "mobile-chrome",
+      use: {
+        browserName: "chromium",
+        ...devices["Pixel 5"], // Use predefined mobile device
+      },
+      testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
+    },
 
     // iPhone 12 (Safari)
     // {

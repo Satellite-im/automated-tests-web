@@ -31,6 +31,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -99,6 +101,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -116,10 +120,10 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Now, add the first user as a friend
     await friendsScreenSecond.addFriend(didKeyFirstUser);
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.closeToastNotification();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and accept friend request
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
     await friendsScreenFirst.acceptFriendRequest(usernameTwo);
@@ -152,10 +156,10 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Now, send again the friend request to the unblocked user
     await friendsScreenSecond.addFriend(didKeyFirstUser);
     await friendsScreenSecond.validateToastRequestSent();
+    await friendsScreenFirst.closeToastNotification();
     await friendsScreenSecond.waitForToastNotificationToDisappear();
 
     // With First User, go to requests list and see the friend request displayed
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
     await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateIncomingRequestExists();
   });
@@ -175,6 +179,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -230,6 +236,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
     // With both users go to Friends Screen
+    await chatsMainPageFirst.dismissDownloadAlert();
+    await chatsMainPageSecond.dismissDownloadAlert();
     await chatsMainPageFirst.goToFriends();
     await chatsMainPageSecond.goToFriends();
 
@@ -262,8 +270,6 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await friendsScreenSecond.validateNoOutgoingRequestsExist();
 
     // With First User, validate incoming request no longer exists
-    await friendsScreenFirst.goToBlockedList();
-    await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateNoIncomingRequestsExist();
   });
 
@@ -302,33 +308,36 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // B4 - Amount of coin should be displayed at top right toolbar - Button is hidden now
     // await expect(chatsMainPageSecond.coinAmountIndicator).toHaveText("0");
 
-    // B5 - Highlighted border should appear around call button when clicked
-    await chatsMainPageSecond.buttonChatCall.focus();
-    await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+    // Validations only done in desktop view
+    if (chatsMainPageSecond.viewport === "desktop-chrome") {
+      // B5 - Highlighted border should appear around call button when clicked
+      await chatsMainPageSecond.buttonChatCall.focus();
+      await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+        "border-bottom-color",
+        "rgb(77, 77, 255)",
+      );
 
-    // Validate CSS from call button backs to normal
-    await page2.locator("body").click();
-    await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
-      "border-bottom-color",
-      "rgb(28, 29, 43)",
-    );
+      // Validate CSS from call button backs to normal
+      await page2.locator("body").click();
+      await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+        "border-bottom-color",
+        "rgb(28, 29, 43)",
+      );
 
-    // B6 - Highlighted border should appear around video button when clicked
-    await chatsMainPageSecond.buttonChatVideo.focus();
-    await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
-      "border-bottom-color",
-      "rgb(77, 77, 255)",
-    );
+      // B6 - Highlighted border should appear around video button when clicked
+      await chatsMainPageSecond.buttonChatVideo.focus();
+      await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
+        "border-bottom-color",
+        "rgb(77, 77, 255)",
+      );
 
-    // Validate CSS from video button backs to normal
-    await page2.locator("body").click();
-    await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
-      "border-bottom-color",
-      "rgb(28, 29, 43)",
-    );
+      // Validate CSS from video button backs to normal
+      await page2.locator("body").click();
+      await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
+        "border-bottom-color",
+        "rgb(28, 29, 43)",
+      );
+    }
 
     // B35 - Highlighted border should appear around textbox in chat when user clicks into it
     await chatsMainPageSecond.chatbarInput.fill("test");
@@ -416,19 +425,19 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.chatEncryptedMessage.waitFor({
       state: "visible",
     });
-    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
-      "background-color",
-      "rgb(33, 38, 58)",
-    );
 
     // First user adds remote user as Favorite
-    await chatsMainPageFirst.buttonChatFavorite.click();
-    await expect(chatsMainPageFirst.buttonChatFavorite).toHaveCSS(
-      "background-color",
-      "color(srgb 0.371765 0.371765 1)",
+    await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
+      "rgb(33, 38, 58)",
+    );
+    await chatsMainPageFirst.clickOnFavoriteButton();
+    await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
+      /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
     );
 
     // C12 - Favorites should appear on left side of Sidebar
+
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
     await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
     await expect(chatsMainPageFirst.favoriteProfileStatusIndicator).toHaveClass(
@@ -438,12 +447,13 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
     // C14 - Clicking a favorite should take you to that chat
     await chatsMainPageFirst.goToFiles();
-    await filesPageFirst.uploadFileButton.waitFor({ state: "attached" });
+    await page1.waitForURL("/files");
+    await filesPageFirst.clickOnShowSidebarIfClosed();
     await filesPageFirst.favoriteProfilePicture.click();
     await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(usernameTwo);
 
     // B58 - User can remove Favorites and these will not be displayed on Slimbar
-    await chatsMainPageFirst.buttonChatFavorite.click();
+    await chatsMainPageFirst.clickOnFavoriteButton();
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
   });
 
@@ -476,12 +486,14 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.chatEncryptedMessage.waitFor({
       state: "visible",
     });
-    const chatPreviewImageURL =
-      await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
+
     const topbarImageURL =
       await chatsMainPageFirst.chatTopbarProfilePictureImage.getAttribute(
         "src",
       );
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+    const chatPreviewImageURL =
+      await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
     await expect(chatsMainPageFirst.chatPreview).toBeVisible();
     await expect(chatsMainPageFirst.chatPreviewPicture).toBeVisible();
     await expect(chatsMainPageFirst.chatPreviewName).toHaveText(usernameTwo);
@@ -492,6 +504,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       "No messages sent yet.",
     );
     expect(chatPreviewImageURL).toEqual(topbarImageURL);
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // Send a message from user two to first user
     await chatsMainPageSecond.sendMessage("Hello from the second user");
@@ -505,6 +518,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
 
     // Validate Chat Sidebar is updated with most recent message on both sides local and remote
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
       "Hello from the second user",
     );
@@ -512,6 +526,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
       usernameTwo,
       "Hello from the second user",
     );
+
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
     await expect(chatsMainPageSecond.chatPreviewLastMessage).toHaveText(
       "Hello from the second user",
     );
@@ -519,6 +535,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       username,
       "Hello from the second user",
     );
+    await chatsMainPageSecond.hideSidebarOnMobileView();
 
     // C15 - Right clicking a chat in sidebar should open context menu
     // C16 - Context menu should display: Favorite, Hide, Mark as read
@@ -536,6 +553,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
     await chatsMainPageFirst.contextMenuOptionFavorite.click();
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // C17 - Timestamp of most recent message sent or received in chat should be displayed in the sidebar - Not working correctly
     // Fast forward clock for 30 minutes and validate message was sent 30 minutes ago
@@ -1716,14 +1734,19 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(imageReceived).toBeVisible();
 
     // Validate GIF sent is displayed in chat preview from sidebar as last message sent
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
     await chatsMainPageSecond.validateChatPreviewMessageImage(
       username,
       gifToSelect,
     );
+    await chatsMainPageSecond.hideSidebarOnMobileView();
+
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await chatsMainPageFirst.validateChatPreviewMessageImage(
       usernameTwo,
       gifToSelect,
     );
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // Validate user can navigate through tabs in Gif picker
     await chatsMainPageSecond.openGifPicker();
@@ -1778,14 +1801,19 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(imageReceived).toBeVisible();
 
     // Validate Sticker sent is displayed in chat preview from sidebar as last message sent
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
     await chatsMainPageSecond.validateChatPreviewMessageImage(
       username,
       "Power Up",
     );
+    await chatsMainPageSecond.hideSidebarOnMobileView();
+
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await chatsMainPageFirst.validateChatPreviewMessageImage(
       usernameTwo,
       "Power Up",
     );
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // Validate user can navigate through tabs in sticker picker
     await chatsMainPageSecond.openStickerPicker();
@@ -1851,6 +1879,8 @@ async function setupChats(
   page1: Page,
 ) {
   // With both users go to Friends Screen
+  await chatsMainPageFirst.dismissDownloadAlert();
+  await chatsMainPageSecond.dismissDownloadAlert();
   await chatsMainPageFirst.goToFriends();
   await chatsMainPageSecond.goToFriends();
 

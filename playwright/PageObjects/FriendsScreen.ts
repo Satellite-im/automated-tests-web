@@ -11,7 +11,6 @@ export class FriendsScreen extends MainPage {
   readonly buttonFriendsActive: Locator;
   readonly buttonFriendsAll: Locator;
   readonly buttonFriendsBlocked: Locator;
-  readonly buttonFriendsHamburger: Locator;
   readonly contextFriendListOptionAll: Locator;
   readonly contextFriendListOptionBlocked: Locator;
   readonly contextFriendListOptionRequests: Locator;
@@ -59,10 +58,6 @@ export class FriendsScreen extends MainPage {
     this.buttonFriendsActive = this.page.getByTestId("button-friends-active");
     this.buttonFriendsAll = this.page.getByTestId("button-friends-all");
     this.buttonFriendsBlocked = this.page.getByTestId("button-friends-blocked");
-    this.buttonFriendsHamburger = this.page
-      .getByTestId("topbar")
-      .getByRole("button")
-      .nth(1);
     this.contextFriendListOptionAll =
       this.page.getByTestId("button-friends-all");
     this.contextFriendListOptionBlocked = this.page.getByTestId(
@@ -186,30 +181,36 @@ export class FriendsScreen extends MainPage {
   }
 
   async goToAllFriendsList() {
-    await this.buttonFriendsAll.click();
+    // Open hambuger button and select option on mobile
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+      await this.contextFriendListOptionAll.click();
+    } else {
+      // On desktop just click on the button to navigat
+      await this.buttonFriendsAll.click();
+    }
   }
 
   async goToBlockedList() {
-    await this.buttonFriendsBlocked.click();
+    // Open hambuger button and select option on mobile
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+      await this.contextFriendListOptionBlocked.click();
+    } else {
+      // On desktop just click on the button to navigat
+      await this.buttonFriendsBlocked.click();
+    }
   }
 
   async goToRequestList() {
-    await this.buttonFriendsActive.click();
-  }
-
-  async goToMobleAllFriendsList() {
-    await this.buttonFriendsHamburger.click();
-    await this.contextFriendListOptionAll.click();
-  }
-
-  async goToMobileBlockedList() {
-    await this.buttonFriendsHamburger.click();
-    await this.contextFriendListOptionBlocked.click();
-  }
-
-  async goToMobileRequestList() {
-    await this.buttonFriendsHamburger.click();
-    await this.contextFriendListOptionRequests.click();
+    // Open hambuger button and select option on mobile
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+      await this.contextFriendListOptionRequests.click();
+    } else {
+      // On desktop just click on the button to navigat
+      await this.buttonFriendsActive.click();
+    }
   }
 
   async removeFriend(username: string) {

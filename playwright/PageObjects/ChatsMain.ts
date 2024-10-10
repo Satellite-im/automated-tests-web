@@ -365,6 +365,13 @@ export class ChatsMainPage extends MainPage {
       this.uploadFilesSelectedSingle.locator(".file-preview-image");
   }
 
+  async clickOnFavoriteButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+    }
+    await this.buttonChatFavorite.click();
+  }
+
   async clickOnGoToPinnedMessageButton(message: string) {
     const pinnedMessage = this.page
       .locator(`[data-cy="pinned-message"]`)
@@ -406,7 +413,13 @@ export class ChatsMainPage extends MainPage {
   }
 
   async exitPinMessagesContainer() {
-    await this.buttonChatPin.click({ force: true });
+    if (this.viewport === "mobile-chrome") {
+      await this.page
+        .getByTestId("button-show-controls")
+        .click({ force: true });
+    } else {
+      await this.buttonChatPin.click({ force: true });
+    }
   }
 
   async getLastLocalProfilePicture() {
@@ -686,6 +699,9 @@ export class ChatsMainPage extends MainPage {
   }
 
   async openPinMessagesContainer() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+    }
     await this.buttonChatPin.click();
   }
 
@@ -742,6 +758,24 @@ export class ChatsMainPage extends MainPage {
   async validateChatsMainPageIsShown() {
     await expect(this.addSomeone).toBeVisible();
     await expect(this.page.url()).toContain("/chat");
+  }
+
+  async validateFavoriteButtonBackgroundColor(rgbColor: RegExp | string) {
+    // Open hamburger button if viewport is mobile
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+    }
+
+    // Validate CSS background color of button
+    await expect(this.buttonChatFavorite).toHaveCSS(
+      "background-color",
+      rgbColor,
+    );
+
+    // Close outside to close hambuger menu if viewport is mobile
+    if (this.viewport === "mobile-chrome") {
+      await this.page.mouse.click(0, 0);
+    }
   }
 
   async validateLocalContextMenuOptions() {
@@ -1136,10 +1170,20 @@ export class ChatsMainPage extends MainPage {
   }
 
   async openGifPicker() {
-    await this.gifPickerButton.click();
+    if (this.viewport === "mobile-chrome") {
+      await this.emojiPickerButton.click();
+      await this.page.getByTestId("button-GIFs").click();
+    } else {
+      await this.gifPickerButton.click();
+    }
   }
 
   async openStickerPicker() {
-    await this.stickerPickerButton.click();
+    if (this.viewport === "mobile-chrome") {
+      await this.emojiPickerButton.click();
+      await this.page.getByTestId("button-Stickers").click();
+    } else {
+      await this.stickerPickerButton.click();
+    }
   }
 }

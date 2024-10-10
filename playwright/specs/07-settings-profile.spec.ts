@@ -215,19 +215,9 @@ test.describe("Settings Profile Tests", () => {
       newUsername,
     );
 
-    // Show sidebar if viewport is Mobile Chrome
-    if (viewport === "mobile-chrome") {
-      await settingsProfile.buttonShowSidebar.click();
-    }
-
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
-
-    // Show sidebar if viewport is Mobile Chrome
-    if (viewport === "mobile-chrome") {
-      await settingsProfile.buttonShowSidebar.click();
-    }
     await chatsMainPage.goToSettings();
 
     // Hide sidebar if viewport is Mobile Chrome
@@ -365,19 +355,11 @@ test.describe("Settings Profile Tests", () => {
       newStatus,
     );
 
-    // Show sidebar if viewport is Mobile Chrome
-    if (viewport === "mobile-chrome") {
-      await settingsProfile.buttonShowSidebar.click();
-    }
-
     // User goes to another page and returns to settings profile, username is still changed
     await settingsProfile.goToFriends();
     await page.waitForURL("/friends");
 
     // Show sidebar if viewport is Mobile Chrome
-    if (viewport === "mobile-chrome") {
-      await settingsProfile.buttonShowSidebar.click();
-    }
     await chatsMainPage.goToSettings();
 
     // Hide sidebar if viewport is Mobile Chrome

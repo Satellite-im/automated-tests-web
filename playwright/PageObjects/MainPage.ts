@@ -5,9 +5,11 @@ export default class MainPage {
   readonly buttonDismissInstallAlert: Locator;
   readonly buttonFiles: Locator;
   readonly buttonFriends: Locator;
+  readonly buttonHambugerMobile: Locator;
   readonly buttonHideSidebar: Locator;
   readonly buttonSettings: Locator;
   readonly buttonShowSidebar: Locator;
+  readonly buttonShowSidebarMobile: Locator;
   readonly buttonSidebarChats: Locator;
   readonly buttonSidebarFiles: Locator;
   readonly buttonWallet: Locator;
@@ -47,10 +49,14 @@ export default class MainPage {
       .first();
     this.buttonFiles = this.page.getByTestId("button-Files");
     this.buttonFriends = this.page.getByTestId("button-Friends");
+    this.buttonHambugerMobile = this.page.getByTestId("button-show-controls");
     this.buttonHideSidebar = this.page.getByTestId("button-hide-sidebar");
     this.buttonSettings = this.page.getByTestId("button-Settings");
     this.buttonShowSidebar = this.page
       .getByTestId("slimbar")
+      .getByTestId("button-show-sidebar");
+    this.buttonShowSidebarMobile = this.page
+      .getByTestId("topbar")
       .getByTestId("button-show-sidebar");
     this.buttonSidebarChats = this.page.getByTestId("button-sidebar-chats");
     this.buttonSidebarFiles = this.page.getByTestId("button-sidebar-files");
@@ -125,8 +131,49 @@ export default class MainPage {
     expect(selectionRange.selectionEnd).toBe(inputValue.length);
   }
 
+  async clickOnHamburgerMobileButton() {
+    await this.buttonHambugerMobile.click();
+  }
+
+  async clickOnShowSidebar() {
+    if (this.viewport === "mobile-chrome") {
+      await this.buttonShowSidebarMobile.click();
+    } else {
+      await this.buttonShowSidebar.click();
+    }
+  }
+
+  async clickOnShowSidebarIfClosed() {
+    const isClosed = await this.sidebar.evaluate((element) => {
+      return element.classList.contains("closed");
+    });
+    if (isClosed) {
+      await this.clickOnShowSidebar();
+    }
+  }
+
+  async hideSidebarOnMobileView() {
+    const isOpen = await this.sidebar.evaluate((element) => {
+      return element.classList.contains("open");
+    });
+    if (isOpen && this.viewport === "mobile-chrome") {
+      await this.buttonHideSidebar.click();
+    }
+  }
+
   async closeToastNotification() {
     await this.toastNotificationButton.click();
+  }
+
+  async dismissAddSomeoneOnMobile() {
+    const addSomeoneVisible = await this.page
+      .getByRole("img", {
+        name: "Better with friends!",
+      })
+      .isVisible();
+    if (addSomeoneVisible && this.viewport === "mobile-chrome") {
+      await this.page.getByTestId("button-add-friends").click();
+    }
   }
 
   async dismissDownloadAlert() {
@@ -158,24 +205,34 @@ export default class MainPage {
   }
 
   async goToChat() {
+    await this.dismissAddSomeoneOnMobile();
+    await this.clickOnShowSidebarIfClosed();
     await this.buttonChat.first().click();
   }
 
   async goToFiles() {
+    await this.dismissAddSomeoneOnMobile();
+    await this.clickOnShowSidebarIfClosed();
     await this.buttonFiles.first().click();
     await this.page.waitForURL("/files");
   }
 
   async goToFriends() {
+    await this.dismissAddSomeoneOnMobile();
+    await this.clickOnShowSidebarIfClosed();
     await this.buttonFriends.first().click();
     await this.page.waitForURL("/friends");
   }
 
   async goToSettings() {
+    await this.dismissAddSomeoneOnMobile();
+    await this.clickOnShowSidebarIfClosed();
     await this.buttonSettings.first().click();
   }
 
   async goToWallet() {
+    await this.dismissAddSomeoneOnMobile();
+    await this.clickOnShowSidebarIfClosed();
     await this.buttonWallet.first().click();
   }
 
@@ -203,6 +260,7 @@ export default class MainPage {
   }
 
   async validateNoFavoritesAreVisible() {
+    await this.clickOnShowSidebarIfClosed();
     await this.favoriteCircle.waitFor({ state: "detached" });
   }
 

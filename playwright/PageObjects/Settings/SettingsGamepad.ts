@@ -1,4 +1,3 @@
-import { vi } from "@faker-js/faker";
 import { SettingsBase } from "./SettingsBase";
 import { type Locator, type Page } from "@playwright/test";
 
