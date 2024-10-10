@@ -24,6 +24,7 @@ export default defineConfig({
   reporter: [
     ["list"],
     ["blob"],
+    ["allure-playwright", { outputFolder: "allure-results" }],
     [
       "@estruyf/github-actions-reporter",
       { title: "Automated Test Report", useDetails: true },
