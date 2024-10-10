@@ -86,24 +86,21 @@ jobs:
     steps:
       - name: Checkout Automated Tests directory 🔖
         uses: actions/checkout@v4
-        with:
-          path: automated-tests
 
       - name: Install dependencies for Testing Repo 📦
-        working-directory: automated-tests
         run: npm ci
 
       - name: Download Blob Report from Desktop
         uses: actions/download-artifact@v4
         with:
           name: playwright-report-desktop-chrome
-          path: automated-tests/blob-report
+          path: blob-report
 
       - name: Download Blob Report from Mobile
         uses: actions/download-artifact@v4
         with:
           name: playwright-report-mobile-chrome
-          path: automated-tests/blob-report
+          path: blob-report
 
       - name: Merge Blob Reports into HTML Report
         run: npx playwright merge-reports --reporter html ./blob-report
@@ -112,19 +109,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: allure-results-desktop-chrome
-          path: automated-tests/allure/desktop-chrome
+          path: allure/desktop-chrome
 
       - name: Download Allure results artifact for mobile
         uses: actions/download-artifact@v4
         with:
           name: allure-results-mobile-chrome
-          path: automated-tests/allure/mobile-chrome
+          path: allure/mobile-chrome
 
       - name: Merge Allure results
         run: |
-          mkdir -p automated-tests/allure-results
-          cp -r automated-tests/allure/desktop-chrome/* automated-tests/allure-results/
-          cp -r automated-tests/allure/mobile-chrome/* automated-tests/allure-results/
+          mkdir -p allure-results
+          cp -r allure/desktop-chrome/* allure-results/
+          cp -r allure/mobile-chrome/* allure-results/
 
       - name: Get Allure history
         uses: actions/checkout@v4
@@ -140,7 +137,7 @@ jobs:
         uses: simple-elf/allure-report-action@master
         with:
           gh_pages: gh-pages
-          allure_results: automated-tests/allure-results
+          allure_results: allure-results
           allure_report: allure-report
           allure_history: allure-history
           keep_reports: 100
@@ -163,7 +160,7 @@ jobs:
           deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           external_repository: Satellite-im/test-reports
           publish_branch: gh-pages
-          publish_dir: automated-tests/playwright-report
+          publish_dir: playwright-report
           allow_empty_commit: true
           destination_dir: playwright
 
