@@ -2,7 +2,6 @@ import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 
 export class FilesPage extends MainPage {
-  readonly buttonFilesHamburger: Locator;
   readonly buttonFilesSync: Locator;
   readonly buttonFilesGiftSpace: Locator;
   readonly buttonFilesRentSpace: Locator;
@@ -33,10 +32,6 @@ export class FilesPage extends MainPage {
     public readonly viewport: string,
   ) {
     super(page, viewport);
-    this.buttonFilesHamburger = this.page
-      .getByTestId("topbar")
-      .getByRole("button")
-      .nth(3);
     this.buttonFilesSync = this.page.getByTestId("button-files-sync");
     this.buttonFilesGiftSpace = this.page.getByTestId(
       "button-files-gift-space",
@@ -77,14 +72,14 @@ export class FilesPage extends MainPage {
 
   async clickOnCreateFolderButton() {
     if (this.viewport === "mobile-chrome") {
-      await this.buttonFilesHamburger.click();
+      await this.clickOnHamburgerMobileButton();
     }
     await this.newFolderButton.click();
   }
 
   async clickOnUploadFileButton() {
     if (this.viewport === "mobile-chrome") {
-      await this.buttonFilesHamburger.click();
+      await this.clickOnHamburgerMobileButton();
     } else {
       await this.uploadFileButton.click();
     }

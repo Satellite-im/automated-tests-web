@@ -270,8 +270,6 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await friendsScreenSecond.validateNoOutgoingRequestsExist();
 
     // With First User, validate incoming request no longer exists
-    await friendsScreenFirst.goToBlockedList();
-    await friendsScreenFirst.goToRequestList();
     await friendsScreenFirst.validateNoIncomingRequestsExist();
   });
 
@@ -488,12 +486,14 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.chatEncryptedMessage.waitFor({
       state: "visible",
     });
-    const chatPreviewImageURL =
-      await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
+
     const topbarImageURL =
       await chatsMainPageFirst.chatTopbarProfilePictureImage.getAttribute(
         "src",
       );
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+    const chatPreviewImageURL =
+      await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
     await expect(chatsMainPageFirst.chatPreview).toBeVisible();
     await expect(chatsMainPageFirst.chatPreviewPicture).toBeVisible();
     await expect(chatsMainPageFirst.chatPreviewName).toHaveText(usernameTwo);
@@ -504,6 +504,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       "No messages sent yet.",
     );
     expect(chatPreviewImageURL).toEqual(topbarImageURL);
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // Send a message from user two to first user
     await chatsMainPageSecond.sendMessage("Hello from the second user");
@@ -517,6 +518,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
 
     // Validate Chat Sidebar is updated with most recent message on both sides local and remote
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
       "Hello from the second user",
     );
@@ -524,6 +526,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
       usernameTwo,
       "Hello from the second user",
     );
+
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
     await expect(chatsMainPageSecond.chatPreviewLastMessage).toHaveText(
       "Hello from the second user",
     );
@@ -531,6 +535,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       username,
       "Hello from the second user",
     );
+    await chatsMainPageSecond.hideSidebarOnMobileView();
 
     // C15 - Right clicking a chat in sidebar should open context menu
     // C16 - Context menu should display: Favorite, Hide, Mark as read
@@ -548,6 +553,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
     await chatsMainPageFirst.contextMenuOptionFavorite.click();
     await chatsMainPageFirst.validateNoFavoritesAreVisible();
+    await chatsMainPageFirst.hideSidebarOnMobileView();
 
     // C17 - Timestamp of most recent message sent or received in chat should be displayed in the sidebar - Not working correctly
     // Fast forward clock for 30 minutes and validate message was sent 30 minutes ago

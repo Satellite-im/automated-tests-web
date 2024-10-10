@@ -9,7 +9,6 @@ export class ChatsMainPage extends MainPage {
   readonly buttonChatAddAttachment: Locator;
   readonly buttonChatCall: Locator;
   readonly buttonChatFavorite: Locator;
-  readonly buttonChatHamburger: Locator;
   readonly buttonChatPin: Locator;
   readonly buttonChatTransact: Locator;
   readonly buttonChatVideo: Locator;
@@ -131,10 +130,6 @@ export class ChatsMainPage extends MainPage {
     );
     this.buttonChatCall = this.page.getByTestId("button-chat-call");
     this.buttonChatFavorite = this.page.getByTestId("button-chat-favorite");
-    this.buttonChatHamburger = this.page
-      .getByTestId("topbar")
-      .getByRole("button")
-      .nth(1);
     this.buttonChatPin = this.page.getByTestId("button-chat-pin");
     this.buttonChatTransact = this.page.getByTestId("button-chat-transact");
     this.buttonChatVideo = this.page.getByTestId("button-chat-video");
@@ -372,13 +367,9 @@ export class ChatsMainPage extends MainPage {
 
   async clickOnFavoriteButton() {
     if (this.viewport === "mobile-chrome") {
-      await this.clickOnHamburgerButton();
+      await this.clickOnHamburgerMobileButton();
     }
     await this.buttonChatFavorite.click();
-  }
-
-  async clickOnHamburgerButton() {
-    await this.buttonChatHamburger.click();
   }
 
   async clickOnGoToPinnedMessageButton(message: string) {
@@ -423,9 +414,12 @@ export class ChatsMainPage extends MainPage {
 
   async exitPinMessagesContainer() {
     if (this.viewport === "mobile-chrome") {
-      await this.clickOnHamburgerButton();
+      await this.page
+        .getByTestId("button-show-controls")
+        .click({ force: true });
+    } else {
+      await this.buttonChatPin.click({ force: true });
     }
-    await this.buttonChatPin.click({ force: true });
   }
 
   async getLastLocalProfilePicture() {
@@ -706,7 +700,7 @@ export class ChatsMainPage extends MainPage {
 
   async openPinMessagesContainer() {
     if (this.viewport === "mobile-chrome") {
-      await this.clickOnHamburgerButton();
+      await this.clickOnHamburgerMobileButton();
     }
     await this.buttonChatPin.click();
   }
@@ -769,7 +763,7 @@ export class ChatsMainPage extends MainPage {
   async validateFavoriteButtonBackgroundColor(rgbColor: RegExp | string) {
     // Open hamburger button if viewport is mobile
     if (this.viewport === "mobile-chrome") {
-      await this.clickOnHamburgerButton();
+      await this.clickOnHamburgerMobileButton();
     }
 
     // Validate CSS background color of button

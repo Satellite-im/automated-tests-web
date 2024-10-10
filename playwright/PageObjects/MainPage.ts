@@ -5,6 +5,7 @@ export default class MainPage {
   readonly buttonDismissInstallAlert: Locator;
   readonly buttonFiles: Locator;
   readonly buttonFriends: Locator;
+  readonly buttonHambugerMobile: Locator;
   readonly buttonHideSidebar: Locator;
   readonly buttonSettings: Locator;
   readonly buttonShowSidebar: Locator;
@@ -48,6 +49,7 @@ export default class MainPage {
       .first();
     this.buttonFiles = this.page.getByTestId("button-Files");
     this.buttonFriends = this.page.getByTestId("button-Friends");
+    this.buttonHambugerMobile = this.page.getByTestId("button-show-controls");
     this.buttonHideSidebar = this.page.getByTestId("button-hide-sidebar");
     this.buttonSettings = this.page.getByTestId("button-Settings");
     this.buttonShowSidebar = this.page
@@ -127,6 +129,10 @@ export default class MainPage {
     // Assert that the whole text is selected
     expect(selectionRange.selectionStart).toBe(0);
     expect(selectionRange.selectionEnd).toBe(inputValue.length);
+  }
+
+  async clickOnHamburgerMobileButton() {
+    await this.buttonHambugerMobile.click();
   }
 
   async clickOnShowSidebar() {
