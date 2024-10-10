@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.47.2-jammy
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     strategy:
       fail-fast: false
       matrix:
@@ -82,7 +82,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.47.2-jammy
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     steps:
       - name: Checkout Automated Tests directory 🔖
         uses: actions/checkout@v4
