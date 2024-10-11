@@ -365,6 +365,13 @@ export class ChatsMainPage extends MainPage {
       this.uploadFilesSelectedSingle.locator(".file-preview-image");
   }
 
+  async clickOnAudioCallButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+    }
+    await this.buttonChatCall.click();
+  }
+
   async clickOnFavoriteButton() {
     if (this.viewport === "mobile-chrome") {
       await this.clickOnHamburgerMobileButton();

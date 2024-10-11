@@ -10,6 +10,7 @@ import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessag
 import { EmojiPicker } from "playwright/PageObjects/ChatsElements/EmojiPicker";
 import { GifPicker } from "playwright/PageObjects/ChatsElements/GifPicker";
 import { StickerPicker } from "playwright/PageObjects/ChatsElements/StickerPicker";
+import { CallScreen } from "playwright/PageObjects/CallScreen";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
@@ -1867,6 +1868,50 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
     await stickerPickerSecond.navigateThroughStickerCategories("The Garden");
     await stickerPickerSecond.navigateThroughStickerCategories("Sassy Toons");
+  });
+
+  test("Videocall testing between two users", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    let lastMessageSent: Locator;
+    let lastMessageReceived: Locator;
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // Send message from second user to first user
+    const firstMessage = "hey I am gonna call you now";
+    await chatsMainPageSecond.sendMessage(firstMessage);
+    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+    await expect(lastMessageReceived).toHaveText(firstMessage);
+
+    // Second user calls the first user
+    await chatsMainPageSecond.clickOnAudioCallButton();
+
+    // Validate outgoing call modal displayed
+    const callScreenSecondUser = new CallScreen(page2, viewport);
+    await expect(callScreenSecondUser.callScreen).toBeVisible();
+
+    // Validate incoming call modal displayed
   });
 });
 
