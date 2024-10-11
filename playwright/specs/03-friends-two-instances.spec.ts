@@ -10,7 +10,7 @@ import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessag
 import { EmojiPicker } from "playwright/PageObjects/ChatsElements/EmojiPicker";
 import { GifPicker } from "playwright/PageObjects/ChatsElements/GifPicker";
 import { StickerPicker } from "playwright/PageObjects/ChatsElements/StickerPicker";
-import { CallScreen } from "playwright/PageObjects/CallScreen";
+import { CallScreen } from "playwright/PageObjects/CallElements/CallScreen";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
