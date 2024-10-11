@@ -419,6 +419,10 @@ export class ChatsMainPage extends MainPage {
     await this.chatbarInput.click();
   }
 
+  async exitCallSettings(): Promise<void> {
+    await this.chatTopbarUsername.click({ force: true });
+  }
+
   async exitPinMessagesContainer() {
     if (this.viewport === "mobile-chrome") {
       await this.page

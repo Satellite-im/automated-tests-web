@@ -191,10 +191,6 @@ export class CallScreen extends MainPage {
     expect(isFullscreen).toBeFalsy();
   }
 
-  async exitCallSettings(): Promise<void> {
-    await this.page.mouse.click(0, 0);
-  }
-
   async muteCall() {
     await expect(this.callMuteButton).toHaveAttribute("data-tooltip", "Mute");
     await this.callMuteButton.click();

@@ -1954,7 +1954,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await callScreenSecondUser.disableVideo();
     await callScreenSecondUser.openCallVolumeMixer();
     await callScreenSecondUser.openCallSettings();
-    await callScreenSecondUser.exitCallSettings();
+    await chatsMainPageSecond.exitCallSettings();
     await callScreenSecondUser.endCall();
   });
 });
