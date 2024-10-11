@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.47.2-jammy
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     strategy:
       fail-fast: false
       matrix:
@@ -77,19 +77,13 @@ jobs:
             Failed Automated Test
           type: add
 
-  generate-report:
+  merge-reports:
     if: always()
     needs: test
     runs-on: ubuntu-latest
-    permissions:
-      checks: write
-      pull-requests: write
-      contents: write
-      issues: read
+    container:
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     steps:
-      - name: Checkout Automated Tests directory 🔖
-        uses: actions/checkout@v4
-
       - name: Download Blob Report from Desktop
         uses: actions/download-artifact@v4
         with:
@@ -104,6 +98,46 @@ jobs:
 
       - name: Merge Blob Reports into HTML Report
         run: npx playwright merge-reports --reporter html ./blob-report
+
+      - name: Upload Merged Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-merged-report
+          path: blob-report
+          retention-days: 5
+
+      - name: Delete temporary artifacts
+        uses: geekyeggo/delete-artifact@v5
+        with:
+          name: |
+            playwright-report-desktop-chrome
+            playwright-report-mobile-chrome
+
+      - name: Add label if job fails
+        if: failure()
+        uses: buildsville/add-remove-label@v2.0.1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            Failed Automated Test
+          type: add
+
+  publish-report:
+    if: always()
+    needs: merge-reports
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+      issues: read
+    steps:
+      - name: Download Merged Report
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-merged-report
+          path: blob-report
 
       - name: Download Allure results artifact for desktop
         uses: actions/download-artifact@v4
@@ -181,7 +215,7 @@ jobs:
           type: add
 
   remove-label:
-    needs: [test, generate-report]
+    needs: [test, merge-reports, publish-report]
     runs-on: ubuntu-latest
     permissions:
       checks: write
@@ -197,8 +231,7 @@ jobs:
         uses: geekyeggo/delete-artifact@v5
         with:
           name: |
-            playwright-report-desktop-chrome
-            playwright-report-mobile-chrome
+            playwright-merged-report
             allure-results-desktop-chrome
             allure-results-mobile-chrome
 
