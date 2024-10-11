@@ -48,7 +48,10 @@ export default defineConfig({
   projects: [
     {
       name: "desktop-chrome",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        video: "retain-on-failure",
+      },
     },
 
     /* Test against mobile viewports. */
@@ -57,6 +60,7 @@ export default defineConfig({
       use: {
         browserName: "chromium",
         ...devices["Pixel 5"], // Use predefined mobile device
+        video: "retain-on-failure",
       },
       testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
     },
