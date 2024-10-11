@@ -17,13 +17,15 @@ export class IncomingCall extends MainPage {
     public readonly viewport: string,
   ) {
     super(page, viewport);
-    this.incomingCallModal = this.page.getByTestId("incoming-call");
-    this.buttonAcceptIncomingCall = this.incomingCallModal.getByTestId(
-      "button-accept-incoming-call",
-    );
-    this.buttonDenyIncomingCall = this.incomingCallModal.getByTestId(
-      "button-deny-incoming-call",
-    );
+    this.incomingCallModal = this.page.locator("#incoming-call");
+    this.buttonAcceptIncomingCall = this.incomingCallModal.getByRole("button", {
+      name: "Answer",
+    });
+
+    this.buttonDenyIncomingCall = this.incomingCallModal.getByRole("button", {
+      name: "End",
+      exact: true,
+    });
     this.incomingCallProfilePicture = this.incomingCallModal.getByTestId(
       "friend-profile-picture",
     );
@@ -31,14 +33,12 @@ export class IncomingCall extends MainPage {
       this.incomingCallProfilePicture.locator(".identicon img");
     this.incomingCallProfilePictureImage =
       this.incomingCallProfilePicture.locator("img");
-    this.incomingCallStatus = this.incomingCallModal.getByTestId(
-      "incoming-call-status",
-    );
+    this.incomingCallStatus = this.incomingCallModal.getByText(
+      "status from second user",
+    ); // Temporarily hardcoded
     this.incomingCallStatusIndicator =
       this.incomingCallModal.getByTestId("status-indicator");
-    this.incomingCallUsername = this.incomingCallModal.getByTestId(
-      "incoming-call-username",
-    );
+    this.incomingCallUsername = this.incomingCallModal.getByText("ChatUserB"); // Temporarily hardcoded
   }
 
   async acceptIncomingCall() {
