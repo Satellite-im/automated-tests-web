@@ -1,5 +1,5 @@
 import MainPage from "../MainPage";
-import { type Locator, type Page } from "@playwright/test";
+import { type Locator, type Page, expect } from "@playwright/test";
 
 export class CallScreen extends MainPage {
   readonly callCollapseExpandButton: Locator;
@@ -32,6 +32,7 @@ export class CallScreen extends MainPage {
     public readonly viewport: string,
   ) {
     super(page, viewport);
+    this.callScreen = this.page.getByTestId("call-screen");
     this.callCollapseExpandButton = this.callScreen.getByTestId(
       "button-call-collapse-expand",
     );
@@ -42,7 +43,6 @@ export class CallScreen extends MainPage {
     );
     this.callMuteButton = this.callScreen.getByTestId("button-call-mute");
     this.callParticipant = this.callScreen.getByTestId("call-participant");
-    this.callScreen = this.page.getByTestId("call-screen");
     this.callScreenTopbar = this.callScreen.getByTestId("topbar");
     this.callSettingsButton = this.callScreen.getByTestId(
       "button-call-settings",
@@ -74,5 +74,172 @@ export class CallScreen extends MainPage {
     this.participants = this.callScreen.locator("#participants");
     this.remoteUserVideo = this.callScreen.getByTestId("remote-user-video");
     this.usersInCallText = this.callScreen.getByTestId("text-users-in-call");
+  }
+
+  async clickOnStreamButton() {
+    await this.callStreamButton.click();
+    await expect(this.callStreamButton).toHaveCSS(
+      "border-bottom-color",
+      "rgb(77, 77, 255)",
+    );
+    await expect(this.callStreamButton).toHaveAttribute(
+      "data-tooltip",
+      "Stream",
+    );
+  }
+
+  async collapseCall() {
+    await expect(this.callCollapseExpandButton).toHaveAttribute(
+      "data-tooltip",
+      "Less Space",
+    );
+    await this.callCollapseExpandButton.click();
+    await expect(this.callScreen).not.toHaveClass(/.*\bexpanded\b.*/);
+    await expect(this.callCollapseExpandButton).toHaveAttribute(
+      "data-tooltip",
+      "More Space",
+    );
+  }
+
+  async deafenCall() {
+    await this.callDeafenButton.click();
+    await expect(this.callDeafenButton).toHaveCSS(
+      "background-color",
+      "color(srgb 0.978824 0.297647 0.396471)",
+    );
+    await expect(this.callDeafenButton).toHaveAttribute(
+      "data-tooltip",
+      "Deafen",
+    );
+  }
+
+  async disableVideo() {
+    await expect(this.callVideoButton).toHaveAttribute(
+      "data-tooltip",
+      "Disable Video",
+    );
+    await this.callVideoButton.click();
+    await expect(this.callVideoButton).toHaveCSS(
+      "background-color",
+      "rgb(249, 56, 84)",
+    );
+    await expect(this.callVideoButton).toHaveAttribute(
+      "data-tooltip",
+      "Enable Video",
+    );
+  }
+
+  async enableVideo() {
+    await expect(this.callVideoButton).toHaveAttribute(
+      "data-tooltip",
+      "Enable Video",
+    );
+    await this.callVideoButton.click();
+    await expect(this.callVideoButton).toHaveCSS(
+      "background-color",
+      "rgb(33, 38, 58)",
+    );
+    await expect(this.callVideoButton).toHaveAttribute(
+      "data-tooltip",
+      "Disable Video",
+    );
+  }
+
+  async endCall() {
+    await expect(this.callEndButton).toHaveAttribute("data-tooltip", "End");
+    await expect(this.callEndButton).toHaveCSS(
+      "background-color",
+      "rgb(249, 56, 84)",
+    );
+    await this.callEndButton.click();
+    await this.callScreen.waitFor({ state: "detached" });
+  }
+
+  async expandCall() {
+    await expect(this.callCollapseExpandButton).toHaveAttribute(
+      "data-tooltip",
+      "More Space",
+    );
+    await this.callCollapseExpandButton.click();
+    await expect(this.callScreen).toHaveClass(/.*\bexpanded\b.*/);
+    await expect(this.callCollapseExpandButton).toHaveAttribute(
+      "data-tooltip",
+      "Less Space",
+    );
+  }
+
+  async enterFullScreenMode() {
+    await expect(this.callFullscreenButton).toHaveAttribute(
+      "data-tooltip",
+      "Fullscreen",
+    );
+    await this.callFullscreenButton.click();
+    const isFullscreen = await this.page.evaluate(() => {
+      return document.fullscreenElement !== null;
+    });
+    expect(isFullscreen).toBeTruthy();
+  }
+  async exitFullScreenMode() {
+    await expect(this.callFullscreenButton).toHaveAttribute(
+      "data-tooltip",
+      "Fullscreen",
+    );
+    await this.callFullscreenButton.click();
+    const isFullscreen = await this.page.evaluate(() => {
+      return document.fullscreenElement !== null;
+    });
+    expect(isFullscreen).toBeFalsy();
+  }
+
+  async exitCallSettings(): Promise<void> {
+    await this.page.mouse.click(0, 0);
+  }
+
+  async muteCall() {
+    await expect(this.callMuteButton).toHaveAttribute("data-tooltip", "Mute");
+    await this.callMuteButton.click();
+    await expect(this.callMuteButton).toHaveCSS(
+      "background-color",
+      "color(srgb 0.978824 0.297647 0.396471)",
+    );
+    await expect(this.callMuteButton).toHaveAttribute("data-tooltip", "Unmute");
+  }
+
+  async openCallSettings() {
+    await this.callSettingsButton.click();
+  }
+
+  async openCallVolumeMixer() {
+    await this.callVolumeMixerButton.click();
+  }
+
+  async undeafenCall() {
+    await this.callDeafenButton.click();
+    await expect(this.callDeafenButton).toHaveCSS(
+      "background-color",
+      "rgb(35, 41, 62)",
+    );
+    await expect(this.callDeafenButton).toHaveAttribute(
+      "data-tooltip",
+      "Deafen",
+    );
+  }
+
+  async unmuteCall() {
+    await expect(this.callMuteButton).toHaveAttribute("data-tooltip", "Unmute");
+    await this.callMuteButton.click();
+    await expect(this.callMuteButton).toHaveCSS(
+      "background-color",
+      "rgb(35, 41, 62)",
+    );
+    await expect(this.callMuteButton).toHaveAttribute("data-tooltip", "Mute");
+  }
+
+  async validateCallScreenContents(imgSrc: string) {
+    await expect(this.participantProfilePictureImage).toHaveAttribute(
+      "src",
+      imgSrc,
+    );
+    await expect(this.usersInCallText).toHaveText("(1) users in the call");
   }
 }

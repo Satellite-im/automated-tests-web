@@ -17,13 +17,13 @@ export class IncomingCall extends MainPage {
     public readonly viewport: string,
   ) {
     super(page, viewport);
+    this.incomingCallModal = this.page.getByTestId("incoming-call");
     this.buttonAcceptIncomingCall = this.incomingCallModal.getByTestId(
       "button-accept-incoming-call",
     );
     this.buttonDenyIncomingCall = this.incomingCallModal.getByTestId(
       "button-deny-incoming-call",
     );
-    this.incomingCallModal = this.page.getByTestId("incoming-call");
     this.incomingCallProfilePicture = this.incomingCallModal.getByTestId(
       "friend-profile-picture",
     );
