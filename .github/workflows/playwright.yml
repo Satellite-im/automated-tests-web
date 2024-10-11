@@ -81,14 +81,15 @@ jobs:
     if: always()
     needs: test
     runs-on: ubuntu-latest
-    container:
-      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     permissions:
       checks: write
       pull-requests: write
       contents: write
       issues: read
     steps:
+      - name: Checkout Automated Tests directory 🔖
+        uses: actions/checkout@v4
+
       - name: Download Blob Report from Desktop
         uses: actions/download-artifact@v4
         with:
@@ -141,6 +142,16 @@ jobs:
           allure_history: allure-history
           keep_reports: 100
 
+      - name: Deploy Allure report to Github Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: Satellite-im/test-reports
+          publish_branch: gh-pages
+          publish_dir: allure-history
+          destination_dir: allure
+
       - name: Deploy Playwright HTML report to Github Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v4
@@ -149,13 +160,14 @@ jobs:
           external_repository: Satellite-im/test-reports
           publish_branch: gh-pages
           publish_dir: playwright-report
+          destination_dir: playwright
 
       - name: Comment PR with Allure test results
         if: always() && github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/${{ github.run_number }})
+            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/playwright/${{ github.run_number }}) and the Allure test report [here](https://satellite-im.github.io/test-reports/allure/${{ github.run_number }})
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
