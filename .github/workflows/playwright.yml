@@ -139,8 +139,8 @@ jobs:
           name: playwright-merged-report
           path: playwright-report
 
-      - name: Set a timestamp
-        id: timestampid
+      - name: Set a timestamp one
+        id: timestampidone
         # this will store current time with UTC in outputs.timestamp (eg of value: 20231028_233147Z)
         run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
 
@@ -153,7 +153,7 @@ jobs:
           keep_files: true
           publish_branch: gh-pages
           publish_dir: ./playwright-report
-          destination_dir: ${{ steps.timestampid.outputs.timestamp }}-playwright
+          destination_dir: ${{ steps.timestampidone.outputs.timestamp }}
 
       - name: Download Allure results artifact for desktop
         uses: actions/download-artifact@v4
@@ -192,6 +192,11 @@ jobs:
           allure_history: allure-history
           keep_reports: 100
 
+      - name: Set a timestamp two
+        id: timestampidtwo
+        # this will store current time with UTC in outputs.timestamp (eg of value: 20231028_233147Z)
+        run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+
       - name: Deploy report to Github Pages
         if: success()
         uses: peaceiris/actions-gh-pages@v4
@@ -201,14 +206,14 @@ jobs:
           keep_files: true
           publish_branch: gh-pages
           publish_dir: ./allure-history
-          destination_dir: ${{ steps.timestampid.outputs.timestamp }}-allure
+          destination_dir: ${{ steps.timestampidtwo.outputs.timestamp }}
 
       - name: Comment PR with Test Report link
         if: always() && github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampid.outputs.timestamp }}-playwright/) and the Allure Test Report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampid.outputs.timestamp }}-allure/)
+            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampidone.outputs.timestamp }}/) and the Allure Test Report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampidtwo.outputs.timestamp }}/)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
