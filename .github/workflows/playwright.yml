@@ -46,6 +46,9 @@ jobs:
         working-directory: automated-tests
         run: npm ci
 
+      - name: Install Allure Commandline
+        run: npm install -g allure-commandline
+
       - name: Run Playwright tests
         working-directory: automated-tests
         run: npx playwright test -c playwright.ci.config.ts --project=${{ matrix.project }}
@@ -55,6 +58,14 @@ jobs:
         with:
           name: playwright-report-${{ matrix.project }}
           path: automated-tests/blob-report/
+          retention-days: 1
+
+      - name: Upload Allure results as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-results-${{ matrix.project }}
+          path: automated-tests/allure-results
           retention-days: 1
 
       - name: Add label if any of build jobs failed
@@ -142,14 +153,62 @@ jobs:
           keep_files: true
           publish_branch: gh-pages
           publish_dir: ./playwright-report
-          destination_dir: ${{ steps.timestampid.outputs.timestamp }}
+          destination_dir: ${{ steps.timestampid.outputs.timestamp }}-playwright
+
+      - name: Download Allure results artifact for desktop
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-desktop-chrome
+          path: allure/desktop-chrome
+
+      - name: Download Allure results artifact for mobile
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-results-mobile-chrome
+          path: allure/mobile-chrome
+
+      - name: Merge Allure results
+        run: |
+          mkdir -p allure-results
+          cp -r allure/desktop-chrome/* allure-results/
+          cp -r allure/mobile-chrome/* allure-results/
+
+      - name: Get Allure history
+        uses: actions/checkout@v4
+        if: always()
+        continue-on-error: true
+        with:
+          repository: Satellite-im/test-reports
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Generate Allure Report
+        if: always()
+        uses: simple-elf/allure-report-action@master
+        with:
+          gh_pages: gh-pages
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+          keep_reports: 100
+
+      - name: Deploy report to Github Pages
+        if: success()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: Satellite-im/test-reports
+          keep_files: true
+          publish_branch: gh-pages
+          publish_dir: ./allure-history
+          destination_dir: ${{ steps.timestampid.outputs.timestamp }}-allure
 
       - name: Comment PR with Test Report link
         if: always() && github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampid.outputs.timestamp }}/)
+            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampid.outputs.timestamp }}-playwright/) and the Allure Test Report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampid.outputs.timestamp }}-allure/)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -180,6 +239,8 @@ jobs:
         with:
           name: |
             playwright-merged-report
+            allure-results-desktop-chrome
+            allure-results-mobile-chrome
 
       - name: Remove label if all test jobs succeeded
         uses: buildsville/add-remove-label@v2.0.1
