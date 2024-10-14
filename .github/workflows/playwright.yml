@@ -155,6 +155,9 @@ jobs:
           publish_dir: ./playwright-report
           destination_dir: ${{ steps.timestampidone.outputs.timestamp }}
 
+      - name: Stop ssh-agent job from first deploy required for deploying a second time
+        run: killall ssh-agent
+
       - name: Download Allure results artifact for desktop
         uses: actions/download-artifact@v4
         with:
