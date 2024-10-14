@@ -56,6 +56,7 @@ export default defineConfig({
             "--use-fake-device-for-media-stream",
           ],
         },
+        video: "retain-on-failure",
       },
     },
 
@@ -72,6 +73,7 @@ export default defineConfig({
             "--use-fake-device-for-media-stream",
           ],
         },
+        video: "retain-on-failure",
       },
       testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
     },
