@@ -1582,15 +1582,15 @@ test.describe("Two instances tests - Friends and Chats", () => {
 
     await chatsMainPageSecond.openEmojiPicker();
     const emojiPickerSecond = new EmojiPicker(page2, viewport);
-    await emojiPickerSecond.selectEmoji("😂");
+    await emojiPickerSecond.selectEmoji("😀");
     await chatsMainPageSecond.buttonChatbarSendMessage.click();
 
     // Validate emoji sent is displayed on local and remote sides
     await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      "😂",
+      "😀",
     );
     await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      "😂",
+      "😀",
     );
 
     // Change skin tone of emojis
@@ -1610,11 +1610,11 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Change emoji size in emojis container view
     await chatsMainPageSecond.openEmojiPicker();
     await emojiPickerSecond.changeEmojiSizeView("16");
-    await emojiPickerSecond.validateSingleEmojiSize("😀", "16px");
+    await emojiPickerSecond.validateSingleEmojiSize("🤣", "16px");
     await emojiPickerSecond.changeEmojiSizeView("45");
-    await emojiPickerSecond.validateSingleEmojiSize("😀", "45px");
+    await emojiPickerSecond.validateSingleEmojiSize("🤣", "45px");
     await emojiPickerSecond.changeEmojiSizeView("30");
-    await emojiPickerSecond.validateSingleEmojiSize("😀", "30px");
+    await emojiPickerSecond.validateSingleEmojiSize("🤣", "30px");
 
     // Validate emoji categories displayed in emoji container
     const emojiCategories = [
@@ -1631,10 +1631,10 @@ test.describe("Two instances tests - Friends and Chats", () => {
     ];
     await emojiPickerSecond.validateEmojiCategories(emojiCategories);
 
-    // Validate number of emojis per category
+    // Validate number of emojis per category - 5 by default and 2 recently selected by user
     await emojiPickerSecond.validateNumberOfEmojisPerSection(
       "frequently-used",
-      2,
+      7,
     );
     await emojiPickerSecond.validateNumberOfEmojisPerSection(
       "smileys-and-emotion",
