@@ -51,6 +51,13 @@ export default defineConfig({
       use: {
         ...devices["Desktop Chrome"],
         video: "retain-on-failure",
+        launchOptions: {
+          args: [
+            "--disable-web-security",
+            "--use-fake-ui-for-media-stream",
+            "--use-fake-device-for-media-stream",
+          ],
+        },
       },
     },
 
@@ -61,6 +68,13 @@ export default defineConfig({
         browserName: "chromium",
         ...devices["Pixel 5"], // Use predefined mobile device
         video: "retain-on-failure",
+        launchOptions: {
+          args: [
+            "--disable-web-security",
+            "--use-fake-ui-for-media-stream",
+            "--use-fake-device-for-media-stream",
+          ],
+        },
       },
       testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
     },
