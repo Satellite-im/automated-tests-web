@@ -1953,6 +1953,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     }
 
     await callScreenSecondUser.enableVideo();
+    await callScreenFirstUser.disableVideo();
     await page2.waitForTimeout(10000);
     await callScreenSecondUser.disableVideo();
     await callScreenSecondUser.openCallVolumeMixer();
