@@ -175,7 +175,7 @@ test.describe.only("Create Account and Login Tests", () => {
       "Scramble keypad?",
     );
     await expect(loginPinPage.stayUnlockedLabel).toBeVisible();
-    await expect(loginPinPage.stayUnlockedLabel).toHaveText("Stay unlocked???");
+    await expect(loginPinPage.stayUnlockedLabel).toHaveText("Stay unlocked?");
   });
 
   test("A6, A7 - Scramble Keypad will change the order of pin input buttons", async ({
