@@ -22,8 +22,8 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
-    ["html", { outputFolder: "playwright-report" }],
-    ["json", { outputFile: "playwright-report/report.json" }],
+    ["list"],
+    ["blob"],
     ["allure-playwright", { outputFolder: "allure-results" }],
     [
       "@estruyf/github-actions-reporter",
@@ -41,13 +41,17 @@ export default defineConfig({
     actionTimeout: 30000,
     video: "retain-on-failure",
     screenshot: "only-on-failure",
+    trace: "on-first-retry",
   },
 
   /* Configure projects for major browsers */
   projects: [
     {
       name: "desktop-chrome",
-      use: { ...devices["Desktop Chrome"] },
+      use: {
+        ...devices["Desktop Chrome"],
+        video: "retain-on-failure",
+      },
     },
 
     /* Test against mobile viewports. */
@@ -56,6 +60,7 @@ export default defineConfig({
       use: {
         browserName: "chromium",
         ...devices["Pixel 5"], // Use predefined mobile device
+        video: "retain-on-failure",
       },
       testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
     },
