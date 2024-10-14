@@ -1933,6 +1933,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
       profilePictureSource,
     );
     await incomingCallFirstUser.acceptIncomingCall();
+    const callScreenFirstUser = new CallScreen(page1, viewport);
+    await callScreenFirstUser.enableVideo();
 
     // With first user validate all buttons are working correctly
     await callScreenSecondUser.validateCallScreenContents(profilePictureSource);
@@ -1951,6 +1953,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     }
 
     await callScreenSecondUser.enableVideo();
+    await page2.waitForTimeout(10000);
     await callScreenSecondUser.disableVideo();
     await callScreenSecondUser.openCallVolumeMixer();
     await callScreenSecondUser.openCallSettings();

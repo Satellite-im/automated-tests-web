@@ -50,6 +50,13 @@ export default defineConfig({
       use: {
         browserName: "chromium",
         viewport: { width: 1280, height: 720 }, // Desktop viewport
+        launchOptions: {
+          args: [
+            "--disable-web-security",
+            "--use-fake-ui-for-media-stream",
+            "--use-fake-device-for-media-stream",
+          ],
+        },
       },
     },
 
@@ -59,6 +66,13 @@ export default defineConfig({
       use: {
         browserName: "chromium",
         ...devices["Pixel 5"], // Use predefined mobile device
+        launchOptions: {
+          args: [
+            "--disable-web-security",
+            "--use-fake-ui-for-media-stream",
+            "--use-fake-device-for-media-stream",
+          ],
+        },
       },
       testIgnore: "./playwright/specs/13-settings-keybinds.spec.ts",
     },

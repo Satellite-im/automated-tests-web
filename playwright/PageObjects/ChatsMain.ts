@@ -420,7 +420,13 @@ export class ChatsMainPage extends MainPage {
   }
 
   async exitCallSettings(): Promise<void> {
-    await this.chatTopbarUsername.click({ force: true });
+    if (this.viewport === "mobile-chrome") {
+      await this.page
+        .getByTestId("button-show-controls")
+        .click({ force: true });
+    } else {
+      await this.chatbarInput.click({ force: true });
+    }
   }
 
   async exitPinMessagesContainer() {

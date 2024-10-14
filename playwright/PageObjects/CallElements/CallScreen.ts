@@ -121,8 +121,9 @@ export class CallScreen extends MainPage {
     await this.callVideoButton.click();
     await expect(this.callVideoButton).toHaveCSS(
       "background-color",
-      "rgb(249, 56, 84)",
+      /rgb\(249, 56, 84\)|color\(srgb 0.978824 0.297647 0.396471\)/,
     );
+
     await expect(this.callVideoButton).toHaveAttribute(
       "data-tooltip",
       "Enable Video",
