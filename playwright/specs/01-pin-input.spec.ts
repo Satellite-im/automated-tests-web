@@ -7,7 +7,7 @@ import { SaveRecoverySeedPage } from "playwright/PageObjects/SaveRecoverySeed";
 import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 
-test.describe.only("Create Account and Login Tests", () => {
+test.describe("Create Account and Login Tests", () => {
   const username =
     faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status = faker.lorem.sentence(3);
