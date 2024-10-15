@@ -1884,6 +1884,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const settingsProfileFirst = new SettingsProfile(page1, viewport);
     const settingsProfileSecond = new SettingsProfile(page2, viewport);
     let lastMessageSent: Locator;
     let lastMessageReceived: Locator;
@@ -1898,7 +1899,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       page1,
     );
 
-    // Second user upload a profile picture
+    // Second user uploads a profile picture
     await chatsMainPageSecond.goToSettings();
     await page2.waitForURL("/settings/profile");
     await settingsProfileSecond.hideSidebarOnMobileView();
@@ -1906,9 +1907,21 @@ test.describe("Two instances tests - Friends and Chats", () => {
       "playwright/assets/logo.jpg",
     );
 
-    const profilePictureSource =
+    const profilePictureUserB =
       await settingsProfileSecond.getProfileImageSource();
     await settingsProfileSecond.goToChat();
+
+    // First user uploads a profile picture
+    await chatsMainPageFirst.goToSettings();
+    await page1.waitForURL("/settings/profile");
+    await settingsProfileFirst.hideSidebarOnMobileView();
+    await settingsProfileFirst.uploadProfilePicture(
+      "playwright/assets/banner.jpg",
+    );
+
+    const profilePictureUserA =
+      await settingsProfileFirst.getProfileImageSource();
+    await settingsProfileFirst.goToChat();
 
     // Send message from second user to first user
     const firstMessage = "hey I am gonna call you now";
@@ -1930,14 +1943,38 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await incomingCallFirstUser.validateIncomingCallModal(
       usernameTwo,
       "status from second user",
-      profilePictureSource,
+      profilePictureUserB,
     );
-    await incomingCallFirstUser.acceptIncomingCall();
+
+    // Validate user is connecting displays and then accept incoming call
+    await callScreenSecondUser.validateUserIsConnecting();
+    await incomingCallFirstUser.acceptAudioIncomingCall();
+
+    // Validate incoming call modal is closed
+    await incomingCallFirstUser.incomingCallModal.waitFor({
+      state: "detached",
+    });
+    await callScreenSecondUser.callParticipantConnecting.waitFor({
+      state: "detached",
+    });
+    const callScreenFirstUser = new CallScreen(page1, viewport);
+    await expect(callScreenFirstUser.callScreen).toBeVisible();
+
+    // With second user validate contents from call screen
+    await callScreenSecondUser.validateCallScreenContents(
+      profilePictureUserB,
+      profilePictureUserA,
+    );
+
+    // With first user validate contents from call screen
+    await callScreenFirstUser.validateCallScreenContents(
+      profilePictureUserA,
+      profilePictureUserB,
+    );
 
     // With first user validate all buttons are working correctly
-    await callScreenSecondUser.validateCallScreenContents(profilePictureSource);
-    await callScreenSecondUser.muteCall();
     await callScreenSecondUser.unmuteCall();
+    await callScreenSecondUser.muteCall();
     await callScreenSecondUser.deafenCall();
     await callScreenSecondUser.undeafenCall();
     await callScreenSecondUser.clickOnStreamButton();
@@ -1950,6 +1987,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       await callScreenSecondUser.exitFullScreenMode();
     }
 
+    // With second user continue validating buttons are working correctly
     await callScreenSecondUser.enableVideo();
     await page2.waitForTimeout(10000);
     await callScreenSecondUser.disableVideo();

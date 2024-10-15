@@ -2,8 +2,9 @@ import MainPage from "../MainPage";
 import { type Locator, type Page, expect } from "@playwright/test";
 
 export class IncomingCall extends MainPage {
-  readonly buttonAcceptIncomingCall: Locator;
-  readonly buttonDenyIncomingCall: Locator;
+  readonly buttonAcceptVideoIncomingCall: Locator;
+  readonly buttonAcceptVoiceIncomingCall: Locator;
+  readonly buttonDeclineIncomingCall: Locator;
   readonly incomingCallModal: Locator;
   readonly incomingCallProfilePicture: Locator;
   readonly incomingCallProfilePictureIdenticon: Locator;
@@ -18,14 +19,25 @@ export class IncomingCall extends MainPage {
   ) {
     super(page, viewport);
     this.incomingCallModal = this.page.locator("#incoming-call");
-    this.buttonAcceptIncomingCall = this.incomingCallModal.getByRole("button", {
-      name: "Answer",
-    });
-
-    this.buttonDenyIncomingCall = this.incomingCallModal.getByRole("button", {
-      name: "End",
-      exact: true,
-    });
+    this.buttonAcceptVideoIncomingCall = this.incomingCallModal.getByRole(
+      "button",
+      {
+        name: "Video",
+      },
+    );
+    this.buttonAcceptVoiceIncomingCall = this.incomingCallModal.getByRole(
+      "button",
+      {
+        name: "Voice",
+      },
+    );
+    this.buttonDeclineIncomingCall = this.incomingCallModal.getByRole(
+      "button",
+      {
+        name: "Decline",
+        exact: true,
+      },
+    );
     this.incomingCallProfilePicture = this.incomingCallModal.getByTestId(
       "friend-profile-picture",
     );
@@ -41,12 +53,16 @@ export class IncomingCall extends MainPage {
     this.incomingCallUsername = this.incomingCallModal.getByText("ChatUserB"); // Temporarily hardcoded
   }
 
-  async acceptIncomingCall() {
-    await this.buttonAcceptIncomingCall.click();
+  async acceptAudioIncomingCall() {
+    await this.buttonAcceptVoiceIncomingCall.click();
+  }
+
+  async acceptVideoIncomingCall() {
+    await this.buttonAcceptVideoIncomingCall.click();
   }
 
   async denyIncomingCall() {
-    await this.buttonDenyIncomingCall.click();
+    await this.buttonDeclineIncomingCall.click();
   }
 
   async validateIncomingCallModal(
@@ -63,5 +79,8 @@ export class IncomingCall extends MainPage {
       "src",
       imageSrc,
     );
+    await expect(this.buttonAcceptVideoIncomingCall).toBeVisible();
+    await expect(this.buttonAcceptVoiceIncomingCall).toBeVisible();
+    await expect(this.buttonDeclineIncomingCall).toBeVisible();
   }
 }

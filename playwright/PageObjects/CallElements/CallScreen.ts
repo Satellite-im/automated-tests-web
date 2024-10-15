@@ -8,6 +8,8 @@ export class CallScreen extends MainPage {
   readonly callFullscreenButton: Locator;
   readonly callMuteButton: Locator;
   readonly callParticipant: Locator;
+  readonly callParticipantConnecting: Locator;
+  readonly callParticipantShaking: Locator;
   readonly callScreen: Locator;
   readonly callScreenTopbar: Locator;
   readonly callSettingsButton: Locator;
@@ -43,6 +45,8 @@ export class CallScreen extends MainPage {
     );
     this.callMuteButton = this.callScreen.getByTestId("button-call-mute");
     this.callParticipant = this.callScreen.getByTestId("call-participant");
+    this.callParticipantConnecting = this.page.getByText("Connecting...");
+    this.callParticipantShaking = this.page.locator(".shaking-participant");
     this.callScreenTopbar = this.callScreen.getByTestId("topbar");
     this.callSettingsButton = this.callScreen.getByTestId(
       "button-call-settings",
@@ -232,11 +236,28 @@ export class CallScreen extends MainPage {
     await expect(this.callMuteButton).toHaveAttribute("data-tooltip", "Mute");
   }
 
-  async validateCallScreenContents(imgSrc: string) {
-    await expect(this.participantProfilePictureImage).toHaveAttribute(
+  async validateCallScreenContents(
+    localUserImgSrc: string,
+    remoteUserImgSrc: string,
+  ) {
+    // Validate local user contents
+    await expect(this.participantProfilePictureImage.first()).toHaveAttribute(
       "src",
-      imgSrc,
+      localUserImgSrc,
     );
-    await expect(this.usersInCallText).toHaveText("(1) users in the call");
+
+    // Validate remote user profile picture
+    await expect(this.participantProfilePictureImage.last()).toHaveAttribute(
+      "src",
+      remoteUserImgSrc,
+    );
+
+    // Validate number of users in call displayed in label
+    await expect(this.usersInCallText).toHaveText("(2) users in the call");
+  }
+
+  async validateUserIsConnecting() {
+    await expect(this.callParticipantConnecting).toBeVisible();
+    await expect(this.callParticipantShaking).toBeVisible();
   }
 }
