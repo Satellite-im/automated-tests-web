@@ -365,6 +365,13 @@ export class ChatsMainPage extends MainPage {
       this.uploadFilesSelectedSingle.locator(".file-preview-image");
   }
 
+  async clickOnAudioCallButton() {
+    if (this.viewport === "mobile-chrome") {
+      await this.clickOnHamburgerMobileButton();
+    }
+    await this.buttonChatCall.click();
+  }
+
   async clickOnFavoriteButton() {
     if (this.viewport === "mobile-chrome") {
       await this.clickOnHamburgerMobileButton();
@@ -410,6 +417,16 @@ export class ChatsMainPage extends MainPage {
 
   async exitContextMenuChat() {
     await this.chatbarInput.click();
+  }
+
+  async exitCallSettings(): Promise<void> {
+    if (this.viewport === "mobile-chrome") {
+      await this.page
+        .getByTestId("button-show-controls")
+        .click({ force: true });
+    } else {
+      await this.chatbarInput.click({ force: true });
+    }
   }
 
   async exitPinMessagesContainer() {

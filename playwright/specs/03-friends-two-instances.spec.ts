@@ -10,6 +10,8 @@ import { SettingsMessages } from "playwright/PageObjects/Settings/SettingsMessag
 import { EmojiPicker } from "playwright/PageObjects/ChatsElements/EmojiPicker";
 import { GifPicker } from "playwright/PageObjects/ChatsElements/GifPicker";
 import { StickerPicker } from "playwright/PageObjects/ChatsElements/StickerPicker";
+import { CallScreen } from "playwright/PageObjects/CallElements/CallScreen";
+import { IncomingCall } from "playwright/PageObjects/CallElements/IncomingCall";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
@@ -1867,6 +1869,132 @@ test.describe("Two instances tests - Friends and Chats", () => {
     );
     await stickerPickerSecond.navigateThroughStickerCategories("The Garden");
     await stickerPickerSecond.navigateThroughStickerCategories("Sassy Toons");
+  });
+
+  test("Videocall testing between two users - mute, unmute, fullscreen, expand/collapse call", async ({
+    firstUserContext,
+    secondUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const settingsProfileFirst = new SettingsProfile(page1, viewport);
+    const settingsProfileSecond = new SettingsProfile(page2, viewport);
+    let lastMessageSent: Locator;
+    let lastMessageReceived: Locator;
+
+    // Setup accounts for testing
+    await setupChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      context1,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      page1,
+    );
+
+    // Second user uploads a profile picture
+    await chatsMainPageSecond.goToSettings();
+    await page2.waitForURL("/settings/profile");
+    await settingsProfileSecond.hideSidebarOnMobileView();
+    await settingsProfileSecond.uploadProfilePicture(
+      "playwright/assets/logo.jpg",
+    );
+
+    const profilePictureUserB =
+      await settingsProfileSecond.getProfileImageSource();
+    await settingsProfileSecond.goToChat();
+
+    // First user uploads a profile picture
+    await chatsMainPageFirst.goToSettings();
+    await page1.waitForURL("/settings/profile");
+    await settingsProfileFirst.hideSidebarOnMobileView();
+    await settingsProfileFirst.uploadProfilePicture(
+      "playwright/assets/banner.jpg",
+    );
+
+    const profilePictureUserA =
+      await settingsProfileFirst.getProfileImageSource();
+    await settingsProfileFirst.goToChat();
+
+    // Send message from second user to first user
+    const firstMessage = "hey I am gonna call you now";
+    await chatsMainPageSecond.sendMessage(firstMessage);
+    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+    await expect(lastMessageSent).toHaveText(firstMessage);
+    await expect(lastMessageReceived).toHaveText(firstMessage);
+
+    // Second user calls the first user
+    await chatsMainPageSecond.clickOnAudioCallButton();
+
+    // Validate outgoing call modal displayed
+    const callScreenSecondUser = new CallScreen(page2, viewport);
+    await expect(callScreenSecondUser.callScreen).toBeVisible();
+
+    // Validate incoming call modal displayed
+    const incomingCallFirstUser = new IncomingCall(page1, viewport);
+    await incomingCallFirstUser.validateIncomingCallModal(
+      usernameTwo,
+      "status from second user",
+      profilePictureUserB,
+    );
+
+    // Validate user is connecting displays and then accept incoming call
+    await callScreenSecondUser.validateUserIsConnecting();
+    await incomingCallFirstUser.acceptAudioIncomingCall();
+
+    // Validate incoming call modal is closed
+    await incomingCallFirstUser.incomingCallModal.waitFor({
+      state: "detached",
+    });
+    await callScreenSecondUser.callParticipantConnecting.waitFor({
+      state: "detached",
+    });
+    const callScreenFirstUser = new CallScreen(page1, viewport);
+    await expect(callScreenFirstUser.callScreen).toBeVisible();
+
+    // With second user validate contents from call screen
+    await callScreenSecondUser.validateCallScreenContents(
+      profilePictureUserB,
+      profilePictureUserA,
+    );
+
+    // With first user validate contents from call screen
+    await callScreenFirstUser.validateCallScreenContents(
+      profilePictureUserA,
+      profilePictureUserB,
+    );
+
+    // With first user validate all buttons are working correctly
+    await callScreenSecondUser.unmuteCall();
+    await callScreenSecondUser.muteCall();
+    await callScreenSecondUser.deafenCall();
+    await callScreenSecondUser.undeafenCall();
+    await callScreenSecondUser.clickOnStreamButton();
+    await callScreenSecondUser.expandCall();
+    await callScreenSecondUser.collapseCall();
+
+    // Executing full screen mode validations only on desktop viewport since exit button appears outside of mobile viewport
+    if (callScreenSecondUser.viewport === "desktop-chrome") {
+      await callScreenSecondUser.enterFullScreenMode();
+      await callScreenSecondUser.exitFullScreenMode();
+    }
+
+    // With second user continue validating buttons are working correctly
+    await callScreenSecondUser.enableVideo();
+    await page2.waitForTimeout(10000);
+    await callScreenSecondUser.disableVideo();
+    await callScreenSecondUser.openCallVolumeMixer();
+    await callScreenSecondUser.openCallSettings();
+    await chatsMainPageSecond.exitCallSettings();
+    await callScreenSecondUser.endCall();
   });
 });
 

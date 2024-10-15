@@ -1,4 +1,4 @@
-import MainPage from "./MainPage";
+import MainPage from "../MainPage";
 import { type Locator, type Page } from "@playwright/test";
 
 export class CallSettings extends MainPage {
