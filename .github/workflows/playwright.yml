@@ -156,10 +156,9 @@ jobs:
           folder: playwright-report
           branch: gh-pages
           commit-message: "Deploying Playwright report to gh-pages"
-          single-commit: true
           ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           repository-name: Satellite-im/test-reports
-          target-folder: ${{ steps.timestampidone.outputs.timestamp }}
+          target-folder: /playwright/${{ steps.timestampidone.outputs.timestamp }}
 
       - name: Stop ssh-agent job from first deploy required for deploying a second time
         run: killall ssh-agent
@@ -215,17 +214,16 @@ jobs:
           folder: allure-history
           branch: gh-pages
           commit-message: "Deploying Allure report to gh-pages"
-          single-commit: true
           ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           repository-name: Satellite-im/test-reports
-          target-folder: ${{ steps.timestampidtwo.outputs.timestamp }}
+          target-folder: allure/${{ steps.timestampidtwo.outputs.timestamp }}
 
       - name: Comment PR with Test Report link
         if: always() && github.event_name == 'pull_request'
         uses: mshick/add-pr-comment@v2
         with:
           message: |
-            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampidone.outputs.timestamp }}/) and the Allure Test Report [here](https://satellite-im.github.io/test-reports/${{ steps.timestampidone.outputs.timestamp }}/)
+            Automated tests execution is complete! You can find the Playwright test report [here](https://satellite-im.github.io/test-reports/playwright/${{ steps.timestampidone.outputs.timestamp }}/) and the Allure Test Report [here](https://satellite-im.github.io/test-reports/allure/${{ steps.timestampidone.outputs.timestamp }}/)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
