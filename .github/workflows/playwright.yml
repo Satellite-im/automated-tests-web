@@ -157,7 +157,7 @@ jobs:
           branch: gh-pages
           commit-message: "Deploying Playwright report to gh-pages"
           single-commit: true
-          token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           repository-name: Satellite-im/test-reports
           target-folder: ${{ steps.timestampidone.outputs.timestamp }}
 
@@ -216,7 +216,7 @@ jobs:
           branch: gh-pages
           commit-message: "Deploying Allure report to gh-pages"
           single-commit: true
-          token: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          ssh-key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
           repository-name: Satellite-im/test-reports
           target-folder: ${{ steps.timestampidtwo.outputs.timestamp }}
 
