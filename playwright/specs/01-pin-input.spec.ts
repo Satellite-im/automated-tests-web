@@ -7,7 +7,7 @@ import { SaveRecoverySeedPage } from "playwright/PageObjects/SaveRecoverySeed";
 import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 
-test.describe("Create Account and Login Tests", () => {
+test.describe.only("Create Account and Login Tests", () => {
   const username =
     faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
   const status = faker.lorem.sentence(3);
@@ -175,7 +175,9 @@ test.describe("Create Account and Login Tests", () => {
       "Scramble keypad?",
     );
     await expect(loginPinPage.stayUnlockedLabel).toBeVisible();
-    await expect(loginPinPage.stayUnlockedLabel).toHaveText("Stay unlocked?");
+    await expect(loginPinPage.stayUnlockedLabel).toHaveText(
+      "Stay unlocked???????",
+    );
   });
 
   test("A6, A7 - Scramble Keypad will change the order of pin input buttons", async ({
