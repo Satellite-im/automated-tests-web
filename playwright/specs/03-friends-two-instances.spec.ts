@@ -1871,8 +1871,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await stickerPickerSecond.navigateThroughStickerCategories("Sassy Toons");
   });
 
-  // Skipping faliing test on CI now
-  test.skip("Videocall testing between two users - mute, unmute, fullscreen, expand/collapse call", async ({
+  test("Videocall testing between two users - mute, unmute, fullscreen, expand/collapse call", async ({
     firstUserContext,
     secondUserContext,
   }) => {
