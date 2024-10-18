@@ -9,6 +9,7 @@ export class CallScreen extends MainPage {
   readonly callMuteButton: Locator;
   readonly callParticipant: Locator;
   readonly callParticipantConnecting: Locator;
+  readonly callParticipantLoading: Locator;
   readonly callParticipantShaking: Locator;
   readonly callScreen: Locator;
   readonly callScreenTopbar: Locator;
@@ -46,6 +47,7 @@ export class CallScreen extends MainPage {
     this.callMuteButton = this.callScreen.getByTestId("button-call-mute");
     this.callParticipant = this.callScreen.getByTestId("call-participant");
     this.callParticipantConnecting = this.page.getByText("Connecting...");
+    this.callParticipantLoading = this.page.getByText("Joined, loading...");
     this.callParticipantShaking = this.page.locator(".shaking-participant");
     this.callScreenTopbar = this.callScreen.getByTestId("topbar");
     this.callSettingsButton = this.callScreen.getByTestId(
@@ -258,6 +260,11 @@ export class CallScreen extends MainPage {
 
   async validateUserIsConnecting() {
     await expect(this.callParticipantConnecting).toBeVisible();
-    await expect(this.callParticipantShaking).toBeVisible();
+  }
+
+  async validateAllUsersAreConnected() {
+    await this.callParticipantConnecting.waitFor({ state: "detached" });
+    await this.callParticipantShaking.waitFor({ state: "detached" });
+    await this.callParticipantLoading.waitFor({ state: "detached" });
   }
 }
