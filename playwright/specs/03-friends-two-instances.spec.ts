@@ -1951,6 +1951,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await incomingCallFirstUser.acceptAudioIncomingCall();
 
     // Validate incoming call modal is closed
+    await callScreenSecondUser.validateAllUsersAreConnected();
     await incomingCallFirstUser.incomingCallModal.waitFor({
       state: "detached",
     });
@@ -1959,6 +1960,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
     const callScreenFirstUser = new CallScreen(page1, viewport);
     await expect(callScreenFirstUser.callScreen).toBeVisible();
+    await callScreenFirstUser.validateAllUsersAreConnected();
 
     // With second user validate contents from call screen
     await callScreenSecondUser.validateCallScreenContents(
