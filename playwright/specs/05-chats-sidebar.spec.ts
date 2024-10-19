@@ -1,5 +1,6 @@
 import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
 import { test, expect } from "../fixtures/setup";
+import { CreateGroupModal } from "playwright/PageObjects/ChatsElements/CreateGroupModal";
 
 test.describe("Chats Sidebar Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
@@ -15,20 +16,22 @@ test.describe("Chats Sidebar Tests", () => {
     const page = singleUserContext.page;
     const viewport = singleUserContext.viewport;
     const chatsMainPage = new ChatsMainPage(page, viewport);
+    const createGroupModal = new CreateGroupModal(page, viewport);
 
-    await chatsMainPage.buttonCreateGroupChat.click();
-    await expect(chatsMainPage.createGroupLabelGroupName).toBeVisible();
-    await expect(chatsMainPage.createGroupLabelGroupName).toHaveText(
+    await chatsMainPage.clickOnCreateGroupChat();
+
+    await expect(createGroupModal.createGroupLabelGroupName).toBeVisible();
+    await expect(createGroupModal.createGroupLabelGroupName).toHaveText(
       "Group name:",
     );
-    await expect(chatsMainPage.createGroupInputGroupName).toBeVisible();
-    await expect(chatsMainPage.createGroupLabelGroupMembers).toHaveText(
+    await expect(createGroupModal.createGroupInputGroupName).toBeVisible();
+    await expect(createGroupModal.createGroupLabelGroupMembers).toHaveText(
       "Group members:",
     );
-    await expect(chatsMainPage.createGroupLabelSelectMembers).toHaveText(
+    await expect(createGroupModal.createGroupLabelSelectMembers).toHaveText(
       "Select member(s)",
     );
-    await expect(chatsMainPage.createGroupButton).toBeVisible();
+    await expect(createGroupModal.createGroupButton).toBeVisible();
   });
 
   test("C2 - Hovering over Create Chat should show tooltips", async ({
