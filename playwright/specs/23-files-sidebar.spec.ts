@@ -1,4 +1,4 @@
-import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsElements/ChatsMain";
 import { test } from "../fixtures/setup";
 
 test.describe("Files Sidebar Tests", () => {

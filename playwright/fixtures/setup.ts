@@ -5,7 +5,7 @@ import {
   type Page,
 } from "@playwright/test";
 import { AuthNewAccount } from "../PageObjects/AuthNewAccount";
-import { ChatsMainPage } from "../PageObjects/ChatsMain";
+import { ChatsMainPage } from "../PageObjects/ChatsElements/ChatsMain";
 import { CreateOrImportPage } from "../PageObjects/CreateOrImport";
 import { LoginPinPage } from "../PageObjects/LoginPin";
 import { SaveRecoverySeedPage } from "../PageObjects/SaveRecoverySeed";

@@ -1,4 +1,4 @@
-import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsElements/ChatsMain";
 import { FilesPage } from "playwright/PageObjects/FilesScreen";
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { QuickProfile } from "playwright/PageObjects/QuickProfile";
@@ -2019,7 +2019,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
     const chatsMainPageThird = new ChatsMainPage(page3, viewport);
-    const createGroupFirst = new CreateGroupModal(page1, viewport);
+    const createGroupThird = new CreateGroupModal(page3, viewport);
 
     // Setup accounts for testing
     await setupThreeChats(
@@ -2035,11 +2035,73 @@ test.describe("Two instances tests - Friends and Chats", () => {
       page2,
     );
 
-    await chatsMainPageFirst.clickOnCreateGroupChat();
-    await createGroupFirst.createGroupChat("Group Chat 1", [
+    // Click on Create Group Chat to open modal
+    await chatsMainPageThird.clickOnCreateGroupChat();
+
+    // Validate that group without members cannot be created
+    await createGroupThird.createGroupChat("", []);
+    await expect(createGroupThird.errorUsersCreateGroupModal).toBeVisible();
+    await expect(createGroupThird.errorUsersCreateGroupModal).toHaveText(
+      "No members selected",
+    );
+
+    // Validate that group without name cannot be created
+    await createGroupThird.createGroupChat("", ["ChatUserA", "ChatUserB"]);
+    await expect(createGroupThird.errorNameCreateGroupModal).toBeVisible();
+    await expect(createGroupThird.errorNameCreateGroupModal).toHaveText(
+      "Please insert group name",
+    );
+
+    await createGroupThird.selectUser(["ChatUserA", "ChatUserB"]);
+
+    await createGroupThird.createGroupChat("Group Chat 1", [
+      "ChatUserA",
       "ChatUserB",
-      "ChatUserC",
     ]);
+
+    // Validate sidebar previews
+    await chatsMainPageThird.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "No messages sent yet.",
+      3,
+    );
+
+    await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "No messages sent yet.",
+      3,
+    );
+    await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "No messages sent yet.",
+      3,
+    );
+
+    // Send a message to the group
+    await chatsMainPageThird.sendMessage("Hello Group");
+    await chatsMainPageThird.validateMessageIsSent("Hello Group");
+    await chatsMainPageFirst.goToSidebarChat("Group Chat 1");
+    await chatsMainPageFirst.validateMessageIsReceived("Hello Group");
+    await chatsMainPageSecond.goToSidebarChat("Group Chat 1");
+    await chatsMainPageSecond.validateMessageIsReceived("Hello Group");
+
+    // Validate sidebar previews after sending group message
+    await chatsMainPageThird.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "Hello Group",
+      3,
+    );
+
+    await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "Hello Group",
+      3,
+    );
+    await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "Hello Group",
+      3,
+    );
   });
 });
 
@@ -2127,36 +2189,12 @@ async function setupThreeChats(
   );
   const didKeySecondUser = await handleTwo.jsonValue();
 
-  // Steps to User B to add User A as a friend
-  // Now, add the first user as a friend
-  await friendsScreenSecond.addFriend(didKeyFirstUser);
-
-  // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
-  await friendsScreenSecond.validateToastRequestSent();
-  await friendsScreenFirst.waitForToastNotificationToDisappear();
-  await friendsScreenSecond.waitForToastNotificationToDisappear();
-
-  // With First User, go to requests list and accept friend request
-  await friendsScreenFirst.goToRequestList();
-  await friendsScreenFirst.validateIncomingRequestExists();
-  await friendsScreenFirst.acceptFriendRequest(usernameTwo);
-
-  // With First User, go to All Friends and click on Chat Button
-  await friendsScreenFirst.goToAllFriendsList();
-  await friendsScreenFirst.chatWithFriend(usernameTwo);
-
-  // With Second User, go to All Friends and click on Chat Button
-  await friendsScreenSecond.goToRequestList();
-  await friendsScreenSecond.goToAllFriendsList();
-  await friendsScreenSecond.chatWithFriend(username);
-
   // Steps to User C to add User A as a friend
-  // Now, third user adds the first user as a friend
+  // Now, add the first user as a friend
   await friendsScreenThird.addFriend(didKeyFirstUser);
 
   // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
   await friendsScreenThird.validateToastRequestSent();
-  await chatsMainPageFirst.goToFriends();
   await friendsScreenFirst.waitForToastNotificationToDisappear();
   await friendsScreenThird.waitForToastNotificationToDisappear();
 
@@ -2169,28 +2207,27 @@ async function setupThreeChats(
   await friendsScreenFirst.goToAllFriendsList();
   await friendsScreenFirst.chatWithFriend(usernameThree);
 
-  // With Second User, go to All Friends and click on Chat Button
+  // With Third User, go to All Friends and click on Chat Button
   await friendsScreenThird.goToRequestList();
   await friendsScreenThird.goToAllFriendsList();
   await friendsScreenThird.chatWithFriend(username);
 
   // Steps to User C to add User B as a friend
-  // Now, third user adds the second user as a friend
+  // Now, third user adds the first user as a friend
   await chatsMainPageThird.goToFriends();
   await friendsScreenThird.addFriend(didKeySecondUser);
 
   // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
   await friendsScreenThird.validateToastRequestSent();
-  await chatsMainPageSecond.goToFriends();
   await friendsScreenSecond.waitForToastNotificationToDisappear();
   await friendsScreenThird.waitForToastNotificationToDisappear();
 
-  // With First User, go to requests list and accept friend request
+  // With Second User, go to requests list and accept friend request
   await friendsScreenSecond.goToRequestList();
   await friendsScreenSecond.validateIncomingRequestExists();
   await friendsScreenSecond.acceptFriendRequest(usernameThree);
 
-  // With First User, go to All Friends and click on Chat Button
+  // With Second User, go to All Friends and click on Chat Button
   await friendsScreenSecond.goToAllFriendsList();
   await friendsScreenSecond.chatWithFriend(usernameThree);
 

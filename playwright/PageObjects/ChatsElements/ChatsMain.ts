@@ -1,4 +1,4 @@
-import MainPage from "./MainPage";
+import MainPage from "../MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 const fs = require("fs");
 

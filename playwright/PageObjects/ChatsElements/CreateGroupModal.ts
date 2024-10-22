@@ -1,5 +1,5 @@
 import MainPage from "../MainPage";
-import { type Locator, type Page } from "@playwright/test";
+import { type Locator, type Page, expect } from "@playwright/test";
 
 export class CreateGroupModal extends MainPage {
   readonly createGroupButton: Locator;
@@ -9,7 +9,8 @@ export class CreateGroupModal extends MainPage {
   readonly createGroupLabelGroupName: Locator;
   readonly createGroupLabelSelectMembers: Locator;
   readonly createGroupUsersList: Locator;
-
+  readonly errorNameCreateGroupModal: Locator;
+  readonly errorUsersCreateGroupModal: Locator;
   readonly singleUser: Locator;
   readonly singleUserProfilePicture: Locator;
   readonly singleUserProfilePictureIdenticon: Locator;
@@ -44,6 +45,12 @@ export class CreateGroupModal extends MainPage {
     this.createGroupUsersList = this.createGroupModal.getByTestId(
       "create-group-users-list",
     );
+    this.errorNameCreateGroupModal = this.createGroupModal
+      .locator(".error-message")
+      .locator("p");
+    this.errorUsersCreateGroupModal = this.createGroupModal.getByTestId(
+      "text-error-create-group",
+    );
     this.singleUser = this.createGroupUsersList.getByTestId("single-user");
     this.singleUserProfilePicture;
     this.singleUserProfilePictureIdenticon;
@@ -56,11 +63,14 @@ export class CreateGroupModal extends MainPage {
   }
 
   async createGroupChat(name: string, users: string[]) {
-    await this.createGroupButton.click();
     await this.createGroupModal.waitFor({ state: "attached" });
     await this.createGroupInputGroupName.fill(name);
     await this.selectUser(users);
     await this.createGroupButton.click();
+  }
+
+  async exitCreateGroup(): Promise<void> {
+    await this.page.mouse.click(0, 0);
   }
 
   async selectUser(users: string[]) {

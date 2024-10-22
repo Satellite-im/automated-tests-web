@@ -4,7 +4,7 @@ import { faker } from "@faker-js/faker";
 import { AuthNewAccount } from "playwright/PageObjects/AuthNewAccount";
 import { LoginPinPage } from "playwright/PageObjects/LoginPin";
 import { SaveRecoverySeedPage } from "playwright/PageObjects/SaveRecoverySeed";
-import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsElements/ChatsMain";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 
 test.describe("Create Account and Login Tests", () => {
