@@ -2092,11 +2092,14 @@ test.describe("Two instances tests - Friends and Chats", () => {
       3,
     );
 
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
     await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
       "Group Chat 1",
       "Hello Group",
       3,
     );
+
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
     await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
       "Group Chat 1",
       "Hello Group",

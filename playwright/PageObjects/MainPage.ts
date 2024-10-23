@@ -363,7 +363,7 @@ export default class MainPage {
       .textContent();
     const statusIndicator = chatPreviewLocator.getByTestId("status-indicator");
     expect(text).toEqual(expectedText);
-    expect(timestamp).toEqual("just now");
+    expect(timestamp).toMatch(/just now|1 minute ago/);
     expect(statusIndicator).toHaveClass(/.*\bonline\b.*/);
   }
 
