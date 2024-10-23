@@ -1,4 +1,4 @@
-import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsElements/ChatsMain";
 import { FilesPage } from "playwright/PageObjects/FilesScreen";
 import { FriendsScreen } from "playwright/PageObjects/FriendsScreen";
 import { QuickProfile } from "playwright/PageObjects/QuickProfile";
@@ -12,9 +12,11 @@ import { GifPicker } from "playwright/PageObjects/ChatsElements/GifPicker";
 import { StickerPicker } from "playwright/PageObjects/ChatsElements/StickerPicker";
 import { CallScreen } from "playwright/PageObjects/CallElements/CallScreen";
 import { IncomingCall } from "playwright/PageObjects/CallElements/IncomingCall";
+import { CreateGroupModal } from "playwright/PageObjects/ChatsElements/CreateGroupModal";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
+const usernameThree = "ChatUserC";
 type reactionContainer = { emoji: string; count: string }[];
 
 test.describe("Two instances tests - Friends and Chats", () => {
@@ -1998,6 +2000,112 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageSecond.exitCallSettings();
     await callScreenSecondUser.endCall();
   });
+
+  test("Group Chats - Create a group with 3 people and send/receive text message flow", async ({
+    firstUserContext,
+    secondUserContext,
+    thirdUserContext,
+  }) => {
+    // Declare constants required from the fixtures
+    const context1 = firstUserContext.context;
+    const context2 = secondUserContext.context;
+    const page1 = firstUserContext.page;
+    const page2 = secondUserContext.page;
+    const page3 = thirdUserContext.page;
+    const viewport = firstUserContext.viewport;
+    const friendsScreenFirst = new FriendsScreen(page1, viewport);
+    const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const friendsScreenThird = new FriendsScreen(page3, viewport);
+    const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
+    const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const chatsMainPageThird = new ChatsMainPage(page3, viewport);
+    const createGroupThird = new CreateGroupModal(page3, viewport);
+
+    // Setup accounts for testing
+    await setupThreeChats(
+      chatsMainPageFirst,
+      chatsMainPageSecond,
+      chatsMainPageThird,
+      context1,
+      context2,
+      friendsScreenFirst,
+      friendsScreenSecond,
+      friendsScreenThird,
+      page1,
+      page2,
+    );
+
+    // Click on Create Group Chat to open modal
+    await chatsMainPageThird.clickOnCreateGroupChat();
+
+    // Validate that group without members cannot be created
+    await createGroupThird.createGroupChat("", []);
+    await expect(createGroupThird.errorUsersCreateGroupModal).toBeVisible();
+    await expect(createGroupThird.errorUsersCreateGroupModal).toHaveText(
+      "No members selected",
+    );
+
+    // Validate that group without name cannot be created
+    await createGroupThird.createGroupChat("", ["ChatUserA", "ChatUserB"]);
+    await expect(createGroupThird.errorNameCreateGroupModal).toBeVisible();
+    await expect(createGroupThird.errorNameCreateGroupModal).toHaveText(
+      "Please insert group name",
+    );
+
+    await createGroupThird.selectUser(["ChatUserA", "ChatUserB"]);
+
+    await createGroupThird.createGroupChat("Group Chat 1", [
+      "ChatUserA",
+      "ChatUserB",
+    ]);
+
+    // Validate sidebar previews
+    await chatsMainPageThird.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "No messages sent yet.",
+      3,
+    );
+
+    await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "No messages sent yet.",
+      3,
+    );
+    await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "No messages sent yet.",
+      3,
+    );
+
+    // Send a message to the group
+    await chatsMainPageThird.sendMessage("Hello Group");
+    await chatsMainPageThird.validateMessageIsSent("Hello Group");
+    await chatsMainPageFirst.goToSidebarChat("Group Chat 1");
+    await chatsMainPageFirst.validateMessageIsReceived("Hello Group");
+    await chatsMainPageSecond.goToSidebarChat("Group Chat 1");
+    await chatsMainPageSecond.validateMessageIsReceived("Hello Group");
+
+    // Validate sidebar previews after sending group message
+    await chatsMainPageThird.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "Hello Group",
+      3,
+    );
+
+    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+    await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "Hello Group",
+      3,
+    );
+
+    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
+    await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
+      "Group Chat 1",
+      "Hello Group",
+      3,
+    );
+  });
 });
 
 async function setupChats(
@@ -2046,4 +2154,93 @@ async function setupChats(
   await friendsScreenSecond.goToRequestList();
   await friendsScreenSecond.goToAllFriendsList();
   await friendsScreenSecond.chatWithFriend(username);
+}
+
+async function setupThreeChats(
+  chatsMainPageFirst: ChatsMainPage,
+  chatsMainPageSecond: ChatsMainPage,
+  chatsMainPageThird: ChatsMainPage,
+  context1: BrowserContext,
+  context2: BrowserContext,
+  friendsScreenFirst: FriendsScreen,
+  friendsScreenSecond: FriendsScreen,
+  friendsScreenThird: FriendsScreen,
+  page1: Page,
+  page2: Page,
+) {
+  // With both users go to Friends Screen
+  await chatsMainPageFirst.dismissDownloadAlert();
+  await chatsMainPageSecond.dismissDownloadAlert();
+  await chatsMainPageThird.dismissDownloadAlert();
+  await chatsMainPageFirst.goToFriends();
+  await chatsMainPageSecond.goToFriends();
+  await chatsMainPageThird.goToFriends();
+
+  // On user one - Grant clipboard permissions, Copy DID and save it into a constant
+  await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await friendsScreenFirst.copyDIDFromContextMenu();
+  const handleOne = await page1.evaluateHandle(() =>
+    navigator.clipboard.readText(),
+  );
+  const didKeyFirstUser = await handleOne.jsonValue();
+
+  // On user two - Grant clipboard permissions, Copy DID and save it into a constant
+  await context2.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await friendsScreenSecond.copyDIDFromContextMenu();
+  const handleTwo = await page2.evaluateHandle(() =>
+    navigator.clipboard.readText(),
+  );
+  const didKeySecondUser = await handleTwo.jsonValue();
+
+  // Steps to User C to add User A as a friend
+  // Now, add the first user as a friend
+  await friendsScreenThird.addFriend(didKeyFirstUser);
+
+  // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
+  await friendsScreenThird.validateToastRequestSent();
+  await friendsScreenFirst.waitForToastNotificationToDisappear();
+  await friendsScreenThird.waitForToastNotificationToDisappear();
+
+  // With First User, go to requests list and accept friend request
+  await friendsScreenFirst.goToRequestList();
+  await friendsScreenFirst.validateIncomingRequestExists();
+  await friendsScreenFirst.acceptFriendRequest(usernameThree);
+
+  // With First User, go to All Friends and click on Chat Button
+  await friendsScreenFirst.goToAllFriendsList();
+  await friendsScreenFirst.chatWithFriend(usernameThree);
+
+  // With Third User, go to All Friends and click on Chat Button
+  await friendsScreenThird.goToRequestList();
+  await friendsScreenThird.goToAllFriendsList();
+  await friendsScreenThird.chatWithFriend(username);
+
+  // Steps to User C to add User B as a friend
+  // Now, third user adds the first user as a friend
+  await chatsMainPageThird.goToFriends();
+  await friendsScreenThird.addFriend(didKeySecondUser);
+
+  // H6 - Toast Notification with Your request is making it's way! should appear after sending a friend request
+  await friendsScreenThird.validateToastRequestSent();
+  await friendsScreenSecond.waitForToastNotificationToDisappear();
+  await friendsScreenThird.waitForToastNotificationToDisappear();
+
+  // With Second User, go to requests list and accept friend request
+  await friendsScreenSecond.goToRequestList();
+  await friendsScreenSecond.validateIncomingRequestExists();
+  await friendsScreenSecond.acceptFriendRequest(usernameThree);
+
+  // With Second User, go to All Friends and click on Chat Button
+  await friendsScreenSecond.goToAllFriendsList();
+  await friendsScreenSecond.chatWithFriend(usernameThree);
+
+  // With Second User, go to All Friends and click on Chat Button
+  await friendsScreenThird.goToRequestList();
+  await friendsScreenThird.goToAllFriendsList();
+  await friendsScreenThird.chatWithFriend(usernameTwo);
+
+  // Show sidebar if closed
+  await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+  await chatsMainPageSecond.clickOnShowSidebarIfClosed();
+  await chatsMainPageThird.clickOnShowSidebarIfClosed();
 }

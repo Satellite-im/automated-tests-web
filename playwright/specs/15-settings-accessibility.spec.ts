@@ -1,4 +1,4 @@
-import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsElements/ChatsMain";
 import { test, expect } from "../fixtures/setup";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 import { SettingsAccessibility } from "playwright/PageObjects/Settings/SettingsAccessibility";

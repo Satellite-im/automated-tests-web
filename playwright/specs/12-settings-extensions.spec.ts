@@ -1,6 +1,6 @@
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
 import { test, expect } from "../fixtures/setup";
-import { ChatsMainPage } from "playwright/PageObjects/ChatsMain";
+import { ChatsMainPage } from "playwright/PageObjects/ChatsElements/ChatsMain";
 import { SettingsExtensions } from "playwright/PageObjects/Settings/SettingsExtensions";
 
 test.describe("Settings Extensions Tests", () => {

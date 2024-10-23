@@ -1,4 +1,4 @@
-import MainPage from "./MainPage";
+import MainPage from "../MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
 const fs = require("fs");
 
@@ -44,12 +44,6 @@ export class ChatsMainPage extends MainPage {
   readonly contextMenuOptionUnpinMessage: Locator;
   readonly contextMenuOptionUpload: Locator;
   readonly contextMenuSidebarChat: Locator;
-  readonly createGroupButton: Locator;
-  readonly createGroupModal: Locator;
-  readonly createGroupInputGroupName: Locator;
-  readonly createGroupLabelGroupMembers: Locator;
-  readonly createGroupLabelGroupName: Locator;
-  readonly createGroupLabelSelectMembers: Locator;
   readonly editMessageInput: Locator;
   readonly emojiButton: Locator;
   readonly emojiGroup: Locator;
@@ -220,20 +214,6 @@ export class ChatsMainPage extends MainPage {
     this.contextMenuOptionUnpinMessage = this.page.getByTestId(
       "context-menu-option-Unpin Message",
     );
-    this.createGroupButton = this.page.getByTestId("button-create-group");
-    this.createGroupModal = this.page.getByTestId("modal-create-group-chat");
-    this.createGroupInputGroupName = this.page.getByTestId(
-      "input-create-group-name",
-    );
-    this.createGroupLabelGroupMembers = this.page.getByTestId(
-      "label-create-group-members",
-    );
-    this.createGroupLabelGroupName = this.page.getByTestId(
-      "label-create-group-name",
-    );
-    this.createGroupLabelSelectMembers = this.page.getByTestId(
-      "label-create-group-select-members",
-    );
     this.editMessageInput = this.page
       .getByTestId("message-bubble-content")
       .locator(".cm-editor")
@@ -370,6 +350,10 @@ export class ChatsMainPage extends MainPage {
       await this.clickOnHamburgerMobileButton();
     }
     await this.buttonChatCall.click();
+  }
+
+  async clickOnCreateGroupChat() {
+    await this.buttonCreateGroupChat.click();
   }
 
   async clickOnFavoriteButton() {

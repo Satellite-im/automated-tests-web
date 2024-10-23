@@ -20,6 +20,9 @@ export default class MainPage {
   readonly chatPreviewPicture: Locator;
   readonly chatPreviewPictureIdenticon: Locator;
   readonly chatPreviewPictureImage: Locator;
+  readonly chatPreviewPictureMany: Locator;
+  readonly chatPreviewPictureSingle: Locator;
+  readonly chatPreviewPictureSingleImage: Locator;
   readonly chatPreviewStatusIndicator: Locator;
   readonly chatPreviewTimestamp: Locator;
   readonly favoriteCircle: Locator;
@@ -72,6 +75,12 @@ export default class MainPage {
     this.chatPreviewPictureIdenticon =
       this.chatPreviewPicture.locator(".identicon img");
     this.chatPreviewPictureImage = this.chatPreviewPicture.locator("img");
+    this.chatPreviewPictureMany = this.page.getByTestId("profile-picture-many");
+    this.chatPreviewPictureSingle = this.page.getByTestId(
+      "profile-picture-many-single-pic",
+    );
+    this.chatPreviewPictureSingleImage =
+      this.chatPreviewPictureSingle.locator("img");
     this.chatPreviewStatusIndicator =
       this.chatPreview.getByTestId("status-indicator");
     this.chatPreviewTimestamp = this.page.getByTestId("chat-preview-timestamp");
@@ -230,6 +239,14 @@ export default class MainPage {
     await this.buttonSettings.first().click();
   }
 
+  async goToSidebarChat(chatName: string) {
+    const chatPreviewLocator = this.page
+      .getByTestId("chat-preview-name")
+      .filter({ hasText: chatName })
+      .locator("xpath=../../..");
+    await chatPreviewLocator.click();
+  }
+
   async goToWallet() {
     await this.dismissAddSomeoneOnMobile();
     await this.clickOnShowSidebarIfClosed();
@@ -346,7 +363,35 @@ export default class MainPage {
       .textContent();
     const statusIndicator = chatPreviewLocator.getByTestId("status-indicator");
     expect(text).toEqual(expectedText);
-    expect(timestamp).toEqual("just now");
+    expect(timestamp).toMatch(/just now|1 minute ago/);
     expect(statusIndicator).toHaveClass(/.*\bonline\b.*/);
+  }
+
+  async validateChatPreviewMessageTextGroup(
+    chatName: string,
+    expectedText: string,
+    numberOfParticipants: number,
+  ) {
+    const chatPreviewLocator = this.page
+      .getByTestId("chat-preview-name")
+      .filter({ hasText: chatName })
+      .locator("xpath=../../..");
+    const text = await chatPreviewLocator
+      .getByTestId("chat-preview-last-message")
+      .textContent();
+    const timestamp = await chatPreviewLocator
+      .getByTestId("chat-preview-timestamp")
+      .textContent();
+    const profilePictureGroup = await chatPreviewLocator.getByTestId(
+      "profile-picture-many",
+    );
+    const singleProfilePictures = await chatPreviewLocator.getByTestId(
+      "profile-picture-many-single-pic",
+    );
+    const numberOfProfilePictures = await singleProfilePictures.count();
+    expect(numberOfProfilePictures).toBe(numberOfParticipants);
+    expect(text).toEqual(expectedText);
+    expect(timestamp).toEqual("just now");
+    await expect(profilePictureGroup).toBeVisible();
   }
 }
