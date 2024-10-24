@@ -407,6 +407,7 @@ export class ChatsMainPage extends MainPage {
     if (this.viewport === "mobile-chrome") {
       await this.page
         .getByTestId("button-show-controls")
+        .first()
         .click({ force: true });
     } else {
       await this.chatbarInput.click({ force: true });
@@ -1088,7 +1089,6 @@ export class ChatsMainPage extends MainPage {
 
     // Assert that the file exists
     if (fileExists) {
-      console.log(`File ${filename} was downloaded successfully.`);
       return true;
     } else {
       console.error(`File ${filename} was not found.`);
