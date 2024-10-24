@@ -1089,7 +1089,6 @@ export class ChatsMainPage extends MainPage {
 
     // Assert that the file exists
     if (fileExists) {
-      console.log(`File ${filename} was downloaded successfully.`);
       return true;
     } else {
       console.error(`File ${filename} was not found.`);
