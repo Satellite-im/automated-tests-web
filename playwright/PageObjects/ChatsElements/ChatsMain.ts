@@ -407,6 +407,7 @@ export class ChatsMainPage extends MainPage {
     if (this.viewport === "mobile-chrome") {
       await this.page
         .getByTestId("button-show-controls")
+        .first()
         .click({ force: true });
     } else {
       await this.chatbarInput.click({ force: true });
