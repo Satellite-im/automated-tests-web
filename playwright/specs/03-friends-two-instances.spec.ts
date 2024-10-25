@@ -33,61 +33,67 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    let currentFriendsSecondUser: string[];
+    let didKeyFirstUser: string;
 
     // With both users go to Friends Screen
-    await chatsMainPageFirst.dismissDownloadAlert();
-    await chatsMainPageSecond.dismissDownloadAlert();
-    await chatsMainPageFirst.goToFriends();
-    await chatsMainPageSecond.goToFriends();
+    await test.step("With both users go to Friends Screen", async () => {
+      await chatsMainPageFirst.dismissDownloadAlert();
+      await chatsMainPageSecond.dismissDownloadAlert();
+      await chatsMainPageFirst.goToFriends();
+      await chatsMainPageSecond.goToFriends();
+    });
 
     // H15 - User should be removed from friends list after clicking unfriend
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
+    await test.step("First user grants clipboard permissions, Copy DID and save it into a constant", async () => {
+      await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+      await friendsScreenFirst.copyDIDFromContextMenu();
+      const handle = await page1.evaluateHandle(() =>
+        navigator.clipboard.readText(),
+      );
+      didKeyFirstUser = await handle.jsonValue();
+    });
 
-    // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    await test.step("Second user adds first user as friend", async () => {
+      await friendsScreenSecond.addFriend(didKeyFirstUser);
+      await friendsScreenSecond.validateToastRequestSent();
+      await friendsScreenFirst.waitForToastNotificationToDisappear();
+      await friendsScreenSecond.waitForToastNotificationToDisappear();
+    });
 
-    // Now, add the first user as a friend
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
+    await test.step("With First User, go to requests list and accept friend request", async () => {
+      await friendsScreenFirst.goToRequestList();
+      await friendsScreenFirst.validateIncomingRequestExists();
+      await friendsScreenFirst.acceptFriendRequest(usernameTwo);
+      await friendsScreenFirst.goToAllFriendsList();
+    });
 
-    // With First User, go to requests list and accept friend request
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
+    await test.step("With Second User, go to All Friends and click on Remove Friend button", async () => {
+      await friendsScreenSecond.goToRequestList();
+      await friendsScreenSecond.goToAllFriendsList();
+    });
 
-    // With First User, go to All Friends
-    await friendsScreenFirst.goToAllFriendsList();
+    await test.step("Validate Friend List is displayed for letter 'C'", async () => {
+      await friendsScreenSecond.validateFriendListIsDisplayed("C");
+      currentFriendsSecondUser =
+        await friendsScreenSecond.getListOfCurrentFriends();
+      expect(currentFriendsSecondUser).toEqual([username]);
+    });
 
-    // With Second User, go to All Friends and click on Remove Friend button
-    await friendsScreenSecond.goToRequestList();
-    await friendsScreenSecond.goToAllFriendsList();
+    await test.step("Now remove the user from friends", async () => {
+      await friendsScreenSecond.removeFriend(username);
+      await friendsScreenSecond.validateFriendListDoesNotExist("C");
+      currentFriendsSecondUser =
+        await friendsScreenSecond.getListOfCurrentFriends();
+      expect(currentFriendsSecondUser).toEqual([]);
+    });
 
-    // Validate Friend List is displayed for letter "C"
-    await friendsScreenSecond.validateFriendListIsDisplayed("C");
-    let currentFriendsSecondUser =
-      await friendsScreenSecond.getListOfCurrentFriends();
-    expect(currentFriendsSecondUser).toEqual([username]);
-
-    // Now remove the user from friends
-    await friendsScreenSecond.removeFriend(username);
-    await friendsScreenSecond.validateFriendListDoesNotExist("C");
-    currentFriendsSecondUser =
-      await friendsScreenSecond.getListOfCurrentFriends();
-    expect(currentFriendsSecondUser).toEqual([]);
-
-    // Validate remote user has friend list empty as well
-    await friendsScreenFirst.validateFriendListDoesNotExist("C");
-    const currentFriendsFirstUser =
-      await friendsScreenFirst.getListOfCurrentFriends();
-    expect(currentFriendsFirstUser).toEqual([]);
+    await test.step("Validate remote user has friend list empty as well", async () => {
+      await friendsScreenFirst.validateFriendListDoesNotExist("C");
+      const currentFriendsFirstUser =
+        await friendsScreenFirst.getListOfCurrentFriends();
+      expect(currentFriendsFirstUser).toEqual([]);
+    });
   });
 
   test("H16, H17, H18, H26 - User can be block/unblocked", async ({
@@ -1884,121 +1890,136 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const viewport = firstUserContext.viewport;
     const friendsScreenFirst = new FriendsScreen(page1, viewport);
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
+    const callScreenFirstUser = new CallScreen(page1, viewport);
+    const callScreenSecondUser = new CallScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const incomingCallFirstUser = new IncomingCall(page1, viewport);
     const settingsProfileFirst = new SettingsProfile(page1, viewport);
     const settingsProfileSecond = new SettingsProfile(page2, viewport);
     let lastMessageSent: Locator;
     let lastMessageReceived: Locator;
+    let profilePictureUserA: string;
+    let profilePictureUserB: string;
 
     // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // Second user uploads a profile picture
-    await chatsMainPageSecond.goToSettings();
-    await page2.waitForURL("/settings/profile");
-    await settingsProfileSecond.hideSidebarOnMobileView();
-    await settingsProfileSecond.uploadProfilePicture(
-      "playwright/assets/logo.jpg",
-    );
-
-    const profilePictureUserB =
-      await settingsProfileSecond.getProfileImageSource();
-    await settingsProfileSecond.goToChat();
-
-    // First user uploads a profile picture
-    await chatsMainPageFirst.goToSettings();
-    await page1.waitForURL("/settings/profile");
-    await settingsProfileFirst.hideSidebarOnMobileView();
-    await settingsProfileFirst.uploadProfilePicture(
-      "playwright/assets/banner.jpg",
-    );
-
-    const profilePictureUserA =
-      await settingsProfileFirst.getProfileImageSource();
-    await settingsProfileFirst.goToChat();
-
-    // Send message from second user to first user
-    const firstMessage = "hey I am gonna call you now";
-    await chatsMainPageSecond.sendMessage(firstMessage);
-    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(firstMessage);
-    await expect(lastMessageReceived).toHaveText(firstMessage);
-
-    // Second user calls the first user
-    await chatsMainPageSecond.clickOnAudioCallButton();
-
-    // Validate outgoing call modal displayed
-    const callScreenSecondUser = new CallScreen(page2, viewport);
-    await expect(callScreenSecondUser.callScreen).toBeVisible();
-
-    // Validate incoming call modal displayed
-    const incomingCallFirstUser = new IncomingCall(page1, viewport);
-    await incomingCallFirstUser.validateIncomingCallModal(
-      usernameTwo,
-      "status from second user",
-      profilePictureUserB,
-    );
-
-    // Validate user is connecting displays and then accept incoming call
-    await callScreenSecondUser.validateUserIsConnecting();
-    await incomingCallFirstUser.acceptAudioIncomingCall();
-
-    // Validate incoming call modal is closed
-    await callScreenSecondUser.validateAllUsersAreConnected();
-    await incomingCallFirstUser.incomingCallModal.waitFor({
-      state: "detached",
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
     });
-    await callScreenSecondUser.callParticipantConnecting.waitFor({
-      state: "detached",
+
+    await test.step("Second user uploads a profile picture", async () => {
+      await chatsMainPageSecond.goToSettings();
+      await page2.waitForURL("/settings/profile");
+      await settingsProfileSecond.hideSidebarOnMobileView();
+      await settingsProfileSecond.uploadProfilePicture(
+        "playwright/assets/logo.jpg",
+      );
+
+      profilePictureUserB = await settingsProfileSecond.getProfileImageSource();
+      await settingsProfileSecond.goToChat();
     });
-    const callScreenFirstUser = new CallScreen(page1, viewport);
-    await expect(callScreenFirstUser.callScreen).toBeVisible();
-    await callScreenFirstUser.validateAllUsersAreConnected();
 
-    // With second user validate contents from call screen
-    await callScreenSecondUser.validateCallScreenContents(
-      profilePictureUserB,
-      profilePictureUserA,
-    );
+    await test.step("First user uploads a profile picture", async () => {
+      await chatsMainPageFirst.goToSettings();
+      await page1.waitForURL("/settings/profile");
+      await settingsProfileFirst.hideSidebarOnMobileView();
+      await settingsProfileFirst.uploadProfilePicture(
+        "playwright/assets/banner.jpg",
+      );
 
-    // With first user validate contents from call screen
-    await callScreenFirstUser.validateCallScreenContents(
-      profilePictureUserA,
-      profilePictureUserB,
-    );
+      profilePictureUserA = await settingsProfileFirst.getProfileImageSource();
+      await settingsProfileFirst.goToChat();
+    });
 
-    // With first user validate all buttons are working correctly
-    await callScreenSecondUser.unmuteCall();
-    await callScreenSecondUser.muteCall();
-    await callScreenSecondUser.deafenCall();
-    await callScreenSecondUser.undeafenCall();
-    await callScreenSecondUser.clickOnStreamButton();
-    await callScreenSecondUser.expandCall();
-    await callScreenSecondUser.collapseCall();
+    await test.step("Send message from second user to first user", async () => {
+      const firstMessage = "hey I am gonna call you now";
+      await chatsMainPageSecond.sendMessage(firstMessage);
+      lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+      lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+      await expect(lastMessageSent).toHaveText(firstMessage);
+      await expect(lastMessageReceived).toHaveText(firstMessage);
+    });
 
-    // Executing full screen mode validations only on desktop viewport since exit button appears outside of mobile viewport
-    if (callScreenSecondUser.viewport === "desktop-chrome") {
-      await callScreenSecondUser.enterFullScreenMode();
-      await callScreenSecondUser.exitFullScreenMode();
-    }
+    await test.step("Second user calls the first user", async () => {
+      await chatsMainPageSecond.clickOnAudioCallButton();
+    });
 
-    // With second user continue validating buttons are working correctly
-    await callScreenSecondUser.enableVideo();
-    await page2.waitForTimeout(10000);
-    await callScreenSecondUser.disableVideo();
-    await callScreenSecondUser.openCallVolumeMixer();
-    await callScreenSecondUser.openCallSettings();
-    await chatsMainPageSecond.exitCallSettings();
-    await callScreenSecondUser.endCall();
+    await test.step("Validate outgoing call modal displayed", async () => {
+      await expect(callScreenSecondUser.callScreen).toBeVisible();
+    });
+
+    await test.step("Validate incoming call modal displayed", async () => {
+      await incomingCallFirstUser.validateIncomingCallModal(
+        usernameTwo,
+        "status from second user",
+        profilePictureUserB,
+      );
+    });
+
+    await test.step("Validate user is connecting displays and then accept incoming call", async () => {
+      await callScreenSecondUser.validateUserIsConnecting();
+      await incomingCallFirstUser.acceptAudioIncomingCall();
+    });
+
+    await test.step("Validate incoming call modal is closed", async () => {
+      await callScreenSecondUser.validateAllUsersAreConnected();
+      await incomingCallFirstUser.incomingCallModal.waitFor({
+        state: "detached",
+      });
+      await callScreenSecondUser.callParticipantConnecting.waitFor({
+        state: "detached",
+      });
+      await expect(callScreenFirstUser.callScreen).toBeVisible();
+      await callScreenFirstUser.validateAllUsersAreConnected();
+    });
+
+    await test.step("With second user validate contents from call screen", async () => {
+      await callScreenSecondUser.validateCallScreenContents(
+        profilePictureUserB,
+        profilePictureUserA,
+      );
+    });
+
+    await test.step("With first user validate contents from call screen", async () => {
+      await callScreenFirstUser.validateCallScreenContents(
+        profilePictureUserA,
+        profilePictureUserB,
+      );
+    });
+
+    await test.step("With first user validate all buttons are working correctly", async () => {
+      await callScreenSecondUser.unmuteCall();
+      await callScreenSecondUser.muteCall();
+      await callScreenSecondUser.deafenCall();
+      await callScreenSecondUser.undeafenCall();
+      await callScreenSecondUser.clickOnStreamButton();
+      await callScreenSecondUser.expandCall();
+      await callScreenSecondUser.collapseCall();
+    });
+
+    await test.step("Executing full screen mode validations only on desktop viewport since exit button appears outside of mobile viewport", async () => {
+      if (callScreenSecondUser.viewport === "desktop-chrome") {
+        await callScreenSecondUser.enterFullScreenMode();
+        await callScreenSecondUser.exitFullScreenMode();
+      }
+    });
+
+    await test.step("With second user continue validating buttons are working correctly", async () => {
+      await callScreenSecondUser.enableVideo();
+      await page2.waitForTimeout(10000);
+      await callScreenSecondUser.disableVideo();
+      await callScreenSecondUser.openCallVolumeMixer();
+      await callScreenSecondUser.openCallSettings();
+      await chatsMainPageSecond.exitCallSettings();
+      await callScreenSecondUser.endCall();
+    });
   });
 
   test("Group Chats - Create a group with 3 people and send/receive text message flow", async ({
@@ -2021,90 +2042,98 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageThird = new ChatsMainPage(page3, viewport);
     const createGroupThird = new CreateGroupModal(page3, viewport);
 
-    // Setup accounts for testing
-    await setupThreeChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      chatsMainPageThird,
-      context1,
-      context2,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      friendsScreenThird,
-      page1,
-      page2,
-    );
+    await test.step("Setup accounts for testing", async () => {
+      await setupThreeChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        chatsMainPageThird,
+        context1,
+        context2,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        friendsScreenThird,
+        page1,
+        page2,
+      );
+    });
 
-    // Click on Create Group Chat to open modal
-    await chatsMainPageThird.clickOnCreateGroupChat();
+    await test.step("Open Create Group Chat Modal", async () => {
+      await chatsMainPageThird.clickOnCreateGroupChat();
+    });
 
-    // Validate that group without members cannot be created
-    await createGroupThird.createGroupChat("", []);
-    await expect(createGroupThird.errorUsersCreateGroupModal).toBeVisible();
-    await expect(createGroupThird.errorUsersCreateGroupModal).toHaveText(
-      "No members selected",
-    );
+    await test.step("Validate that group without members cannot be created", async () => {
+      await createGroupThird.createGroupChat("", []);
+      await expect(createGroupThird.errorUsersCreateGroupModal).toBeVisible();
+      await expect(createGroupThird.errorUsersCreateGroupModal).toHaveText(
+        "No members selected",
+      );
+    });
 
-    // Validate that group without name cannot be created
-    await createGroupThird.createGroupChat("", ["ChatUserA", "ChatUserB"]);
-    await expect(createGroupThird.errorNameCreateGroupModal).toBeVisible();
-    await expect(createGroupThird.errorNameCreateGroupModal).toHaveText(
-      "Please insert group name",
-    );
+    await test.step("Validate that group without name cannot be created", async () => {
+      await createGroupThird.createGroupChat("", ["ChatUserA", "ChatUserB"]);
+      await expect(createGroupThird.errorNameCreateGroupModal).toBeVisible();
+      await expect(createGroupThird.errorNameCreateGroupModal).toHaveText(
+        "Please insert group name",
+      );
+      await createGroupThird.selectUser(["ChatUserA", "ChatUserB"]);
+    });
 
-    await createGroupThird.selectUser(["ChatUserA", "ChatUserB"]);
+    await test.step("Create a valid group chat", async () => {
+      await createGroupThird.createGroupChat("Group Chat 1", [
+        "ChatUserA",
+        "ChatUserB",
+      ]);
+    });
 
-    await createGroupThird.createGroupChat("Group Chat 1", [
-      "ChatUserA",
-      "ChatUserB",
-    ]);
+    await test.step("Validate group chat sidebar preview is displayed on all users", async () => {
+      await chatsMainPageThird.validateChatPreviewMessageTextGroup(
+        "Group Chat 1",
+        "No messages sent yet.",
+        3,
+      );
 
-    // Validate sidebar previews
-    await chatsMainPageThird.validateChatPreviewMessageTextGroup(
-      "Group Chat 1",
-      "No messages sent yet.",
-      3,
-    );
+      await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
+        "Group Chat 1",
+        "No messages sent yet.",
+        3,
+      );
+      await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
+        "Group Chat 1",
+        "No messages sent yet.",
+        3,
+      );
+    });
 
-    await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
-      "Group Chat 1",
-      "No messages sent yet.",
-      3,
-    );
-    await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
-      "Group Chat 1",
-      "No messages sent yet.",
-      3,
-    );
+    await test.step("Send a message to the group", async () => {
+      await chatsMainPageThird.sendMessage("Hello Group");
+      await chatsMainPageThird.validateMessageIsSent("Hello Group");
+      await chatsMainPageFirst.goToSidebarChat("Group Chat 1");
+      await chatsMainPageFirst.validateMessageIsReceived("Hello Group");
+      await chatsMainPageSecond.goToSidebarChat("Group Chat 1");
+      await chatsMainPageSecond.validateMessageIsReceived("Hello Group");
+    });
 
-    // Send a message to the group
-    await chatsMainPageThird.sendMessage("Hello Group");
-    await chatsMainPageThird.validateMessageIsSent("Hello Group");
-    await chatsMainPageFirst.goToSidebarChat("Group Chat 1");
-    await chatsMainPageFirst.validateMessageIsReceived("Hello Group");
-    await chatsMainPageSecond.goToSidebarChat("Group Chat 1");
-    await chatsMainPageSecond.validateMessageIsReceived("Hello Group");
+    await test.step("Validate group chat sidebar preview is updated with message received on all users", async () => {
+      await chatsMainPageThird.validateChatPreviewMessageTextGroup(
+        "Group Chat 1",
+        "Hello Group",
+        3,
+      );
 
-    // Validate sidebar previews after sending group message
-    await chatsMainPageThird.validateChatPreviewMessageTextGroup(
-      "Group Chat 1",
-      "Hello Group",
-      3,
-    );
+      await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+      await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
+        "Group Chat 1",
+        "Hello Group",
+        3,
+      );
 
-    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
-    await chatsMainPageFirst.validateChatPreviewMessageTextGroup(
-      "Group Chat 1",
-      "Hello Group",
-      3,
-    );
-
-    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
-    await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
-      "Group Chat 1",
-      "Hello Group",
-      3,
-    );
+      await chatsMainPageSecond.clickOnShowSidebarIfClosed();
+      await chatsMainPageSecond.validateChatPreviewMessageTextGroup(
+        "Group Chat 1",
+        "Hello Group",
+        3,
+      );
+    });
   });
 });
 
