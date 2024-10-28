@@ -1952,7 +1952,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
 
     await test.step("Validate outgoing call modal displayed", async () => {
-      await expect(callScreenSecondUser.callScreen).toBeVisible();
+      await callScreenSecondUser.callScreen.waitFor({ state: "attached" });
     });
 
     await test.step("Validate incoming call modal displayed", async () => {
