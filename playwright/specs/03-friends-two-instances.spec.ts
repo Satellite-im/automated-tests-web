@@ -13,6 +13,7 @@ import { StickerPicker } from "playwright/PageObjects/ChatsElements/StickerPicke
 import { CallScreen } from "playwright/PageObjects/CallElements/CallScreen";
 import { IncomingCall } from "playwright/PageObjects/CallElements/IncomingCall";
 import { CreateGroupModal } from "playwright/PageObjects/ChatsElements/CreateGroupModal";
+import { ReplyModal } from "playwright/PageObjects/ChatsElements/ReplyModal";
 
 const username = "ChatUserA";
 const usernameTwo = "ChatUserB";
@@ -1892,28 +1893,56 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    const replyModalSecond = new ReplyModal(page2, viewport);
+    const firstMessage = "this is a first test message";
+    const replyText = "This is a reply to my own message";
     let lastMessageSent: Locator;
     let lastMessageReceived: Locator;
 
     // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Send message from second user to first user
-    const firstMessage = "this is a first test message";
-    await chatsMainPageSecond.sendMessage(firstMessage);
-    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(firstMessage);
-    await expect(lastMessageReceived).toHaveText(firstMessage);
+    await test.step("Send message from second user to first user", async () => {
+      await chatsMainPageSecond.sendMessage(firstMessage);
+      lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
+      lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
+      await expect(lastMessageSent).toHaveText(firstMessage);
+      await expect(lastMessageReceived).toHaveText(firstMessage);
+    });
 
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+    await test.step("User can open reply modal and close it", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectContextMenuOption("Reply");
+      await replyModalSecond.cancelReply();
+    });
+
+    await test.step("User can reply to its own message", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectContextMenuOption("Reply");
+      await chatsMainPageSecond.sendMessage(replyText);
+
+      // Validate original message and reply are displayed
+      const repliedMessage =
+        await chatsMainPageSecond.getLastReplyContainerLocal();
+      await expect(repliedMessage).toHaveText(firstMessage);
+      const replyMessage = await chatsMainPageSecond.getLastMessageLocal();
+      await expect(replyMessage).toHaveText(replyText);
+    });
+
+    // Need to add tests
+    // User can reply to remote message
+    // User can reply to images, stickers and gif messages
+    // User can reply to attachment messages
+    // User can reply with image, sticker or gif or attachment or emoji
   });
 
   test("Videocall testing between two users - mute, unmute, fullscreen, expand/collapse call", async ({

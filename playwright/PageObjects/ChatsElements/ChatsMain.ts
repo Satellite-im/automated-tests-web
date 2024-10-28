@@ -77,6 +77,8 @@ export class ChatsMainPage extends MainPage {
   readonly messagePinIndicator: Locator;
   readonly messageReactionsLocal: Locator;
   readonly messageReactionsRemote: Locator;
+  readonly messageReplyContainer: Locator;
+  readonly messageReplyContainerContent: Locator;
   readonly pendingMessageGroup: Locator;
   readonly pendingFileCancelButton: Locator;
   readonly pendingFileName: Locator;
@@ -284,6 +286,10 @@ export class ChatsMainPage extends MainPage {
     this.messageReactionsRemote = this.page.getByTestId(
       "message-reactions-remote",
     );
+    this.messageReplyContainer = this.page.locator(".message-reply-container");
+    this.messageReplyContainerContent = this.messageReplyContainer
+      .getByTestId("message-bubble-content")
+      .locator("p");
     this.pendingFileCancelButton = this.page.getByTestId(
       "button-pending-file-cancel",
     );
@@ -632,6 +638,28 @@ export class ChatsMainPage extends MainPage {
       .last();
     await lastMessage.waitFor({ state: "attached" });
     return lastMessage;
+  }
+
+  async getLastReplyContainerLocal() {
+    const lastRepliedMessage = this.messageReplyContainer
+      .last()
+      .getByTestId("message-bubble-local")
+      .getByTestId("message-bubble-content")
+      .locator("p")
+      .locator("p")
+      .locator("span");
+    return lastRepliedMessage;
+  }
+
+  async getLastReplyContainerRemote() {
+    const lastRepliedMessage = this.messageReplyContainer
+      .last()
+      .getByTestId("message-bubble-remote")
+      .getByTestId("message-bubble-content")
+      .locator("p")
+      .locator("p")
+      .locator("span");
+    return lastRepliedMessage;
   }
 
   async getLastTimestampLocal() {
