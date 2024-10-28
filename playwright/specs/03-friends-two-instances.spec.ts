@@ -2062,11 +2062,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
 
     await test.step("Validate that group without members cannot be created", async () => {
-      await createGroupThird.createGroupChat("", []);
-      await expect(createGroupThird.errorUsersCreateGroupModal).toBeVisible();
-      await expect(createGroupThird.errorUsersCreateGroupModal).toHaveText(
-        "No members selected",
-      );
+      await createGroupThird.createGroupChat("test", []);
+      await expect(createGroupThird.createGroupButton).toBeDisabled();
     });
 
     await test.step("Validate that group without name cannot be created", async () => {
