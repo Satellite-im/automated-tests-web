@@ -961,11 +961,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
 
     // Send message from second user to first user
     const firstMessage = "this is a first test message";
-    await chatsMainPageSecond.sendMessage(firstMessage);
-    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(firstMessage);
-    await expect(lastMessageReceived).toHaveText(firstMessage);
+    await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
+    await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
 
     // B18 - Context menu appears when user right clicks a message
     // B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete
@@ -991,11 +988,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await expect(clipboardContent).toEqual(firstMessage);
     await chatsMainPageFirst.sendMessage(firstMessage);
 
-    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
-    await expect(lastMessageSent).toHaveText(firstMessage);
-
-    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
-    await expect(lastMessageReceived).toHaveText(firstMessage);
+    await chatsMainPageFirst.validateLastMessageLocal(firstMessage);
+    await chatsMainPageSecond.validateLastMessageRemote(firstMessage);
 
     // B24 - Clicking Edit should open up the edit message modal
     const editedMessage = "Edited message";
@@ -1003,11 +997,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await chatsMainPageFirst.selectContextMenuOption("Edit");
     await chatsMainPageFirst.typeOnEditMessageInput(editedMessage);
 
-    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
-    await expect(lastMessageSent).toHaveText(editedMessage);
-
-    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
-    await expect(lastMessageReceived).toHaveText(editedMessage);
+    await chatsMainPageFirst.validateLastMessageLocal(editedMessage);
+    await chatsMainPageSecond.validateLastMessageRemote(editedMessage);
 
     // B25 - Clicking Delete should delete message from chat
     await chatsMainPageFirst.openContextMenuOnLastMessageSent();
@@ -1044,10 +1035,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Send message from second user to first user
     const firstMessage = "this is a first test message";
     await chatsMainPageSecond.sendMessage(firstMessage);
-    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(firstMessage);
-    await expect(lastMessageReceived).toHaveText(firstMessage);
+    await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
+    await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
 
     // Validate Pinned Messages container is empty when no messages have been pinned
     await chatsMainPageSecond.openPinMessagesContainer();
@@ -1105,10 +1094,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Send a message from first user to second user
     const secondMessage = "this is a second test message";
     await chatsMainPageFirst.sendMessage(secondMessage);
-    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(secondMessage);
-    await expect(lastMessageReceived).toHaveText(secondMessage);
+    await chatsMainPageFirst.validateLastMessageLocal(secondMessage);
+    await chatsMainPageSecond.validateLastMessageRemote(secondMessage);
 
     // Validate user can pin a remote message
     await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
@@ -1141,10 +1128,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Send a message from second user to first user
     const thirdMessage = "this is a third test message";
     await chatsMainPageSecond.sendMessage(thirdMessage);
-    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(thirdMessage);
-    await expect(lastMessageReceived).toHaveText(thirdMessage);
+    await chatsMainPageSecond.validateLastMessageLocal(thirdMessage);
+    await chatsMainPageFirst.validateLastMessageRemote(thirdMessage);
 
     // Local user can pin the message
     await chatsMainPageSecond.openContextMenuOnLastMessageSent();
@@ -1163,10 +1148,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Send a message from first user to second user
     const fourthMessage = "this is a fourth test message";
     await chatsMainPageFirst.sendMessage(fourthMessage);
-    lastMessageSent = await chatsMainPageFirst.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageSecond.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(fourthMessage);
-    await expect(lastMessageReceived).toHaveText(fourthMessage);
+    await chatsMainPageFirst.validateLastMessageLocal(fourthMessage);
+    await chatsMainPageSecond.validateLastMessageRemote(fourthMessage);
 
     // Remote user can pin the message
     await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
@@ -1235,10 +1218,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     // Send message from second user to first user
     const firstMessage = "this is a first test message";
     await chatsMainPageSecond.sendMessage(firstMessage);
-    lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
-    lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
-    await expect(lastMessageSent).toHaveText(firstMessage);
-    await expect(lastMessageReceived).toHaveText(firstMessage);
+    await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
+    await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
 
     // Local user can react to message sent - React to message sent with 👍
     expectedReactions = [
@@ -1733,16 +1714,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await gifPickerSecond.selectGif(gifToSelect);
 
     // Validate GIF sent is displayed on local and remote sides
-    const imageSent = chatsMainPageSecond.messageBubbleContent
-      .last()
-      .locator("img");
-    const imageReceived = chatsMainPageFirst.messageBubbleContent
-      .last()
-      .locator("img");
-    await expect(imageSent).toHaveAttribute("alt", gifToSelect);
-    await expect(imageSent).toBeVisible();
-    await expect(imageReceived).toHaveAttribute("alt", gifToSelect);
-    await expect(imageReceived).toBeVisible();
+    await chatsMainPageSecond.validateGifStickerSent(gifToSelect);
+    await chatsMainPageFirst.validateGifStickerReceived(gifToSelect);
 
     // Validate GIF sent is displayed in chat preview from sidebar as last message sent
     await chatsMainPageSecond.clickOnShowSidebarIfClosed();
@@ -1798,18 +1771,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await stickerPickerSecond.selectSticker("Space Cat", "Power Up");
 
     // Validate Sticker sent is displayed on local and remote sides
-    const imageSent = chatsMainPageSecond.messageBubbleContent
-      .last()
-      .locator("img");
-    await imageSent.waitFor({ state: "attached" });
-    const imageReceived = chatsMainPageFirst.messageBubbleContent
-      .last()
-      .locator("img");
-    await imageReceived.waitFor({ state: "attached" });
-    await expect(imageSent).toHaveAttribute("alt", "Power Up");
-    await expect(imageSent).toBeVisible();
-    await expect(imageReceived).toHaveAttribute("alt", "Power Up");
-    await expect(imageReceived).toBeVisible();
+    await chatsMainPageSecond.validateGifStickerSent("Power Up");
+    await chatsMainPageFirst.validateGifStickerReceived("Power Up");
 
     // Validate Sticker sent is displayed in chat preview from sidebar as last message sent
     await chatsMainPageSecond.clickOnShowSidebarIfClosed();
@@ -1895,9 +1858,9 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
     const replyModalSecond = new ReplyModal(page2, viewport);
     const firstMessage = "this is a first test message";
-    const replyText = "This is a reply to my own message";
-    let lastMessageSent: Locator;
-    let lastMessageReceived: Locator;
+    const secondMessage = "this is a second test message";
+    const selfReplyText = "This is a reply to my own message";
+    const remoteReplyText = "This is a reply to a remote message";
 
     // Setup accounts for testing
     await test.step("Setup accounts for testing", async () => {
@@ -1913,10 +1876,8 @@ test.describe("Two instances tests - Friends and Chats", () => {
 
     await test.step("Send message from second user to first user", async () => {
       await chatsMainPageSecond.sendMessage(firstMessage);
-      lastMessageSent = await chatsMainPageSecond.getLastMessageLocal();
-      lastMessageReceived = await chatsMainPageFirst.getLastMessageRemote();
-      await expect(lastMessageSent).toHaveText(firstMessage);
-      await expect(lastMessageReceived).toHaveText(firstMessage);
+      await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
+      await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
     });
 
     await test.step("User can open reply modal and close it", async () => {
@@ -1928,18 +1889,88 @@ test.describe("Two instances tests - Friends and Chats", () => {
     await test.step("User can reply to its own message", async () => {
       await chatsMainPageSecond.openContextMenuOnLastMessageSent();
       await chatsMainPageSecond.selectContextMenuOption("Reply");
-      await chatsMainPageSecond.sendMessage(replyText);
+      await chatsMainPageSecond.sendMessage(selfReplyText);
 
-      // Validate original message and reply are displayed
-      const repliedMessage =
-        await chatsMainPageSecond.getLastReplyContainerLocal();
-      await expect(repliedMessage).toHaveText(firstMessage);
-      const replyMessage = await chatsMainPageSecond.getLastMessageLocal();
-      await expect(replyMessage).toHaveText(replyText);
+      // Validate local message and self reply are displayed
+      await chatsMainPageSecond.validateReplyToLocalMessage(
+        "text",
+        firstMessage,
+        selfReplyText,
+        true,
+      );
+
+      // Validate remote message and reply received are displayed
+      await chatsMainPageFirst.validateReplyToRemoteMessage(
+        "text",
+        firstMessage,
+        selfReplyText,
+        false,
+      );
     });
 
-    // Need to add tests
-    // User can reply to remote message
+    await test.step("Send another message from second user to first user", async () => {
+      await chatsMainPageSecond.sendMessage(secondMessage);
+      await chatsMainPageSecond.validateLastMessageLocal(secondMessage);
+      await chatsMainPageFirst.validateLastMessageRemote(secondMessage);
+    });
+
+    await test.step("User can reply to a remote message", async () => {
+      await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+      await chatsMainPageFirst.selectContextMenuOption("Reply");
+      await chatsMainPageFirst.sendMessage(remoteReplyText);
+
+      // Validate remote message and reply sent are displayed
+      await chatsMainPageFirst.validateReplyToRemoteMessage(
+        "text",
+        secondMessage,
+        remoteReplyText,
+        true,
+      );
+
+      // Validate local message and reply received are displayed
+      await chatsMainPageSecond.validateReplyToLocalMessage(
+        "text",
+        secondMessage,
+        remoteReplyText,
+        false,
+      );
+    });
+
+    await test.step("User can reply to a sticker sent", async () => {
+      // Send a sticker from second user to second user
+      await chatsMainPageSecond.openStickerPicker();
+      const stickerPickerSecond = new StickerPicker(page2, viewport);
+      await stickerPickerSecond.waitForStickersToLoad();
+
+      // Send a Sticker to the other user
+      await stickerPickerSecond.selectSticker("Space Cat", "Power Up");
+
+      // Validate Sticker sent is displayed on local and remote sides
+      await chatsMainPageSecond.validateGifStickerSent("Power Up");
+      await chatsMainPageFirst.validateGifStickerReceived("Power Up");
+
+      // Reply to sticker sent by yourself
+      await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+      await chatsMainPageFirst.selectContextMenuOption("Reply");
+      await chatsMainPageFirst.sendMessage(selfReplyText);
+
+      // Validate remote message and reply sent are displayed
+      await chatsMainPageFirst.validateReplyToRemoteMessage(
+        "sticker",
+        "Power Up",
+        selfReplyText,
+        true,
+      );
+
+      // Validate local message and reply received are displayed
+      await chatsMainPageSecond.validateReplyToLocalMessage(
+        "sticker",
+        "Power Up",
+        selfReplyText,
+        false,
+      );
+    });
+
     // User can reply to images, stickers and gif messages
     // User can reply to attachment messages
     // User can reply with image, sticker or gif or attachment or emoji
