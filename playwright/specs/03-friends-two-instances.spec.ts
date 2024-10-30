@@ -946,8 +946,6 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-    let lastMessageSent: Locator;
-    let lastMessageReceived: Locator;
 
     // Setup accounts for testing
     await setupChats(
@@ -961,6 +959,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
 
     // Send message from second user to first user
     const firstMessage = "this is a first test message";
+    await chatsMainPageSecond.sendMessage(firstMessage);
     await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
     await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
 
@@ -1019,8 +1018,6 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-    let lastMessageSent: Locator;
-    let lastMessageReceived: Locator;
 
     // Setup accounts for testing
     await setupChats(
@@ -1196,8 +1193,6 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-    let lastMessageSent: Locator;
-    let lastMessageReceived: Locator;
     let localMessageReactions: reactionContainer;
     let remoteMessageReactions: reactionContainer;
     let expectedReactions: reactionContainer;
@@ -1936,7 +1931,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       );
     });
 
-    await test.step("User can reply to a sticker sent", async () => {
+    await test.step("User can reply to a sticker received", async () => {
       // Send a sticker from second user to second user
       await chatsMainPageSecond.openStickerPicker();
       const stickerPickerSecond = new StickerPicker(page2, viewport);
@@ -1949,7 +1944,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       await chatsMainPageSecond.validateGifStickerSent("Power Up");
       await chatsMainPageFirst.validateGifStickerReceived("Power Up");
 
-      // Reply to sticker sent by yourself
+      // Reply to sticker sent by remote user
       await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
       await chatsMainPageFirst.selectContextMenuOption("Reply");
       await chatsMainPageFirst.sendMessage(selfReplyText);
@@ -1971,9 +1966,41 @@ test.describe("Two instances tests - Friends and Chats", () => {
       );
     });
 
-    // User can reply to images, stickers and gif messages
-    // User can reply to attachment messages
-    // User can reply with image, sticker or gif or attachment or emoji
+    await test.step("User can reply to a GIF received", async () => {
+      // Send a GIF from second user to first user
+      await chatsMainPageSecond.openGifPicker();
+      const gifPickerSecond = new GifPicker(page2, viewport);
+      await gifPickerSecond.waitForGifsToLoad();
+
+      // Send a Gif to the other user
+      const gifToSelect = await gifPickerSecond.getGifAltText(0);
+      await gifPickerSecond.selectGif(gifToSelect);
+
+      // Validate GIF sent is displayed on local and remote sides
+      await chatsMainPageSecond.validateGifStickerSent(gifToSelect);
+      await chatsMainPageFirst.validateGifStickerReceived(gifToSelect);
+
+      // Reply to GIF sent by remote user
+      await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+      await chatsMainPageFirst.selectContextMenuOption("Reply");
+      await chatsMainPageFirst.sendMessage(selfReplyText);
+
+      // Validate remote message and reply sent are displayed
+      await chatsMainPageFirst.validateReplyToRemoteMessage(
+        "GIF",
+        gifToSelect,
+        selfReplyText,
+        true,
+      );
+
+      // Validate local message and reply received are displayed
+      await chatsMainPageSecond.validateReplyToLocalMessage(
+        "GIF",
+        gifToSelect,
+        selfReplyText,
+        false,
+      );
+    });
   });
 
   test("Videocall testing between two users - mute, unmute, fullscreen, expand/collapse call", async ({
