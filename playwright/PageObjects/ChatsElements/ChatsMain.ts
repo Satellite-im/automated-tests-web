@@ -77,6 +77,8 @@ export class ChatsMainPage extends MainPage {
   readonly messagePinIndicator: Locator;
   readonly messageReactionsLocal: Locator;
   readonly messageReactionsRemote: Locator;
+  readonly messageReplyContainer: Locator;
+  readonly messageReplyContainerContent: Locator;
   readonly pendingMessageGroup: Locator;
   readonly pendingFileCancelButton: Locator;
   readonly pendingFileName: Locator;
@@ -284,6 +286,10 @@ export class ChatsMainPage extends MainPage {
     this.messageReactionsRemote = this.page.getByTestId(
       "message-reactions-remote",
     );
+    this.messageReplyContainer = this.page.locator(".message-reply-container");
+    this.messageReplyContainerContent = this.messageReplyContainer
+      .getByTestId("message-bubble-content")
+      .locator("p");
     this.pendingFileCancelButton = this.page.getByTestId(
       "button-pending-file-cancel",
     );
@@ -833,6 +839,16 @@ export class ChatsMainPage extends MainPage {
     );
   }
 
+  async validateLastMessageLocal(expectedMessage: string) {
+    const lastMessageSent = await this.getLastMessageLocal();
+    await expect(lastMessageSent).toHaveText(expectedMessage);
+  }
+
+  async validateLastMessageRemote(expectedMessage: string) {
+    const lastMessageReceived = await this.getLastMessageRemote();
+    await expect(lastMessageReceived).toHaveText(expectedMessage);
+  }
+
   async validateMarkdownFromLastMessageLocal(
     expectedText: string,
     expectedMarkdown: string[],
@@ -1185,6 +1201,102 @@ export class ChatsMainPage extends MainPage {
       await this.page.getByTestId("button-Stickers").click();
     } else {
       await this.stickerPickerButton.click();
+    }
+  }
+
+  async validateGifStickerReceived(gifText: string) {
+    const imageReceived = this.messageBubbleContent.last().locator("img");
+    await imageReceived.waitFor({ state: "attached" });
+    await expect(imageReceived).toHaveAttribute("alt", gifText);
+    await expect(imageReceived).toBeVisible();
+  }
+
+  async validateGifStickerSent(gifText: string) {
+    const imageSent = this.messageBubbleContent.last().locator("img");
+    await imageSent.waitFor({ state: "attached" });
+    await expect(imageSent).toHaveAttribute("alt", gifText);
+    await expect(imageSent).toBeVisible();
+  }
+
+  // Replies tests
+
+  async getLastReplyContainerLocal(
+    typeOfMessageReplied: "text" | "GIF" | "sticker",
+  ) {
+    let repliedMessage: Locator;
+    const lastRepliedMessage = this.messageReplyContainer
+      .last()
+      .getByTestId("message-bubble-local")
+      .getByTestId("message-bubble-content")
+      .locator("p")
+      .locator("p");
+    if (typeOfMessageReplied === "text") {
+      repliedMessage = lastRepliedMessage.locator("span");
+    } else {
+      repliedMessage = lastRepliedMessage.locator("img");
+    }
+    return repliedMessage;
+  }
+
+  async getLastReplyContainerRemote(
+    typeOfMessageReplied: "text" | "GIF" | "sticker",
+  ) {
+    let repliedMessage: Locator;
+    const lastRepliedMessage = this.messageReplyContainer
+      .last()
+      .getByTestId("message-bubble-remote")
+      .getByTestId("message-bubble-content")
+      .locator("p")
+      .locator("p");
+    if (typeOfMessageReplied === "text") {
+      repliedMessage = lastRepliedMessage.locator("span");
+    } else {
+      repliedMessage = lastRepliedMessage.locator("img");
+    }
+    return repliedMessage;
+  }
+
+  async validateReplyToLocalMessage(
+    typeOfMessageReplied: "text" | "GIF" | "sticker",
+    messageReplied: string,
+    replyText: string,
+    currentUserIsReplying: boolean = true,
+  ) {
+    if (typeOfMessageReplied === "text") {
+      const repliedMessage =
+        await this.getLastReplyContainerLocal(typeOfMessageReplied);
+      await expect(repliedMessage).toHaveText(messageReplied);
+    } else if (typeOfMessageReplied === "GIF" || "sticker") {
+      const repliedMessage =
+        await this.getLastReplyContainerLocal(typeOfMessageReplied);
+      await expect(repliedMessage).toHaveAttribute("alt", messageReplied);
+    }
+    if (currentUserIsReplying) {
+      await this.validateLastMessageLocal(replyText);
+    } else {
+      await this.validateLastMessageRemote(replyText);
+    }
+  }
+
+  async validateReplyToRemoteMessage(
+    typeOfMessageReplied: "text" | "GIF" | "sticker",
+    messageReplied: string,
+    replyText: string,
+    currentUserIsReplying: boolean = true,
+  ) {
+    if (typeOfMessageReplied === "text") {
+      const repliedMessage =
+        await this.getLastReplyContainerRemote(typeOfMessageReplied);
+      await expect(repliedMessage).toHaveText(messageReplied);
+    } else if (typeOfMessageReplied === "GIF" || "sticker") {
+      const repliedMessage =
+        await this.getLastReplyContainerRemote(typeOfMessageReplied);
+      await expect(repliedMessage).toHaveAttribute("alt", messageReplied);
+    }
+    if (currentUserIsReplying) {
+      await this.validateLastMessageLocal(replyText);
+    } else {
+      await this.validateLastMessageRemote(replyText);
     }
   }
 }
