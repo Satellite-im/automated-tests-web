@@ -64,9 +64,12 @@ export class CreateGroupModal extends MainPage {
 
   async createGroupChat(name: string, users: string[]) {
     await this.createGroupModal.waitFor({ state: "attached" });
+    await this.createGroupInputGroupName.clear();
     await this.createGroupInputGroupName.fill(name);
     await this.selectUser(users);
-    await this.createGroupButton.click();
+    if (users.length > 0 && name.length > 0) {
+      await this.createGroupButton.click();
+    }
   }
 
   async exitCreateGroup(): Promise<void> {
