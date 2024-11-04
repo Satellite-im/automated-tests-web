@@ -497,7 +497,6 @@ test.describe("Create Account and Login Tests", () => {
         "./downloads/seed-phrase.txt",
       );
       const recoverySeedDisplayed = await saveRecoverySeed.getRecoveryPhrase();
-      console.log("Displayed Phrase:", recoverySeedDisplayed);
       expect(recoverySeedFile).toEqual(recoverySeedDisplayed);
     });
 

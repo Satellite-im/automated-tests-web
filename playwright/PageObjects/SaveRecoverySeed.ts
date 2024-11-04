@@ -61,7 +61,6 @@ export class SaveRecoverySeedPage extends MainPage {
   async readRecoveryPhraseFile(filePath: string) {
     const fileContent = await readFile(filePath, "utf-8");
     const fileSeedPhraseArray = fileContent.split(/\s+/).filter(Boolean);
-    console.log("Raw File Content:", fileContent);
     return fileSeedPhraseArray;
   }
 
