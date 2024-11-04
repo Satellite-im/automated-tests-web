@@ -1,5 +1,6 @@
 import MainPage from "./MainPage";
 import { expect, type Locator, type Page } from "@playwright/test";
+import { readFile } from "fs/promises";
 
 export class SaveRecoverySeedPage extends MainPage {
   readonly buttonDownloadPhrase: Locator;
@@ -26,19 +27,27 @@ export class SaveRecoverySeedPage extends MainPage {
 
   async getRecoveryPhrase() {
     let phrase = [];
+
+    // Loop through each of the 12 phrases
     for (let i = 1; i <= 12; i++) {
-      await expect(
-        this.page.getByTestId(`ordered-phrase-number-${i}`),
-      ).toBeVisible();
-      await expect(
-        this.page.getByTestId(`ordered-phrase-word-${i}`),
-      ).toBeVisible();
+      // Ensure the phrase number element exists
+      await this.page
+        .locator(`[data-cy="ordered-phrase-number-${i}"]`)
+        .waitFor({ state: "attached" });
+
+      // Ensure the phrase word element exists
+      await this.page
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
+        .waitFor({ state: "attached" });
+
+      // Get the text from the <p> tag inside the phrase word element
       const text = await this.page
-        .getByTestId(`ordered-phrase-word-${i}`)
+        .locator(`[data-cy="ordered-phrase-word-${i}"]`)
         .locator("p")
-        .getAttribute("innerText");
+        .innerText();
       phrase.push(text);
     }
+
     return phrase;
   }
 
@@ -47,5 +56,28 @@ export class SaveRecoverySeedPage extends MainPage {
       .locator(`[data-cy^="ordered-phrase-word-`)
       .count();
     return count;
+  }
+
+  async readRecoveryPhraseFile(filePath: string) {
+    const fileContent = await readFile(filePath, "utf-8");
+    const fileSeedPhraseArray = fileContent.split(/\s+/).filter(Boolean);
+    console.log("Raw File Content:", fileContent);
+    return fileSeedPhraseArray;
+  }
+
+  async saveRecoverySeed() {
+    // Wait for the download event
+    const filename = "seed-phrase.txt";
+    const downloadPromise = this.page.waitForEvent("download");
+    await this.buttonDownloadPhrase.click();
+    const download = await downloadPromise;
+
+    // Save the file manually to the specified folder
+    const savedFilePath = "./downloads/" + filename;
+
+    await download.saveAs(savedFilePath); // Save the file to the desired folder
+
+    // Return the saved file path for further validation
+    return savedFilePath;
   }
 }

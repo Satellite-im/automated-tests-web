@@ -453,4 +453,79 @@ test.describe("Create Account and Login Tests", () => {
     await page.waitForURL("/settings/profile");
     await expect(settingsProfile.identiconSettingsProfile).toBeVisible();
   });
+
+  test("Download seed phrase file", async ({ enterPinUserContext }) => {
+    const page = enterPinUserContext.page;
+    const viewport = enterPinUserContext.viewport;
+    const chatsMainPage = new ChatsMainPage(page, viewport);
+    const createOrImport = new CreateOrImportPage(page, viewport);
+    const authNewAccount = new AuthNewAccount(page, viewport);
+    const loginPinPage = new LoginPinPage(page, viewport);
+    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
+    const settingsProfile = new SettingsProfile(page, viewport);
+    let recoverySeedFile: string[];
+
+    await test.step("Start account creation until Save Recovery Seed Page", async () => {
+      // Click on Create New Account
+      await createOrImport.clickCreateNewAccount();
+
+      // Enter Username and Status
+      await authNewAccount.validateLoadingHeader();
+      await authNewAccount.typeOnUsername(username);
+      await authNewAccount.typeOnStatus(status);
+
+      // Validate identicon image is assigned to user
+      await expect(authNewAccount.identiconNewAccount).toBeVisible();
+      await authNewAccount.buttonNewAccountCreate.click();
+
+      // Login Page Test
+      await loginPinPage.waitUntilPageIsLoaded();
+      await loginPinPage.goToPinSettings();
+      await loginPinPage.clickStayUnlockedSwitch();
+      await loginPinPage.enterPin(pinNumber);
+      await loginPinPage.pinButtonConfirm.click();
+    });
+
+    await test.step("Save Recovery Phrase displayed into a file", async () => {
+      // Download Recovery Seed Phrase
+      await saveRecoverySeed.saveRecoverySeed();
+    });
+
+    await test.step("Compare output from file vs phrase displayed", async () => {
+      // Compare recovery seed phrase displayed vs downloaded
+      recoverySeedFile = await saveRecoverySeed.readRecoveryPhraseFile(
+        "./downloads/seed-phrase.txt",
+      );
+      const recoverySeedDisplayed = await saveRecoverySeed.getRecoveryPhrase();
+      console.log("Displayed Phrase:", recoverySeedDisplayed);
+      expect(recoverySeedFile).toEqual(recoverySeedDisplayed);
+    });
+
+    await test.step("Finish account creation and go to Settings Profile", async () => {
+      // Click on I Saved It
+      await saveRecoverySeed.clickOnSavedIt();
+
+      // Once that user is in Chats page, go to Settings Profile
+      await page.waitForURL("/chat");
+      await chatsMainPage.goToSettings();
+      await page.waitForURL("/settings/profile");
+
+      // Hide sidebar if viewport is Mobile Chrome
+      if (viewport === "mobile-chrome") {
+        await chatsMainPage.buttonHideSidebar.click();
+      }
+    });
+
+    await test.step("In Settings Profile, show Recovery Seed Phrase", async () => {
+      // Show Recovery Phrase and ensure phrase displayed matches with phrase shown during account creation
+      await settingsProfile.revealPhraseSectionRevealButton.click();
+      await settingsProfile.validateRecoveryPhraseIsShown();
+      await settingsProfile.revealPhraseSectionButtonCopyPhrase.click();
+    });
+
+    await test.step("Compare Recovery Seed Phrase displayed vs downloaded", async () => {
+      const settingProfilePhrase = await settingsProfile.getRecoveryPhrase();
+      expect(recoverySeedFile).toEqual(settingProfilePhrase);
+    });
+  });
 });
