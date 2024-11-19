@@ -86,7 +86,7 @@ export class CallScreen extends MainPage {
     await this.callStreamButton.click();
     await expect(this.callStreamButton).toHaveCSS(
       "border-bottom-color",
-      "rgb(77, 77, 255)",
+      "rgb(18, 192, 70)",
     );
     await expect(this.callStreamButton).toHaveAttribute(
       "data-tooltip",
