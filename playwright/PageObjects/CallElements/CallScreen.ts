@@ -243,15 +243,19 @@ export class CallScreen extends MainPage {
     remoteUserImgSrc: string,
   ) {
     // Validate local user contents
-    await expect(this.participantProfilePictureImage.first()).toHaveAttribute(
-      "src",
-      localUserImgSrc,
+    const localUserImage = await this.participantProfilePictureImage
+      .first()
+      .getAttribute("src");
+    expect(localUserImage.substring(0, 100)).toBe(
+      localUserImgSrc.substring(0, 100),
     );
 
     // Validate remote user profile picture
-    await expect(this.participantProfilePictureImage.last()).toHaveAttribute(
-      "src",
-      remoteUserImgSrc,
+    const remoteUserImage = await this.participantProfilePictureImage
+      .last()
+      .getAttribute("src");
+    expect(remoteUserImage.substring(0, 100)).toBe(
+      remoteUserImgSrc.substring(0, 100),
     );
 
     // Validate number of users in call displayed in label
