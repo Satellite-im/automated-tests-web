@@ -433,6 +433,7 @@ test.describe("Create Account and Login Tests", () => {
     const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
     const chatsMainPage = new ChatsMainPage(page, viewport);
     const settingsProfile = new SettingsProfile(page, viewport);
+    let srcImageCreateUser: string;
 
     await test.step("Click on Create New Account and Enter Username and Status", async () => {
       await createOrImport.clickCreateNewAccount();
@@ -443,7 +444,7 @@ test.describe("Create Account and Login Tests", () => {
 
     await test.step("Upload custom profile picture", async () => {
       await authNewAccount.uploadProfilePicture("playwright/assets/logo.jpg");
-      const srcImageCreateUser =
+      srcImageCreateUser =
         await authNewAccount.profileImageNewAccount.getAttribute("src");
       await authNewAccount.buttonNewAccountCreate.click();
     });
