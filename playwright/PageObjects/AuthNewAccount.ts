@@ -14,6 +14,8 @@ export class AuthNewAccount extends MainPage {
   readonly profileImageNewAccount: Locator;
   readonly profilePictureNewAccount: Locator;
   readonly textNewAccountSecondary: Locator;
+  readonly textNewAccountTerms: Locator;
+  readonly textNewAccountTermsLink: Locator;
   readonly titleNewAccount: Locator;
 
   constructor(
@@ -51,6 +53,10 @@ export class AuthNewAccount extends MainPage {
     this.textNewAccountSecondary = this.page.getByTestId(
       "text-new-account-secondary",
     );
+    this.textNewAccountTerms = this.page.getByText(
+      "By using this application,",
+    );
+    this.textNewAccountTermsLink = this.textNewAccountTerms.locator("a");
   }
 
   async clickOnCreateAccount() {
@@ -80,5 +86,13 @@ export class AuthNewAccount extends MainPage {
   async validateLoadingHeader() {
     await expect(this.titleNewAccount).toBeVisible();
     await expect(this.titleNewAccount).toHaveText("Make It Yours");
+  }
+
+  async validateTermsAndConditionsLink() {
+    await this.textNewAccountTermsLink.click();
+    const pagePromise = this.page.waitForEvent("popup");
+    const newTab = await pagePromise;
+    await newTab.waitForLoadState();
+    await expect(newTab).toHaveURL("https://uplink.satellite.im/terms.html");
   }
 }
