@@ -196,7 +196,7 @@ test.describe("Create Account and Login Tests", () => {
       await authNewAccount.buttonNewAccountCreate.click();
     });
 
-    await test.step("Validate create account settigns options", async () => {
+    await test.step("Validate create account settings options", async () => {
       await loginPinPage.waitUntilPageIsLoaded();
       await loginPinPage.goToPinSettings();
       await expect(loginPinPage.scrambleKeypadLabel).toBeVisible();
