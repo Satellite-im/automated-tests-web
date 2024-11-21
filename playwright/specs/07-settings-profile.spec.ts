@@ -1,6 +1,8 @@
 import { ChatsMainPage } from "playwright/PageObjects/ChatsElements/ChatsMain";
 import { test, expect } from "../fixtures/setup";
 import { SettingsProfile } from "playwright/PageObjects/Settings/SettingsProfile";
+import { DeleteAccountModal } from "playwright/PageObjects/Settings/DeleteAccountModal";
+import { CreateOrImportPage } from "playwright/PageObjects/CreateOrImport";
 
 test.describe("Settings Profile Tests", () => {
   const username = "test123";
@@ -553,5 +555,67 @@ test.describe("Settings Profile Tests", () => {
     // Click on Log Out and validate user is redirected to unlock page
     await settingsProfile.logOutSectionButton.click();
     await page.waitForURL("/auth");
+  });
+
+  test("I25 - Support section tests", async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
+
+    await test.step("Validate Support Section contents", async () => {
+      await expect(settingsProfile.supportSectionLabel).toHaveText("Support");
+      await expect(settingsProfile.supportSectionText).toHaveText(
+        "Contact us for support.",
+      );
+    });
+
+    await test.step("Validate support button redirects to send email to support@satellite.im", async () => {
+      await settingsProfile.validateSupportButton();
+    });
+  });
+
+  test("I26 - Delete Account section tests", async ({ singleUserContext }) => {
+    const page = singleUserContext.page;
+    const viewport = singleUserContext.viewport;
+    const settingsProfile = new SettingsProfile(page, viewport);
+    const deleteAccount = new DeleteAccountModal(page, viewport);
+    const createOrImport = new CreateOrImportPage(page, viewport);
+
+    await test.step("Validate Delete Account Section contents", async () => {
+      await expect(settingsProfile.deleteAccountSectionLabel).toHaveText(
+        "Delete Account",
+      );
+      await expect(settingsProfile.deleteAccountSectionText).toHaveText(
+        "Click here to delete your account",
+      );
+    });
+
+    await test.step("Click on Delete Account button and validate contents from modal prompt", async () => {
+      await settingsProfile.deleteAccountSectionButton.click();
+      await expect(deleteAccount.textDeleteAccount).toHaveText(
+        "This action will delete your account permanently",
+      );
+      await expect(deleteAccount.textEnterYourPin).toHaveText(
+        "Enter your pin to confirm",
+      );
+    });
+
+    await test.step("Enter wrong pin and validate toast notification", async () => {
+      await deleteAccount.enterWrongPin();
+      await deleteAccount.clickConfirmButton();
+      await deleteAccount.validateToastPinIsWrong();
+      await deleteAccount.waitForToastNotificationToDisappear();
+    });
+
+    await test.step("Enter correct pin and validate account is deleted", async () => {
+      await deleteAccount.enterDefaultPin();
+      await createOrImport.labelCreateTitle.waitFor({ state: "attached" });
+      await expect(createOrImport.labelCreateTitle).toHaveText(
+        "Account Creation",
+      );
+      await expect(createOrImport.textCreateDescription).toHaveText(
+        "Let's get started! Begin by either creating a new account, or if you already have one we can import your existing account instead.",
+      );
+    });
   });
 });

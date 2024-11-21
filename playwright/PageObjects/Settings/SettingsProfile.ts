@@ -33,6 +33,10 @@ export class SettingsProfile extends SettingsBase {
   readonly contextMenuOptionCopyID: Locator;
   readonly contextMenuOptionDeleteBannerPicture: Locator;
   readonly contextMenuOptionDeleteProfilePicture: Locator;
+  readonly deleteAccountSection: Locator;
+  readonly deleteAccountSectionButton: Locator;
+  readonly deleteAccountSectionLabel: Locator;
+  readonly deleteAccountSectionText: Locator;
   readonly identiconSettingsProfile: Locator;
   readonly inputSettingsProfileShortID: Locator;
   readonly inputSettingsProfileShortIDGroup: Locator;
@@ -80,6 +84,10 @@ export class SettingsProfile extends SettingsBase {
   readonly storeRecoverySeedSection: Locator;
   readonly storeRecoverySeedCheckbox: Locator;
   readonly storeRecoverySeedText: Locator;
+  readonly supportSection: Locator;
+  readonly supportSectionButton: Locator;
+  readonly supportSectionLabel: Locator;
+  readonly supportSectionText: Locator;
   readonly warningMessageFieldRequired: Locator;
   readonly warningMessageInvalidFormat: Locator;
   readonly warningMessageMaxLengthIs128: Locator;
@@ -183,6 +191,16 @@ export class SettingsProfile extends SettingsBase {
     this.contextMenuOptionDeleteProfilePicture = this.page.getByTestId(
       "context-menu-option-Delete Profile Picture",
     );
+    this.deleteAccountSection = this.page.getByTestId("section-delete-account");
+    this.deleteAccountSectionButton = this.deleteAccountSection.getByTestId(
+      "button-delete-account",
+    );
+    this.deleteAccountSectionLabel = this.deleteAccountSection.getByTestId(
+      "setting-section-label",
+    );
+    this.deleteAccountSectionText = this.deleteAccountSection.getByTestId(
+      "setting-section-text",
+    );
     this.identiconSettingsProfile = this.page
       .locator(".identicon")
       .locator("img");
@@ -285,6 +303,17 @@ export class SettingsProfile extends SettingsBase {
     this.storeRecoverySeedText = this.storeRecoverySeedSection.getByTestId(
       "text-store-recovery-seed",
     );
+
+    this.supportSection = this.page.getByTestId("section-support");
+    this.supportSectionButton =
+      this.supportSection.getByTestId("button-support");
+    this.supportSectionLabel = this.supportSection.getByTestId(
+      "setting-section-label",
+    );
+    this.supportSectionText = this.supportSection.getByTestId(
+      "setting-section-text",
+    );
+
     this.warningMessageFieldRequired = this.page.getByText(
       "This field is required.",
     );
@@ -510,5 +539,10 @@ export class SettingsProfile extends SettingsBase {
       maxDiffPixels: 5000,
       mask: [this.inputSettingsProfileShortID],
     });
+  }
+
+  async validateSupportButton() {
+    const href = await this.supportSection.locator("a").getAttribute("href");
+    expect(href).toBe("mailto:support@satellite.im");
   }
 }
