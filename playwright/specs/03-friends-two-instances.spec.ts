@@ -110,69 +110,74 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    let didKeyFirstUser: string;
 
-    // With both users go to Friends Screen
-    await chatsMainPageFirst.dismissDownloadAlert();
-    await chatsMainPageSecond.dismissDownloadAlert();
-    await chatsMainPageFirst.goToFriends();
-    await chatsMainPageSecond.goToFriends();
+    await test.step("Create two accounts, dismiss download alerts and go to Friends", async () => {
+      await chatsMainPageFirst.dismissDownloadAlert();
+      await chatsMainPageSecond.dismissDownloadAlert();
+      await chatsMainPageFirst.goToFriends();
+      await chatsMainPageSecond.goToFriends();
+    });
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
+    await test.step("First user grants clipboard permissions, Copy DID and save it into a constant", async () => {
+      await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+      await friendsScreenFirst.copyDIDFromContextMenu();
+      const handle = await page1.evaluateHandle(() =>
+        navigator.clipboard.readText(),
+      );
+      didKeyFirstUser = await handle.jsonValue();
 
-    // Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+      await friendsScreenSecond.copyDIDFromContextMenu();
+    });
 
-    // Now, add the first user as a friend
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.closeToastNotification();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
+    await test.step("Add first user as a friend", async () => {
+      await friendsScreenSecond.addFriend(didKeyFirstUser);
+      await friendsScreenSecond.validateToastRequestSent();
+      await friendsScreenFirst.closeToastNotification();
+      await friendsScreenSecond.waitForToastNotificationToDisappear();
+    });
 
-    // With First User, go to requests list and accept friend request
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.acceptFriendRequest(usernameTwo);
-    await friendsScreenFirst.goToAllFriendsList();
-    await friendsScreenFirst.validateFriendListIsDisplayed("C");
+    await test.step("With First User, go to requests list and accept friend request", async () => {
+      await friendsScreenFirst.goToRequestList();
+      await friendsScreenFirst.validateIncomingRequestExists();
+      await friendsScreenFirst.acceptFriendRequest(usernameTwo);
+      await friendsScreenFirst.goToAllFriendsList();
+      await friendsScreenFirst.validateFriendListIsDisplayed("C");
+    });
 
-    // With Second User, go to All Friends
-    await friendsScreenSecond.goToRequestList();
-    await friendsScreenSecond.goToAllFriendsList();
-    await friendsScreenSecond.validateFriendListIsDisplayed("C");
+    await test.step("With Second User, go to All Friends", async () => {
+      await friendsScreenSecond.goToRequestList();
+      await friendsScreenSecond.goToAllFriendsList();
+      await friendsScreenSecond.validateFriendListIsDisplayed("C");
+    });
 
-    // H16 - Clicking block should block user
-    await friendsScreenSecond.blockFriend(username);
-    await friendsScreenSecond.validateFriendListDoesNotExist("C");
+    await test.step("H16 - Clicking block should block user", async () => {
+      await friendsScreenSecond.blockFriend(username);
+      await friendsScreenSecond.validateFriendListDoesNotExist("C");
+      await friendsScreenFirst.validateFriendListDoesNotExist("C");
+    });
 
-    // Second user should no longer see the other friend once it is blocked
-    await friendsScreenFirst.validateFriendListDoesNotExist("C");
+    await test.step("H17 - User should be displayed under Blocked Users after you block them", async () => {
+      await friendsScreenSecond.goToBlockedList();
+      await friendsScreenSecond.validateBlockedUserExists();
+      await friendsScreenSecond.validateUserIsBlocked(username);
+    });
 
-    // H17 - User should be displayed under Blocked Users after you block them
-    await friendsScreenSecond.goToBlockedList();
-    await friendsScreenSecond.validateBlockedUserExists();
-    await friendsScreenSecond.validateUserIsBlocked(username);
+    await test.step("H18 - User should be cleared from Blocked Users after you unblock them", async () => {
+      await friendsScreenSecond.unblockFriend(username);
+      await friendsScreenSecond.validateNoBlockedUsersExist();
+      await friendsScreenSecond.goToAllFriendsList();
+    });
 
-    // H18 - User should be cleared from Blocked Users after you unblock them
-    // H26 - User can unblock a user and add again the same user
-    await friendsScreenSecond.unblockFriend(username);
-    await friendsScreenSecond.validateNoBlockedUsersExist();
-    await friendsScreenSecond.goToAllFriendsList();
+    await test.step("H26 - User can unblock a user and add again the same user", async () => {
+      await friendsScreenSecond.addFriend(didKeyFirstUser);
+      await friendsScreenSecond.validateToastRequestSent();
+      await friendsScreenFirst.closeToastNotification();
+      await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-    // Now, send again the friend request to the unblocked user
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.closeToastNotification();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
-
-    // With First User, go to requests list and see the friend request displayed
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.validateIncomingRequestExists();
+      await friendsScreenFirst.goToRequestList();
+      await friendsScreenFirst.validateIncomingRequestExists();
+    });
   });
 
   test("H7, H20 - User can send a friend request and remote user can deny it", async ({
@@ -188,48 +193,53 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    let didKeyFirstUser: string;
 
-    // With both users go to Friends Screen
-    await chatsMainPageFirst.dismissDownloadAlert();
-    await chatsMainPageSecond.dismissDownloadAlert();
-    await chatsMainPageFirst.goToFriends();
-    await chatsMainPageSecond.goToFriends();
+    await test.step("Create two accounts, dismiss download alerts and go to Friends", async () => {
+      await chatsMainPageFirst.dismissDownloadAlert();
+      await chatsMainPageSecond.dismissDownloadAlert();
+      await chatsMainPageFirst.goToFriends();
+      await chatsMainPageSecond.goToFriends();
+    });
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
+    await test.step("First user grants clipboard permissions, Copy DID and save it into a constant", async () => {
+      await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+      await friendsScreenFirst.copyDIDFromContextMenu();
+      const handle = await page1.evaluateHandle(() =>
+        navigator.clipboard.readText(),
+      );
+      didKeyFirstUser = await handle.jsonValue();
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+      await friendsScreenSecond.copyDIDFromContextMenu();
+    });
 
-    // Now, add the first user as a friend
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
+    await test.step("Add first user as a friend", async () => {
+      await friendsScreenSecond.addFriend(didKeyFirstUser);
+    });
 
-    // H7 - Skipped validation Toast Notification with Username sent a request. should appear after receiving a friend request
-    await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
+    await test.step("H7 - With First User, go to requests list and deny friend request", async () => {
+      await friendsScreenSecond.validateToastRequestSent();
+      await friendsScreenFirst.waitForToastNotificationToDisappear();
+      await friendsScreenSecond.waitForToastNotificationToDisappear();
 
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
-    await friendsScreenSecond.goToBlockedList();
-    await friendsScreenSecond.goToRequestList();
+      await friendsScreenSecond.waitForToastNotificationToDisappear();
+      await friendsScreenSecond.goToBlockedList();
+      await friendsScreenSecond.goToRequestList();
 
-    // With First User, go to requests list and deny friend request
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.goToAllFriendsList();
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.validateIncomingRequestExists();
-    await friendsScreenFirst.denyFriendRequest(usernameTwo);
+      await friendsScreenFirst.goToRequestList();
+      await friendsScreenFirst.goToAllFriendsList();
+      await friendsScreenFirst.goToRequestList();
+      await friendsScreenFirst.validateIncomingRequestExists();
+      await friendsScreenFirst.denyFriendRequest(usernameTwo);
+    });
 
-    // Validate incoming list now shows empty on user who received and denied the friend request
-    await friendsScreenFirst.validateNoIncomingRequestsExist();
+    await test.step("Validate incoming list now shows empty on user who received and denied the friend request", async () => {
+      await friendsScreenFirst.validateNoIncomingRequestsExist();
+    });
 
-    // Validate outgoing list now shows empty on user who sent the friend request
-    await friendsScreenSecond.validateNoOutgoingRequestsExist();
+    await test.step("Validate outgoing list now shows empty on user who sent the friend request", async () => {
+      await friendsScreenSecond.validateNoOutgoingRequestsExist();
+    });
   });
 
   test("H21 - User can send a friend request and cancel request before other user replies to it", async ({
@@ -245,43 +255,47 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
+    let didKeyFirstUser: string;
 
-    // With both users go to Friends Screen
-    await chatsMainPageFirst.dismissDownloadAlert();
-    await chatsMainPageSecond.dismissDownloadAlert();
-    await chatsMainPageFirst.goToFriends();
-    await chatsMainPageSecond.goToFriends();
+    await test.step("With both users go to Friends Screen", async () => {
+      await chatsMainPageFirst.dismissDownloadAlert();
+      await chatsMainPageSecond.dismissDownloadAlert();
+      await chatsMainPageFirst.goToFriends();
+      await chatsMainPageSecond.goToFriends();
+    });
 
-    // H21 - User can send a friend request and cancel request before other user replies to it
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
-    await friendsScreenFirst.copyDIDFromContextMenu();
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const didKeyFirstUser = await handle.jsonValue();
+    await test.step("First user grants clipboard permissions, Copy DID and save it into a constant", async () => {
+      await context1.grantPermissions(["clipboard-read", "clipboard-write"]);
+      await friendsScreenFirst.copyDIDFromContextMenu();
+      const handle = await page1.evaluateHandle(() =>
+        navigator.clipboard.readText(),
+      );
+      didKeyFirstUser = await handle.jsonValue();
+      await friendsScreenSecond.copyDIDFromContextMenu();
+    });
 
-    // Grant clipboard permissions, Copy DID and save it into a constant
-    await friendsScreenSecond.copyDIDFromContextMenu();
+    await test.step("Add first user as a friend", async () => {
+      await friendsScreenSecond.addFriend(didKeyFirstUser);
+      await friendsScreenSecond.validateToastRequestSent();
+      await friendsScreenSecond.waitForToastNotificationToDisappear();
+    });
 
-    // Now, add the first user as a friend
-    await friendsScreenSecond.addFriend(didKeyFirstUser);
-    await friendsScreenSecond.validateToastRequestSent();
-    await friendsScreenSecond.waitForToastNotificationToDisappear();
+    await test.step("With First User, validate incoming request exists", async () => {
+      await friendsScreenFirst.waitForToastNotificationToDisappear();
+      await friendsScreenFirst.goToRequestList();
+      await friendsScreenFirst.validateIncomingRequestExists();
+    });
 
-    // With First User, go to requests list and accept friend request
-    await friendsScreenFirst.waitForToastNotificationToDisappear();
-    await friendsScreenFirst.goToRequestList();
-    await friendsScreenFirst.validateIncomingRequestExists();
+    await test.step("With Second User, cancel the outgoing request", async () => {
+      await friendsScreenSecond.goToRequestList();
+      await friendsScreenSecond.validateOutgoingRequestExists();
+      await friendsScreenSecond.cancelFriendRequest(username);
+      await friendsScreenSecond.validateNoOutgoingRequestsExist();
+    });
 
-    // With Second User, cancel the outgoing request
-    await friendsScreenSecond.goToRequestList();
-    await friendsScreenSecond.validateOutgoingRequestExists();
-    await friendsScreenSecond.cancelFriendRequest(username);
-    await friendsScreenSecond.validateNoOutgoingRequestsExist();
-
-    // With First User, validate incoming request no longer exists
-    await friendsScreenFirst.validateNoIncomingRequestsExist();
+    await test.step("With First User, validate incoming request no longer exists", async () => {
+      await friendsScreenFirst.validateNoIncomingRequestsExist();
+    });
   });
 
   test("H6, H19, B1 to B6, B16 and B17, B35 to B37 - Friend request happy path flow and then Chats Page basic send/receive text message flow", async ({
@@ -298,112 +312,116 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat
-    await chatsMainPageSecond.chatEncryptedMessage.waitFor({
-      state: "visible",
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
     });
-    await expect(chatsMainPageSecond.chatEncryptedMessageText).toHaveText(
-      "Messages are secured by end-to-end encryption, sent over a peer-to-peer network.",
-    );
 
-    // B4 - Amount of coin should be displayed at top right toolbar - Button is hidden now
-    // await expect(chatsMainPageSecond.coinAmountIndicator).toHaveText("0");
-
-    // Validations only done in desktop view
-    if (chatsMainPageSecond.viewport === "desktop-chrome") {
-      // B5 - Highlighted border should appear around call button when clicked
-      await chatsMainPageSecond.buttonChatCall.focus();
-      await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
-        "border-bottom-color",
-        "rgb(77, 77, 255)",
+    await test.step("B3 - Messages are secured by end-to-end encryption, sent over a peer-to-peer network should be displayed at the top of every chat", async () => {
+      await chatsMainPageSecond.chatEncryptedMessage.waitFor({
+        state: "visible",
+      });
+      await expect(chatsMainPageSecond.chatEncryptedMessageText).toHaveText(
+        "Messages are secured by end-to-end encryption, sent over a peer-to-peer network.",
       );
+    });
 
-      // Validate CSS from call button backs to normal
-      await page2.locator("body").click();
-      await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
-        "border-bottom-color",
-        "rgb(28, 29, 43)",
+    await test.step("Validate in Desktop View CSS for buttons when focused", async () => {
+      // Validations only done in desktop view
+      if (chatsMainPageSecond.viewport === "desktop-chrome") {
+        // B5 - Highlighted border should appear around call button when clicked
+        await chatsMainPageSecond.buttonChatCall.focus();
+        await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+          "border-bottom-color",
+          "rgb(77, 77, 255)",
+        );
+
+        // Validate CSS from call button backs to normal
+        await page2.locator("body").click();
+        await expect(chatsMainPageSecond.buttonChatCall).toHaveCSS(
+          "border-bottom-color",
+          "rgb(28, 29, 43)",
+        );
+
+        // B6 - Highlighted border should appear around video button when clicked
+        await chatsMainPageSecond.buttonChatVideo.focus();
+        await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
+          "border-bottom-color",
+          "rgb(77, 77, 255)",
+        );
+
+        // Validate CSS from video button backs to normal
+        await page2.locator("body").click();
+        await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
+          "border-bottom-color",
+          "rgb(28, 29, 43)",
+        );
+      }
+    });
+
+    await test.step("B35 - Highlighted border should appear around textbox in chat when user clicks into it", async () => {
+      await chatsMainPageSecond.chatbarInput.fill("test");
+      await expect(chatsMainPageSecond.chatbarInputContainer).toHaveCSS(
+        "box-shadow",
+        "rgb(77, 77, 255) 0px 0px 0px 1px",
       );
+      await chatsMainPageSecond.chatbarInput.clear();
+    });
 
-      // B6 - Highlighted border should appear around video button when clicked
-      await chatsMainPageSecond.buttonChatVideo.focus();
-      await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
-        "border-bottom-color",
-        "rgb(77, 77, 255)",
+    await test.step("B36 - User should already be clicked into textbox when they enter a chat", async () => {
+      await chatsMainPageSecond.sendMessage("Hello from the second user");
+    });
+
+    await test.step("Validate message sent is seen in local and remote sides", async () => {
+      await chatsMainPageSecond.validateMessageIsSent(
+        "Hello from the second user",
       );
-
-      // Validate CSS from video button backs to normal
-      await page2.locator("body").click();
-      await expect(chatsMainPageSecond.buttonChatVideo).toHaveCSS(
-        "border-bottom-color",
-        "rgb(28, 29, 43)",
+      await chatsMainPageFirst.validateMessageIsReceived(
+        "Hello from the second user",
       );
-    }
+    });
 
-    // B35 - Highlighted border should appear around textbox in chat when user clicks into it
-    await chatsMainPageSecond.chatbarInput.fill("test");
-    await expect(chatsMainPageSecond.chatbarInputContainer).toHaveCSS(
-      "box-shadow",
-      "rgb(77, 77, 255) 0px 0px 0px 1px",
-    );
-    await chatsMainPageSecond.chatbarInput.clear();
+    await test.step("B16 - Timestamp appears after most recent message sent", async () => {
+      const timestampMessageReceived =
+        await chatsMainPageFirst.getLastTimestampRemote();
+      const timestampMessageSent =
+        await chatsMainPageSecond.getLastTimestampLocal();
 
-    // B36 - User should already be clicked into textbox when they enter a chat
-    // Send a message from the first user
-    await chatsMainPageSecond.sendMessage("Hello from the second user");
+      await expect(timestampMessageReceived).toHaveText("ChatUserB - just now");
+      await expect(timestampMessageSent).toHaveText("ChatUserB - just now");
+    });
 
-    // Validate message is displayed on local user
-    await chatsMainPageSecond.validateMessageIsSent(
-      "Hello from the second user",
-    );
+    await test.step("B17 - Users profile picture appears next to messages sent", async () => {
+      const profilePictureLocalUser =
+        await chatsMainPageSecond.getLastLocalProfilePicture();
+      await expect(profilePictureLocalUser).toBeVisible();
 
-    // Validate message is displayed on remote user
-    await chatsMainPageFirst.validateMessageIsReceived(
-      "Hello from the second user",
-    );
+      const profilePictureRemoteUser =
+        await chatsMainPageFirst.getLastRemoteProfilePicture();
+      await expect(profilePictureRemoteUser).toBeVisible();
+    });
 
-    // B16 - Timestamp appears after most recent message sent
-    const timestampMessageReceived =
-      await chatsMainPageFirst.getLastTimestampRemote();
-    const timestampMessageSent =
-      await chatsMainPageSecond.getLastTimestampLocal();
+    await test.step("B37 - User should not be able to send a blank message (Send button should be greyed out until any text is added into the textbox", async () => {
+      await chatsMainPageFirst.sendMessage("");
+      const numberOfMessagesSent =
+        await chatsMainPageFirst.messabeBubbleLocal.count();
+      expect(numberOfMessagesSent).toEqual(0);
+    });
 
-    await expect(timestampMessageReceived).toHaveText("ChatUserB - just now");
-    await expect(timestampMessageSent).toHaveText("ChatUserB - just now");
-
-    // B17 - Users profile picture appears next to messages sent
-    // Validate profile pictures for local and remote users are displayed on conversation next to chat bubbles
-    const profilePictureLocalUser =
-      await chatsMainPageSecond.getLastLocalProfilePicture();
-    await expect(profilePictureLocalUser).toBeVisible();
-
-    const profilePictureRemoteUser =
-      await chatsMainPageFirst.getLastRemoteProfilePicture();
-    await expect(profilePictureRemoteUser).toBeVisible();
-
-    // B37 - User should not be able to send a blank message (Send button should be greyed out until any text is added into the textbox
-    await chatsMainPageFirst.sendMessage("");
-    const numberOfMessagesSent =
-      await chatsMainPageFirst.messabeBubbleLocal.count();
-    expect(numberOfMessagesSent).toEqual(0);
-
-    // B55 - Messages should be limited to 255 chars - Failing now
-    await chatsMainPageFirst.chatbarInput.fill(
-      "012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890",
-    );
-    await page1
-      .getByText("Maximum length is 255 characters.")
-      .waitFor({ state: "attached" });
+    await test.step("B55 - Messages should be limited to 255 chars", async () => {
+      await chatsMainPageFirst.chatbarInput.fill(
+        "012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890012345678900123456789001234567890",
+      );
+      await page1
+        .getByText("Maximum length is 255 characters.")
+        .waitFor({ state: "attached" });
+    });
   });
 
   test("B7, B57, B58 - Favorites tests", async ({
@@ -421,51 +439,53 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // B7 - Favorite button should should be highlighted after clicked and grey when unclicked
-    // First when button is not clicked
-    await chatsMainPageFirst.chatEncryptedMessage.waitFor({
-      state: "visible",
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
     });
 
-    // First user adds remote user as Favorite
-    await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
-      "rgb(33, 38, 58)",
-    );
-    await chatsMainPageFirst.clickOnFavoriteButton();
-    await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
-      /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
-    );
+    await test.step("B7 - Favorite button should should be highlighted after clicked and grey when unclicked", async () => {
+      await chatsMainPageFirst.chatEncryptedMessage.waitFor({
+        state: "visible",
+      });
+      await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
+        "rgb(33, 38, 58)",
+      );
+      await chatsMainPageFirst.clickOnFavoriteButton();
+      await chatsMainPageFirst.validateFavoriteButtonBackgroundColor(
+        /rgb\(77, 77, 255\)|color\(srgb 0.371765 0.371765 1\)/,
+      );
+    });
 
-    // C12 - Favorites should appear on left side of Sidebar
+    await test.step("C12 - Favorites should appear on left side of Sidebar", async () => {
+      await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+      await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
+      await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
+      await expect(
+        chatsMainPageFirst.favoriteProfileStatusIndicator,
+      ).toHaveClass(/.*\bonline\b.*/);
+    });
 
-    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
-    await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
-    await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
-    await expect(chatsMainPageFirst.favoriteProfileStatusIndicator).toHaveClass(
-      /.*\bonline\b.*/,
-    );
+    await test.step("B57 and C14 - Clicking a favorite should take you to that chat", async () => {
+      await chatsMainPageFirst.goToFiles();
+      await page1.waitForURL("/files");
+      await filesPageFirst.clickOnShowSidebarIfClosed();
+      await filesPageFirst.favoriteProfilePicture.click();
+      await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(
+        usernameTwo,
+      );
+    });
 
-    // B57 - User can go to Conversation with remote user by clicking on Favorites Circle
-    // C14 - Clicking a favorite should take you to that chat
-    await chatsMainPageFirst.goToFiles();
-    await page1.waitForURL("/files");
-    await filesPageFirst.clickOnShowSidebarIfClosed();
-    await filesPageFirst.favoriteProfilePicture.click();
-    await expect(chatsMainPageFirst.chatTopbarUsername).toHaveText(usernameTwo);
-
-    // B58 - User can remove Favorites and these will not be displayed on Slimbar
-    await chatsMainPageFirst.clickOnFavoriteButton();
-    await chatsMainPageFirst.validateNoFavoritesAreVisible();
+    await test.step("B58 - User can remove Favorites and these will not be displayed on Slimbar", async () => {
+      await chatsMainPageFirst.clickOnFavoriteButton();
+      await chatsMainPageFirst.validateNoFavoritesAreVisible();
+    });
   });
 
   test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
@@ -2124,6 +2144,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
       await callScreenSecondUser.deafenCall();
       await callScreenSecondUser.undeafenCall();
       await callScreenSecondUser.clickOnStreamButton();
+      // Add steps to validate stream button
       await callScreenSecondUser.expandCall();
       await callScreenSecondUser.collapseCall();
     });
