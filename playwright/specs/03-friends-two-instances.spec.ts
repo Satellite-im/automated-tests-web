@@ -502,96 +502,95 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
 
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // Validate chat preview is displayed on sidebar - Default values when no messages have been sent
-    // C11 - ProfilePicFrame should display for any friends that have one
-    await chatsMainPageFirst.chatEncryptedMessage.waitFor({
-      state: "visible",
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
     });
 
-    const topbarImageURL =
-      await chatsMainPageFirst.chatTopbarProfilePictureImage.getAttribute(
-        "src",
+    await test.step("Validate elements displayed in chat sidebar preview", async () => {
+      await chatsMainPageFirst.chatEncryptedMessage.waitFor({
+        state: "visible",
+      });
+
+      const topbarImageURL =
+        await chatsMainPageFirst.chatTopbarProfilePictureImage.getAttribute(
+          "src",
+        );
+      await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+      const chatPreviewImageURL =
+        await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
+      await expect(chatsMainPageFirst.chatPreview).toBeVisible();
+      await expect(chatsMainPageFirst.chatPreviewPicture).toBeVisible();
+      await expect(chatsMainPageFirst.chatPreviewName).toHaveText(usernameTwo);
+      await expect(chatsMainPageFirst.chatPreviewStatusIndicator).toHaveClass(
+        /.*\bonline\b.*/,
       );
-    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
-    const chatPreviewImageURL =
-      await chatsMainPageFirst.chatPreviewPictureImage.getAttribute("src");
-    await expect(chatsMainPageFirst.chatPreview).toBeVisible();
-    await expect(chatsMainPageFirst.chatPreviewPicture).toBeVisible();
-    await expect(chatsMainPageFirst.chatPreviewName).toHaveText(usernameTwo);
-    await expect(chatsMainPageFirst.chatPreviewStatusIndicator).toHaveClass(
-      /.*\bonline\b.*/,
-    );
-    await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
-      "No messages sent yet.",
-    );
-    expect(chatPreviewImageURL).toEqual(topbarImageURL);
-    await chatsMainPageFirst.hideSidebarOnMobileView();
+      await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
+        "No messages sent yet.",
+      );
+      expect(chatPreviewImageURL).toEqual(topbarImageURL);
+      await chatsMainPageFirst.hideSidebarOnMobileView();
+    });
 
-    // Send a message from user two to first user
-    await chatsMainPageSecond.sendMessage("Hello from the second user");
-    await chatsMainPageSecond.validateMessageIsSent(
-      "Hello from the second user",
-    );
+    await test.step("Send a message from user two to first user", async () => {
+      await chatsMainPageSecond.sendMessage("Hello from the second user");
+      await chatsMainPageSecond.validateMessageIsSent(
+        "Hello from the second user",
+      );
+    });
 
-    // Validate message is displayed on remote user
-    await chatsMainPageFirst.validateMessageIsReceived(
-      "Hello from the second user",
-    );
+    await test.step("Validate message is displayed on remote user", async () => {
+      await chatsMainPageFirst.validateMessageIsReceived(
+        "Hello from the second user",
+      );
+    });
 
-    // Validate Chat Sidebar is updated with most recent message on both sides local and remote
-    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
-    await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
-      "Hello from the second user",
-    );
-    await chatsMainPageFirst.validateChatPreviewMessageText(
-      usernameTwo,
-      "Hello from the second user",
-    );
+    await test.step("Validate chat sidebar is updated with most recent message on both sides local and remote", async () => {
+      await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+      await expect(chatsMainPageFirst.chatPreviewLastMessage).toHaveText(
+        "Hello from the second user",
+      );
+      await chatsMainPageFirst.validateChatPreviewMessageText(
+        usernameTwo,
+        "Hello from the second user",
+      );
 
-    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
-    await expect(chatsMainPageSecond.chatPreviewLastMessage).toHaveText(
-      "Hello from the second user",
-    );
-    await chatsMainPageSecond.validateChatPreviewMessageText(
-      username,
-      "Hello from the second user",
-    );
-    await chatsMainPageSecond.hideSidebarOnMobileView();
+      await chatsMainPageSecond.clickOnShowSidebarIfClosed();
+      await expect(chatsMainPageSecond.chatPreviewLastMessage).toHaveText(
+        "Hello from the second user",
+      );
+      await chatsMainPageSecond.validateChatPreviewMessageText(
+        username,
+        "Hello from the second user",
+      );
+      await chatsMainPageSecond.hideSidebarOnMobileView();
+    });
 
-    // C15 - Right clicking a chat in sidebar should open context menu
-    // C16 - Context menu should display: Favorite, Hide, Mark as read
-    await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
+    await test.step("Validate context menu options for chat sidebar preview", async () => {
+      await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
+    });
 
-    // C12 - Favorites should appear on left side of Sidebar when selecting from Context Menu - Favorite
-    await chatsMainPageFirst.contextMenuOptionFavorite.click();
-    await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
-    await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
-    await expect(chatsMainPageFirst.favoriteProfileStatusIndicator).toHaveClass(
-      /.*\bonline\b.*/,
-    );
+    await test.step("C12 - Favorites should appear on left side of Sidebar when selecting from Context Menu - Favorite", async () => {
+      await chatsMainPageFirst.contextMenuOptionFavorite.click();
+      await expect(chatsMainPageFirst.favoriteCircle).toBeVisible();
+      await expect(chatsMainPageFirst.favoriteProfilePicture).toBeVisible();
+      await expect(
+        chatsMainPageFirst.favoriteProfileStatusIndicator,
+      ).toHaveClass(/.*\bonline\b.*/);
+    });
 
-    // Unfavorite user from Context Menu and validate remote user is removed from favorites
-    await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
-    await chatsMainPageFirst.contextMenuOptionFavorite.click();
-    await chatsMainPageFirst.validateNoFavoritesAreVisible();
-    await chatsMainPageFirst.hideSidebarOnMobileView();
-
-    // C17 - Timestamp of most recent message sent or received in chat should be displayed in the sidebar - Not working correctly
-    // Fast forward clock for 30 minutes and validate message was sent 30 minutes ago
-    // await page1.clock.fastForward("30:00");
-    // await page1.getByText("30 minutes ago").waitFor({ state: "attached" });
-
-    // C19 - After selecting Hide chat chat should no longer be displayed in sidebar
+    await test.step("Unfavorite user from Context Menu and validate remote user is removed from favorites", async () => {
+      await chatsMainPageFirst.openContextMenuOnChatPreview(usernameTwo);
+      await chatsMainPageFirst.contextMenuOptionFavorite.click();
+      await chatsMainPageFirst.validateNoFavoritesAreVisible();
+      await chatsMainPageFirst.hideSidebarOnMobileView();
+    });
   });
 
   test("B49 and B56 - Chats Tests - Multiple messages testing - Scroll to bottom and Go to pin message buttons", async ({
@@ -607,71 +606,81 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // Validate chat pages are loaded on both sides
-    await chatsMainPageFirst.chatEncryptedMessage.waitFor({
-      state: "visible",
-    });
-    await chatsMainPageSecond.chatEncryptedMessage.waitFor({
-      state: "visible",
-    });
-
-    // Send a first message different from the ones that will be send after
     const firstMessage = "this is a first message";
-    await chatsMainPageSecond.sendMessage(firstMessage);
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
+    let firstMessageLocal: Locator;
 
-    // Pin first message sent
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
-    await chatsMainPageSecond.selectContextMenuOption("Pin Message");
-    await chatsMainPageSecond.validateLastLocalMessageIsPinned();
-    await chatsMainPageFirst.validateLastRemoteMessageIsPinned();
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Validate second user is in chats page and send 20 messages
-    for (let i = 0; i < 19; i++) {
-      const randomSentence = faker.lorem.sentence(3);
-      await chatsMainPageSecond.sendMessage(randomSentence);
+    await test.step("Validate chat pages are loaded on both sides", async () => {
+      await chatsMainPageFirst.chatEncryptedMessage.waitFor({
+        state: "visible",
+      });
+      await chatsMainPageSecond.chatEncryptedMessage.waitFor({
+        state: "visible",
+      });
+    });
+
+    await test.step("Send a first message different from the ones that will be send after", async () => {
+      await chatsMainPageSecond.sendMessage(firstMessage);
       await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-        randomSentence,
+        firstMessage,
       );
       await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-        randomSentence,
+        firstMessage,
       );
-    }
+    });
 
-    // Click on Scroll to bottom
-    const firstMessageLocal = await chatsMainPageSecond.getFirstMessageLocal();
-    await firstMessageLocal.scrollIntoViewIfNeeded();
-    await expect(firstMessageLocal).toBeVisible();
-    await expect(chatsMainPageSecond.scrollToBottomButton).toBeVisible();
-    await chatsMainPageSecond.scrollToBottomButton.click();
-    await expect(chatsMainPageSecond.scrollToBottomButton).toBeHidden();
+    await test.step("Pin first message sent", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectContextMenuOption("Pin Message");
+      await chatsMainPageSecond.validateLastLocalMessageIsPinned();
+      await chatsMainPageFirst.validateLastRemoteMessageIsPinned();
+    });
 
-    // Validate local user can go to pinned message by clicking on Go To button
-    await chatsMainPageSecond.openPinMessagesContainer();
-    await chatsMainPageSecond.clickOnGoToPinnedMessageButton(firstMessage);
-    await expect(firstMessageLocal).toBeVisible();
+    await test.step("Send 20 messages to validate scroll to bottom button", async () => {
+      for (let i = 0; i < 19; i++) {
+        const randomSentence = faker.lorem.sentence(3);
+        await chatsMainPageSecond.sendMessage(randomSentence);
+        await expect(
+          chatsMainPageSecond.messageBubbleContent.last(),
+        ).toHaveText(randomSentence);
+        await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+          randomSentence,
+        );
+      }
+    });
 
-    // Validate remote user can go to pinned message by clicking on Go To button
-    const firstMessageRemote = await chatsMainPageFirst.getFirstMessageRemote();
-    await chatsMainPageFirst.openPinMessagesContainer();
-    await chatsMainPageFirst.clickOnGoToPinnedMessageButton(firstMessage);
-    await expect(firstMessageRemote).toBeVisible();
+    await test.step("Validate scroll to bottom button is displayed", async () => {
+      firstMessageLocal = await chatsMainPageSecond.getFirstMessageLocal();
+      await firstMessageLocal.scrollIntoViewIfNeeded();
+      await expect(firstMessageLocal).toBeVisible();
+      await expect(chatsMainPageSecond.scrollToBottomButton).toBeVisible();
+      await chatsMainPageSecond.scrollToBottomButton.click();
+      await expect(chatsMainPageSecond.scrollToBottomButton).toBeHidden();
+    });
+
+    await test.step("Valiate local user can go to pinned message by clicking on Go To button", async () => {
+      await chatsMainPageSecond.openPinMessagesContainer();
+      await chatsMainPageSecond.clickOnGoToPinnedMessageButton(firstMessage);
+      await expect(firstMessageLocal).toBeVisible();
+    });
+
+    await test.step("Valiate remote user can go to pinned message by clicking on Go To button", async () => {
+      const firstMessageRemote =
+        await chatsMainPageFirst.getFirstMessageRemote();
+      await chatsMainPageFirst.openPinMessagesContainer();
+      await chatsMainPageFirst.clickOnGoToPinnedMessageButton(firstMessage);
+      await expect(firstMessageRemote).toBeVisible();
+    });
   });
 
   // Needs research to fix quick profile input
@@ -690,88 +699,98 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
     const quickProfileLocal = new QuickProfile(page1, viewport);
     const quickProfileRemote = new QuickProfile(page1, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // Send message from first user to second user
     const randomSentence = faker.lorem.sentence(3);
-    await chatsMainPageFirst.sendMessage(randomSentence);
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      randomSentence,
-    );
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      randomSentence,
-    );
-
-    // Send message from second user to first user
     const randomSentenceTwo = faker.lorem.sentence(3);
-    await chatsMainPageSecond.sendMessage(randomSentenceTwo);
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      randomSentenceTwo,
-    );
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      randomSentence,
-    );
 
-    // Open Quick Profile from the last message sent and validate default values
-    await chatsMainPageFirst.openLocalQuickProfile();
-    await expect(quickProfileLocal.quickProfile).toBeVisible();
-    await expect(quickProfileLocal.quickProfileNoteInput).toBeEmpty();
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // B14 - Highlighted border should appear when user clicks into Notes textbox
-    await quickProfileLocal.quickProfileNoteInput.focus();
-    await expect(quickProfileLocal.quickProfileNoteInputContainer).toHaveCSS(
-      "box-shadow",
-      "rgb(77, 77, 255) 0px 0px 0px 1px",
-    );
+    await test.step("Send a message from first user to second user", async () => {
+      await chatsMainPageFirst.sendMessage(randomSentence);
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        randomSentence,
+      );
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        randomSentence,
+      );
+    });
 
-    // Update note on local quick profile
-    // Save copied value from clipboard into a constant
-    const userNote = "Local User Note";
-    await page1.evaluate((text) => {
-      navigator.clipboard.writeText(text);
-    }, userNote);
-    await quickProfileLocal.pasteOnQuickProfileNote();
-    await quickProfileLocal.exitQuickProfile();
+    await test.step("Send a message from second user to first user", async () => {
+      await chatsMainPageSecond.sendMessage(randomSentenceTwo);
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        randomSentenceTwo,
+      );
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        randomSentence,
+      );
+    });
 
-    // Validate note is kept on local quick profile after opening again Quick Profile
-    await chatsMainPageFirst.openLocalQuickProfile();
-    await expect(quickProfileLocal.quickProfile).toBeVisible();
-    await expect(quickProfileLocal.quickProfileNoteInput).toHaveValue(
-      "Local User Note",
-    );
-    await quickProfileLocal.exitQuickProfile();
+    await test.step("Open Quick Profile from the last message sent and validate default values", async () => {
+      await chatsMainPageFirst.openLocalQuickProfile();
+      await expect(quickProfileLocal.quickProfile).toBeVisible();
+      await expect(quickProfileLocal.quickProfileNoteInput).toBeEmpty();
+    });
 
-    // Open Quick Profile from the last message received
-    await chatsMainPageFirst.openRemoteQuickProfile();
-    await expect(quickProfileRemote.quickProfile).toBeVisible();
-    await expect(quickProfileRemote.quickProfileNoteInput).toBeEmpty();
+    await test.step("B14 - Highlighted border should appear when user clicks into Notes textbox", async () => {
+      await quickProfileLocal.quickProfileNoteInput.focus();
+      await expect(quickProfileLocal.quickProfileNoteInputContainer).toHaveCSS(
+        "box-shadow",
+        "rgb(77, 77, 255) 0px 0px 0px 1px",
+      );
+    });
 
-    // B10 - Friends profile should display friends status (wether you are friends or not)
-    await expect(quickProfileRemote.quickProfileUserButton).toBeVisible();
-    await expect(quickProfileRemote.quickProfileUserButtonText).toHaveText(
-      "You're friends",
-    );
+    await test.step("Update note on local quick profile", async () => {
+      const userNote = "Local User Note";
+      await page1.evaluate((text) => {
+        navigator.clipboard.writeText(text);
+      }, userNote);
+      await quickProfileLocal.pasteOnQuickProfileNote();
+      await quickProfileLocal.exitQuickProfile();
+    });
 
-    // Update note on remote quick profile
-    await quickProfileRemote.quickProfileNoteInput.fill("Remote User Note");
-    await quickProfileRemote.exitQuickProfile();
+    await test.step("Validate note is kept on local quick profile after opening again Quick Profile", async () => {
+      await chatsMainPageFirst.openLocalQuickProfile();
+      await expect(quickProfileLocal.quickProfile).toBeVisible();
+      await expect(quickProfileLocal.quickProfileNoteInput).toHaveValue(
+        "Local User Note",
+      );
+      await quickProfileLocal.exitQuickProfile();
+    });
 
-    // Validate note is kept on remote quick profile after opening again Quick Profile
-    await chatsMainPageFirst.openRemoteQuickProfile();
-    await expect(quickProfileRemote.quickProfile).toBeVisible();
-    await expect(quickProfileRemote.quickProfileNoteInput).toHaveValue(
-      "Remote User Note",
-    );
-    await quickProfileRemote.exitQuickProfile();
+    await test.step("Open Quick Profile from the last message received", async () => {
+      await chatsMainPageFirst.openRemoteQuickProfile();
+      await expect(quickProfileRemote.quickProfile).toBeVisible();
+      await expect(quickProfileRemote.quickProfileNoteInput).toBeEmpty();
+    });
+
+    await test.step("B10 - Friends profile should display friends status (wether you are friends or not)", async () => {
+      await expect(quickProfileRemote.quickProfileUserButton).toBeVisible();
+      await expect(quickProfileRemote.quickProfileUserButtonText).toHaveText(
+        "You're friends",
+      );
+    });
+
+    await test.step("Update note on remote quick profile", async () => {
+      await quickProfileRemote.quickProfileNoteInput.fill("Remote User Note");
+      await quickProfileRemote.exitQuickProfile();
+    });
+
+    await test.step("Validate note is kept on remote quick profile after opening again Quick Profile", async () => {
+      await chatsMainPageFirst.openRemoteQuickProfile();
+      await expect(quickProfileRemote.quickProfile).toBeVisible();
+      await expect(quickProfileRemote.quickProfileNoteInput).toHaveValue(
+        "Remote User Note",
+      );
+      await quickProfileRemote.exitQuickProfile();
+    });
   });
 
   // Needs research to fix quick profile input
@@ -791,73 +810,79 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const quickProfileLocal = new QuickProfile(page1, viewport);
     const settingsProfileFirst = new SettingsProfile(page1, viewport);
 
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Send message from first user to second user
-    const firstMessage = "this is a first test message";
-    await chatsMainPageFirst.sendMessage(firstMessage);
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
+    await test.step("Send a message from first user to second user", async () => {
+      const firstMessage = "this is a first test message";
+      await chatsMainPageFirst.sendMessage(firstMessage);
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        firstMessage,
+      );
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        firstMessage,
+      );
+    });
 
-    // Send message from second user to first user
-    const secondMessage = "this is a second test message";
-    await chatsMainPageSecond.sendMessage(secondMessage);
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      secondMessage,
-    );
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      secondMessage,
-    );
+    await test.step("Send a message from second user to first user", async () => {
+      const secondMessage = "this is a second test message";
+      await chatsMainPageSecond.sendMessage(secondMessage);
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        secondMessage,
+      );
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        secondMessage,
+      );
+    });
 
-    // Open Quick Profile from the last message sent and validate default values
-    await chatsMainPageFirst.openLocalQuickProfile();
-    await expect(quickProfileLocal.quickProfile).toBeVisible();
-    await expect(quickProfileLocal.quickProfileUsernameText).toHaveText(
-      username,
-    );
-    await expect(quickProfileLocal.quickProfileStatusText).toHaveText(
-      "status from first user",
-    );
-    await expect(quickProfileLocal.quickProfileNoteInput).toBeEmpty();
-    await quickProfileLocal.exitQuickProfile();
+    await test.step("Open Quick Profile from the last message sent and validate default values", async () => {
+      await chatsMainPageFirst.openLocalQuickProfile();
+      await expect(quickProfileLocal.quickProfile).toBeVisible();
+      await expect(quickProfileLocal.quickProfileUsernameText).toHaveText(
+        username,
+      );
+      await expect(quickProfileLocal.quickProfileStatusText).toHaveText(
+        "status from first user",
+      );
+      await expect(quickProfileLocal.quickProfileNoteInput).toBeEmpty();
+      await quickProfileLocal.exitQuickProfile();
+    });
 
-    // Update local profile picture, profile banner, username and status
-    await chatsMainPageFirst.goToSettings();
-    await page1.waitForURL("/settings/profile");
-    await settingsProfileFirst.updateUsername("newUsernameFirst");
-    await settingsProfileFirst.updateStatus("new status first user");
-    await settingsProfileFirst.uploadProfileBanner(
-      "playwright/assets/banner.jpg",
-    );
-    await settingsProfileFirst.uploadProfilePicture(
-      "playwright/assets/logo.jpg",
-    );
-    await settingsProfileFirst.goToChat();
-    const thirdMessage = "this is a third test message";
-    await chatsMainPageFirst.sendMessage(thirdMessage);
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      thirdMessage,
-    );
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      thirdMessage,
-    );
+    await test.step("Update local profile picture, profile banner, username and status", async () => {
+      await chatsMainPageFirst.goToSettings();
+      await page1.waitForURL("/settings/profile");
+      await settingsProfileFirst.updateUsername("newUsernameFirst");
+      await settingsProfileFirst.updateStatus("new status first user");
+      await settingsProfileFirst.uploadProfileBanner(
+        "playwright/assets/banner.jpg",
+      );
+      await settingsProfileFirst.uploadProfilePicture(
+        "playwright/assets/logo.jpg",
+      );
+      await settingsProfileFirst.goToChat();
+      const thirdMessage = "this is a third test message";
+      await chatsMainPageFirst.sendMessage(thirdMessage);
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        thirdMessage,
+      );
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        thirdMessage,
+      );
+    });
 
-    // Validate changes from settings profile remote are displayed on remote quick profile
-    await chatsMainPageFirst.openLocalQuickProfile();
-    await quickProfileLocal.validateQuickProfileSnapshot();
-    await quickProfileLocal.exitQuickProfile();
+    await test.step("Validate changes from settings profile local are displayed on local quick profile", async () => {
+      await chatsMainPageFirst.openLocalQuickProfile();
+      await quickProfileLocal.validateQuickProfileSnapshot();
+      await quickProfileLocal.exitQuickProfile();
+    });
   });
 
   // Needs research to fix quick profile input
@@ -1576,120 +1601,137 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    await chatsMainPageSecond.openEmojiPicker();
     const emojiPickerSecond = new EmojiPicker(page2, viewport);
-    await emojiPickerSecond.selectEmoji("😀");
-    await chatsMainPageSecond.buttonChatbarSendMessage.click();
 
-    // Validate emoji sent is displayed on local and remote sides
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      "😀",
-    );
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      "😀",
-    );
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Change skin tone of emojis
-    await chatsMainPageSecond.openEmojiPicker();
-    await emojiPickerSecond.changeSkinToneEmoji(2);
-    await emojiPickerSecond.selectEmoji("🖐🏾");
-    await chatsMainPageSecond.buttonChatbarSendMessage.click();
+    await test.step("Open emoji picker and send emoji to the other user", async () => {
+      await chatsMainPageSecond.openEmojiPicker();
+      await emojiPickerSecond.selectEmoji("😀");
+      await chatsMainPageSecond.buttonChatbarSendMessage.click();
+    });
 
-    // Validate emoji sent is displayed on local and remote sides
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      "🖐🏾",
-    );
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      "🖐🏾",
-    );
+    await test.step("Validate emoji sent is displayed on local and remote sides", async () => {
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        "😀",
+      );
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        "😀",
+      );
+    });
 
-    // Change emoji size in emojis container view
-    await chatsMainPageSecond.openEmojiPicker();
-    await emojiPickerSecond.changeEmojiSizeView("16");
-    await emojiPickerSecond.validateSingleEmojiSize("🤣", "16px");
-    await emojiPickerSecond.changeEmojiSizeView("45");
-    await emojiPickerSecond.validateSingleEmojiSize("🤣", "45px");
-    await emojiPickerSecond.changeEmojiSizeView("30");
-    await emojiPickerSecond.validateSingleEmojiSize("🤣", "30px");
+    await test.step("Change skin tone of emojis", async () => {
+      await chatsMainPageSecond.openEmojiPicker();
+      await emojiPickerSecond.changeSkinToneEmoji(2);
+      await emojiPickerSecond.selectEmoji("🖐🏾");
+      await chatsMainPageSecond.buttonChatbarSendMessage.click();
+    });
 
-    // Validate emoji categories displayed in emoji container
-    const emojiCategories = [
-      "Frequently Used",
-      "smileys and emotion",
-      "people and body",
-      "animals and nature",
-      "food and drink",
-      "travel and places",
-      "activities",
-      "objects",
-      "symbols",
-      "flags",
-    ];
-    await emojiPickerSecond.validateEmojiCategories(emojiCategories);
+    await test.step("Validate emoji sent is displayed on local and remote sides", async () => {
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        "🖐🏾",
+      );
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        "🖐🏾",
+      );
+    });
 
-    // Validate number of emojis per category - 5 by default and 2 recently selected by user
-    await emojiPickerSecond.validateNumberOfEmojisPerSection(
-      "frequently-used",
-      7,
-    );
-    await emojiPickerSecond.validateNumberOfEmojisPerSection(
-      "smileys-and-emotion",
-      168,
-    );
-    await emojiPickerSecond.validateNumberOfEmojisPerSection(
-      "people-and-body",
-      367,
-    );
-    await emojiPickerSecond.validateNumberOfEmojisPerSection(
-      "animals-and-nature",
-      153,
-    );
-    await emojiPickerSecond.validateNumberOfEmojisPerSection(
-      "food-and-drink",
-      135,
-    );
-    await emojiPickerSecond.validateNumberOfEmojisPerSection(
-      "travel-and-places",
-      218,
-    );
-    await emojiPickerSecond.validateNumberOfEmojisPerSection("activities", 84);
-    await emojiPickerSecond.validateNumberOfEmojisPerSection("objects", 261);
-    await emojiPickerSecond.validateNumberOfEmojisPerSection("symbols", 223);
-    await emojiPickerSecond.validateNumberOfEmojisPerSection("flags", 269);
+    await test.step("Change emoji size in emojis container view", async () => {
+      await chatsMainPageSecond.openEmojiPicker();
+      await emojiPickerSecond.changeEmojiSizeView("16");
+      await emojiPickerSecond.validateSingleEmojiSize("🤣", "16px");
+      await emojiPickerSecond.changeEmojiSizeView("45");
+      await emojiPickerSecond.validateSingleEmojiSize("🤣", "45px");
+      await emojiPickerSecond.changeEmojiSizeView("30");
+      await emojiPickerSecond.validateSingleEmojiSize("🤣", "30px");
+    });
 
-    // Validate user can navigate through all categories of emojis
-    await emojiPickerSecond.navigateThroughEmojiCategories(
-      "smileys-and-emotion",
-    );
-    await emojiPickerSecond.navigateThroughEmojiCategories("people-and-body");
-    await emojiPickerSecond.navigateThroughEmojiCategories(
-      "animals-and-nature",
-    );
-    await emojiPickerSecond.navigateThroughEmojiCategories("food-and-drink");
-    await emojiPickerSecond.navigateThroughEmojiCategories("travel-and-places");
-    await emojiPickerSecond.navigateThroughEmojiCategories("activities");
-    await emojiPickerSecond.navigateThroughEmojiCategories("objects");
-    await emojiPickerSecond.navigateThroughEmojiCategories("symbols");
-    await emojiPickerSecond.navigateThroughEmojiCategories("flags");
+    await test.step("Validate emoji categories displayed", async () => {
+      const emojiCategories = [
+        "Frequently Used",
+        "smileys and emotion",
+        "people and body",
+        "animals and nature",
+        "food and drink",
+        "travel and places",
+        "activities",
+        "objects",
+        "symbols",
+        "flags",
+      ];
+      await emojiPickerSecond.validateEmojiCategories(emojiCategories);
+    });
 
-    // Validate user can navigate through tabs in emoji picker
-    await emojiPickerSecond.goToGifsTab();
-    await emojiPickerSecond.goToStickersTab();
-    await emojiPickerSecond.goToEmojisTab();
+    await test.step("Validate number of emojis per category", async () => {
+      await emojiPickerSecond.validateNumberOfEmojisPerSection(
+        "frequently-used",
+        7,
+      );
+      await emojiPickerSecond.validateNumberOfEmojisPerSection(
+        "smileys-and-emotion",
+        168,
+      );
+      await emojiPickerSecond.validateNumberOfEmojisPerSection(
+        "people-and-body",
+        367,
+      );
+      await emojiPickerSecond.validateNumberOfEmojisPerSection(
+        "animals-and-nature",
+        153,
+      );
+      await emojiPickerSecond.validateNumberOfEmojisPerSection(
+        "food-and-drink",
+        135,
+      );
+      await emojiPickerSecond.validateNumberOfEmojisPerSection(
+        "travel-and-places",
+        218,
+      );
+      await emojiPickerSecond.validateNumberOfEmojisPerSection(
+        "activities",
+        84,
+      );
+      await emojiPickerSecond.validateNumberOfEmojisPerSection("objects", 261);
+      await emojiPickerSecond.validateNumberOfEmojisPerSection("symbols", 223);
+      await emojiPickerSecond.validateNumberOfEmojisPerSection("flags", 269);
+    });
 
-    // Search for emojis in emoji picker
-    await emojiPickerSecond.searchEmoji("mexico");
+    await test.step("Validate user can navigate through all categories of emojis", async () => {
+      await emojiPickerSecond.navigateThroughEmojiCategories(
+        "smileys-and-emotion",
+      );
+      await emojiPickerSecond.navigateThroughEmojiCategories("people-and-body");
+      await emojiPickerSecond.navigateThroughEmojiCategories(
+        "animals-and-nature",
+      );
+      await emojiPickerSecond.navigateThroughEmojiCategories("food-and-drink");
+      await emojiPickerSecond.navigateThroughEmojiCategories(
+        "travel-and-places",
+      );
+      await emojiPickerSecond.navigateThroughEmojiCategories("activities");
+      await emojiPickerSecond.navigateThroughEmojiCategories("objects");
+      await emojiPickerSecond.navigateThroughEmojiCategories("symbols");
+      await emojiPickerSecond.navigateThroughEmojiCategories("flags");
+    });
+
+    await test.step("Validate user can navigate through tabs in emoji picker", async () => {
+      await emojiPickerSecond.goToGifsTab();
+      await emojiPickerSecond.goToStickersTab();
+      await emojiPickerSecond.goToEmojisTab();
+    });
+
+    await test.step("Validate user can search for emojis in emoji picker", async () => {
+      await emojiPickerSecond.searchEmoji("mexico");
+    });
   });
 
   test("B67 - Sending and receiving GIFs and gif picker tests", async ({
@@ -1705,53 +1747,60 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // Change GIF size in gifs container view
-    await chatsMainPageSecond.openGifPicker();
     const gifPickerSecond = new GifPicker(page2, viewport);
-    await gifPickerSecond.waitForGifsToLoad();
-    await gifPickerSecond.changeGifSizeView("100");
-    await gifPickerSecond.changeGifSizeView("200");
-    await gifPickerSecond.changeGifSizeView("150");
+    let gifToSelect: string;
 
-    // Send a Gif to the other user
-    const gifToSelect = await gifPickerSecond.getGifAltText(0);
-    await gifPickerSecond.selectGif(gifToSelect);
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Validate GIF sent is displayed on local and remote sides
-    await chatsMainPageSecond.validateGifStickerSent(gifToSelect);
-    await chatsMainPageFirst.validateGifStickerReceived(gifToSelect);
+    await test.step("Open gif picker and validate user can change gif size view", async () => {
+      await chatsMainPageSecond.openGifPicker();
+      await gifPickerSecond.waitForGifsToLoad();
+      await gifPickerSecond.changeGifSizeView("100");
+      await gifPickerSecond.changeGifSizeView("200");
+      await gifPickerSecond.changeGifSizeView("150");
+    });
 
-    // Validate GIF sent is displayed in chat preview from sidebar as last message sent
-    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
-    await chatsMainPageSecond.validateChatPreviewMessageImage(
-      username,
-      gifToSelect,
-    );
-    await chatsMainPageSecond.hideSidebarOnMobileView();
+    await test.step("Send a Gif to the other user", async () => {
+      gifToSelect = await gifPickerSecond.getGifAltText(0);
+      await gifPickerSecond.selectGif(gifToSelect);
+    });
 
-    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
-    await chatsMainPageFirst.validateChatPreviewMessageImage(
-      usernameTwo,
-      gifToSelect,
-    );
-    await chatsMainPageFirst.hideSidebarOnMobileView();
+    await test.step("Validate GIF sent is displayed on local and remote sides", async () => {
+      await chatsMainPageSecond.validateGifStickerSent(gifToSelect);
+      await chatsMainPageFirst.validateGifStickerReceived(gifToSelect);
+    });
 
-    // Validate user can navigate through tabs in Gif picker
-    await chatsMainPageSecond.openGifPicker();
-    await gifPickerSecond.goToStickersTab();
-    await gifPickerSecond.goToEmojisTab();
-    await gifPickerSecond.goToGifsTab();
+    await test.step("Validate GIF sent is displayed in chat preview from sidebar as last message sent", async () => {
+      await chatsMainPageSecond.clickOnShowSidebarIfClosed();
+      await chatsMainPageSecond.validateChatPreviewMessageImage(
+        username,
+        gifToSelect,
+      );
+      await chatsMainPageSecond.hideSidebarOnMobileView();
+
+      await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+      await chatsMainPageFirst.validateChatPreviewMessageImage(
+        usernameTwo,
+        gifToSelect,
+      );
+      await chatsMainPageFirst.hideSidebarOnMobileView();
+    });
+
+    await test.step("Validate user can navigate through all categories of gifs", async () => {
+      await chatsMainPageSecond.openGifPicker();
+      await gifPickerSecond.goToStickersTab();
+      await gifPickerSecond.goToEmojisTab();
+      await gifPickerSecond.goToGifsTab();
+    });
   });
 
   test("B68 - Sending and receiving stickers and sticker picker tests", async ({
@@ -1767,95 +1816,102 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    await chatsMainPageSecond.openStickerPicker();
     const stickerPickerSecond = new StickerPicker(page2, viewport);
-    await stickerPickerSecond.waitForStickersToLoad();
 
-    // Send a Sticker to the other user
-    await stickerPickerSecond.selectSticker("Space Cat", "Power Up");
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Validate Sticker sent is displayed on local and remote sides
-    await chatsMainPageSecond.validateGifStickerSent("Power Up");
-    await chatsMainPageFirst.validateGifStickerReceived("Power Up");
+    await test.step("Open sticker picker and send a sticker to the other user", async () => {
+      await chatsMainPageSecond.openStickerPicker();
+      await stickerPickerSecond.waitForStickersToLoad();
+      await stickerPickerSecond.selectSticker("Space Cat", "Power Up");
+    });
 
-    // Validate Sticker sent is displayed in chat preview from sidebar as last message sent
-    await chatsMainPageSecond.clickOnShowSidebarIfClosed();
-    await chatsMainPageSecond.validateChatPreviewMessageImage(
-      username,
-      "Power Up",
-    );
-    await chatsMainPageSecond.hideSidebarOnMobileView();
+    await test.step("Validate Sticker sent is displayed on local and remote sides", async () => {
+      await chatsMainPageSecond.validateGifStickerSent("Power Up");
+      await chatsMainPageFirst.validateGifStickerReceived("Power Up");
+    });
 
-    await chatsMainPageFirst.clickOnShowSidebarIfClosed();
-    await chatsMainPageFirst.validateChatPreviewMessageImage(
-      usernameTwo,
-      "Power Up",
-    );
-    await chatsMainPageFirst.hideSidebarOnMobileView();
+    await test.step("Validate Sticker sent is displayed in chat preview from sidebar as last message sent", async () => {
+      await chatsMainPageSecond.clickOnShowSidebarIfClosed();
+      await chatsMainPageSecond.validateChatPreviewMessageImage(
+        username,
+        "Power Up",
+      );
+      await chatsMainPageSecond.hideSidebarOnMobileView();
 
-    // Validate user can navigate through tabs in sticker picker
-    await chatsMainPageSecond.openStickerPicker();
-    await stickerPickerSecond.goToEmojisTab();
-    await stickerPickerSecond.goToGifsTab();
-    await stickerPickerSecond.goToStickersTab();
+      await chatsMainPageFirst.clickOnShowSidebarIfClosed();
+      await chatsMainPageFirst.validateChatPreviewMessageImage(
+        usernameTwo,
+        "Power Up",
+      );
+      await chatsMainPageFirst.hideSidebarOnMobileView();
+    });
 
-    // Validate sticker categories displayed in sticker container
-    const stickerCategories = [
-      "Space Cat (Team Satellite)",
-      "Bad Animals (Team Satellite)",
-      "Anime (Team Satellite)",
-      "Words (Team Satellite)",
-      "Fishy Business (Team Satellite)",
-      "The Garden (Team Satellite)",
-      "Sassy Toons (Team Satellite)",
-    ];
-    await stickerPickerSecond.validateStickerCategories(stickerCategories);
+    await test.step("Validate user can navigate through tabs in sticker picker", async () => {
+      await chatsMainPageSecond.openStickerPicker();
+      await stickerPickerSecond.goToEmojisTab();
+      await stickerPickerSecond.goToGifsTab();
+      await stickerPickerSecond.goToStickersTab();
+    });
 
-    // Validate number of stickers per category
-    await stickerPickerSecond.validateNumberOfStickersPerSection(
-      "Space Cat",
-      16,
-    );
-    await stickerPickerSecond.validateNumberOfStickersPerSection(
-      "Bad Animals",
-      18,
-    );
-    await stickerPickerSecond.validateNumberOfStickersPerSection("Anime", 13);
-    await stickerPickerSecond.validateNumberOfStickersPerSection("Words", 9);
-    await stickerPickerSecond.validateNumberOfStickersPerSection(
-      "Fishy Business",
-      9,
-    );
-    await stickerPickerSecond.validateNumberOfStickersPerSection(
-      "The Garden",
-      9,
-    );
-    await stickerPickerSecond.validateNumberOfStickersPerSection(
-      "Sassy Toons",
-      5,
-    );
+    await test.step("Validate sticker categories displayed in sticker container", async () => {
+      const stickerCategories = [
+        "Space Cat (Team Satellite)",
+        "Bad Animals (Team Satellite)",
+        "Anime (Team Satellite)",
+        "Words (Team Satellite)",
+        "Fishy Business (Team Satellite)",
+        "The Garden (Team Satellite)",
+        "Sassy Toons (Team Satellite)",
+      ];
+      await stickerPickerSecond.validateStickerCategories(stickerCategories);
+    });
 
-    // Validate user can navigate through all categories of stickers
-    await stickerPickerSecond.navigateThroughStickerCategories("Space Cat");
-    await stickerPickerSecond.navigateThroughStickerCategories("Bad Animals");
-    await stickerPickerSecond.navigateThroughStickerCategories("Anime");
-    await stickerPickerSecond.navigateThroughStickerCategories("Words");
-    await stickerPickerSecond.navigateThroughStickerCategories(
-      "Fishy Business",
-    );
-    await stickerPickerSecond.navigateThroughStickerCategories("The Garden");
-    await stickerPickerSecond.navigateThroughStickerCategories("Sassy Toons");
+    await test.step("Validate number of stickers displated per category are correct", async () => {
+      await stickerPickerSecond.validateNumberOfStickersPerSection(
+        "Space Cat",
+        16,
+      );
+      await stickerPickerSecond.validateNumberOfStickersPerSection(
+        "Bad Animals",
+        18,
+      );
+      await stickerPickerSecond.validateNumberOfStickersPerSection("Anime", 13);
+      await stickerPickerSecond.validateNumberOfStickersPerSection("Words", 9);
+      await stickerPickerSecond.validateNumberOfStickersPerSection(
+        "Fishy Business",
+        9,
+      );
+      await stickerPickerSecond.validateNumberOfStickersPerSection(
+        "The Garden",
+        9,
+      );
+      await stickerPickerSecond.validateNumberOfStickersPerSection(
+        "Sassy Toons",
+        5,
+      );
+    });
+
+    await test.step("Validate user can navigate through all categories of stickers", async () => {
+      await stickerPickerSecond.navigateThroughStickerCategories("Space Cat");
+      await stickerPickerSecond.navigateThroughStickerCategories("Bad Animals");
+      await stickerPickerSecond.navigateThroughStickerCategories("Anime");
+      await stickerPickerSecond.navigateThroughStickerCategories("Words");
+      await stickerPickerSecond.navigateThroughStickerCategories(
+        "Fishy Business",
+      );
+      await stickerPickerSecond.navigateThroughStickerCategories("The Garden");
+      await stickerPickerSecond.navigateThroughStickerCategories("Sassy Toons");
+    });
   });
 
   test("Chat Replies Tests", async ({
@@ -2138,13 +2194,24 @@ test.describe("Two instances tests - Friends and Chats", () => {
       );
     });
 
-    await test.step("With first user validate all buttons are working correctly", async () => {
+    await test.step("Validate user can unmute and mute the call", async () => {
       await callScreenSecondUser.unmuteCall();
       await callScreenSecondUser.muteCall();
+    });
+
+    await test.step("Validate user can deafen/undeafen the call", async () => {
       await callScreenSecondUser.deafenCall();
       await callScreenSecondUser.undeafenCall();
+    });
+
+    await test.step("Validate user can start/stop sharing screen", async () => {
       await callScreenSecondUser.clickOnStreamButton();
-      // Add steps to validate stream button
+      await callScreenSecondUser.validateLocalVideoStreamIsVisible(true);
+      await callScreenFirstUser.validateRemoteVideoStreamIsVisible();
+      await callScreenSecondUser.clickOnStreamButton();
+    });
+
+    await test.step("Validate user can expand/collapse the call view", async () => {
       await callScreenSecondUser.expandCall();
       await callScreenSecondUser.collapseCall();
     });
@@ -2156,13 +2223,22 @@ test.describe("Two instances tests - Friends and Chats", () => {
       }
     });
 
-    await test.step("With second user continue validating buttons are working correctly", async () => {
+    await test.step("Validate user can enable/disable video during call", async () => {
       await callScreenSecondUser.enableVideo();
-      await page2.waitForTimeout(10000);
+      await page2.waitForTimeout(5000);
       await callScreenSecondUser.disableVideo();
+    });
+
+    await test.step("Validate user can open call volume mixer", async () => {
       await callScreenSecondUser.openCallVolumeMixer();
+    });
+
+    await test.step("Validate user can open/close call settings", async () => {
       await callScreenSecondUser.openCallSettings();
       await chatsMainPageSecond.exitCallSettings();
+    });
+
+    await test.step("Validate user can finish the call", async () => {
       await callScreenSecondUser.endCall();
     });
   });
