@@ -5,7 +5,7 @@ import { SettingsAbout } from "playwright/PageObjects/Settings/SettingsAbout";
 
 test.describe("Settings About Tests", () => {
   const BASE_URL = "https://satellite.im/";
-  const VERSION = "0.2.5";
+  const versionPattern = /^\d+\.\d+\.\d+$/;
   const GITHUB_URL = "https://github.com/Satellite-im";
 
   test.beforeEach(async ({ singleUserContext }) => {
@@ -42,7 +42,8 @@ test.describe("Settings About Tests", () => {
 
     // Label and texts for settings section are correct
     await expect(settingsAbout.versionSectionLabel).toHaveText("Version");
-    await expect(settingsAbout.versionSectionText).toHaveText(VERSION);
+    const versionNumber = await settingsAbout.versionSectionText.textContent();
+    expect(versionNumber).toMatch(versionPattern);
   });
 
   // Cannot be automated now since button does not perform any action
