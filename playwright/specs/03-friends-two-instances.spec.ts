@@ -902,80 +902,86 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const quickProfileRemote = new QuickProfile(page1, viewport);
     const settingsProfileSecond = new SettingsProfile(page2, viewport);
 
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Send message from first user to second user
-    const firstMessage = "this is a first test message";
-    await chatsMainPageFirst.sendMessage(firstMessage);
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      firstMessage,
-    );
+    await test.step("Send a message from first user to second user", async () => {
+      const firstMessage = "this is a first test message";
+      await chatsMainPageFirst.sendMessage(firstMessage);
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        firstMessage,
+      );
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        firstMessage,
+      );
+    });
 
-    // Send message from second user to first user
-    const secondMessage = "this is a second test message";
-    await chatsMainPageSecond.sendMessage(secondMessage);
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      secondMessage,
-    );
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      secondMessage,
-    );
+    await test.step("Send a message from second user to first user", async () => {
+      const secondMessage = "this is a second test message";
+      await chatsMainPageSecond.sendMessage(secondMessage);
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        secondMessage,
+      );
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        secondMessage,
+      );
+    });
 
-    // Open Quick Profile from the last message received and validate current values are displayed on username and status
-    await chatsMainPageFirst.openRemoteQuickProfile();
-    await expect(quickProfileRemote.quickProfile).toBeVisible();
-    await expect(quickProfileRemote.quickProfileUsernameText).toHaveText(
-      usernameTwo,
-    );
-    await expect(quickProfileRemote.quickProfileStatusText).toHaveText(
-      "status from second user",
-    );
-    await expect(quickProfileRemote.quickProfileNoteInput).toBeEmpty();
-    await quickProfileRemote.exitQuickProfile();
+    await test.step("Open Quick Profile from the last message received and validate current values are displayed on username and status", async () => {
+      await chatsMainPageFirst.openRemoteQuickProfile();
+      await expect(quickProfileRemote.quickProfile).toBeVisible();
+      await expect(quickProfileRemote.quickProfileUsernameText).toHaveText(
+        usernameTwo,
+      );
+      await expect(quickProfileRemote.quickProfileStatusText).toHaveText(
+        "status from second user",
+      );
+      await expect(quickProfileRemote.quickProfileNoteInput).toBeEmpty();
+      await quickProfileRemote.exitQuickProfile();
+    });
 
-    // Remote user updates username, status, profile banner and profile picture
-    await chatsMainPageSecond.goToSettings();
-    await page2.waitForURL("/settings/profile");
-    await settingsProfileSecond.updateUsername("newUsernameSecond");
-    await settingsProfileSecond.updateStatus("new status second user");
-    await settingsProfileSecond.uploadProfileBanner(
-      "playwright/assets/banner.jpg",
-    );
-    await settingsProfileSecond.uploadProfilePicture(
-      "playwright/assets/logo.jpg",
-    );
-    await settingsProfileSecond.goToChat();
-    const thirdMessage = "this is a third test message";
-    await chatsMainPageSecond.sendMessage(thirdMessage);
-    await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
-      thirdMessage,
-    );
-    await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
-      thirdMessage,
-    );
+    await test.step("Remote user updates profile picture, profile banner, username and status", async () => {
+      await chatsMainPageSecond.goToSettings();
+      await page2.waitForURL("/settings/profile");
+      await settingsProfileSecond.updateUsername("newUsernameSecond");
+      await settingsProfileSecond.updateStatus("new status second user");
+      await settingsProfileSecond.uploadProfileBanner(
+        "playwright/assets/banner.jpg",
+      );
+      await settingsProfileSecond.uploadProfilePicture(
+        "playwright/assets/logo.jpg",
+      );
+      await settingsProfileSecond.goToChat();
+      const thirdMessage = "this is a third test message";
+      await chatsMainPageSecond.sendMessage(thirdMessage);
+      await expect(chatsMainPageSecond.messageBubbleContent.last()).toHaveText(
+        thirdMessage,
+      );
+      await expect(chatsMainPageFirst.messageBubbleContent.last()).toHaveText(
+        thirdMessage,
+      );
+    });
 
-    // Validate new username, status, profile banner and profile picture from remote user is displayed on remote quick profile
-    await chatsMainPageFirst.openRemoteQuickProfile();
-    await expect(quickProfileRemote.quickProfile).toBeVisible();
-    await expect(quickProfileRemote.quickProfileUsernameText).toHaveText(
-      "newUsernameSecond",
-    );
-    await expect(quickProfileRemote.quickProfileStatusText).toHaveText(
-      "new status second user",
-    );
-    await quickProfileRemote.validateQuickProfileSnapshot();
-    await quickProfileRemote.exitQuickProfile();
+    await test.step("Validate changes from settings profile remote are displayed on remote quick profile", async () => {
+      await chatsMainPageFirst.openRemoteQuickProfile();
+      await expect(quickProfileRemote.quickProfile).toBeVisible();
+      await expect(quickProfileRemote.quickProfileUsernameText).toHaveText(
+        "newUsernameSecond",
+      );
+      await expect(quickProfileRemote.quickProfileStatusText).toHaveText(
+        "new status second user",
+      );
+      await quickProfileRemote.validateQuickProfileSnapshot();
+      await quickProfileRemote.exitQuickProfile();
+    });
   });
 
   test("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
@@ -991,63 +997,72 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // Send message from second user to first user
     const firstMessage = "this is a first test message";
-    await chatsMainPageSecond.sendMessage(firstMessage);
-    await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
-    await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
 
-    // B18 - Context menu appears when user right clicks a message
-    // B19 - When user clicks their own message context menu should display Top 5 Most Used Emojis, Pin Message, Reply, React, Copy, Edit, Delete
-    // Context Menu on Message Sent
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
-    await chatsMainPageSecond.validateLocalContextMenuOptions();
-    await chatsMainPageSecond.exitContextMenuChat();
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Context Menu on Message Received
-    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
-    await chatsMainPageFirst.validateRemoteContextMenuOptions();
-    await chatsMainPageFirst.exitContextMenuChat();
+    await test.step("Send a message from first user to second user", async () => {
+      await chatsMainPageSecond.sendMessage(firstMessage);
+      await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
+      await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
+    });
 
-    // B23 - Clicking Copy should copy text to users clipboard
-    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
-    await chatsMainPageFirst.selectContextMenuOption("Copy");
-    // Save copied value from clipboard into a constant
-    const handle = await page1.evaluateHandle(() =>
-      navigator.clipboard.readText(),
-    );
-    const clipboardContent = await handle.jsonValue();
+    await test.step("Validate Context Menu from Message Sent", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.validateLocalContextMenuOptions();
+      await chatsMainPageSecond.exitContextMenuChat();
+    });
 
-    await expect(clipboardContent).toEqual(firstMessage);
-    await chatsMainPageFirst.sendMessage(firstMessage);
+    await test.step("Validate Context Menu from Message Received", async () => {
+      await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+      await chatsMainPageFirst.validateRemoteContextMenuOptions();
+      await chatsMainPageFirst.exitContextMenuChat();
+    });
 
-    await chatsMainPageFirst.validateLastMessageLocal(firstMessage);
-    await chatsMainPageSecond.validateLastMessageRemote(firstMessage);
+    await test.step("B23 - Clicking Copy should copy text to users clipboard", async () => {
+      await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+      await chatsMainPageFirst.selectContextMenuOption("Copy");
+    });
 
-    // B24 - Clicking Edit should open up the edit message modal
-    const editedMessage = "Edited message";
-    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
-    await chatsMainPageFirst.selectContextMenuOption("Edit");
-    await chatsMainPageFirst.typeOnEditMessageInput(editedMessage);
+    await test.step("Paste clipboard into chatbar and ensure message was copied correctly", async () => {
+      const handle = await page1.evaluateHandle(() =>
+        navigator.clipboard.readText(),
+      );
+      const clipboardContent = await handle.jsonValue();
 
-    await chatsMainPageFirst.validateLastMessageLocal(editedMessage);
-    await chatsMainPageSecond.validateLastMessageRemote(editedMessage);
+      await expect(clipboardContent).toEqual(firstMessage);
+      await chatsMainPageFirst.sendMessage(firstMessage);
 
-    // B25 - Clicking Delete should delete message from chat
-    await chatsMainPageFirst.openContextMenuOnLastMessageSent();
-    await chatsMainPageFirst.selectContextMenuOption("Delete");
-    await chatsMainPageFirst.messabeBubbleLocal.waitFor({ state: "detached" });
+      await chatsMainPageFirst.validateLastMessageLocal(firstMessage);
+      await chatsMainPageSecond.validateLastMessageRemote(firstMessage);
+    });
+
+    await test.step("B24 - Validate Edit Mesage option", async () => {
+      const editedMessage = "Edited message";
+      await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+      await chatsMainPageFirst.selectContextMenuOption("Edit");
+      await chatsMainPageFirst.typeOnEditMessageInput(editedMessage);
+
+      await chatsMainPageFirst.validateLastMessageLocal(editedMessage);
+      await chatsMainPageSecond.validateLastMessageRemote(editedMessage);
+    });
+
+    await test.step("B25 - Validate Delete Message option", async () => {
+      await chatsMainPageFirst.openContextMenuOnLastMessageSent();
+      await chatsMainPageFirst.selectContextMenuOption("Delete");
+      await chatsMainPageFirst.messabeBubbleLocal.waitFor({
+        state: "detached",
+      });
+    });
   });
 
   test("B20 - Pin Messages Tests", async ({
@@ -1063,166 +1078,156 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
-    // Send message from second user to first user
     const firstMessage = "this is a first test message";
-    await chatsMainPageSecond.sendMessage(firstMessage);
-    await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
-    await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
-
-    // Validate Pinned Messages container is empty when no messages have been pinned
-    await chatsMainPageSecond.openPinMessagesContainer();
-    await expect(chatsMainPageSecond.pinnedMessagesContainer).toBeVisible();
-    await expect(chatsMainPageSecond.labelPinnedMessages).toHaveText(
-      "Pinned Messages",
-    );
-    await expect(chatsMainPageSecond.pinnedMessagesEmpty).toBeVisible();
-    await expect(chatsMainPageSecond.pinnedMessagesEmpty).toHaveText(
-      "There are no pinned messages in this chat",
-    );
-
-    // Close Pinned Messages container
-    await chatsMainPageSecond.exitPinMessagesContainer();
-    await expect(chatsMainPageSecond.pinnedMessagesContainer).toBeHidden();
-
-    // B20 - Clicking Pin Message should pin message in chat
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
-
-    // Local user can Pin a Message
-    await chatsMainPageSecond.selectContextMenuOption("Pin Message");
-
-    // Local Message should have Pin Message Indicator
-    await chatsMainPageSecond.validateLastLocalMessageIsPinned();
-
-    // Open Pinned Messages container on local side and validate message is displayed
-    await chatsMainPageSecond.openPinMessagesContainer();
-    await chatsMainPageSecond.validatePinMessageShownInContainer(
-      usernameTwo,
-      firstMessage,
-    );
-    await chatsMainPageSecond.exitPinMessagesContainer();
-
-    // Remote Message should have Pin Message Indicator
-    await chatsMainPageFirst.validateLastRemoteMessageIsPinned();
-
-    // Open Pinned Messages container on remote side and validate message is displayed
-    await chatsMainPageFirst.openPinMessagesContainer();
-    await chatsMainPageFirst.validatePinMessageShownInContainer(
-      usernameTwo,
-      firstMessage,
-    );
-    await chatsMainPageFirst.exitPinMessagesContainer();
-
-    // Validate local user can unpin a message from context menu
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
-    await chatsMainPageSecond.selectContextMenuOption("Unpin Message");
-
-    // Local Message should not have Pin Message Indicator
-    await chatsMainPageSecond.validateLastLocalMessageIsNotPinned();
-
-    // Remote Message should not have Pin Message Indicator
-    await chatsMainPageSecond.validateLastRemoteMessageIsNotPinned();
-
-    // Send a message from first user to second user
     const secondMessage = "this is a second test message";
-    await chatsMainPageFirst.sendMessage(secondMessage);
-    await chatsMainPageFirst.validateLastMessageLocal(secondMessage);
-    await chatsMainPageSecond.validateLastMessageRemote(secondMessage);
-
-    // Validate user can pin a remote message
-    await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
-    await chatsMainPageSecond.selectContextMenuOption("Pin Message");
-
-    // Remote Message should have Pin Message Indicator
-    await chatsMainPageSecond.validateLastRemoteMessageIsPinned();
-
-    // Local Message should have Pin Message Indicator
-    await chatsMainPageFirst.validateLastLocalMessageIsPinned();
-
-    // Open Pinned Messages container on local side and validate message is displayed
-    await chatsMainPageFirst.openPinMessagesContainer();
-    await chatsMainPageFirst.validatePinMessageShownInContainer(
-      username,
-      secondMessage,
-    );
-    await chatsMainPageFirst.exitPinMessagesContainer();
-
-    // Validate remote user can unpin a message from context menu
-    await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
-    await chatsMainPageSecond.selectContextMenuOption("Unpin Message");
-
-    // Remote Message should not have Pin Message Indicator
-    await chatsMainPageSecond.validateLastRemoteMessageIsNotPinned();
-
-    // Local Message should not have Pin Message Indicator
-    await chatsMainPageSecond.validateLastLocalMessageIsNotPinned();
-
-    // Send a message from second user to first user
     const thirdMessage = "this is a third test message";
-    await chatsMainPageSecond.sendMessage(thirdMessage);
-    await chatsMainPageSecond.validateLastMessageLocal(thirdMessage);
-    await chatsMainPageFirst.validateLastMessageRemote(thirdMessage);
-
-    // Local user can pin the message
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
-    await chatsMainPageSecond.selectContextMenuOption("Pin Message");
-
-    // Validate local user can unpin a message from unpin button
-    await chatsMainPageSecond.openPinMessagesContainer();
-    await chatsMainPageSecond.clickOnUnpinMessageButton(thirdMessage);
-
-    // Local Message should not have Pin Message Indicator
-    await chatsMainPageSecond.validateLastLocalMessageIsNotPinned();
-
-    // Remote Message should not have Pin Message Indicator
-    await chatsMainPageFirst.validateLastRemoteMessageIsNotPinned();
-
-    // Send a message from first user to second user
     const fourthMessage = "this is a fourth test message";
-    await chatsMainPageFirst.sendMessage(fourthMessage);
-    await chatsMainPageFirst.validateLastMessageLocal(fourthMessage);
-    await chatsMainPageSecond.validateLastMessageRemote(fourthMessage);
 
-    // Remote user can pin the message
-    await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
-    await chatsMainPageSecond.selectContextMenuOption("Pin Message");
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Validate remote user can unpin a message from unpin button
-    await chatsMainPageSecond.openPinMessagesContainer();
-    await chatsMainPageSecond.clickOnUnpinMessageButton(fourthMessage);
+    await test.step("Send a message from first user to second user", async () => {
+      await chatsMainPageSecond.sendMessage(firstMessage);
+      await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
+      await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
+    });
 
-    // Remote Message should not have Pin Message Indicator
-    await chatsMainPageSecond.validateLastRemoteMessageIsNotPinned();
+    await test.step("Validate Pinned Messages container is empty when no messages have been pinned", async () => {
+      await chatsMainPageSecond.openPinMessagesContainer();
+      await expect(chatsMainPageSecond.pinnedMessagesContainer).toBeVisible();
+      await expect(chatsMainPageSecond.labelPinnedMessages).toHaveText(
+        "Pinned Messages",
+      );
+      await expect(chatsMainPageSecond.pinnedMessagesEmpty).toBeVisible();
+      await expect(chatsMainPageSecond.pinnedMessagesEmpty).toHaveText(
+        "There are no pinned messages in this chat",
+      );
+    });
 
-    // Local Message should not have Pin Message Indicator
-    await chatsMainPageFirst.validateLastLocalMessageIsNotPinned();
+    await test.step("Close Pinned Messages container", async () => {
+      await chatsMainPageSecond.exitPinMessagesContainer();
+      await expect(chatsMainPageSecond.pinnedMessagesContainer).toBeHidden();
+    });
 
-    // Validate after all messages are unpinned, Pinned Messages container is empty again on both sides
-    // Validate Pinned Messages container is empty when no messages have been pinned
-    await chatsMainPageSecond.openPinMessagesContainer();
-    await expect(chatsMainPageSecond.pinnedMessagesEmpty).toBeVisible();
-    await expect(chatsMainPageSecond.pinnedMessagesEmpty).toHaveText(
-      "There are no pinned messages in this chat",
-    );
-    await chatsMainPageSecond.exitPinMessagesContainer();
+    await test.step("Local user can pin a message", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectContextMenuOption("Pin Message");
+      await chatsMainPageSecond.validateLastLocalMessageIsPinned();
+    });
 
-    // Validate Pinned Messages container is empty when no messages have been pinned
-    await chatsMainPageFirst.openPinMessagesContainer();
-    await expect(chatsMainPageFirst.pinnedMessagesEmpty).toBeVisible();
-    await expect(chatsMainPageFirst.pinnedMessagesEmpty).toHaveText(
-      "There are no pinned messages in this chat",
-    );
-    await chatsMainPageFirst.exitPinMessagesContainer();
+    await test.step("Open Pinned Messages container on local side and validate message is displayed", async () => {
+      await chatsMainPageSecond.openPinMessagesContainer();
+      await chatsMainPageSecond.validatePinMessageShownInContainer(
+        usernameTwo,
+        firstMessage,
+      );
+      await chatsMainPageSecond.exitPinMessagesContainer();
+    });
+
+    await test.step("Validate remote message pinned by remote user", async () => {
+      await chatsMainPageFirst.validateLastRemoteMessageIsPinned();
+      await chatsMainPageFirst.openPinMessagesContainer();
+      await chatsMainPageFirst.validatePinMessageShownInContainer(
+        usernameTwo,
+        firstMessage,
+      );
+      await chatsMainPageFirst.exitPinMessagesContainer();
+    });
+
+    await test.step("Local user can unpin a message", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectContextMenuOption("Unpin Message");
+      await chatsMainPageSecond.validateLastLocalMessageIsNotPinned();
+      await chatsMainPageSecond.validateLastRemoteMessageIsNotPinned();
+    });
+
+    await test.step("Send a second message from first user to second user", async () => {
+      await chatsMainPageFirst.sendMessage(secondMessage);
+      await chatsMainPageFirst.validateLastMessageLocal(secondMessage);
+      await chatsMainPageSecond.validateLastMessageRemote(secondMessage);
+    });
+
+    await test.step("Validate user can pin a remote message", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
+      await chatsMainPageSecond.selectContextMenuOption("Pin Message");
+      await chatsMainPageSecond.validateLastRemoteMessageIsPinned();
+      await chatsMainPageFirst.validateLastLocalMessageIsPinned();
+    });
+
+    await test.step("Open Pinned Messages container on local side and validate message is displayed", async () => {
+      await chatsMainPageFirst.openPinMessagesContainer();
+      await chatsMainPageFirst.validatePinMessageShownInContainer(
+        username,
+        secondMessage,
+      );
+      await chatsMainPageFirst.exitPinMessagesContainer();
+    });
+
+    await test.step("Validate remote user can unpin a message from context menu", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
+      await chatsMainPageSecond.selectContextMenuOption("Unpin Message");
+      await chatsMainPageSecond.validateLastRemoteMessageIsNotPinned();
+      await chatsMainPageSecond.validateLastLocalMessageIsNotPinned();
+    });
+
+    await test.step("Send a third message from second user to first user", async () => {
+      await chatsMainPageSecond.sendMessage(thirdMessage);
+      await chatsMainPageSecond.validateLastMessageLocal(thirdMessage);
+      await chatsMainPageFirst.validateLastMessageRemote(thirdMessage);
+    });
+
+    await test.step("Validate local user can pin a message", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectContextMenuOption("Pin Message");
+    });
+
+    await test.step("Validate local user can unpin a message from unpin button", async () => {
+      await chatsMainPageSecond.openPinMessagesContainer();
+      await chatsMainPageSecond.clickOnUnpinMessageButton(thirdMessage);
+      await chatsMainPageSecond.validateLastLocalMessageIsNotPinned();
+      await chatsMainPageFirst.validateLastRemoteMessageIsNotPinned();
+    });
+
+    await test.step("Send a fourth message from first user to second user", async () => {
+      await chatsMainPageFirst.sendMessage(fourthMessage);
+      await chatsMainPageFirst.validateLastMessageLocal(fourthMessage);
+      await chatsMainPageSecond.validateLastMessageRemote(fourthMessage);
+    });
+
+    await test.step("Validate that remote user can pin a message", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageReceived();
+      await chatsMainPageSecond.selectContextMenuOption("Pin Message");
+    });
+
+    await test.step("Validate that remote user can unpin a message from unpin button", async () => {
+      await chatsMainPageSecond.openPinMessagesContainer();
+      await chatsMainPageSecond.clickOnUnpinMessageButton(fourthMessage);
+      await chatsMainPageSecond.validateLastRemoteMessageIsNotPinned();
+      await chatsMainPageFirst.validateLastLocalMessageIsNotPinned();
+    });
+
+    await test.step("Validate after all messages are unpinned, Pinned Messages container is empty again on both sides", async () => {
+      await chatsMainPageSecond.openPinMessagesContainer();
+      await expect(chatsMainPageSecond.pinnedMessagesEmpty).toBeVisible();
+      await expect(chatsMainPageSecond.pinnedMessagesEmpty).toHaveText(
+        "There are no pinned messages in this chat",
+      );
+      await chatsMainPageSecond.exitPinMessagesContainer();
+      await chatsMainPageFirst.openPinMessagesContainer();
+      await expect(chatsMainPageFirst.pinnedMessagesEmpty).toBeVisible();
+      await expect(chatsMainPageFirst.pinnedMessagesEmpty).toHaveText(
+        "There are no pinned messages in this chat",
+      );
+      await chatsMainPageFirst.exitPinMessagesContainer();
+    });
   });
 
   test("B22 and B50 - Reaction Tests", async ({
