@@ -220,8 +220,11 @@ export class FilesPage extends MainPage {
   }
 
   async uploadFile(filePath: string) {
+    const fileChooserPromise = this.page.waitForEvent("filechooser");
     await this.clickOnUploadFileButton();
-    await this.uploadFileInput.setInputFiles(filePath);
+    const fileChooser = await fileChooserPromise;
+    await fileChooser.setFiles(filePath);
+
     if (this.viewport === "mobile-chrome") {
       await this.uploadFileButton.click();
     }
