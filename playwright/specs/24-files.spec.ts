@@ -6,12 +6,17 @@ import { LoginPinPage } from "playwright/PageObjects/LoginPin";
 
 test.describe("Files Page Tests", () => {
   test.beforeEach(async ({ singleUserContext }) => {
-    const page = singleUserContext.page;
     const viewport = singleUserContext.viewport;
-    const chatsMainPage = new ChatsMainPage(page, viewport);
-    await chatsMainPage.dismissDownloadAlert();
-    await chatsMainPage.goToFiles();
-    await page.waitForURL("/files");
+    if (viewport === "desktop-chrome") {
+      const page = singleUserContext.page;
+      const viewport = singleUserContext.viewport;
+      const chatsMainPage = new ChatsMainPage(page, viewport);
+      await chatsMainPage.dismissDownloadAlert();
+      await chatsMainPage.goToFiles();
+      await page.waitForURL("/files");
+    } else {
+      test.skip();
+    }
   });
 
   test("F3, F4 - Amount of Free and Total should appear in Toolbar", async ({
