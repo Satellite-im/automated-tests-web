@@ -17,6 +17,7 @@ export class CallScreen extends MainPage {
   readonly callStreamButton: Locator;
   readonly callVideoButton: Locator;
   readonly callVolumeMixerButton: Locator;
+  readonly localUserLiveLabel: Locator;
   readonly localUserVideo: Locator;
   readonly participantDeafenButton: Locator;
   readonly participantMuteButton: Locator;
@@ -59,6 +60,7 @@ export class CallScreen extends MainPage {
       "button-call-volume-mixer",
     );
     this.localUserVideo = this.callScreen.getByTestId("local-user-video");
+    this.localUserLiveLabel = this.localUserVideo.locator(".live-label");
     this.participantDeafenButton = this.callScreen.getByTestId(
       "button-participant-deafen",
     );
@@ -270,5 +272,15 @@ export class CallScreen extends MainPage {
     await this.callParticipantConnecting.waitFor({ state: "detached" });
     await this.callParticipantShaking.waitFor({ state: "detached" });
     await this.callParticipantLoading.waitFor({ state: "detached" });
+  }
+
+  async validateLocalVideoStreamIsVisible(stream: boolean = false) {
+    await expect(this.localUserVideo).toBeVisible();
+    if (stream) {
+      expect(this.localUserLiveLabel).toBeVisible;
+    }
+  }
+  async validateRemoteVideoStreamIsVisible() {
+    await expect(this.remoteUserVideo).toBeVisible();
   }
 }
