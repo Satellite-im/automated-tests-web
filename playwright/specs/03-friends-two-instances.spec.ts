@@ -178,6 +178,29 @@ test.describe("Two instances tests - Friends and Chats", () => {
       await friendsScreenFirst.goToRequestList();
       await friendsScreenFirst.validateIncomingRequestExists();
     });
+
+    await test.step("Accept incoming request after being unblocked", async () => {
+      await friendsScreenFirst.acceptFriendRequest(usernameTwo);
+      await friendsScreenFirst.goToAllFriendsList();
+      await friendsScreenFirst.chatWithFriend(usernameTwo);
+
+      await friendsScreenSecond.goToRequestList();
+      await friendsScreenSecond.validateNoOutgoingRequestsExist();
+      await friendsScreenSecond.goToAllFriendsList();
+      await friendsScreenSecond.chatWithFriend(username);
+    });
+
+    await test.step("Send message to another user after being unblocked", async () => {
+      await chatsMainPageFirst.sendMessage("Hello from the first user");
+      await chatsMainPageFirst.validateMessageIsSent(
+        "Hello from the first user",
+      );
+    });
+    await test.step("Validate messages from unblocked user care received", async () => {
+      await chatsMainPageSecond.validateMessageIsReceived(
+        "Hello from the first user",
+      );
+    });
   });
 
   test("H7, H20 - User can send a friend request and remote user can deny it", async ({
@@ -1247,115 +1270,132 @@ test.describe("Two instances tests - Friends and Chats", () => {
     let remoteMessageReactions: reactionContainer;
     let expectedReactions: reactionContainer;
 
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
     // B22 - Clicking React should open up emoji menu - Not working currently
     // B50 - Number of reactions should be displayed underneath message
 
     // Send message from second user to first user
-    const firstMessage = "this is a first test message";
-    await chatsMainPageSecond.sendMessage(firstMessage);
-    await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
-    await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
+    await test.step("Send a message from second user to first user", async () => {
+      const firstMessage = "this is a first test message";
+      await chatsMainPageSecond.sendMessage(firstMessage);
+      await chatsMainPageSecond.validateLastMessageLocal(firstMessage);
+      await chatsMainPageFirst.validateLastMessageRemote(firstMessage);
+    });
 
-    // Local user can react to message sent - React to message sent with 👍
-    expectedReactions = [
-      { emoji: "👍", count: "1" },
-      { emoji: "❤️", count: "1" },
-    ];
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
-    await chatsMainPageSecond.selectDefaultReaction("👍");
-    await chatsMainPageSecond.validateReactionExistsInLocalMessage("👍");
-    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("👍");
+    await test.step("Local user can react to message sent - React to message sent with 👍", async () => {
+      expectedReactions = [
+        { emoji: "👍", count: "1" },
+        { emoji: "❤️", count: "1" },
+      ];
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectDefaultReaction("👍");
+      await chatsMainPageSecond.validateReactionExistsInLocalMessage("👍");
+      await chatsMainPageFirst.validateReactionExistsInRemoteMessage("👍");
+    });
 
-    // Local user can react to message sent - React to message sent with ❤️
-    await chatsMainPageSecond.openContextMenuOnLastMessageSent();
-    await chatsMainPageSecond.selectDefaultReaction("❤️");
-    await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
-    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
+    await test.step("Local user can react to message sent - React to message sent with ❤️", async () => {
+      await chatsMainPageSecond.openContextMenuOnLastMessageSent();
+      await chatsMainPageSecond.selectDefaultReaction("❤️");
+      await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
+      await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
+    });
 
-    // Validate that message reactions from message sent are displayed in local side
-    localMessageReactions =
-      await chatsMainPageSecond.getLastLocalReactionsContainer();
-    expect(localMessageReactions).toEqual(expectedReactions);
+    await test.step("Validate that message reactions from message sent are displayed in local and remote sides", async () => {
+      localMessageReactions =
+        await chatsMainPageSecond.getLastLocalReactionsContainer();
+      expect(localMessageReactions).toEqual(expectedReactions);
 
-    // Validate that message reactions from message received are displayed on remote side
-    remoteMessageReactions =
-      await chatsMainPageFirst.getLastRemoteReactionsContainer();
-    expect(remoteMessageReactions).toEqual(expectedReactions);
+      remoteMessageReactions =
+        await chatsMainPageFirst.getLastRemoteReactionsContainer();
+      expect(remoteMessageReactions).toEqual(expectedReactions);
+    });
 
-    // Remote user can react to message received - React to message received with ❤️
-    expectedReactions = [
-      { emoji: "👍", count: "1" },
-      { emoji: "❤️", count: "2" },
-      { emoji: "😂", count: "1" },
-    ];
-    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
-    await chatsMainPageFirst.selectDefaultReaction("❤️");
-    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
-    await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
+    await test.step("Remote user can react to message received - Reacto to message received with ❤️", async () => {
+      expectedReactions = [
+        { emoji: "👍", count: "1" },
+        { emoji: "❤️", count: "2" },
+        { emoji: "😂", count: "1" },
+      ];
+      await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+      await chatsMainPageFirst.selectDefaultReaction("❤️");
+      await chatsMainPageFirst.validateReactionExistsInRemoteMessage("❤️");
+      await chatsMainPageSecond.validateReactionExistsInLocalMessage("❤️");
+    });
 
-    // Remote user can react to message received - React to message received with 😂
-    await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
-    await chatsMainPageFirst.selectDefaultReaction("😂");
-    await chatsMainPageFirst.validateReactionExistsInRemoteMessage("😂");
-    await chatsMainPageSecond.validateReactionExistsInLocalMessage("😂");
+    await test.step("Remote user can react to message received - React to message received with 😂", async () => {
+      await chatsMainPageFirst.openContextMenuOnLastMessageReceived();
+      await chatsMainPageFirst.selectDefaultReaction("😂");
+      await chatsMainPageFirst.validateReactionExistsInRemoteMessage("😂");
+      await chatsMainPageSecond.validateReactionExistsInLocalMessage("😂");
+    });
 
-    // Validate that message reactions from remote user are updated on remote side
-    remoteMessageReactions =
-      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+    await test.step("Validate that message reactions from remote user are displayed in local and remote sides", async () => {
+      remoteMessageReactions =
+        await chatsMainPageFirst.getLastRemoteReactionsContainer();
 
-    expect(remoteMessageReactions).toEqual(expectedReactions);
+      expect(remoteMessageReactions).toEqual(expectedReactions);
 
-    // Validate that message reactions are updated in local side
-    localMessageReactions =
-      await chatsMainPageSecond.getLastLocalReactionsContainer();
-    expect(localMessageReactions).toEqual(expectedReactions);
+      localMessageReactions =
+        await chatsMainPageSecond.getLastLocalReactionsContainer();
+      expect(localMessageReactions).toEqual(expectedReactions);
+    });
 
-    // Remote user can remove reaction from message received - Remove reaction from message received with ❤️
-    await chatsMainPageFirst.removeReactionInRemoteMessage("😂");
-    await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage("😂");
-    await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage("😂");
-    expectedReactions = [
-      { emoji: "👍", count: "1" },
-      { emoji: "❤️", count: "2" },
-    ];
+    await test.step("Remote user can remove reaction from message received - Remove reaction from message received with ❤️", async () => {
+      await chatsMainPageFirst.removeReactionInRemoteMessage("😂");
+      await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage(
+        "😂",
+      );
+      await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage(
+        "😂",
+      );
+      expectedReactions = [
+        { emoji: "👍", count: "1" },
+        { emoji: "❤️", count: "2" },
+      ];
+    });
 
-    // Validate that message reactions from remote message are updated on remote side
-    remoteMessageReactions =
-      await chatsMainPageFirst.getLastRemoteReactionsContainer();
+    await test.step("Validate that message reactions from remote message are updated on remote and local side", async () => {
+      remoteMessageReactions =
+        await chatsMainPageFirst.getLastRemoteReactionsContainer();
 
-    expect(remoteMessageReactions).toEqual(expectedReactions);
+      expect(remoteMessageReactions).toEqual(expectedReactions);
 
-    // Validate that message reactions from sent message are updated on local side
-    localMessageReactions =
-      await chatsMainPageSecond.getLastLocalReactionsContainer();
-    expect(localMessageReactions).toEqual(expectedReactions);
+      localMessageReactions =
+        await chatsMainPageSecond.getLastLocalReactionsContainer();
+      expect(localMessageReactions).toEqual(expectedReactions);
+    });
 
-    // Local user can remove reaction from message sent - Remove reaction from message received with ❤️
-    await chatsMainPageSecond.removeReactionInLocalMessage("👍");
-    await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage("👍");
-    await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage("👍");
-    expectedReactions = [{ emoji: "❤️", count: "2" }];
+    await test.step("Local user can remove reaction from message sent - Remove reaction from message received with ❤️", async () => {
+      await chatsMainPageSecond.removeReactionInLocalMessage("👍");
+      await chatsMainPageSecond.validateReactionDoesNotExistInLocalMessage(
+        "👍",
+      );
+      await chatsMainPageFirst.validateReactionDoesNotExistInRemoteMessage(
+        "👍",
+      );
+      expectedReactions = [{ emoji: "❤️", count: "2" }];
+    });
 
-    // Validate that message reactions from sent message are updated on local side
-    localMessageReactions =
-      await chatsMainPageSecond.getLastLocalReactionsContainer();
+    await test.step("Validate that message reactions from sent message are updated on local and remote side", async () => {
+      localMessageReactions =
+        await chatsMainPageSecond.getLastLocalReactionsContainer();
 
-    expect(localMessageReactions).toEqual(expectedReactions);
+      expect(localMessageReactions).toEqual(expectedReactions);
 
-    // Validate that message reactions from received message are updated on remote side
-    remoteMessageReactions =
-      await chatsMainPageFirst.getLastRemoteReactionsContainer();
-    expect(remoteMessageReactions).toEqual(expectedReactions);
+      remoteMessageReactions =
+        await chatsMainPageFirst.getLastRemoteReactionsContainer();
+      expect(remoteMessageReactions).toEqual(expectedReactions);
+    });
   });
 
   test("B51 - Chats Markdowns Tests", async ({
@@ -1374,147 +1414,161 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const settingsProfileSecond = new SettingsProfile(page2, viewport);
     const settingsMessagesSecond = new SettingsMessages(page2, viewport);
 
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Go to Settings, then Settings Messages and disable convert to emoji functionality
-    await chatsMainPageSecond.goToSettings();
-    await page2.waitForURL("/settings/profile");
-    await settingsProfileSecond.buttonMessages.click();
-    await page2.waitForURL("/settings/messages");
-    await settingsMessagesSecond.convertToEmojiSectionSlider.click();
-    await expect(
-      settingsMessagesSecond.convertToEmojiSectionCheckbox,
-    ).not.toBeChecked();
-    await settingsMessagesSecond.goToChat();
-    await page2.waitForURL("/chat");
+    await test.step("Go to Settings, then Settings Messages and disable convert to emoji functionality", async () => {
+      await chatsMainPageSecond.goToSettings();
+      await page2.waitForURL("/settings/profile");
+      await settingsProfileSecond.buttonMessages.click();
+      await page2.waitForURL("/settings/messages");
+      await settingsMessagesSecond.convertToEmojiSectionSlider.click();
+      await expect(
+        settingsMessagesSecond.convertToEmojiSectionCheckbox,
+      ).not.toBeChecked();
+      await settingsMessagesSecond.goToChat();
+      await page2.waitForURL("/chat");
+    });
 
-    // Send message with *test1* from second user to first user - Italic
-    await chatsMainPageSecond.sendMessage("*test1*");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test1", [
-      "Italic",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test1", [
-      "Italic",
-    ]);
+    await test.step("Send message with *test1* from second user to first user - Italic", async () => {
+      await chatsMainPageSecond.sendMessage("*test1*");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test1", [
+        "Italic",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test1", [
+        "Italic",
+      ]);
+    });
 
-    // Send message _test2_ from second user to first user - Italic
-    await chatsMainPageSecond.sendMessage("_test2_");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test2", [
-      "Italic",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test2", [
-      "Italic",
-    ]);
+    await test.step("Send message _test2_ from second user to first user - Italic", async () => {
+      await chatsMainPageSecond.sendMessage("_test2_");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test2", [
+        "Italic",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test2", [
+        "Italic",
+      ]);
+    });
 
-    // Send message **test3** from second user to first user - Bold
-    await chatsMainPageSecond.sendMessage("**test3**");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test3", [
-      "Bold",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test3", [
-      "Bold",
-    ]);
+    await test.step("Send message **test3** from second user to first user - Bold", async () => {
+      await chatsMainPageSecond.sendMessage("**test3**");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test3", [
+        "Bold",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test3", [
+        "Bold",
+      ]);
+    });
 
-    // Send message __test4__ from second user to first user - Bold
-    await chatsMainPageSecond.sendMessage("__test4__");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test4", [
-      "Bold",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test4", [
-      "Bold",
-    ]);
+    await test.step("Send message __test4__ from second user to first user - Bold", async () => {
+      await chatsMainPageSecond.sendMessage("__test4__");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test4", [
+        "Bold",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test4", [
+        "Bold",
+      ]);
+    });
 
-    // Send message ~test5~ from second user to first user - Strikethroug
-    await chatsMainPageSecond.sendMessage("~test5~");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test5", [
-      "Strikethrough",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test5", [
-      "Strikethrough",
-    ]);
+    await test.step("Send message ~test5~ from second user to first user - Strikethrough", async () => {
+      await chatsMainPageSecond.sendMessage("~test5~");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test5", [
+        "Strikethrough",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test5", [
+        "Strikethrough",
+      ]);
+    });
 
-    // Send message ~~test6~~ from second user to first user - Strikethroug
-    await chatsMainPageSecond.sendMessage("~~test6~~");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test6", [
-      "Strikethrough",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test6", [
-      "Strikethrough",
-    ]);
+    await test.step("Send message ~~test6~~ from second user to first user - Strikethrough", async () => {
+      await chatsMainPageSecond.sendMessage("~~test6~~");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test6", [
+        "Strikethrough",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test6", [
+        "Strikethrough",
+      ]);
+    });
 
-    // Send message ~_test7_~ from second user to first user - Strikethrough
-    await chatsMainPageSecond.sendMessage("~_test7_~");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test7", [
-      "Strikethrough",
-      "Italic",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test7", [
-      "Strikethrough",
-      "Italic",
-    ]);
+    await test.step("Send message ~_test7_~ from second user to first user - Strikethrough", async () => {
+      await chatsMainPageSecond.sendMessage("~_test7_~");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test7", [
+        "Strikethrough",
+        "Italic",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test7", [
+        "Strikethrough",
+        "Italic",
+      ]);
+    });
 
-    // Send message _~test8~_ from second user to first user - Strikethrough
-    await chatsMainPageSecond.sendMessage("_~test8~_");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test8", [
-      "Italic",
-      "Strikethrough",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test8", [
-      "Italic",
-      "Strikethrough",
-    ]);
+    await test.step("Send message _~test8~_ from second user to first user - Strikethrough", async () => {
+      await chatsMainPageSecond.sendMessage("_~test8~_");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test8", [
+        "Italic",
+        "Strikethrough",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test8", [
+        "Italic",
+        "Strikethrough",
+      ]);
+    });
 
-    // Send message ~*test9*~ from second user to first user - Strikethrough
-    await chatsMainPageSecond.sendMessage("~*test9*~");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test9", [
-      "Strikethrough",
-      "Italic",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test9", [
-      "Strikethrough",
-      "Italic",
-    ]);
+    await test.step("Send message ~*test9*~ from second user to first user - Strikethrough", async () => {
+      await chatsMainPageSecond.sendMessage("~*test9*~");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test9", [
+        "Strikethrough",
+        "Italic",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test9", [
+        "Strikethrough",
+        "Italic",
+      ]);
+    });
 
-    // Send message *~test10*~ from second user to first user - Strikethrough
-    await chatsMainPageSecond.sendMessage("*~test10~*");
-    await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test10", [
-      "Italic",
-      "Strikethrough",
-    ]);
-    await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test10", [
-      "Italic",
-      "Strikethrough",
-    ]);
+    await test.step("Send message *~test10*~ from second user to first user - Strikethrough", async () => {
+      await chatsMainPageSecond.sendMessage("*~test10~*");
+      await chatsMainPageSecond.validateMarkdownFromLastMessageLocal("test10", [
+        "Italic",
+        "Strikethrough",
+      ]);
+      await chatsMainPageFirst.validateMarkdownFromLastMessageRemote("test10", [
+        "Italic",
+        "Strikethrough",
+      ]);
+    });
 
-    // Send message with hyperlink like www.google.com
-    await chatsMainPageSecond.sendMessage("www.google.com");
-    await chatsMainPageSecond.validateHyperlinkFromLastMessageLocal(
-      "www.google.com",
-      "http://www.google.com",
-    );
-    await chatsMainPageFirst.validateHyperlinkFromLastMessageRemote(
-      "www.google.com",
-      "http://www.google.com",
-    );
+    await test.step("Send message with hyperlink like www.google.com", async () => {
+      await chatsMainPageSecond.sendMessage("www.google.com");
+      await chatsMainPageSecond.validateHyperlinkFromLastMessageLocal(
+        "www.google.com",
+        "http://www.google.com",
+      );
+      await chatsMainPageFirst.validateHyperlinkFromLastMessageRemote(
+        "www.google.com",
+        "http://www.google.com",
+      );
+    });
 
-    // Send message with hyperlink like https://www.satellite.im
-    await chatsMainPageSecond.sendMessage("https://www.satellite.im");
-    await chatsMainPageSecond.validateHyperlinkFromLastMessageLocal(
-      "https://www.satellite.im",
-      "https://www.satellite.im",
-    );
-    await chatsMainPageFirst.validateHyperlinkFromLastMessageRemote(
-      "https://www.satellite.im",
-      "https://www.satellite.im",
-    );
+    await test.step("Send message with hyperlink like https://www.satellite.im", async () => {
+      await chatsMainPageSecond.sendMessage("https://www.satellite.im");
+      await chatsMainPageSecond.validateHyperlinkFromLastMessageLocal(
+        "https://www.satellite.im",
+        "https://www.satellite.im",
+      );
+      await chatsMainPageFirst.validateHyperlinkFromLastMessageRemote(
+        "https://www.satellite.im",
+        "https://www.satellite.im",
+      );
+    });
   });
 
   test("B52 and B53 - Sending and receiving files tests", async ({
@@ -1530,67 +1584,78 @@ test.describe("Two instances tests - Friends and Chats", () => {
     const friendsScreenSecond = new FriendsScreen(page2, viewport);
     const chatsMainPageFirst = new ChatsMainPage(page1, viewport);
     const chatsMainPageSecond = new ChatsMainPage(page2, viewport);
-
-    // Setup accounts for testing
-    await setupChats(
-      chatsMainPageFirst,
-      chatsMainPageSecond,
-      context1,
-      friendsScreenFirst,
-      friendsScreenSecond,
-      page1,
-    );
-
     let fileLocations = [
       "playwright/assets/logo.jpg",
       "playwright/assets/test.txt",
     ];
 
-    await chatsMainPageSecond.uploadFiles(fileLocations);
-    await chatsMainPageSecond.validateFilePreviews(fileLocations);
-    await chatsMainPageSecond.sendMessage("bunch of files");
+    await test.step("Setup accounts for testing", async () => {
+      await setupChats(
+        chatsMainPageFirst,
+        chatsMainPageSecond,
+        context1,
+        friendsScreenFirst,
+        friendsScreenSecond,
+        page1,
+      );
+    });
 
-    // Validate file sent is displayed on local side
-    await chatsMainPageSecond.validateFileEmbedInChat("test.txt", "14 B", true);
+    await test.step("Send files from second user to first user", async () => {
+      await chatsMainPageSecond.uploadFiles(fileLocations);
+      await chatsMainPageSecond.validateFilePreviews(fileLocations);
+      await chatsMainPageSecond.sendMessage("bunch of files");
+    });
 
-    // Validate image sent is displayed on local side
-    await chatsMainPageSecond.validateImageEmbedInChat(
-      "logo.jpg",
-      "7.75 kB",
-      true,
-    );
+    await test.step("Validate files and images sent are displayed on local side", async () => {
+      await chatsMainPageSecond.validateFileEmbedInChat(
+        "test.txt",
+        "14 B",
+        true,
+      );
 
-    // Validate file received is displayed in chat on remote side
-    await chatsMainPageFirst.validateFileEmbedInChat("test.txt", "14 B", false);
+      await chatsMainPageSecond.validateImageEmbedInChat(
+        "logo.jpg",
+        "7.75 kB",
+        true,
+      );
+    });
 
-    // Validate image received is displayed in chat on remote side
-    await chatsMainPageFirst.validateImageEmbedInChat(
-      "logo.jpg",
-      "7.75 kB",
-      false,
-    );
+    await test.step("Validate files and images sent are displayed on remote side", async () => {
+      await chatsMainPageFirst.validateFileEmbedInChat(
+        "test.txt",
+        "14 B",
+        false,
+      );
+      await chatsMainPageFirst.validateImageEmbedInChat(
+        "logo.jpg",
+        "7.75 kB",
+        false,
+      );
+    });
 
-    // B53 - User can download media from chat by clicking download
-    // Download last files sent and received
-    await chatsMainPageSecond.downloadFileLastMessage("test.txt", true);
-    await chatsMainPageSecond.validateDownloadedFile("test.txt");
-    await chatsMainPageFirst.downloadFileLastMessage("test.txt", false);
-    await chatsMainPageFirst.validateDownloadedFile("test.txt");
+    await test.step("B53 - Users remote and local can download files from chat by clicking download", async () => {
+      await chatsMainPageSecond.downloadFileLastMessage("test.txt", true);
+      await chatsMainPageSecond.validateDownloadedFile("test.txt");
+      await chatsMainPageFirst.downloadFileLastMessage("test.txt", false);
+      await chatsMainPageFirst.validateDownloadedFile("test.txt");
+    });
 
-    // Download last images sent and received
-    await chatsMainPageSecond.downloadFileLastMessage("logo.jpg", true);
-    await chatsMainPageSecond.validateDownloadedFile("logo.jpg");
-    await chatsMainPageFirst.downloadFileLastMessage("logo.jpg", false);
-    await chatsMainPageFirst.validateDownloadedFile("logo.jpg");
+    await test.step("B53 - Users remote and local can download images from chat by clicking download", async () => {
+      await chatsMainPageSecond.downloadFileLastMessage("logo.jpg", true);
+      await chatsMainPageSecond.validateDownloadedFile("logo.jpg");
+      await chatsMainPageFirst.downloadFileLastMessage("logo.jpg", false);
+      await chatsMainPageFirst.validateDownloadedFile("logo.jpg");
+    });
 
-    // B52 - User should be able to click on image in chat to see image preview
-    await chatsMainPageSecond.openImagePreviewLastImageSent();
-    await chatsMainPageSecond.validateImagePreviewIsVisible();
-    await chatsMainPageSecond.closeImagePreview();
+    await test.step("B52 - Users remote and local should be able to click on image in chat to see image preview", async () => {
+      await chatsMainPageSecond.openImagePreviewLastImageSent();
+      await chatsMainPageSecond.validateImagePreviewIsVisible();
+      await chatsMainPageSecond.closeImagePreview();
 
-    await chatsMainPageFirst.openImagePreviewLastImageReceived();
-    await chatsMainPageFirst.validateImagePreviewIsVisible();
-    await chatsMainPageFirst.closeImagePreview();
+      await chatsMainPageFirst.openImagePreviewLastImageReceived();
+      await chatsMainPageFirst.validateImagePreviewIsVisible();
+      await chatsMainPageFirst.closeImagePreview();
+    });
   });
 
   test("B66 - Sending and receiving emojis and emoji picker tests", async ({
