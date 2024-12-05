@@ -18,6 +18,7 @@ test.describe("Chats Sidebar Tests", () => {
     const chatsMainPage = new ChatsMainPage(page, viewport);
     const createGroupModal = new CreateGroupModal(page, viewport);
 
+    await chatsMainPage.clickOnShowSidebarIfClosed();
     await chatsMainPage.clickOnCreateGroupChat();
 
     await expect(createGroupModal.createGroupLabelGroupName).toBeVisible();
@@ -41,6 +42,7 @@ test.describe("Chats Sidebar Tests", () => {
     const viewport = singleUserContext.viewport;
     const chatsMainPage = new ChatsMainPage(page, viewport);
 
+    await chatsMainPage.clickOnShowSidebarIfClosed();
     await chatsMainPage.buttonCreateGroupChat.hover();
     await chatsMainPage.validateTooltipAttribute(
       '[data-cy="button-create-group-chat"]',
@@ -55,32 +57,26 @@ test.describe("Chats Sidebar Tests", () => {
     const viewport = singleUserContext.viewport;
     const chatsMainPage = new ChatsMainPage(page, viewport);
 
-    // Hover on each button and validate the tooltip
-    // await chatsMainPage.buttonWallet.hover();
-    // await chatsMainPage.validateTooltipAttribute(
-    //   '[data-cy="button-Wallet"]',
-    //   "Wallet",
-    // );
-
-    await chatsMainPage.buttonFiles.hover();
+    await chatsMainPage.clickOnShowSidebarIfClosed();
+    await chatsMainPage.buttonFiles.first().hover();
     await chatsMainPage.validateTooltipAttribute(
       '[data-cy="button-Files"]',
       "Files",
     );
 
-    await chatsMainPage.buttonChat.hover();
+    await chatsMainPage.buttonChat.first().hover();
     await chatsMainPage.validateTooltipAttribute(
       '[data-cy="button-Chat"]',
       "Chat",
     );
 
-    await chatsMainPage.buttonFriends.hover();
+    await chatsMainPage.buttonFriends.first().hover();
     await chatsMainPage.validateTooltipAttribute(
       '[data-cy="button-Friends"]',
       "Friends",
     );
 
-    await chatsMainPage.buttonSettings.hover();
+    await chatsMainPage.buttonSettings.first().hover();
     await chatsMainPage.validateTooltipAttribute(
       '[data-cy="button-Settings"]',
       "Settings",
@@ -94,6 +90,7 @@ test.describe("Chats Sidebar Tests", () => {
     const viewport = singleUserContext.viewport;
     const chatsMainPage = new ChatsMainPage(page, viewport);
 
+    await chatsMainPage.clickOnShowSidebarIfClosed();
     await chatsMainPage.buttonHideSidebar.click();
 
     await chatsMainPage.buttonHideSidebar.waitFor({ state: "detached" });
@@ -143,6 +140,7 @@ test.describe("Chats Sidebar Tests", () => {
     const viewport = singleUserContext.viewport;
     const chatsMainPage = new ChatsMainPage(page, viewport);
 
+    await chatsMainPage.clickOnShowSidebarIfClosed();
     await chatsMainPage.inputSidebarSearch.focus();
 
     await expect(chatsMainPage.inputSidebarSearchContainer).toHaveCSS(
