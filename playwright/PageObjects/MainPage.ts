@@ -434,7 +434,7 @@ export default class MainPage {
     // Validate the downloaded file
     console.log(`Downloaded file saved at: ${filePath}`);
     expect(fs.existsSync(filePath)).toBeTruthy(); // Check file exists
-    expect([".exe", ".dmg", ".deb", ".apk"]).toContain(path.extname(fileName)); // Validate file extension
+    expect([".msi", ".dmg", ".deb", ".apk"]).toContain(path.extname(fileName)); // Validate file extension
 
     // Clean up after test
     if (fs.existsSync(filePath)) {
