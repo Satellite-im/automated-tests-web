@@ -1,8 +1,10 @@
 import { expect, type Locator, type Page } from "@playwright/test";
-
+const fs = require("fs");
+const path = require("path");
 export default class MainPage {
   readonly buttonChat: Locator;
   readonly buttonDismissInstallAlert: Locator;
+  readonly buttonDownloadInstallAlert: Locator;
   readonly buttonFiles: Locator;
   readonly buttonFriends: Locator;
   readonly buttonHambugerMobile: Locator;
@@ -30,6 +32,8 @@ export default class MainPage {
   readonly favoriteProfileStatusIndicator: Locator;
   readonly favoritesLabel: Locator;
   readonly installAlert: Locator;
+  readonly installAlertHeaderText: Locator;
+  readonly installAlertDescriptionText: Locator;
   readonly inputSidebarSearch: Locator;
   readonly inputSidebarSearchContainer: Locator;
   readonly navigationBar: Locator;
@@ -50,6 +54,10 @@ export default class MainPage {
       .locator("#install-banner")
       .getByRole("button")
       .first();
+    this.buttonDownloadInstallAlert = this.page
+      .locator("#install-banner")
+      .getByRole("button")
+      .last();
     this.buttonFiles = this.page.getByTestId("button-Files");
     this.buttonFriends = this.page.getByTestId("button-Friends");
     this.buttonHambugerMobile = this.page.getByTestId("button-show-controls");
@@ -92,6 +100,10 @@ export default class MainPage {
       this.favoriteProfilePicture.getByTestId("status-indicator");
     this.favoritesLabel = this.page.getByTestId("label-favorites");
     this.installAlert = this.page.locator("#install-banner");
+    this.installAlertHeaderText = this.page.getByText("Install Uplink");
+    this.installAlertDescriptionText = this.page.getByText(
+      "Install our app for a better",
+    );
     this.inputSidebarSearch = this.page
       .getByTestId("input-sidebar-search")
       .locator("input");
@@ -393,5 +405,43 @@ export default class MainPage {
     expect(text).toEqual(expectedText);
     expect(timestamp).toEqual("just now");
     await expect(profilePictureGroup).toBeVisible();
+  }
+
+  async validateInstallBanner() {
+    await expect(this.installAlertHeaderText).toHaveText("Install Uplink");
+    await expect(this.installAlertDescriptionText).toHaveText(
+      "Install our app for a better experience",
+    );
+    await expect(this.buttonDownloadInstallAlert).toHaveText(
+      /MacOS|Linux|Windows|Android|iOS|Other/,
+    );
+  }
+
+  async validateInstallerIsDownloaded() {
+    const downloadPath = path.join(__dirname, "downloads");
+    if (!fs.existsSync(downloadPath)) {
+      fs.mkdirSync(downloadPath);
+    }
+
+    const downloadPromise = this.page.waitForEvent("download");
+    await this.buttonDownloadInstallAlert.click();
+    const download = await downloadPromise;
+
+    const fileName = download.suggestedFilename(); // Get the suggested filename
+    const filePath = path.join(downloadPath, fileName);
+    await download.saveAs(filePath); // Save the file to the designated path
+
+    // Validate the downloaded file
+    console.log(`Downloaded file saved at: ${filePath}`);
+    expect(fs.existsSync(filePath)).toBeTruthy(); // Check file exists
+    expect([".exe", ".dmg", ".deb", ".apk"]).toContain(path.extname(fileName)); // Validate file extension
+
+    // Clean up after test
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath); // Delete the file
+    }
+
+    // Validate install banner is gone
+    await this.installAlert.waitFor({ state: "detached" });
   }
 }

@@ -588,4 +588,32 @@ test.describe("Create Account and Login Tests", () => {
       expect(recoverySeedFile).toEqual(settingProfilePhrase);
     });
   });
+
+  test("A18 - Install Banner validations - Download installer", async ({
+    enterPinUserContext,
+  }) => {
+    const page = enterPinUserContext.page;
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+
+    await test.step("Download installer banner contains expected information", async () => {
+      await createOrImport.validateInstallBanner();
+    });
+
+    await test.step("User can download installer from button and banner is hidden", async () => {
+      await createOrImport.validateInstallerIsDownloaded();
+    });
+  });
+
+  test("A19 - Install Banner validations - Dismiss banner", async ({
+    enterPinUserContext,
+  }) => {
+    const page = enterPinUserContext.page;
+    const viewport = enterPinUserContext.viewport;
+    const createOrImport = new CreateOrImportPage(page, viewport);
+
+    await test.step("User can dismiss installer banner and then banner is hidden", async () => {
+      await createOrImport.dismissDownloadAlert();
+    });
+  });
 });
