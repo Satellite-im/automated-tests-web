@@ -2393,6 +2393,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
 
     await test.step("Send a message to the group", async () => {
+      await chatsMainPageThird.goToSidebarChat("Group Chat 1");
       await chatsMainPageThird.sendMessage("Hello Group");
       await chatsMainPageThird.validateMessageIsSent("Hello Group");
       await chatsMainPageFirst.goToSidebarChat("Group Chat 1");
@@ -2402,6 +2403,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
 
     await test.step("Validate group chat sidebar preview is updated with message received on all users", async () => {
+      await chatsMainPageThird.clickOnShowSidebarIfClosed();
       await chatsMainPageThird.validateChatPreviewMessageTextGroup(
         "Group Chat 1",
         "Hello Group",
