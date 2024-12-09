@@ -80,9 +80,8 @@ export class FilesPage extends MainPage {
   async clickOnUploadFileButton() {
     if (this.viewport === "mobile-chrome") {
       await this.clickOnHamburgerMobileButton();
-    } else {
-      await this.uploadFileButton.click();
     }
+    await this.uploadFileButton.click();
   }
 
   async createNewFolder(folderName: string) {
@@ -101,6 +100,10 @@ export class FilesPage extends MainPage {
 
   async getFolderByName(folderName) {
     return this.page.locator(`[data-cy="folder-${folderName}"]`);
+  }
+
+  async goBackToPreviousFolder() {
+    await this.goBackButton.click();
   }
 
   async navigateToFolder(folderName: string) {
@@ -224,13 +227,26 @@ export class FilesPage extends MainPage {
     await this.clickOnUploadFileButton();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(filePath);
-
-    if (this.viewport === "mobile-chrome") {
-      await this.uploadFileButton.click();
-    }
     const filename = await this.getFileName(filePath);
     await this.page
       .locator(`[data-cy="file-${filename}"]`)
       .waitFor({ state: "attached" });
+  }
+
+  // Methods for validating sidebar tree
+  async expandTreeFolder(folderName: string) {
+    const folder = this.page.locator(`[data-cy="tree-item-${folderName}"]`);
+    await folder.click();
+  }
+
+  async validateNumberOfItemsInTree(numberOfItems: number) {
+    const count = await this.treeItem.count();
+    expect(count).toEqual(numberOfItems);
+  }
+
+  async validateTreeItemExists(itemName: string) {
+    await this.page.locator(`[data-cy="tree-item-${itemName}"]`).waitFor({
+      state: "attached",
+    });
   }
 }
