@@ -152,20 +152,25 @@ jobs:
         run: chmod 600 ~/.ssh/deploy_key
 
       - name: Start SSH Agent
-        run: eval "$(ssh-agent -s)"
+        run: |
+          eval "$(ssh-agent -s)"
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
 
       - name: Add SSH Key
         run: ssh-add ~/.ssh/deploy_key
 
       - name: Test SSH Key
+        if: always()
         run: ssh-add -l
 
       - name: Debug Deploy Key
+        if: always()
         run: |
           cat ~/.ssh/deploy_key
           ssh-keygen -l -f ~/.ssh/deploy_key
 
       - name: Debug SSH Environment
+        if: always()
         run: ls -la ~/.ssh
 
       - id: deploy-playwright-report
