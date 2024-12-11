@@ -148,6 +148,15 @@ jobs:
       - name: Set correct permissions for the SSH key
         run: chmod 600 ~/.ssh/deploy_key
 
+      - name: Start ssh-agent with a custom socket
+        run: |
+          export SSH_AUTH_SOCK=$(mktemp -u /tmp/ssh-auth-XXXXXX.sock)
+          ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
+          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
+
+      - name: Add SSH key to ssh-agent
+        run: ssh-add ~/.ssh/deploy_key
+
       - id: deploy-playwright-report
         if: always()
         name: Deploy Playwright report to Github Pages
@@ -156,7 +165,6 @@ jobs:
           attempt_limit: 3
           action: peaceiris/actions-gh-pages@v4
           with: |
-            deploy_key: ~/.ssh/deploy_key
             external_repository: Satellite-im/test-reports
             publish_branch: gh-pages
             publish_dir: ./playwright-report
