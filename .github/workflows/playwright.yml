@@ -151,6 +151,17 @@ jobs:
       - name: Set correct permissions for the SSH key
         run: chmod 600 ~/.ssh/deploy_key
 
+      - name: Test SSH Key
+        run: ssh-add -l
+
+      - name: Debug Deploy Key
+        run: |
+          cat ~/.ssh/deploy_key
+          ssh-keygen -l -f ~/.ssh/deploy_key
+
+      - name: Debug SSH Environment
+        run: ls -la ~/.ssh
+
       - id: deploy-playwright-report
         if: always()
         name: Deploy Playwright report to Github Pages
