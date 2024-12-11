@@ -151,6 +151,12 @@ jobs:
       - name: Set correct permissions for the SSH key
         run: chmod 600 ~/.ssh/deploy_key
 
+      - name: Start SSH Agent
+        run: eval "$(ssh-agent -s)"
+
+      - name: Add SSH Key
+        run: ssh-add ~/.ssh/deploy_key
+
       - name: Test SSH Key
         run: ssh-add -l
 
