@@ -159,7 +159,7 @@ jobs:
           ps -ef | grep ssh-agent || echo "No active SSH agents."
 
       - name: Clean Up Existing Sockets
-        run: find /tmp -type s -name 'ssh-auth.sock' -delete
+        run: find /tmp -type s -name 'ssh-auth.sock' ! -path '/tmp/systemd-private*' ! -path '/tmp/snap-private*' -delete
 
       - name: Start SSH Agent
         run: |
