@@ -154,8 +154,7 @@ jobs:
             publish_branch: gh-pages
             publish_dir: ./playwright-report
             destination_dir: ${{ steps.timestampidone.outputs.timestamp }}
-        env:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
 
       - name: Set Playwright report URL output
         id: comment
