@@ -142,38 +142,6 @@ jobs:
         id: timestampidone
         run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
 
-      - name: Prepare SSH Directory
-        run: mkdir -p ~/.ssh
-
-      - name: Decode deploy_key
-        run: echo "${{ secrets.ACTIONS_DEPLOY_KEY }}" | base64 -d > ~/.ssh/deploy_key
-
-      - name: Set Correct Permissions for the SSH Key
-        run: chmod 600 ~/.ssh/deploy_key
-
-      - name: Debug Existing Sockets
-        run: |
-          echo "Listing existing sockets in /tmp:"
-          ls -la /tmp | grep ssh-auth || echo "No existing sockets found."
-          echo "Active SSH processes:"
-          ps -ef | grep ssh-agent || echo "No active SSH agents."
-
-      - name: Clean Up Existing Sockets
-        run: find /tmp -type s -name 'ssh-auth.sock' ! -path '/tmp/systemd-private*' ! -path '/tmp/snap-private*' -delete
-
-      - name: Start SSH Agent
-        run: |
-          SOCKET_PATH="/tmp/ssh-agent-$$/ssh-auth.sock"
-          mkdir -p "$(dirname $SOCKET_PATH)"
-          eval "$(ssh-agent -a $SOCKET_PATH)"
-          echo "SSH_AUTH_SOCK=$SOCKET_PATH" >> $GITHUB_ENV
-
-      - name: Add SSH Key
-        run: ssh-add ~/.ssh/deploy_key
-
-      - name: Test SSH Key
-        run: ssh-add -l
-
       - id: deploy-playwright-report
         if: always()
         name: Deploy Playwright report to Github Pages
@@ -182,13 +150,11 @@ jobs:
           attempt_limit: 3
           action: peaceiris/actions-gh-pages@v4
           with: |
-            deploy_key: ~/.ssh/deploy_key
+            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
             external_repository: Satellite-im/test-reports
             publish_branch: gh-pages
             publish_dir: ./playwright-report
             destination_dir: ${{ steps.timestampidone.outputs.timestamp }}
-        env:
-          SSH_AUTH_SOCK: ${{ env.SSH_AUTH_SOCK }}
 
       - name: Set Playwright report URL output
         id: comment
