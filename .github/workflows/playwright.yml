@@ -150,11 +150,12 @@ jobs:
           attempt_limit: 3
           action: peaceiris/actions-gh-pages@v4
           with: |
-            deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
             external_repository: Satellite-im/test-reports
             publish_branch: gh-pages
             publish_dir: ./playwright-report
             destination_dir: ${{ steps.timestampidone.outputs.timestamp }}
+        env:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
 
       - name: Set Playwright report URL output
         id: comment
