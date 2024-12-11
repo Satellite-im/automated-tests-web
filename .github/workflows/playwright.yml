@@ -112,8 +112,62 @@ jobs:
             Failed Automated Test
           type: add
 
+  publish-playwright-report:
+    if: always()
+    needs: merge-reports
+    runs-on: ubuntu-latest
+    permissions:
+      checks: write
+      pull-requests: write
+      contents: write
+      issues: read
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    outputs:
+      playwright_report_url: ${{ steps.comment.outputs.playwright_report_url }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+        with:
+          repository: Satellite-im/test-reports
+          ref: gh-pages
+          path: gh-pages
+
+      - name: Download Merged Report
+        uses: actions/download-artifact@v4.1.8
+        with:
+          name: playwright-merged-report
+          path: playwright-report
+
+      - name: Set a timestamp
+        id: timestampidone
+        run: echo "timestamp=$(date --utc +%Y%m%d_%H%M%SZ)" >> "$GITHUB_OUTPUT"
+
+      - name: Decode deploy_key
+        run: echo "${{ secrets.ACTIONS_DEPLOY_KEY }}" | base64 -d > ~/.ssh/deploy_key
+
+      - name: Set correct permissions for the SSH key
+        run: chmod 600 ~/.ssh/deploy_key
+
+      - id: deploy-playwright-report
+        if: always()
+        name: Deploy Playwright report to Github Pages
+        uses: Wandalen/wretry.action@master
+        with:
+          attempt_limit: 3
+          action: peaceiris/actions-gh-pages@v4
+          with: |
+            deploy_key: ~/.ssh/deploy_key
+            external_repository: Satellite-im/test-reports
+            publish_branch: gh-pages
+            publish_dir: ./playwright-report
+            destination_dir: ${{ steps.timestampidone.outputs.timestamp }}
+
+      - name: Set Playwright report URL output
+        id: comment
+        run: echo "playwright_report_url=https://satellite-im.github.io/test-reports/${{ steps.timestampidone.outputs.timestamp }}/" >> "$GITHUB_OUTPUT"
+
   remove-label:
-    needs: [test, merge-reports]
+    needs: [test, merge-reports, publish-playwright-report]
     runs-on: ubuntu-latest
     permissions:
       checks: write
