@@ -153,7 +153,10 @@ jobs:
 
       - name: Start SSH Agent
         run: |
-          eval "$(ssh-agent -s)"
+          if [ -S /tmp/ssh-auth.sock ]; then
+            rm /tmp/ssh-auth.sock
+          fi
+          eval "$(ssh-agent -a /tmp/ssh-auth.sock)"
           echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
 
       - name: Add SSH Key
