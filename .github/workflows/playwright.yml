@@ -16,7 +16,9 @@ on:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: macos-14
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     strategy:
       fail-fast: false
       matrix:
@@ -32,6 +34,9 @@ jobs:
         with:
           path: automated-tests
 
+      - name: Configure Git safe directory
+        run: git config --global --add safe.directory '/__w/automated-tests-web/automated-tests-web'
+
       - name: Setup Node.js for Uplink Web 🔨
         uses: actions/setup-node@v4
         with:
@@ -42,11 +47,10 @@ jobs:
 
       - name: Install dependencies for Testing Repo 📦
         working-directory: automated-tests
-        run: npm install
+        run: npm ci
 
-      - name: Install Playwright Browsers
-        working-directory: automated-tests
-        run: npx playwright install --with-deps
+      - name: Set read permissions
+        run: chmod -R u+rw src
 
       - name: Run Playwright tests
         working-directory: automated-tests
