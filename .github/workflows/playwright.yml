@@ -27,36 +27,39 @@ jobs:
     steps:
       - name: Checkout Automated Tests directory 🔖
         uses: actions/checkout@v4
+        with:
+          path: automated-tests
 
       - name: Checkout Uplink Web directory 🔖
         uses: actions/checkout@v4
         with:
           repository: Satellite-im/UplinkWeb
-          path: app
+          ref: luis/fix-ci-test-dec-12
 
       - name: Configure Git safe directory
-        run: git config --global --add safe.directory '/__w/automated-tests-web'
+        run: git config --global --add safe.directory '/__w/automated-tests-web/automated-tests-web'
 
       - name: Setup Node.js for Uplink Web 🔨
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies for Testing Repo 📦
-        run: npm ci
-
       - name: Install dependencies for Uplink Web 📦
-        working-directory: app
         run: npm install
 
+      - name: Install dependencies for Testing Repo 📦
+        working-directory: automated-tests
+        run: npm ci
+
       - name: Run Playwright tests
+        working-directory: automated-tests
         run: npx playwright test -c playwright.ci.config.ts --project=${{ matrix.project }}
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-${{ matrix.project }}
-          path: blob-report/
+          path: automated-tests/blob-report/
           retention-days: 1
 
       - name: Add label if any of build jobs failed
