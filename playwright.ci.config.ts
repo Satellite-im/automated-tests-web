@@ -95,9 +95,9 @@ export default defineConfig({
   ],
 
   // Run your local dev server before starting the tests
-  webServer: {
-    command: "cd .. && npm run dev",
-    url: "http://127.0.0.1:5173",
-    reuseExistingServer: !process.env.CI,
-  },
+  // webServer: {
+  //   command: "cd .. && npm run dev",
+  //   url: "http://127.0.0.1:5173",
+  //   reuseExistingServer: !process.env.CI,
+  // },
 });
