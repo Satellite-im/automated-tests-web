@@ -13,7 +13,7 @@ test.describe("Create Account and Login Tests", () => {
   const status = faker.lorem.sentence(3);
   const pinNumber = "123456";
 
-  test.only("A1, A9, A11 - Enter valid PIN redirects to Main Page", async ({
+  test("A1, A9, A11 - Enter valid PIN redirects to Main Page", async ({
     enterPinUserContext,
   }) => {
     const page = enterPinUserContext.page;
