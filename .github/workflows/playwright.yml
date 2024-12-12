@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.48.0-noble
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     strategy:
       fail-fast: false
       matrix:
@@ -49,7 +49,7 @@ jobs:
         working-directory: automated-tests
         run: npm ci
 
-      - name: Run server for Uplink Web
+      - name: Run localhost from Uplink Web
         run: npm run dev &
 
       - name: Run Playwright tests
@@ -77,7 +77,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.48.0-noble
+      image: mcr.microsoft.com/playwright:v1.48.0-jammy
     steps:
       - name: Download Blob Report from Desktop
         uses: actions/download-artifact@v4
