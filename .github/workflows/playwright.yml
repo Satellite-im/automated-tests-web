@@ -25,16 +25,16 @@ jobs:
       matrix:
         project: ["desktop-chrome", "mobile-chrome"]
     steps:
-      - name: Checkout Automated Tests directory 🔖
-        uses: actions/checkout@v4
-        with:
-          path: automated-tests
-
       - name: Checkout Uplink Web directory 🔖
         uses: actions/checkout@v4
         with:
           repository: Satellite-im/UplinkWeb
           ref: luis/fix-ci-test-dec-12
+
+      - name: Checkout Automated Tests directory 🔖
+        uses: actions/checkout@v4
+        with:
+          path: automated-tests
 
       - name: Configure Git safe directory
         run: git config --global --add safe.directory '/__w/automated-tests-web/automated-tests-web'
