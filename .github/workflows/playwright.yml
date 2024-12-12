@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.49.1
+      image: mcr.microsoft.com/playwright:v1.48.0-noble
     strategy:
       fail-fast: false
       matrix:
@@ -74,7 +74,7 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.49.1
+      image: mcr.microsoft.com/playwright:v1.48.0-noble
     steps:
       - name: Download Blob Report from Desktop
         uses: actions/download-artifact@v4
