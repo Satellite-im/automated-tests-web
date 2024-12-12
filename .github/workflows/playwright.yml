@@ -25,43 +25,38 @@ jobs:
       matrix:
         project: ["desktop-chrome", "mobile-chrome"]
     steps:
+      - name: Checkout Automated Tests directory 🔖
+        uses: actions/checkout@v4
+
       - name: Checkout Uplink Web directory 🔖
         uses: actions/checkout@v4
         with:
           repository: Satellite-im/UplinkWeb
-
-      - name: Checkout Automated Tests directory 🔖
-        uses: actions/checkout@v4
-        with:
-          path: automated-tests
+          path: app
 
       - name: Configure Git safe directory
-        run: git config --global --add safe.directory '/__w/automated-tests-web/automated-tests-web'
+        run: git config --global --add safe.directory '/__w/automated-tests-web'
 
       - name: Setup Node.js for Uplink Web 🔨
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies for Uplink Web 📦
-        run: npm install
-
       - name: Install dependencies for Testing Repo 📦
-        working-directory: automated-tests
         run: npm ci
 
-      - name: Set read permissions
-        run: chmod -R u+rw src
+      - name: Install dependencies for Uplink Web 📦
+        working-directory: app
+        run: npm install
 
       - name: Run Playwright tests
-        working-directory: automated-tests
         run: npx playwright test -c playwright.ci.config.ts --project=${{ matrix.project }}
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: playwright-report-${{ matrix.project }}
-          path: automated-tests/blob-report/
+          path: blob-report/
           retention-days: 1
 
       - name: Add label if any of build jobs failed
