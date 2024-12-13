@@ -80,6 +80,7 @@ test.describe("Create Account and Login Tests", () => {
     });
 
     await test.step("Validate Save Recovery Seed Page, click on I Saved It and wait for Chat page to load", async () => {
+      await saveRecoverySeed.validatePageIsLoaded();
       await expect(saveRecoverySeed.titleRecoveryPage).toHaveText(
         "Backup your seed!",
       );
