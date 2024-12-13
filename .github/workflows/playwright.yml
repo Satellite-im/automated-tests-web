@@ -29,7 +29,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: Satellite-im/UplinkWeb
-          ref: luis/fix-ci-test-dec-12
 
       - name: Checkout Automated Tests directory 🔖
         uses: actions/checkout@v4
