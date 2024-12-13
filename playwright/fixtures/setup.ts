@@ -96,6 +96,7 @@ export const test = base.extend<MyFixtures>({
     await loginPinPage.enterDefaultPin();
 
     // Click on I Saved It
+    await saveRecoverySeed.validatePageIsLoaded();
     await saveRecoverySeed.clickOnSavedIt();
 
     await chatsMainPage.addSomeone.waitFor({ state: "attached" });
@@ -144,6 +145,7 @@ export const test = base.extend<MyFixtures>({
     await loginPinPage.enterDefaultPin();
 
     // Click on I Saved It
+    await saveRecoverySeed.validatePageIsLoaded();
     await saveRecoverySeed.clickOnSavedIt();
 
     // Pass the context, browser, and page to the test
@@ -189,6 +191,7 @@ export const test = base.extend<MyFixtures>({
     await loginPinPage.enterDefaultPin();
 
     // Click on I Saved It
+    await saveRecoverySeed.validatePageIsLoaded();
     await saveRecoverySeed.clickOnSavedIt();
 
     // Pass the context, browser, and page to the test
@@ -243,6 +246,7 @@ export const test = base.extend<MyFixtures>({
     await loginPinPage.enterDefaultPin();
 
     // Click on I Saved It
+    await saveRecoverySeed.validatePageIsLoaded();
     await saveRecoverySeed.clickOnSavedIt();
 
     // Pass the context, browser, and page to the test

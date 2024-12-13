@@ -79,4 +79,8 @@ export class SaveRecoverySeedPage extends MainPage {
     // Return the saved file path for further validation
     return savedFilePath;
   }
+
+  async validatePageIsLoaded() {
+    await this.titleRecoveryPage.waitFor({ state: "attached" });
+  }
 }
