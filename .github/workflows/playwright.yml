@@ -18,7 +18,8 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.48.0-jammy
+      image: mcr.microsoft.com/playwright:v1.49.1-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:
@@ -33,6 +34,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: automated-tests
+
+      - name: Configure Git safe directory
+        run: git config --global --add safe.directory '/__w/automated-tests-web/automated-tests-web'
 
       - name: Setup Node.js for Uplink Web 🔨
         uses: actions/setup-node@v4
@@ -71,7 +75,8 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     container:
-      image: mcr.microsoft.com/playwright:v1.48.0-jammy
+      image: mcr.microsoft.com/playwright:v1.49.1-noble
+      options: --user 1001
     steps:
       - name: Download Blob Report from Desktop
         uses: actions/download-artifact@v4
