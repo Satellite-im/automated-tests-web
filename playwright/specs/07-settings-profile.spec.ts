@@ -609,7 +609,7 @@ test.describe("Settings Profile Tests", () => {
 
     await test.step("Enter correct pin and validate account is deleted", async () => {
       await deleteAccount.enterDefaultPin();
-      await createOrImport.labelCreateTitle.waitFor({ state: "attached" });
+      await createOrImport.validatePageIsDisplayed();
       await expect(createOrImport.labelCreateTitle).toHaveText(
         "Account Creation",
       );
