@@ -591,7 +591,7 @@ test.describe("Settings Profile Tests", () => {
     });
 
     await test.step("Click on Delete Account button and validate contents from modal prompt", async () => {
-      await settingsProfile.deleteAccountSectionButton.click();
+      await settingsProfile.deleteAccount();
       await expect(deleteAccount.textDeleteAccount).toHaveText(
         "This action will delete your account permanently",
       );

@@ -90,7 +90,7 @@ export class ImportAccountPage extends MainPage {
 
   async importAccountFromFile(
     phraseType: "file" | "manual",
-    importFilePath: string,
+    backUpFile: string,
     seedPhrasePath?: string,
     seedPhrase?: string[],
   ) {
@@ -101,7 +101,7 @@ export class ImportAccountPage extends MainPage {
     } else {
       throw new Error("Invalid passphrase type");
     }
-    await this.uploadImportedFile(importFilePath);
+    await this.uploadImportedFile(backUpFile);
   }
 
   async importAccountFromRemote(
@@ -126,7 +126,6 @@ export class ImportAccountPage extends MainPage {
   }
 
   async uploadImportedFile(filePath: string) {
-    await expect(this.buttonImportAccountFromFile).toHaveClass("enabled");
     const fileChooserPromise = this.page.waitForEvent("filechooser");
     await this.clickOnImportAccountFromFile();
     const fileChooser = await fileChooserPromise;
@@ -134,12 +133,24 @@ export class ImportAccountPage extends MainPage {
   }
 
   async uploadSeedPhraseFile(filePath: string) {
-    await expect(this.buttonImportAccountFromFile).toHaveClass("disabled");
     const fileChooserPromise = this.page.waitForEvent("filechooser");
     await this.clickOnUploadPassphrase();
     const fileChooser = await fileChooserPromise;
     await fileChooser.setFiles(filePath);
-    await expect(this.buttonImportAccountFromFile).toHaveClass("enabled");
+  }
+
+  async validateToastInvalidPhrase() {
+    await this.toastNotificationText.waitFor({ state: "attached" });
+    await expect(this.toastNotificationText).toHaveText(
+      "Invalid word in phrase",
+    );
+  }
+
+  async validateToastUnkwnownError() {
+    await this.toastNotificationText.waitFor({ state: "attached" });
+    await expect(this.toastNotificationText).toHaveText(
+      "An unknown error occurred",
+    );
   }
 
   async validatePageIsLoaded() {

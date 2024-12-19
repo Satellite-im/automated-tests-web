@@ -1,4 +1,5 @@
 import { expect, type Locator, type Page } from "@playwright/test";
+import { readFile } from "fs/promises";
 const fs = require("fs");
 const path = require("path");
 export default class MainPage {
@@ -286,6 +287,12 @@ export default class MainPage {
     return await this.page.evaluate(async () => {
       return await navigator.clipboard.readText();
     });
+  }
+
+  async readRecoveryPhraseFile(filePath: string) {
+    const fileContent = await readFile(filePath, "utf-8");
+    const fileSeedPhraseArray = fileContent.split(/\s+/).filter(Boolean);
+    return fileSeedPhraseArray;
   }
 
   async validateNoFavoritesAreVisible() {
