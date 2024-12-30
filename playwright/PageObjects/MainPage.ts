@@ -424,28 +424,40 @@ export default class MainPage {
     );
   }
 
-  async validateInstallerIsDownloaded() {
-    const downloadPath = path.join(__dirname, "downloads");
-    if (!fs.existsSync(downloadPath)) {
-      fs.mkdirSync(downloadPath);
-    }
+  async validateInstallerIsDownloaded(viewport: string) {
+    if (viewport === "mobile-chrome") {
+      const pagePromise = this.page.waitForEvent("popup");
+      await this.buttonDownloadInstallAlert.click();
+      const newTab = await pagePromise;
+      await expect(newTab).toHaveURL(
+        "https://play.google.com/store/apps/details?id=com.uplink.app",
+      );
+    } else {
+      const downloadPath = path.join(__dirname, "downloads");
+      if (!fs.existsSync(downloadPath)) {
+        fs.mkdirSync(downloadPath);
+      }
 
-    const downloadPromise = this.page.waitForEvent("download");
-    await this.buttonDownloadInstallAlert.click();
-    const download = await downloadPromise;
+      const downloadPromise = this.page.waitForEvent("download");
+      await this.buttonDownloadInstallAlert.click();
 
-    const fileName = download.suggestedFilename(); // Get the suggested filename
-    const filePath = path.join(downloadPath, fileName);
-    await download.saveAs(filePath); // Save the file to the designated path
+      const download = await downloadPromise;
 
-    // Validate the downloaded file
-    console.log(`Downloaded file saved at: ${filePath}`);
-    expect(fs.existsSync(filePath)).toBeTruthy(); // Check file exists
-    expect([".msi", ".dmg", ".deb", ".apk"]).toContain(path.extname(fileName)); // Validate file extension
+      const fileName = download.suggestedFilename(); // Get the suggested filename
+      const filePath = path.join(downloadPath, fileName);
+      await download.saveAs(filePath); // Save the file to the designated path
 
-    // Clean up after test
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath); // Delete the file
+      // Validate the downloaded file
+      console.log(`Downloaded file saved at: ${filePath}`);
+      expect(fs.existsSync(filePath)).toBeTruthy(); // Check file exists
+      expect([".msi", ".dmg", ".deb", ".apk"]).toContain(
+        path.extname(fileName),
+      ); // Validate file extension
+
+      // Clean up after test
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath); // Delete the file
+      }
     }
 
     // Validate install banner is gone
