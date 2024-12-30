@@ -3,6 +3,7 @@ import { type Locator, type Page } from "@playwright/test";
 
 export class CreateOrImportPage extends MainPage {
   readonly buttonCreateAccount: Locator;
+  readonly buttonImportAccount: Locator;
   readonly labelCreateTitle: Locator;
   readonly textCreateDescription: Locator;
 
@@ -12,6 +13,7 @@ export class CreateOrImportPage extends MainPage {
   ) {
     super(page, viewport);
     this.buttonCreateAccount = this.page.getByTestId("button-create-account");
+    this.buttonImportAccount = this.page.getByTestId("button-import-account");
     this.labelCreateTitle = this.page.getByTestId("label-create-title");
     this.textCreateDescription = this.page.getByTestId(
       "text-create-description",
@@ -22,7 +24,15 @@ export class CreateOrImportPage extends MainPage {
     await this.buttonCreateAccount.click();
   }
 
+  async clickImportAccount() {
+    await this.buttonImportAccount.click();
+  }
+
   async navigateTo() {
     await this.page.goto("/");
+  }
+
+  async validatePageIsDisplayed() {
+    await this.labelCreateTitle.waitFor({ state: "attached" });
   }
 }

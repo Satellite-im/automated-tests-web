@@ -1,5 +1,7 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 import { SettingsBase } from "./SettingsBase";
+const fs = require("fs");
+const path = require("path");
 
 export class SettingsProfile extends SettingsBase {
   readonly accountIntegrations: Locator;
@@ -37,6 +39,11 @@ export class SettingsProfile extends SettingsBase {
   readonly deleteAccountSectionButton: Locator;
   readonly deleteAccountSectionLabel: Locator;
   readonly deleteAccountSectionText: Locator;
+  readonly exportAccountSection: Locator;
+  readonly exportAccountSectionLabel: Locator;
+  readonly exportAccountSectionText: Locator;
+  readonly exportAccountSectionFileButton: Locator;
+  readonly exportAccountSectionRemoteButton: Locator;
   readonly identiconSettingsProfile: Locator;
   readonly inputSettingsProfileShortID: Locator;
   readonly inputSettingsProfileShortIDGroup: Locator;
@@ -201,6 +208,18 @@ export class SettingsProfile extends SettingsBase {
     this.deleteAccountSectionText = this.deleteAccountSection.getByTestId(
       "setting-section-text",
     );
+    this.exportAccountSection = this.page.getByTestId("export-account");
+    this.exportAccountSectionLabel = this.exportAccountSection.getByTestId(
+      "setting-section-label",
+    );
+    this.exportAccountSectionText = this.exportAccountSection.getByTestId(
+      "setting-section-text",
+    );
+    this.exportAccountSectionFileButton = this.exportAccountSection.getByTestId(
+      "export-account-file",
+    );
+    this.exportAccountSectionRemoteButton =
+      this.exportAccountSection.getByTestId("export-account-remote");
     this.identiconSettingsProfile = this.page
       .locator(".identicon")
       .locator("img");
@@ -329,10 +348,37 @@ export class SettingsProfile extends SettingsBase {
     );
   }
 
-  // Rewrite everything here in playwright
-
   async copyShortID() {
     await this.inputSettingsProfileShortIDGroup.click();
+  }
+
+  async deleteAccount() {
+    await this.deleteAccountSectionButton.click();
+  }
+
+  async exportAccountToFile() {
+    const downloadPath = path.join(__dirname, "downloads");
+    if (!fs.existsSync(downloadPath)) {
+      fs.mkdirSync(downloadPath);
+    }
+
+    const downloadPromise = this.page.waitForEvent("download");
+    await this.exportAccountSectionFileButton.click();
+    const download = await downloadPromise;
+
+    const fileName = download.suggestedFilename(); // Get the suggested filename
+    const filePath = path.join(downloadPath, fileName);
+    await download.saveAs(filePath); // Save the file to the designated path
+
+    // Validate the downloaded file
+    expect(fs.existsSync(filePath)).toBeTruthy(); // Check file exists
+    expect([".upk"]).toContain(path.extname(fileName)); // Validate file extension
+  }
+
+  async exportAccountToRemote() {
+    await this.exportAccountSectionRemoteButton.click();
+    await this.validateToastSuccessRemoteExport();
+    await this.waitForToastNotificationToDisappear();
   }
 
   async getProfileIdenticonSource() {
@@ -515,6 +561,16 @@ export class SettingsProfile extends SettingsBase {
   async validateToastProfileUpdated() {
     await this.toastNotificationText.waitFor({ state: "attached" });
     await expect(this.toastNotificationText).toHaveText("Profile Updated!");
+  }
+
+  async validateToastSuccessRemoteExport() {
+    await this.toastNotification.waitFor({ state: "attached" });
+    const textToast = this.toastNotification.getByText(
+      "Successfully exported account to remote",
+    );
+    await expect(textToast).toHaveText(
+      "Successfully exported account to remote",
+    );
   }
 
   async uploadProfileBanner(file: string) {

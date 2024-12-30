@@ -24,7 +24,7 @@ test.describe("Create Account and Login Tests", () => {
     const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
 
     await test.step("Validate Create or Import Page and then click on Create New Account", async () => {
-      await createOrImport.labelCreateTitle.waitFor({ state: "attached" });
+      await createOrImport.validatePageIsDisplayed();
       await expect(createOrImport.labelCreateTitle).toHaveText(
         "Account Creation",
       );
