@@ -1,6 +1,5 @@
 import MainPage from "./MainPage";
-import { expect, type Locator, type Page } from "@playwright/test";
-import { readFile } from "fs/promises";
+import { type Locator, type Page } from "@playwright/test";
 
 export class SaveRecoverySeedPage extends MainPage {
   readonly buttonDownloadPhrase: Locator;
@@ -56,12 +55,6 @@ export class SaveRecoverySeedPage extends MainPage {
       .locator(`[data-cy^="ordered-phrase-word-`)
       .count();
     return count;
-  }
-
-  async readRecoveryPhraseFile(filePath: string) {
-    const fileContent = await readFile(filePath, "utf-8");
-    const fileSeedPhraseArray = fileContent.split(/\s+/).filter(Boolean);
-    return fileSeedPhraseArray;
   }
 
   async saveRecoverySeed() {

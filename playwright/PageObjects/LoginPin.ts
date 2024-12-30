@@ -6,6 +6,7 @@ export class LoginPinPage extends MainPage {
   readonly buttonCreateNewProfile: Locator;
   readonly buttonPinSettings: Locator;
   readonly labelChooseEnterPin: Locator;
+  readonly oldAccountToBeOverwrittenText: Locator;
   readonly pinButton0: Locator;
   readonly pinButton1: Locator;
   readonly pinButton2: Locator;
@@ -39,6 +40,9 @@ export class LoginPinPage extends MainPage {
     );
     this.buttonPinSettings = this.page.getByTestId("button-settings");
     this.labelChooseEnterPin = this.page.getByTestId("label-choose-enter-pin");
+    this.oldAccountToBeOverwrittenText = this.page.getByText(
+      "By continuing your old account will be overwritten!",
+    );
     this.pinButton0 = this.page.getByTestId("button-pin-0");
     this.pinButton1 = this.page.getByTestId("button-pin-1");
     this.pinButton2 = this.page.getByTestId("button-pin-2");
