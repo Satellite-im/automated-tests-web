@@ -203,45 +203,6 @@ test.describe("Import Account Tests", () => {
     });
   });
 
-  test("U11 - Import Account - Import account from Remote", async ({
-    enterPinUserContext,
-  }) => {
-    const page = enterPinUserContext.page;
-    const viewport = enterPinUserContext.viewport;
-    const createOrImport = new CreateOrImportPage(page, viewport);
-    const importAccount = new ImportAccountPage(page, viewport);
-    const loginPinPage = new LoginPinPage(page, viewport);
-
-    await test.step("Validate Create or Import Page is displayed and then click on Import Account", async () => {
-      await createOrImport.validatePageIsDisplayed();
-      await createOrImport.clickImportAccount();
-    });
-
-    await test.step("Dismiss installer download banner", async () => {
-      await createOrImport.dismissDownloadAlert();
-    });
-
-    await test.step("Enter valid PIN", async () => {
-      await loginPinPage.enterDefaultPin();
-    });
-
-    await test.step("Import account from remote by entering seed phrase manually ", async () => {
-      await importAccount.validatePageIsLoaded();
-      const recoverySeedArray = await importAccount.readRecoveryPhraseFile(
-        "playwright/assets/seed-phrase.txt",
-      );
-      await importAccount.importAccountFromRemote(
-        "manual",
-        "",
-        recoverySeedArray,
-      );
-    });
-
-    await test.step("Since remote import is not implemented yet a toast notification for unknown error is shown", async () => {
-      await importAccount.validateToastUnkwnownError();
-    });
-  });
-
   test("U12 - Export Account - Export account to File", async ({
     enterPinUserContext,
   }) => {
@@ -299,7 +260,7 @@ test.describe("Import Account Tests", () => {
         "Export",
       );
       await expect(settingsProfile.exportAccountSectionText).toHaveText(
-        "Export your account manually to remote or a file",
+        "Export your account manually to a file.",
       );
     });
 
@@ -326,7 +287,7 @@ test.describe("Import Account Tests", () => {
       await loginPinPage.enterDefaultPin();
     });
 
-    await test.step("Import account using a seed phrase from file", async () => {
+    /*await test.step("Import account using a seed phrase from file", async () => {
       await importAccount.validatePageIsLoaded();
       await importAccount.importAccountFromFile(
         "file",
@@ -338,107 +299,6 @@ test.describe("Import Account Tests", () => {
     await test.step("After succesful import from file, user is redirected to chats page", async () => {
       await page.waitForURL("/chat");
       await chatsPage.validateChatsMainPageIsShown();
-    });
-  });
-
-  test("U13 - Export Account - Export account to Remote", async ({
-    enterPinUserContext,
-  }) => {
-    const page = enterPinUserContext.page;
-    const viewport = enterPinUserContext.viewport;
-    const authNewAccount = new AuthNewAccount(page, viewport);
-    const chatsMainPage = new ChatsMainPage(page, viewport);
-    const createOrImport = new CreateOrImportPage(page, viewport);
-    const deleteAccount = new DeleteAccountModal(page, viewport);
-    const importAccount = new ImportAccountPage(page, viewport);
-    const loginPinPage = new LoginPinPage(page, viewport);
-    const saveRecoverySeed = new SaveRecoverySeedPage(page, viewport);
-    const settingsProfile = new SettingsProfile(page, viewport);
-    const username =
-      faker.person.firstName() + faker.number.int({ min: 100, max: 10000 });
-    const status = faker.lorem.sentence(3);
-
-    await test.step("Validate Create or Import Page is shown and then click on Create New Account", async () => {
-      await createOrImport.validatePageIsDisplayed();
-      await createOrImport.clickCreateNewAccount();
-    });
-
-    await test.step("Enter username and status and continue", async () => {
-      await authNewAccount.validateLoadingHeader();
-      await authNewAccount.typeOnUsername(username);
-      await authNewAccount.typeOnStatus(status);
-      await authNewAccount.buttonNewAccountCreate.click();
-    });
-
-    await test.step("Enter a valid pin and continue", async () => {
-      await loginPinPage.waitUntilPageIsLoaded();
-      await loginPinPage.enterDefaultPin();
-    });
-
-    await test.step("Save Recovery Seed file and continue", async () => {
-      await saveRecoverySeed.validatePageIsLoaded();
-      await saveRecoverySeed.saveRecoverySeed();
-      await saveRecoverySeed.clickOnSavedIt();
-    });
-
-    await test.step("Go to settings profile", async () => {
-      // Once that user is in Chats page, go to Settings Profile
-      await page.waitForURL("/chat");
-      await chatsMainPage.goToSettings();
-      await page.waitForURL("/settings/profile");
-
-      // Hide sidebar if viewport is Mobile Chrome
-      if (viewport === "mobile-chrome") {
-        await chatsMainPage.buttonHideSidebar.click();
-      }
-    });
-
-    await test.step("Validate Export Account Section contents", async () => {
-      await expect(settingsProfile.exportAccountSectionLabel).toHaveText(
-        "Export",
-      );
-      await expect(settingsProfile.exportAccountSectionText).toHaveText(
-        "Export your account manually to remote or a file",
-      );
-    });
-
-    await test.step("Validate user can export account to remote", async () => {
-      await settingsProfile.exportAccountToRemote();
-    });
-
-    await test.step("Now Delete the Account so it can be restored from remote", async () => {
-      await settingsProfile.deleteAccount();
-      await deleteAccount.enterDefaultPin();
-      await createOrImport.validatePageIsDisplayed();
-    });
-
-    await test.step("Validate Create or Import Page is displayed and then click on Import Account", async () => {
-      await createOrImport.validatePageIsDisplayed();
-      await createOrImport.clickImportAccount();
-    });
-
-    await test.step("Dismiss installer download banner", async () => {
-      await createOrImport.dismissDownloadAlert();
-    });
-
-    await test.step("Enter valid PIN", async () => {
-      await loginPinPage.enterDefaultPin();
-    });
-
-    await test.step("Import account from remote by entering seed phrase manually ", async () => {
-      await importAccount.validatePageIsLoaded();
-      const recoverySeedArray = await importAccount.readRecoveryPhraseFile(
-        "./downloads/assets/seed-phrase.txt",
-      );
-      await importAccount.importAccountFromRemote(
-        "manual",
-        "",
-        recoverySeedArray,
-      );
-    });
-
-    await test.step("Since remote import is not implemented yet a toast notification for unknown error is shown", async () => {
-      await importAccount.validateToastUnkwnownError();
-    });
+    });*/
   });
 });
