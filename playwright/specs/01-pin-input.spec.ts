@@ -602,7 +602,7 @@ test.describe("Create Account and Login Tests", () => {
     });
 
     await test.step("User can download installer from button and banner is hidden", async () => {
-      await createOrImport.validateInstallerIsDownloaded();
+      await createOrImport.validateInstallerIsDownloaded(viewport);
     });
   });
 
