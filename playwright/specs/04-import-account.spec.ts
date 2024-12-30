@@ -114,7 +114,7 @@ test.describe("Import Account Tests", () => {
       );
     });
 
-    await test.step("After succesful import from file, user is redirected to chats page", async () => {
+    await test.step("After successful import from file, user is redirected to chats page", async () => {
       await page.waitForURL("/chat");
       await chatsPage.validateChatsMainPageIsShown();
     });
@@ -156,7 +156,7 @@ test.describe("Import Account Tests", () => {
       );
     });
 
-    await test.step("After succesful import entering seed phrase manually, user is redirected to chats page", async () => {
+    await test.step("After successful import entering seed phrase manually, user is redirected to chats page", async () => {
       await page.waitForURL("/chat");
       await chatsPage.validateChatsMainPageIsShown();
     });
@@ -296,7 +296,7 @@ test.describe("Import Account Tests", () => {
       );
     });
 
-    await test.step("After succesful import from file, user is redirected to chats page", async () => {
+    await test.step("After successful import from file, user is redirected to chats page", async () => {
       await page.waitForURL("/chat");
       await chatsPage.validateChatsMainPageIsShown();
     });*/
