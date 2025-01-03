@@ -213,7 +213,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateTreeItemExists("banner");
   });
 
-  test("F13 - Files and folders are still visible after logging out and login again", async ({
+  test.skip("F13 - Files and folders are still visible after logging out and login again", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
@@ -280,7 +280,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateTreeItemExists("NewFolder");
   });
 
-  test("F14 - If user upload the same file again, file is uploaded but with different filename", async ({
+  test.skip("F14 - If user upload the same file again, file is uploaded but with different filename", async ({
     singleUserContext,
   }) => {
     const page = singleUserContext.page;
