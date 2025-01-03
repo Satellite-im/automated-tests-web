@@ -228,6 +228,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
 
     // Create a folder in root and enter on it
+    await filesPage.closeToastNotificationIfExists();
     await filesPage.createNewFolder("NewFolder");
     await expect(filesPage.freeSpaceValue).toHaveText("2.15 GB");
     await filesPage.validateNewFolderCreated("NewFolder");
@@ -244,6 +245,7 @@ test.describe("Files Page Tests", () => {
 
     // User can upload an image file in folder
     await filesPage.uploadFile("playwright/assets/banner.jpg");
+    await filesPage.closeToastNotificationIfExists();
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
 
     // Validate tree structure inside folder
@@ -278,6 +280,7 @@ test.describe("Files Page Tests", () => {
     await filesPage.validateNumberOfItemsInTree(2);
     await filesPage.validateTreeItemExists("banner");
     await filesPage.validateTreeItemExists("NewFolder");
+    await filesPage.closeToastNotificationIfExists();
   });
 
   test("F14 - If user upload the same file again, file is uploaded but with different filename", async ({
@@ -289,6 +292,7 @@ test.describe("Files Page Tests", () => {
 
     // Upload a file
     await filesPage.uploadFile("playwright/assets/banner.jpg");
+    await filesPage.closeToastNotificationIfExists();
     await filesPage.validateUploadedImageInfo("banner", "jpg", "61.4 kB");
 
     // Validate tree structure inside folder
@@ -299,6 +303,7 @@ test.describe("Files Page Tests", () => {
     // Attempt to upload the same file again
     await filesPage.hideSidebarOnMobileView();
     await filesPage.uploadFile("playwright/assets/banner.jpg");
+    await filesPage.closeToastNotificationIfExists();
 
     // File banner.jpg is uploaded again but with name "banner (1).jpg"
     await filesPage.validateUploadedImageInfo("banner (1)", "jpg", "61.4 kB");
