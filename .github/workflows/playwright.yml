@@ -16,7 +16,10 @@ on:
 jobs:
   test:
     timeout-minutes: 60
-    runs-on: macos-14
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.49.1-noble
+      options: --user 1001
     strategy:
       fail-fast: false
       matrix:
@@ -42,9 +45,6 @@ jobs:
 
       - name: Install dependencies for Uplink Web 📦
         run: npm install
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
 
       - name: Install dependencies for Testing Repo 📦
         working-directory: automated-tests

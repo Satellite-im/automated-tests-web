@@ -98,7 +98,6 @@ export default defineConfig({
   webServer: {
     command: "cd .. && npm run dev",
     url: "http://127.0.0.1:5173",
-    reuseExistingServer: !process.env.CI,
     stdout: "pipe",
     timeout: 120 * 1000,
   },
