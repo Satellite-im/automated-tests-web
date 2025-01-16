@@ -97,7 +97,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("H16, H17, H18, H26 - User can be block/unblocked", async ({
+  test("H16, H17, H18, H26 - User can be block/unblocked", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -321,7 +321,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("H6, H19, B1 to B6, B16 and B17, B35 to B37 - Friend request happy path flow and then Chats Page basic send/receive text message flow", async ({
+  test("H6, H19, B1 to B6, B16 and B17, B35 to B37 - Friend request happy path flow and then Chats Page basic send/receive text message flow", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -511,7 +511,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
+  test("C11, C12, C16, C17 and C19 - Chat Sidebar tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -616,7 +616,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B49 and B56 - Chats Tests - Multiple messages testing - Scroll to bottom and Go to pin message buttons", async ({
+  test("B49 and B56 - Chats Tests - Multiple messages testing - Scroll to bottom and Go to pin message buttons", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1007,7 +1007,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
+  test("B18 and B19, B23 to B25 - Chats Context Menu tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1088,7 +1088,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B20 - Pin Messages Tests", async ({
+  test("B20 - Pin Messages Tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1253,7 +1253,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B22 and B50 - Reaction Tests", async ({
+  test("B22 and B50 - Reaction Tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1398,7 +1398,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B51 - Chats Markdowns Tests", async ({
+  test("B51 - Chats Markdowns Tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1571,7 +1571,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B52 and B53 - Sending and receiving files tests", async ({
+  test("B52 and B53 - Sending and receiving files tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1658,7 +1658,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B66 - Sending and receiving emojis and emoji picker tests", async ({
+  test("B66 - Sending and receiving emojis and emoji picker tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1804,7 +1804,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B67 - Sending and receiving GIFs and gif picker tests", async ({
+  test("B67 - Sending and receiving GIFs and gif picker tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1873,7 +1873,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("B68 - Sending and receiving stickers and sticker picker tests", async ({
+  test("B68 - Sending and receiving stickers and sticker picker tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -1984,7 +1984,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("Chat Replies Tests", async ({
+  test("Chat Replies Tests", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -2149,7 +2149,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("Videocall testing between two users - mute, unmute, fullscreen, expand/collapse call", async ({
+  test("Videocall testing between two users - mute, unmute, fullscreen, expand/collapse call", async ({
     firstUserContext,
     secondUserContext,
   }) => {
@@ -2313,7 +2313,7 @@ test.describe("Two instances tests - Friends and Chats", () => {
     });
   });
 
-  test.skip("Group Chats - Create a group with 3 people and send/receive text message flow", async ({
+  test("Group Chats - Create a group with 3 people and send/receive text message flow", async ({
     firstUserContext,
     secondUserContext,
     thirdUserContext,

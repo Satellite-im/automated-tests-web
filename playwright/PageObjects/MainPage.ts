@@ -187,6 +187,12 @@ export default class MainPage {
     await this.toastNotificationButton.click();
   }
 
+  async closeToastNotificationIfExists() {
+    if (await this.toastNotificationButton.isVisible()) {
+      await this.toastNotificationButton.click();
+    }
+  }
+
   async dismissAddSomeoneOnMobile() {
     const addSomeoneVisible = await this.page
       .getByRole("img", {
